@@ -26,7 +26,7 @@ async function init() {
     for (const file of eventFiles) {
         const event = require(`${process.cwd()}/src/events/${file}`);
         const eventName = file.split(".")[0];
-        client.logger.load(`Loading event ${file}.`);
+        client.logger.load(`Listening to ${eventName} event.`);
         client.on(eventName, event.bind(null, client));
     }
 
