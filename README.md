@@ -26,7 +26,7 @@ Want to contribute? Great, we love that! Please take your time on [opening a new
 1. [Invite the bot](https://coinzbot.xyz/invite) into your server
 2. Run /help in your server and view all commands
 
-*If you need any more help, cosider joining our [Coinz support discord](https://coinzbot.xyz/discord).*
+*If you need any more help, consider joining our [Coinz support discord](https://coinzbot.xyz/discord).*
 
 ## Support Coinz
 If you really like this bot, consider donating to Coinz on Ko-fi.
