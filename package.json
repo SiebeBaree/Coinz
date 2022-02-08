@@ -1,0 +1,37 @@
+{
+  "name": "coinz",
+  "version": "1.0.0",
+  "description": "A economic discord bot with a lot of features",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "setup": "node src/setup.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SiebeBaree/Coinz.git"
+  },
+  "keywords": [
+    "economy",
+    "discord",
+    "bot",
+    "javascript",
+    "discord.js"
+  ],
+  "author": "Siebe Baree",
+  "license": "LICENSE",
+  "bugs": {
+    "url": "https://github.com/SiebeBaree/Coinz/issues"
+  },
+  "homepage": "https://github.com/SiebeBaree/Coinz#readme",
+  "dependencies": {
+    "axios": "^0.25.0",
+    "bufferutil": "^4.0.6",
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0",
+    "fs": "^0.0.1-security",
+    "moment": "^2.29.1",
+    "mongoose": "^6.2.0"
+  }
+}

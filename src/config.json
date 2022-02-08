@@ -1,0 +1,15 @@
+{
+    "rootServerId": "940542575704686593",
+    "ownerId": "643072638075273248",
+    "website": "https://coinzbot.xyz/",
+    "presence": {
+        "name": "coinzbot.xyz",
+        "type": "WATCHING",
+        "status": "online"
+    },
+    "embed": {
+        "footer": "Coinz | coinzbot.xyz",
+        "color": "#DBA514",
+        "defaultIcon": "https://cdn.discordapp.com/embed/avatars/0.png"
+    }
+}
