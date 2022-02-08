@@ -9,18 +9,17 @@ module.exports.execute = async (client, interaction, data) => {
         .setColor(client.config.embed.color)
         .setFooter({ text: client.config.embed.footer })
         .setTimestamp()
-        .setThumbnail(`${client.user.avatarURL() || client.config.embed.defaultIcon}`)
+        .setDescription('**If you like this bot, maybe consider [donating](https://coinzbot.xyz/donate).**')
         .addFields(
-            { name: 'Library', value: `discord.js${dependencies["discord.js"]}`, inline: true },
-            { name: 'Uptime', value: `${client.calc.msToTime(client.uptime)}`, inline: true },
-            { name: 'Memory Usage', value: `${Math.round(usedMemory * 100) / 100} MB`, inline: true }
+            { name: 'Info', value: `:man_technologist: **Developer:** \`Siebe#9999\`\n:globe_with_meridians: **Website: [coinzbot.xyz](${client.config.website})**\n:beginner: **Official Server: [discord.gg/asnZQwc6kW](https://discord.gg/asnZQwc6kW)**\n:books: **Library:** \`discord.js${dependencies["discord.js"]}\``, inline: true },
+            { name: 'Statistics', value: `:video_game: **Commands:** \`${client.commands.size}\`\n:white_check_mark: **Uptime:** \`${client.calc.msToTime(client.uptime)}\`\n:film_frames: **Memory Usage:** \`${Math.round(usedMemory * 100) / 100}\` MB`, inline: true }
         )
     await interaction.reply({ embeds: [newEmbed] });
 }
 
 module.exports.help = {
-    name: "statistics",
-    description: "Get some statistics about Coinz.",
+    name: "info",
+    description: "Get some information about Coinz.",
     options: [],
     usage: "",
     category: "misc",
