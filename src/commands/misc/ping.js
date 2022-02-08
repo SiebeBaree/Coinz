@@ -6,7 +6,7 @@ module.exports.execute = async (client, interaction, data) => {
 
 module.exports.help = {
     name: "ping",
-    description: "",
+    description: "Get the time between the bot and discord in milliseconds.",
     options: [],
     usage: "",
     category: "misc",
