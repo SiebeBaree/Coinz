@@ -4,6 +4,7 @@ module.exports = mongoose.model("Shop", new mongoose.Schema({
     itemId: { type: String, require: true },
     category: { type: String, require: true },
     name: { type: String, require: true },
+    emoteId: { type: String, default: "" },
     shortDescription: { type: String, require: true },
     longDescription: String,
     buyPrice: { type: Number, require: true },
