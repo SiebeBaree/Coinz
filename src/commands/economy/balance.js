@@ -8,11 +8,10 @@ module.exports.execute = async (client, interaction, data) => {
     const embed = new MessageEmbed()
         .setAuthor({ name: `${member.displayName || member.username}'s balance`, iconURL: `${member.displayAvatarURL() || client.config.embed.defaultIcon}` })
         .setColor(client.config.embed.color)
-        .setFooter({ text: client.config.embed.footer })
         .addFields(
-            { name: 'Wallet', value: `${memberData.wallet}`, inline: true },
-            { name: 'Bank', value: `${memberData.bank}`, inline: true },
-            { name: 'Net Worth', value: `${memberData.wallet + memberData.bank}`, inline: true }
+            { name: 'Wallet', value: `:coin: ${memberData.wallet}`, inline: true },
+            { name: 'Bank', value: `:coin: ${memberData.bank}`, inline: true },
+            { name: 'Net Worth', value: `:coin: ${memberData.wallet + memberData.bank}`, inline: true }
         )
     await interaction.reply({ embeds: [embed] });
 }
