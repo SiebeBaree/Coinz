@@ -58,7 +58,6 @@ module.exports = async (client, interaction) => {
             return interaction.reply({ embeds: [createBanEmbed(`Sorry but this server is banned from using Coinz.\n\n**What you can do to lift this ban:**\nIf you are the server owner or a server administrator please join our [support server](https://discord.gg/asnZQwc6kW) and create a ticket.`)], ephemeral: true })
         }
 
-
         if (await client.cooldown.isOnCooldown(client, interaction.guildId, interaction.member.id, cmd.help.name)) return interaction.reply({ content: `:x: You have to wait ${client.calc.msToTime(await client.cooldown.getCooldown(client, interaction.guildId, interaction.member.id, cmd.help.name) * 1000)} to use this command again.`, ephemeral: true });
         await client.cooldown.setCooldown(interaction.guildId, interaction.member.id, cmd.help.name, cmd.help.cooldown);
 
