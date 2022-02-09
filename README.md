@@ -6,7 +6,7 @@
 [![invite](https://img.shields.io/badge/Invite-Coinz-DBA514?style=for-the-badge&logo=coil&logoColor=white)](https://coinzbot.xyz/invite)
 [![Discord](https://img.shields.io/discord/938177962698735616?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/asnZQwc6kW)
 
-Coinz is a open source Discord.js Bot. Coinz has over 70+ commands and more than 40 ways to make money.
+Coinz is an open source Discord.js Bot. Coinz has over 70+ commands and more than 40 ways to make money.
 
 ## Features
 * All commands are [slash commands](https://discord.com/blog/slash-commands-are-here).
