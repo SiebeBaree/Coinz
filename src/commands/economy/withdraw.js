@@ -2,23 +2,8 @@ const { MessageEmbed } = require('discord.js');
 const guildUserSchema = require('../../database/schemas/guildUsers');
 
 module.exports.execute = async (client, interaction, data) => {
-    let amount = interaction.options.getString('amount') || "0";
-
-    if (amount.toLowerCase() === "all") {
-        amount = data.guildUser.bank;
-    } else {
-        try {
-            amount = parseInt(amount);
-
-            if (amount > data.guildUser.bank) {
-                return interaction.reply({ content: `You don't have that much in your bank. You only have :coin: ${data.guildUser.bank}.`, ephemeral: true });
-            } else if (amount <= 0) {
-                return interaction.reply({ content: `You need to withdraw at least :coin: 1.`, ephemeral: true });
-            }
-        } catch (e) {
-            return interaction.reply({ content: `Invalid amount. Please enter a number or type \`ALL\``, ephemeral: true });
-        }
-    }
+    let amount = interaction.options.getInteger('amount');
+    if (amount > data.guildUser.bank) return interaction.reply({ content: `You don't have that much in your bank. You only have :coin: ${data.guildUser.bank}.`, ephemeral: true });
 
     await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
         $inc: {
@@ -44,9 +29,10 @@ module.exports.help = {
     options: [
         {
             name: 'amount',
-            type: 'STRING',
-            description: 'Enter an amount that you want to withdraw or ALL to withdraw all available money in your bank.',
-            required: true
+            type: 'INTEGER',
+            description: 'Enter an amount that you want to withdraw.',
+            required: true,
+            min_value: 1
         }
     ],
     usage: "<amount | all>",
