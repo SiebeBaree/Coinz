@@ -9,7 +9,6 @@ module.exports = mongoose.model("Shop", new mongoose.Schema({
     longDescription: String,
     buyPrice: { type: Number, require: true },
     sellPrice: { type: Number, require: true },
-    type: { type: String, default: "None" },
     multiplier: { type: mongoose.Types.Decimal128, default: 0.0 }, // floating point
     duration: { type: Number, default: 0 }
 }))
