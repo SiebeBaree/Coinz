@@ -49,7 +49,7 @@ module.exports.help = {
             required: true
         }
     ],
-    usage: "",
+    usage: "<amount | all>",
     category: "economy",
     extraFields: [],
     memberPermissions: [],
