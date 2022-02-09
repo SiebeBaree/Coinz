@@ -1,6 +1,7 @@
 # Project unique ignore
 website/__pycache__/
 __pycache__/
+data/
 
 # compiled output
 /dist
