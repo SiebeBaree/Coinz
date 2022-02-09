@@ -45,8 +45,8 @@ module.exports = async (client, interaction) => {
         if (clientPerms.length > 0) return interaction.reply({ content: "Looks like I am missing the following permissions: " + clientPerms.map((p) => `\`${p}\``).join(", "), ephemeral: true });
 
         // Get data on GuildUser, User and Guild
-        let guildUserData = await client.database.fetchGuildUser(interaction.member.id);
-        let userData = await client.database.fetchUser(interaction.guildId, interaction.member.id);
+        let guildUserData = await client.database.fetchGuildUser(interaction.guildId, interaction.member.id);
+        let userData = await client.database.fetchUser(interaction.member.id);
         let guildData = await client.database.fetchGuild(interaction.guildId);
 
         // Checking if the user is banned.
