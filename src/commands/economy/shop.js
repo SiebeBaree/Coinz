@@ -1,7 +1,7 @@
 const { MessageEmbed, ButtonInteraction, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const shopSchema = require('../../database/schemas/shop');
 
-const itemsPerPage = 10;
+const itemsPerPage = 5;
 
 async function getItems(category) {
     return await shopSchema.find({ category: category.toLowerCase() })
@@ -14,7 +14,7 @@ function createShop(shopItems, currentPage) {
         if (i >= currentPage * itemsPerPage && i < currentPage * itemsPerPage + itemsPerPage) {
             let buyPrice = ':coin: ' + shopItems[i].buyPrice;
             if (shopItems[i].buyPrice === 0) buyPrice = "Not For Sale";
-            shopStr += `${shopItems[i].icon || ':heavy_multiplication_x:'} **${shopItems[i].name}** ― ${buyPrice}\n> ${shopItems[i].shortDescription}\n\n`
+            shopStr += `${shopItems[i].icon || ':heavy_multiplication_x:'} **${shopItems[i].name}** ― ${buyPrice}\n**ID:** \`${item[i].itemId}\`\n> ${shopItems[i].shortDescription}\n\n`
         }
     }
     return shopStr;
@@ -24,7 +24,7 @@ function createShopEmbed(client, shopStr, currentPage, maxPages) {
     let embed = new MessageEmbed()
         .setAuthor({ name: `Coinz Shop` })
         .setColor(client.config.embed.color)
-        .setFooter({ text: `/shop [item] to get more info about an item. ─ Page ${currentPage + 1} of ${maxPages}.` })
+        .setFooter({ text: `/shop [item-id] to get more info about an item. ─ Page ${currentPage + 1} of ${maxPages}.` })
         .setDescription(shopStr)
     return embed;
 }
@@ -50,7 +50,7 @@ function createSelectMenu(defaultLabel, disabled = false) {
     const selectMenu = new MessageActionRow()
         .addComponents(
             new MessageSelectMenu()
-                .setCustomId('selectCategory')
+                .setCustomId('selectCategoryShop')
                 .setPlaceholder('The interaction has ended')
                 .setDisabled(disabled)
                 .addOptions(options),
@@ -129,7 +129,7 @@ module.exports.help = {
     description: "Shop for new items or look up there value.",
     options: [
         {
-            name: 'item',
+            name: 'item-id',
             type: 'STRING',
             description: 'The item you want more information on.',
             required: false
