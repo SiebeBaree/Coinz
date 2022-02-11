@@ -14,7 +14,7 @@ function createShop(shopItems, currentPage) {
         if (i >= currentPage * itemsPerPage && i < currentPage * itemsPerPage + itemsPerPage) {
             let buyPrice = ':coin: ' + shopItems[i].buyPrice;
             if (shopItems[i].buyPrice === 0) buyPrice = "Not For Sale";
-            shopStr += `${shopItems[i].icon || ':heavy_multiplication_x:'} **${shopItems[i].name}** ― ${buyPrice}\n**ID:** \`${item[i].itemId}\`\n> ${shopItems[i].shortDescription}\n\n`
+            shopStr += `${shopItems[i].icon || ':heavy_multiplication_x:'} **${shopItems[i].name}** ― ${buyPrice}\n**ID:** \`${shopItems[i].itemId}\`\n> ${shopItems[i].shortDescription}\n\n`
         }
     }
     return shopStr;
