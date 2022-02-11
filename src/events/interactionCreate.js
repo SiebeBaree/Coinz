@@ -1,8 +1,8 @@
 const { MessageEmbed } = require('discord.js');
 
-function createBanEmbed(description) {
+function createBanEmbed(client, member, description) {
     const embed = new MessageEmbed()
-        .setAuthor({ name: `Sorry, you can't use the bot.`, iconURL: `${interaction.member.displayAvatarURL() || client.config.embed.defaultIcon}` })
+        .setAuthor({ name: `Sorry, you can't use the bot.`, iconURL: `${member.displayAvatarURL() || client.config.embed.defaultIcon}` })
         .setColor("RED")
         .setFooter({ text: client.config.embed.footer })
         .setThumbnail(`https://www.freeiconspng.com/thumbs/stop-sign-png/stop-sign-png-26.png`)
@@ -51,11 +51,11 @@ module.exports = async (client, interaction) => {
 
         // Checking if the user is banned.
         if (guildUserData.banned === true) {
-            return interaction.reply({ embeds: [createBanEmbed(`Sorry but this server banned you from using any commands from this bot.\n\n**What you can do to lift this ban:**\nAsk a server admin to unban you with the command: /unban <@${interaction.member.id}>\n\n*Coinz is not responsible for your ban as this ban is only in this server.*`)], ephemeral: true })
+            return interaction.reply({ embeds: [createBanEmbed(client, interaction.member, `Sorry but this server banned you from using any commands from this bot.\n\n**What you can do to lift this ban:**\nAsk a server admin to unban you with the command: /unban <@${interaction.member.id}>\n\n*Coinz is not responsible for your ban as this ban is only in this server.*`)], ephemeral: true })
         } else if (userData.banned === true) {
-            return interaction.reply({ embeds: [createBanEmbed(`Sorry but you are banned from Coinz.\n\n**What you can do to lift this ban:**\nIf you think this ban was incorrect, please join our [support server](https://discord.gg/asnZQwc6kW) and create a ticket.`)], ephemeral: true })
+            return interaction.reply({ embeds: [createBanEmbed(client, interaction.member, `Sorry but you are banned from Coinz.\n\n**What you can do to lift this ban:**\nIf you think this ban was incorrect, please join our [support server](https://discord.gg/asnZQwc6kW) and create a ticket.`)], ephemeral: true })
         } else if (guildData.banned === true) {
-            return interaction.reply({ embeds: [createBanEmbed(`Sorry but this server is banned from using Coinz.\n\n**What you can do to lift this ban:**\nIf you are the server owner or a server administrator please join our [support server](https://discord.gg/asnZQwc6kW) and create a ticket.`)], ephemeral: true })
+            return interaction.reply({ embeds: [createBanEmbed(client, interaction.member, `Sorry but this server is banned from using Coinz.\n\n**What you can do to lift this ban:**\nIf you are the server owner or a server administrator please join our [support server](https://discord.gg/asnZQwc6kW) and create a ticket.`)], ephemeral: true })
         }
 
         if (await client.cooldown.isOnCooldown(client, interaction.guildId, interaction.member.id, cmd.help.name)) return interaction.reply({ content: `:x: You have to wait ${client.calc.msToTime(await client.cooldown.getCooldown(client, interaction.guildId, interaction.member.id, cmd.help.name) * 1000)} to use this command again.`, ephemeral: true });
