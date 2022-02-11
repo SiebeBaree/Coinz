@@ -21,18 +21,13 @@ module.exports.removeMoney = async (guildId, userId, amount) => {
     });
 }
 
-module.exports.setListButtons = (currentPage, maxPages) => {
+module.exports.setListButtons = (currentPage, maxPages, disableAll = false) => {
     var disablePrevious = false;
     var disableNext = false;
 
-    if (currentPage <= 0) {
-        disablePrevious = true;
-    } else if (currentPage + 1 >= maxPages) {
-        disableNext = true;
-    } else {
-        disablePrevious = false;
-        disableNext = false;
-    }
+    if (currentPage <= 0) disablePrevious = true;
+    if (currentPage + 1 >= maxPages) disableNext = true;
+    if (disableAll) disablePrevious, disableNext = true;
 
     let row = new MessageActionRow().addComponents(
         new MessageButton()
