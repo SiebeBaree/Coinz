@@ -86,8 +86,8 @@ After all this, run `python3 website/coinzbot.py`.
 You are not allowed to upload this bot to any service such as discordbotlist or top.gg, you are only allowed to host this bot for your community. You can use small parts of this code in your public bot.
 
 ## License
-We use the MIT license. If you plan to use any part of this source code in your own bot, we would be grateful if you would include some form of credit somewhere.
+We use the GNU GPLv3-license. If you plan to use any part of this source code in your own bot, we would be grateful if you would include some form of credit somewhere.
 
-> A short, permissive software license. Basically, you can do whatever you want as long as you include the original copyright and license notice in any copy of the software/source.  There are many variations of this license in use.
+> You may copy, distribute and modify the software as long as you track changes/dates in source files. Any modifications to or software including (via compiler) GPL-licensed code must also be made available under the GPL along with build & install instructions.
 
-Fetched from [TLDRLegal](https://tldrlegal.com/license/mit-license), please also read the [license](https://github.com/SiebeBaree/Coinz/blob/master/LICENSE) if you plan on using the source code. This is only a short summary. Please also take note of that we are not forced to help you, and we won't help you host it yourself as we do not recommend you doing so.
+Fetched from [TLDRLegal](https://tldrlegal.com/license/gnu-general-public-license-v3-(gpl-3)), please also read the [license](https://github.com/SiebeBaree/Coinz/blob/main/LICENSE) if you plan on using the source code. This is only a short summary. Please also take note of that we are not forced to help you, and we won't help you host it yourself as we do not recommend you doing so.
