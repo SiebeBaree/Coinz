@@ -20,6 +20,7 @@ client.logger = require('./tools/logger');
 client.cooldown = require('./tools/cooldown');
 client.calc = require('./tools/calculators');
 client.tools = require('./tools/tools');
+client.resolvers = require('./tools/resolvers');
 
 async function init() {
     // Event handler
