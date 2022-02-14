@@ -66,12 +66,12 @@ function createSelectMenu(defaultLabel, disabled = false) {
 }
 
 module.exports.execute = async (client, interaction, data) => {
-    await interaction.deferReply();
     const member = interaction.options.getUser('user') || interaction.member;
 
     const memberData = await client.database.fetchGuildUser(interaction.guildId, member.id);
-    if (memberData.inventory.length <= 0 && member.id === interaction.member.id) return interaction.editReply({ content: `You don't have anything in your inventory.` });
-    if (memberData.inventory.length <= 0) return interaction.editReply({ content: `This user doesn't have anything in his inventory.` });
+    if (memberData.inventory.length <= 0 && member.id === interaction.member.id) return interaction.reply({ content: `You don't have anything in your inventory.`, ephemeral: true });
+    if (memberData.inventory.length <= 0) return interaction.reply({ content: `This user doesn't have anything in his inventory.`, ephemeral: true });
+    await interaction.deferReply();
 
     let category = "all";
     let invItems = await getItems(memberData.inventory, category);
