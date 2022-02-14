@@ -12,3 +12,9 @@ module.exports.msToTime = ms => {
 
     return str || "0s";
 };
+
+// Not 100% accurate but it doesn't need to be very accurate.
+module.exports.roundNumber = (n, places = 2) => {
+    let x = Math.pow(10, places);
+    return Math.round(n * x) / x;
+}
