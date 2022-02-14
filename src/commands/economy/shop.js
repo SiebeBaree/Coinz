@@ -59,12 +59,12 @@ function createSelectMenu(defaultLabel, disabled = false) {
 }
 
 module.exports.execute = async (client, interaction, data) => {
-    await interaction.deferReply();
     const itemId = interaction.options.getString('item');
 
     if (itemId) {
         const item = await client.database.fetchItem(itemId.toLowerCase());
-        if (item == null) return interaction.editReply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.` });
+        if (item == null) return interaction.reply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.`, ephemeral: true });
+        await interaction.deferReply();
 
         const embed = new MessageEmbed()
             .setTitle(item.name)
