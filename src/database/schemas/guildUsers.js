@@ -42,11 +42,19 @@ const inventorySchema = new mongoose.Schema({
 })
 
 // type == [stock, etf, crypto, bond, ...]
-const stocksSchema = new mongoose.Schema({
+const stocksBoughtSchema = new mongoose.Schema({
     ticker: { type: String, require: true },
     type: { type: String, require: true },
     buyPrice: { type: Number, require: true },
-    datePurchased: { type: Date, default: Date.now },
+    datePurchased: { type: Number, default: Date.now() },
+    quantity: { type: Number, default: 1 }
+})
+
+const stocksSoldSchema = new mongoose.Schema({
+    ticker: { type: String, require: true },
+    type: { type: String, require: true },
+    sellPrice: { type: Number, require: true },
+    dateSold: { type: Number, default: Date.now() },
     quantity: { type: Number, default: 1 }
 })
 
@@ -89,7 +97,8 @@ module.exports = mongoose.model("GuildUsers", new mongoose.Schema({
     social: { type: socialSchema, default: {} },
     business: { type: businessSchema, default: {} },
     inventory: [{ type: inventorySchema }],
-    stocks: [{ type: stocksSchema }],
+    stocksBought: [{ type: stocksBoughtSchema }],
+    stocksSold: [{ type: stocksSoldSchema }],
     miners: [{ type: minersSchema }],
     plots: [{ type: plotsSchema }],
     activeBoosters: [{ type: activeBoostersSchema }]
