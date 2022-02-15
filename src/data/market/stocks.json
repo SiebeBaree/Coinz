@@ -1,0 +1,28 @@
+{
+    "stocks": [
+        [
+            "AAPL",
+            "MSFT",
+            "AMZN",
+            "GOOG",
+            "TSLA",
+            "NVDA",
+            "FB",
+            "PFE",
+            "DIS",
+            "KO"
+        ],
+        [
+            "ADBE",
+            "INTC",
+            "MCD",
+            "NKE",
+            "DHR",
+            "NFLX",
+            "BA",
+            "BLK",
+            "GM",
+            "FDX"
+        ]
+    ]
+}
