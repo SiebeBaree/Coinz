@@ -1,7 +1,12 @@
 # Project unique ignore
 website/__pycache__/
 __pycache__/
-data/
+src/data/*
+src/data/market/markets.json
+!src/
+!src/data/
+!src/data/market/
+!src/data/market/stocks.json
 
 # compiled output
 /dist
