@@ -3,14 +3,12 @@ const database = require('../database/mongoose');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const axios = require("axios").default;
 require('dotenv').config();
+const fs = require('fs');
 
 // Because our Stocks API has a rate limit of 1000 requests per month we need to bundle the stocks per groups of 10.
-// Every group only counts as 1 request. Thats 20 stocks updated every 1.5 hours.
-// Later for $10/month (15000 requests per month) we can upgrade the API to allow 50 stocks updated every 15 minutes
-const stocks = [
-    ['AAPL', 'MSFT', 'AMZN', 'GOOG', 'TSLA', 'NVDA', 'FB', 'PFE', 'DIS', 'KO'],
-    ['ADBE', 'INTC', 'MCD', 'NKE', 'DHR', 'NFLX', 'BA', 'BLK', 'GM', 'FDX']
-];
+// Every group only counts as 1 request. Thats 20 stocks updated every 75 minutes ~ 883 requests/month (+ 8 weekend days)
+// Later for $10/month (15000 requests per month) we can upgrade the API to allow 60 stocks updated every 15 minutes ~ 13.248 requests/month (+ 8 weekend days)
+const stocks = require('../data/market/stocks.json').stocks;
 
 module.exports.addMoney = async (guildId, userId, amount) => {
     await guildUserSchema.updateOne({ guildId: guildId, userId: userId }, {
@@ -86,10 +84,27 @@ module.exports.getNewStockData = async (ticker) => {
 
         try {
             const response = await axios.request(options);
-            return response.data;
+            const apiData = response.data;
+
+            const markets = require('../data/market/markets.json');
+
+            markets.marketStart = apiData.start;
+            markets.marketClose = apiData.end;
+
+            fs.writeFile(`${process.cwd()}/src/data/market/markets.json`, JSON.stringify(markets, null, 4), function writeJSON(err) {
+                if (err) return console.log(err);
+            });
+
+            return apiData;
         } catch (e) {
             console.log(e);
         }
     }
     return null;
+}
+
+module.exports.marketIsOpen = async () => {
+    const now = parseInt(Date.now() / 1000);
+    const marketInfo = require('../data/market/markets.json');
+    return (now >= marketInfo.marketStart && now <= marketInfo.marketClose ? true : false)
 }
