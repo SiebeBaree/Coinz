@@ -6,7 +6,7 @@ const readdir = util.promisify(fs.readdir);
 const { Client, Collection, Intents } = require('discord.js');
 
 // Initialising a Client object
-const intents = [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES];
+const intents = [Intents.FLAGS.GUILDS];
 const client = new Client({ intents: intents });
 
 // Creating collections and importing general items
