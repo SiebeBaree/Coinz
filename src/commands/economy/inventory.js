@@ -1,4 +1,4 @@
-const { MessageEmbed, ButtonInteraction, MessageActionRow, MessageSelectMenu } = require('discord.js');
+const { MessageEmbed, ButtonInteraction } = require('discord.js');
 const shopSchema = require('../../database/schemas/shop');
 
 const itemsPerPage = 10;
@@ -7,8 +7,8 @@ async function getItems(inventory, category = "all") {
     let items = [];
 
     for (let invItem in inventory) {
-        let item = await shopSchema.findOne({ itemId: invItem.itemId });
-        item.quantity = invItem.quantity; // Add quantity to item
+        let item = await shopSchema.findOne({ itemId: inventory[invItem].itemId });
+        item.quantity = inventory[invItem].quantity; // Add quantity to item
         if (item != null && (category === "all" || item.category === category.toLowerCase())) items.push(item);
     }
 
@@ -30,39 +30,9 @@ function createInvEmbed(client, member, desc, currentPage, maxPages) {
     let embed = new MessageEmbed()
         .setAuthor({ name: `${member.displayName || member.username}'s inventory`, iconURL: `${member.displayAvatarURL() || client.config.embed.defaultIcon}` })
         .setColor(client.config.embed.color)
-        .setFooter({ text: `/shop [item-id] to get more info about an item. ─ Page ${currentPage + 1} of ${maxPages}.` })
+        .setFooter({ text: `/shop list [item-id] to get more info about an item. ─ Page ${currentPage + 1} of ${maxPages}.` })
         .setDescription(desc)
     return embed;
-}
-
-function createSelectMenu(defaultLabel, disabled = false) {
-    let options = [
-        { label: 'All Items', value: 'all' },
-        { label: 'Tools', value: 'tools' },
-        { label: 'Pets', value: 'pets' },
-        { label: 'Fish', value: 'fish' },
-        { label: 'Miners', value: 'miners' },
-        { label: 'Crops', value: 'crops' },
-        { label: 'Boosters', value: 'boosters' },
-        { label: 'Rare Items', value: 'rare_items' },
-        { label: 'Other', value: 'other' }
-    ]
-
-    for (let i = 0; i < options.length; i++) {
-        if (options[i].value === defaultLabel) {
-            options[i].default = true;
-        }
-    }
-
-    const selectMenu = new MessageActionRow()
-        .addComponents(
-            new MessageSelectMenu()
-                .setCustomId('selectCategoryInv')
-                .setPlaceholder('The interaction has ended')
-                .setDisabled(disabled)
-                .addOptions(options),
-        );
-    return selectMenu;
 }
 
 module.exports.execute = async (client, interaction, data) => {
@@ -79,7 +49,7 @@ module.exports.execute = async (client, interaction, data) => {
     let currentPage = 0;
 
     let invStr = createInventory(invItems, currentPage);
-    await interaction.editReply({ embeds: [createInvEmbed(client, member, invStr, currentPage, maxPages)], components: [createSelectMenu(category), client.tools.setListButtons(currentPage, maxPages)] });
+    await interaction.editReply({ embeds: [createInvEmbed(client, member, invStr, currentPage, maxPages)], components: [client.tools.createSelectMenu(category), client.tools.setListButtons(currentPage, maxPages)] });
 
     const filter = (i) => {
         if (i.member.id === interaction.member.id) return true;
@@ -103,11 +73,11 @@ module.exports.execute = async (client, interaction, data) => {
 
         invStr = createInventory(invItems, currentPage);
         await interactionCollector.deferUpdate();
-        await interaction.editReply({ embeds: [createInvEmbed(client, member, invStr, currentPage, maxPages)], components: [createSelectMenu(category), client.tools.setListButtons(currentPage, maxPages)] });
+        await interaction.editReply({ embeds: [createInvEmbed(client, member, invStr, currentPage, maxPages)], components: [client.tools.createSelectMenu(category), client.tools.setListButtons(currentPage, maxPages)] });
     })
 
     collector.on('end', async (interactionCollector) => {
-        await interaction.editReply({ components: [createSelectMenu("", true), client.tools.setListButtons(currentPage, maxPages, true)] });
+        await interaction.editReply({ components: [client.tools.createSelectMenu("", true), client.tools.setListButtons(currentPage, maxPages, true)] });
     })
 }
 
