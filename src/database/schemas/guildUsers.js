@@ -15,7 +15,7 @@ const petSchema = new mongoose.Schema({
         luck: { type: Number, default: 0 }
     },
     prestige: { type: Number, default: 0 },
-    lastNameChange: { type: Date, default: Date.now }
+    lastNameChange: { type: Number, default: parseInt(Date.now() / 1000) }
 })
 
 const socialSchema = new mongoose.Schema({
@@ -41,20 +41,9 @@ const inventorySchema = new mongoose.Schema({
     quantity: { type: Number, default: 1 }
 })
 
-// type == [stock, etf, crypto, bond, ...]
-const stocksBoughtSchema = new mongoose.Schema({
+const stocksSchema = new mongoose.Schema({
     ticker: { type: String, require: true },
-    type: { type: String, require: true },
-    buyPrice: { type: Number, require: true },
-    datePurchased: { type: Number, default: Date.now() },
-    quantity: { type: Number, default: 1 }
-})
-
-const stocksSoldSchema = new mongoose.Schema({
-    ticker: { type: String, require: true },
-    type: { type: String, require: true },
-    sellPrice: { type: Number, require: true },
-    dateSold: { type: Number, default: Date.now() },
+    totalBuyPrice: { type: Number, require: true },
     quantity: { type: Number, default: 1 }
 })
 
@@ -69,15 +58,14 @@ const minersSchema = new mongoose.Schema({
 
 const plotsSchema = new mongoose.Schema({
     plotId: { type: Number, require: true },
-    status: { type: String, default: "Empty" },
-    harvestOn: { type: Date, require: true },
-    crop: { type: String, default: "None" },
-    fertilized: { type: Boolean, default: false }
+    status: { type: String, default: "empty" },
+    harvestOn: { type: Number, require: true, default: parseInt(Date.now() / 1000) },
+    crop: { type: String, default: "none" }
 })
 
 const activeBoostersSchema = new mongoose.Schema({
     itemId: { type: String, require: true },
-    timeStarted: { type: Date, default: Date.now },
+    timeStarted: { type: Number, default: parseInt(Date.now() / 1000) },
     timeEnd: { type: Date, require: true }
 })
 
@@ -97,9 +85,9 @@ module.exports = mongoose.model("GuildUsers", new mongoose.Schema({
     social: { type: socialSchema, default: {} },
     business: { type: businessSchema, default: {} },
     inventory: [{ type: inventorySchema }],
-    stocksBought: [{ type: stocksBoughtSchema }],
-    stocksSold: [{ type: stocksSoldSchema }],
+    stocks: [{ type: stocksSchema }],
     miners: [{ type: minersSchema }],
     plots: [{ type: plotsSchema }],
+    lastWater: { type: Number, default: parseInt(Date.now() / 1000) },
     activeBoosters: [{ type: activeBoostersSchema }]
 }))
