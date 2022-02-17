@@ -1,6 +1,6 @@
 const guildUserSchema = require('../database/schemas/guildUsers');
 const database = require('../database/mongoose');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 const axios = require("axios").default;
 require('dotenv').config();
 const fs = require('fs');
@@ -60,7 +60,37 @@ module.exports.setListButtons = (currentPage, maxPages, disableAll = false) => {
             .setDisabled(disableNext)
     );
     return row;
-};
+}
+
+module.exports.createSelectMenu = (defaultLabel, disabled = false) => {
+    let options = [
+        { label: 'Tools', value: 'tools' },
+        { label: 'Pets', value: 'pets' },
+        { label: 'Fish', value: 'fish' },
+        { label: 'Miners', value: 'miners' },
+        { label: 'Crops', value: 'crops' },
+        { label: 'Boosters', value: 'boosters' },
+        { label: 'Rare Items', value: 'rare_items' },
+        { label: 'Other', value: 'other' },
+        { label: 'All Items', value: 'all' }
+    ]
+
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].value === defaultLabel) {
+            options[i].default = true;
+        }
+    }
+
+    const selectMenu = new MessageActionRow()
+        .addComponents(
+            new MessageSelectMenu()
+                .setCustomId('selectCategoryShop')
+                .setPlaceholder('The interaction has ended')
+                .setDisabled(disabled)
+                .addOptions(options),
+        );
+    return selectMenu;
+}
 
 module.exports.getNewStockData = async (ticker) => {
     let symbols = "";
@@ -107,4 +137,26 @@ module.exports.marketIsOpen = async () => {
     const now = parseInt(Date.now() / 1000);
     const marketInfo = require('../data/market/markets.json');
     return (now >= marketInfo.marketStart && now <= marketInfo.marketClose ? true : false)
+}
+
+module.exports.userHasItem = async (inv, itemId) => {
+    for (let i = 0; i < inv.length; i++) if (inv[i].itemId === itemId) return true;
+    return false;
+}
+
+module.exports.giveItem = async (interaction, data, itemId, quantity) => {
+    if (await this.userHasItem(data.guildUser.inventory, itemId)) {
+        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'inventory.itemId': itemId }, {
+            $inc: { 'inventory.$.quantity': quantity }
+        });
+    } else {
+        const invObj = {
+            itemId: itemId,
+            quantity: quantity
+        };
+
+        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
+            $push: { inventory: invObj },
+        });
+    }
 }
