@@ -1,10 +1,12 @@
-const { MessageEmbed, ButtonInteraction, MessageActionRow, MessageSelectMenu } = require('discord.js');
+const { MessageEmbed, ButtonInteraction } = require('discord.js');
 const shopSchema = require('../../database/schemas/shop');
+const guildUserSchema = require('../../database/schemas/guildUsers');
 
 const itemsPerPage = 5;
 
 async function getItems(category) {
-    return await shopSchema.find({ category: category.toLowerCase() })
+    if (category === "all") return await shopSchema.find();
+    return await shopSchema.find({ category: category.toLowerCase() });
 }
 
 function createShop(shopItems, currentPage) {
@@ -24,42 +26,13 @@ function createShopEmbed(client, shopStr, currentPage, maxPages) {
     let embed = new MessageEmbed()
         .setAuthor({ name: `Coinz Shop` })
         .setColor(client.config.embed.color)
-        .setFooter({ text: `/shop [item-id] to get more info about an item. ─ Page ${currentPage + 1} of ${maxPages}.` })
+        .setFooter({ text: `/shop list [item-id] to get more info about an item. ─ Page ${currentPage + 1} of ${maxPages}.` })
         .setDescription(shopStr)
     return embed;
 }
 
-function createSelectMenu(defaultLabel, disabled = false) {
-    let options = [
-        { label: 'Tools', value: 'tools' },
-        { label: 'Pets', value: 'pets' },
-        { label: 'Fish', value: 'fish' },
-        { label: 'Miners', value: 'miners' },
-        { label: 'Crops', value: 'crops' },
-        { label: 'Boosters', value: 'boosters' },
-        { label: 'Rare Items', value: 'rare_items' },
-        { label: 'Other', value: 'other' }
-    ]
-
-    for (let i = 0; i < options.length; i++) {
-        if (options[i].value === defaultLabel) {
-            options[i].default = true;
-        }
-    }
-
-    const selectMenu = new MessageActionRow()
-        .addComponents(
-            new MessageSelectMenu()
-                .setCustomId('selectCategoryShop')
-                .setPlaceholder('The interaction has ended')
-                .setDisabled(disabled)
-                .addOptions(options),
-        );
-    return selectMenu;
-}
-
-module.exports.execute = async (client, interaction, data) => {
-    const itemId = interaction.options.getString('item');
+async function execList(client, interaction, data) {
+    const itemId = interaction.options.getString('item-id');
 
     if (itemId) {
         const item = await client.database.fetchItem(itemId.toLowerCase());
@@ -85,13 +58,14 @@ module.exports.execute = async (client, interaction, data) => {
 
         await interaction.editReply({ embeds: [embed] })
     } else {
+        await interaction.deferReply();
         let category = "tools";
         let shopItems = await getItems(category);
         let maxPages = Math.ceil(shopItems.length / itemsPerPage);
         let currentPage = 0;
 
         let shopStr = createShop(shopItems, currentPage);
-        await interaction.editReply({ embeds: [createShopEmbed(client, shopStr, currentPage, maxPages)], components: [createSelectMenu(category), client.tools.setListButtons(currentPage, maxPages)] });
+        await interaction.editReply({ embeds: [createShopEmbed(client, shopStr, currentPage, maxPages)], components: [client.tools.createSelectMenu(category), client.tools.setListButtons(currentPage, maxPages)] });
 
         const filter = (i) => {
             if (i.member.id === interaction.member.id) return true;
@@ -115,24 +89,138 @@ module.exports.execute = async (client, interaction, data) => {
 
             shopStr = createShop(shopItems, currentPage);
             await interactionCollector.deferUpdate();
-            await interaction.editReply({ embeds: [createShopEmbed(client, shopStr, currentPage, maxPages)], components: [createSelectMenu(category), client.tools.setListButtons(currentPage, maxPages)] });
+            await interaction.editReply({ embeds: [createShopEmbed(client, shopStr, currentPage, maxPages)], components: [client.tools.createSelectMenu(category), client.tools.setListButtons(currentPage, maxPages)] });
         })
 
         collector.on('end', async (interactionCollector) => {
-            await interaction.editReply({ components: [createSelectMenu("", true), client.tools.setListButtons(currentPage, maxPages, true)] });
+            await interaction.editReply({ components: [client.tools.createSelectMenu("", true), client.tools.setListButtons(currentPage, maxPages, true)] });
         })
     }
 }
 
+async function execBuy(client, interaction, data) {
+    const itemId = interaction.options.getString('item-id');
+    const amount = interaction.options.getInteger('amount') || 1;
+
+    const item = await client.database.fetchItem(itemId.toLowerCase());
+    if (item == null) return interaction.reply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.`, ephemeral: true });
+    if (item.buyPrice == 0) return interaction.reply({ content: `This item is not for sale.`, ephemeral: true });
+
+    const totalPrice = item.buyPrice * amount;
+    if (data.guildUser.wallet < totalPrice) return interaction.reply({ content: `You don't have enough money in your wallet. You need :coin: ${totalPrice}.`, ephemeral: true });
+    await interaction.deferReply();
+    await client.tools.giveItem(interaction, data, item.itemId, amount);
+    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
+        $inc: { wallet: -totalPrice },
+    });
+
+    await interaction.editReply({ content: `You successfully bought **${amount}x** \`${item.name}\` for :coin: ${totalPrice}.` });
+}
+
+async function execSell(client, interaction, data) {
+    const itemId = interaction.options.getString('item-id');
+    const amount = interaction.options.getInteger('amount') || 1;
+
+    const item = await client.database.fetchItem(itemId.toLowerCase());
+    if (item == null) return interaction.reply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.`, ephemeral: true });
+    if (item.sellPrice == 0) return interaction.reply({ content: `You can't sell this item.`, ephemeral: true });
+
+    let inventoryItem;
+    for (let i = 0; i < data.guildUser.inventory.length; i++) {
+        if (data.guildUser.inventory[i].itemId == item.itemId) {
+            inventoryItem = data.guildUser.inventory[i];
+            break;
+        }
+    }
+
+    if (inventoryItem === undefined) return interaction.reply({ content: `You don't have that item in your inventory.`, ephemeral: true });
+    if (inventoryItem.quantity < amount) return interaction.reply({ content: `You don't ${amount}x of that item in your inventory.`, ephemeral: true });
+
+    await interaction.deferReply();
+
+    const worth = item.sellPrice * amount;
+    if (inventoryItem.quantity - amount <= 0) {
+        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'inventory.itemId': item.itemId }, {
+            $pull: { 'inventory': { itemId: item.itemId } }
+        });
+    } else {
+        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'inventory.itemId': item.itemId }, {
+            $inc: { 'inventory.$.quantity': -amount }
+        });
+    }
+
+    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
+        $inc: { wallet: worth },
+    });
+
+    await interaction.editReply({ content: `You sold **${amount}x** \`${item.name}\` for :coin: ${worth}.` });
+}
+
+module.exports.execute = async (client, interaction, data) => {
+    if (interaction.options.getSubcommand() === "list") return await execList(client, interaction, data);
+    if (interaction.options.getSubcommand() === "buy") return await execBuy(client, interaction, data);
+    if (interaction.options.getSubcommand() === "sell") return await execSell(client, interaction, data);
+    return interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help shop\`.`, ephemeral: true });
+}
+
 module.exports.help = {
     name: "shop",
-    description: "Shop for new items or look up there value.",
+    description: "View, buy or sell items with this command.",
     options: [
         {
-            name: 'item-id',
-            type: 'STRING',
-            description: 'The item you want more information on.',
-            required: false
+            name: 'list',
+            type: 'SUB_COMMAND',
+            description: 'Get all items or get more information about a specific item.',
+            options: [
+                {
+                    name: 'item-id',
+                    type: 'STRING',
+                    description: 'The item id you want more information on.',
+                    required: false
+                }
+            ]
+        },
+        {
+            name: 'buy',
+            type: 'SUB_COMMAND',
+            description: 'Buy an item from the shop.',
+            options: [
+                {
+                    name: 'item-id',
+                    type: 'STRING',
+                    description: 'The item id you want to buy.',
+                    required: true
+                },
+                {
+                    name: 'amount',
+                    type: 'INTEGER',
+                    description: 'The amount you want to buy. Default = 1',
+                    required: false,
+                    min_value: 1,
+                    max_value: 100
+                }
+            ]
+        },
+        {
+            name: 'sell',
+            type: 'SUB_COMMAND',
+            description: 'Buy an item from the shop',
+            options: [
+                {
+                    name: 'item-id',
+                    type: 'STRING',
+                    description: 'The item id you want to sell.',
+                    required: true
+                },
+                {
+                    name: 'amount',
+                    type: 'INTEGER',
+                    description: 'The amount you want to sell. Default = 1',
+                    required: false,
+                    min_value: 1,
+                    max_value: 100
+                }
+            ]
         }
     ],
     usage: "[item]",
@@ -141,6 +229,6 @@ module.exports.help = {
     memberPermissions: [],
     botPermissions: ["SEND_MESSAGES", "EMBED_LINKS", "READ_MESSAGE_HISTORY"],
     ownerOnly: false,
-    cooldown: 10,
+    cooldown: 5,
     enabled: true
 }
