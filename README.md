@@ -6,7 +6,7 @@
 [![invite](https://img.shields.io/badge/Invite-Coinz-DBA514?style=for-the-badge&logo=coil&logoColor=white)](https://coinzbot.xyz/invite)
 [![Discord](https://img.shields.io/discord/938177962698735616?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/asnZQwc6kW)
 
-Coinz is an open source Discord.js Bot. Coinz has over 70+ commands and more than 40 ways to make money.
+Coinz is an open source Discord.js Bot. Coinz has a boatload of commands and features all related to the economy.
 
 ## Features
 * All commands are [slash commands](https://discord.com/blog/slash-commands-are-here).
@@ -16,6 +16,7 @@ Coinz is an open source Discord.js Bot. Coinz has over 70+ commands and more tha
 * Create a social media account.
 * Play more than 20 games inside discord.
 * Modern dashboard with audit logs.
+* Be a farmer and grow some crops.
 * Buy pets and level them up. (25+ unique pets)
 
 ## Suggestions, bugs, feature requests
@@ -40,7 +41,7 @@ We do not recommend self-hosting the bot and website, but it's always an option.
 
 ### Self-host Discord bot
 To selfhost the bot yourself, you need to have:
-* Node - confirmed working on v17.0.1
+* Node - confirmed working on v16.14.0
 * npm - comes with Node, the version shouldn't really matter
 * A Discord bot token, and having the bot in your server
 * An mongodb.com-database set up, as well as a user to it (with write access)
@@ -61,7 +62,7 @@ After all this, start the bot with `npm run start`.
 
 ### Self-host Website
 To selfhost the website yourself, you need to have:
-* Python - confirmed working on v3.9.7
+* Python - confirmed working on v3.9.10
 * pip - comes with Python, the version shouldn't really matter (at least 2.x)
 * OAuth2 Redirects setup (You can find the OAuth2 tab in your discord application)
 * All packages installed (List of all packages in `/website/requirements.txt`)
@@ -80,7 +81,7 @@ https://www.your-website-here.com/dashboard
 After all this, run `python3 website/coinzbot.py`.
 
 > ### ⚠ Warning 
-> There is literally no warranty if you self-host Coinz, and we will not help you set it up either. If you wish to set the bot and/or website up yourself, we expect you have well enough knowledge in Node.js and Python.
+> There is literally no warranty if you self-host Coinz, and we will not help you set it up either. If you wish to set the bot and/or website up yourself, we expect you have well enough knowledge in Node.js, Python, mongodb, ... .
 
 ## Disclamer
 You are not allowed to upload this bot to any service such as discordbotlist or top.gg, you are only allowed to host this bot for your community. You can use small parts of this code in your public bot.
