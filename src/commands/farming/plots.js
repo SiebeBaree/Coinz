@@ -135,7 +135,7 @@ async function calcBtns(data) {
 }
 
 async function execList(client, interaction, data) {
-    if (data.guildUser.plots.length <= 0) return interaction.reply({ content: "You do not own any plots. Please buy plots first with `/plot buy`.", ephemeral: true });
+    if (data.guildUser.plots.length <= 0) return await interaction.reply({ content: "You do not own any plots. Please buy plots first with `/plot buy`.", ephemeral: true });
     await interaction.deferReply();
     await interaction.editReply({ embeds: [await createEmbed(client, interaction, data)], components: [createRow(await calcBtns(data))] });
 
@@ -177,9 +177,9 @@ async function execPlant(client, interaction, data) {
     const plotId = interaction.options.getInteger('plot-id');
     const cropType = interaction.options.getString('crop');
 
-    if (plotId > data.guildUser.plots.length) return interaction.reply({ content: `You don't own a plot with id \`${plotId}\`.`, ephemeral: true });
+    if (plotId > data.guildUser.plots.length) return await interaction.reply({ content: `You don't own a plot with id \`${plotId}\`.`, ephemeral: true });
     const cropItem = await client.database.fetchItem(cropType);
-    if (cropItem == null) return interaction.reply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use \`/shop list\` to view all crops.`, ephemeral: true });
+    if (cropItem == null) return await interaction.reply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use \`/shop list\` to view all crops.`, ephemeral: true });
 
     await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'plots.plotId': plotId - 1 }, {
         $set: {
@@ -196,7 +196,7 @@ module.exports.execute = async (client, interaction, data) => {
     if (interaction.options.getSubcommand() === "list") return await execList(client, interaction, data);
     if (interaction.options.getSubcommand() === "buy") return await execBuy(client, interaction, data);
     if (interaction.options.getSubcommand() === "plant") return await execPlant(client, interaction, data);
-    return interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help plot\`.`, ephemeral: true });
+    return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help plot\`.`, ephemeral: true });
 }
 
 module.exports.help = {
