@@ -7,7 +7,7 @@ function createVisualRow(element) {
 }
 
 function calcPlotPrice(plots) {
-    return plots * 5000 + 10000;
+    return plots * 3000 + 7500;
 }
 
 async function createEmbed(client, interaction, data) {
@@ -18,9 +18,9 @@ async function createEmbed(client, interaction, data) {
     const embed = new MessageEmbed()
         .setTitle(`${interaction.member.displayName || interaction.member.username}'s farm`)
         .setColor(client.config.embed.color)
-        .setDescription(`:seedling: **Use** \`/plot plant <plot-id> <crop>\` **to plant a crop.**\n:droplet: **${waterTxt}**\n:wilted_rose: **You can clear rotten crops by harvesting all plots.**`)
+        .setDescription(`:seedling: **Use** \`/plot plant <plot-id> <crop>\` **to plant a crop.**\n:droplet: **${waterTxt}**\n:wilted_rose: **You can clear rotten crops by harvesting all plots.**\n:basket: **All harvested crops are found in your inventory** \`/inventory\`**.**`)
 
-    if (userPlots.lengt == 0) {
+    if (userPlots.length == 0) {
         embed.addField(`Buy a Plot`, `Please press the button below to buy a plot.`, false);
         return embed;
     }
@@ -135,13 +135,12 @@ async function calcBtns(data) {
 }
 
 async function execList(client, interaction, data) {
-    if (data.guildUser.plots.length <= 0) return await interaction.reply({ content: "You do not own any plots. Please buy plots first with `/plot buy`.", ephemeral: true });
     await interaction.deferReply();
     await interaction.editReply({ embeds: [await createEmbed(client, interaction, data)], components: [createRow(await calcBtns(data))] });
 
     const filter = (i) => {
         if (i.member.id === interaction.member.id) return true;
-        return i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: ButtonInteraction.member })
+        return i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: i.member })
     }
 
     const collector = interaction.channel.createMessageComponentCollector({ filter, max: 15, idle: 10000, time: 30000 });
@@ -158,8 +157,10 @@ async function execList(client, interaction, data) {
                 }
             }
         }
-        else if (interactionCollector.customId === 'plot_water') await waterPlots(interaction, data);
-        else if (interactionCollector.customId === 'plot_buy') {
+        else if (interactionCollector.customId === 'plot_water') {
+            await waterPlots(interaction, data);
+            data.guildUser = await client.database.fetchGuildUser(interaction.guildId, interaction.member.id);
+        } else if (interactionCollector.customId === 'plot_buy') {
             await buyPlot(interaction, data);
             data.guildUser = await client.database.fetchGuildUser(interaction.guildId, interaction.member.id);
         }
@@ -185,10 +186,10 @@ async function execPlant(client, interaction, data) {
         $set: {
             'plots.$.status': "growing",
             'plots.$.harvestOn': parseInt(Date.now() / 1000) + cropItem.duration,
-            'plots.$.crop': cropItem.item
+            'plots.$.crop': cropItem.itemId
         }
     });
-
+    if (!await client.tools.takeItem(interaction, data, cropItem.itemId, 1)) return await interaction.reply({ content: `You don't have that crop in your inventory. Please buy a crop with \`/shop buy <crop-id>\`.`, ephemeral: true });
     await interaction.reply({ content: `You successfully planted \`${cropItem.name}\` on plot ${plotId}`, ephemeral: true });
 }
 
