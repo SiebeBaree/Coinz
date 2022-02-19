@@ -160,3 +160,28 @@ module.exports.giveItem = async (interaction, data, itemId, quantity) => {
         });
     }
 }
+
+module.exports.takeItem = async (interaction, data, itemId, quantity) => {
+    let item;
+    for (let i = 0; i < data.guildUser.inventory.length; i++) if (data.guildUser.inventory[i].itemId === itemId) item = data.guildUser.inventory[i];
+    if (item === undefined) return false;
+
+    if (item.quantity - quantity > 0) {
+        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'inventory.itemId': item.itemId }, {
+            $inc: { 'inventory.$.quantity': -quantity }
+        });
+    } else {
+        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
+            $pull: { 'inventory': { itemId: item.itemId } }
+        });
+    }
+    return true;
+}
+
+module.exports.randomNumber = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+module.exports.commandPassed = (chance) => {
+    return chance >= this.randomNumber(1, 100);
+}
