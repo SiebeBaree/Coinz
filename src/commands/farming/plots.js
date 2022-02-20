@@ -13,12 +13,14 @@ function calcPlotPrice(plots) {
 async function createEmbed(client, interaction, data) {
     const userPlots = data.guildUser.plots;
     let waterTxt = `You can water your plots.`;
+    let buyPlot = ``;
     if (data.guildUser.lastWater + 14400 > parseInt(Date.now() / 1000)) waterTxt = `You can water your plots again in ${client.calc.msToTime(((data.guildUser.lastWater + 14400) * 1000) - Date.now())}.`;
+    if (data.guildUser.plots.length < 15) buyPlot = `\n:moneybag: **To buy a new plot you will need :coin: ${calcPlotPrice(data.guildUser.plots.length)} in your wallet.**`;
 
     const embed = new MessageEmbed()
         .setTitle(`${interaction.member.displayName || interaction.member.username}'s farm`)
         .setColor(client.config.embed.color)
-        .setDescription(`:seedling: **Use** \`/plot plant <plot-id> <crop>\` **to plant a crop.**\n:droplet: **${waterTxt}**\n:wilted_rose: **You can clear rotten crops by harvesting all plots.**\n:basket: **All harvested crops are found in your inventory** \`/inventory\`**.**`)
+        .setDescription(`:seedling: **Use** \`/plot plant <plot-id> <crop>\` **to plant a crop.**\n:droplet: **${waterTxt}**\n:wilted_rose: **You can clear rotten crops by harvesting all plots.**\n:basket: **All harvested crops are found in your inventory** \`/inventory\`**.**${buyPlot}`)
 
     if (userPlots.length == 0) {
         embed.addField(`Buy a Plot`, `Please press the button below to buy a plot.`, false);
@@ -106,8 +108,6 @@ async function waterPlots(interaction, data) {
 
 async function buyPlot(interaction, data) {
     const newPlotPrice = calcPlotPrice(data.guildUser.plots.length);
-    if (data.guildUser.wallet < newPlotPrice) return interaction.followUp({ content: `You don't have enough money in your wallet.`, ephemeral: true })
-
     let plotObj = {
         plotId: data.guildUser.plots.length,
         status: "empty",
@@ -130,7 +130,7 @@ async function calcBtns(data) {
         if (data.guildUser.plots[i].status === "harvest" || data.guildUser.plots[i].status === "rotten") btnsDisabled[0] = false;
         if (data.guildUser.plots[i].status === "growing" && data.guildUser.lastWater + 14400 < parseInt(Date.now() / 1000)) btnsDisabled[1] = false;
     }
-    if (data.guildUser.plots.length >= 15) btnsDisabled[2] = true;
+    if (data.guildUser.plots.length >= 15 || data.guildUser.wallet < calcPlotPrice(data.guildUser.plots.length)) btnsDisabled[2] = true;
     return btnsDisabled;
 }
 
@@ -145,7 +145,7 @@ async function execList(client, interaction, data) {
         return false;
     }
 
-    const collector = interactionMessage.createMessageComponentCollector({ filter, max: 15, idle: 10000, time: 30000 });
+    const collector = interactionMessage.createMessageComponentCollector({ filter, max: 15, idle: 15000, time: 60000 });
 
     collector.on('collect', async (interactionCollector) => {
         if (interactionCollector.customId === 'plot_harvest') {
