@@ -8,7 +8,7 @@ module.exports.isOnCooldown = async (client, guildId, userId, cmdName) => {
 };
 
 module.exports.removeCooldown = async (guildId, userId, cmdName) => {
-    await cooldownSchema.remove({ guildId: guildId, userId: userId, command: cmdName });
+    await cooldownSchema.deleteOne({ guildId: guildId, userId: userId, command: cmdName });
 };
 
 module.exports.setCooldown = async (guildId, userId, cmdName, cooldown = 3) => {
