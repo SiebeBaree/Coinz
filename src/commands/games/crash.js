@@ -1,5 +1,4 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
-const guildUserSchema = require('../../database/schemas/guildUsers');
 
 function createEmbed(client, multiplier, profit, color = "none") {
     if (color === "none") color = client.config.embed.color;
@@ -68,17 +67,11 @@ module.exports.execute = async (client, interaction, data) => {
         return async function () {
             // returning in this function also stops the command
             if (userWon && stoppedGame) {
-                await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-                    $inc: { wallet: Math.floor(profit * multiplier) - bet }
-                });
-
+                await client.tools.addMoney(interaction.guildId, interaction.member.id, Math.floor(profit * multiplier) - bet);
                 return await interaction.editReply({ embeds: [createEmbed(client, multiplier, Math.floor(profit * multiplier) - bet, "GREEN")], components: [setButton(true)] });
             }
             else if (!userWon && stoppedGame) {
-                await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-                    $inc: { wallet: -bet }
-                });
-
+                await client.tools.removeMoney(interaction.guildId, interaction.member.id, bet);
                 return await interaction.editReply({ embeds: [createEmbed(client, multiplier, -bet, "RED")], components: [setButton(true)] });
             }
 

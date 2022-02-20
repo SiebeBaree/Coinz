@@ -1,4 +1,4 @@
-const { MessageEmbed, ButtonInteraction } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const shopSchema = require('../../database/schemas/shop');
 const guildUserSchema = require('../../database/schemas/guildUsers');
 
@@ -112,9 +112,7 @@ async function execBuy(client, interaction, data) {
     if (data.guildUser.wallet < totalPrice) return interaction.reply({ content: `You don't have enough money in your wallet. You need :coin: ${totalPrice}.`, ephemeral: true });
     await interaction.deferReply();
     await client.tools.giveItem(interaction, data, item.itemId, amount);
-    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-        $inc: { wallet: -totalPrice },
-    });
+    await client.tools.removeMoney(interaction.guildId, interaction.member.id, totalPrice);
 
     await interaction.editReply({ content: `You successfully bought **${amount}x** \`${item.name}\` for :coin: ${totalPrice}.` });
 }
@@ -137,7 +135,6 @@ async function execSell(client, interaction, data) {
 
     if (inventoryItem === undefined) return interaction.reply({ content: `You don't have that item in your inventory.`, ephemeral: true });
     if (inventoryItem.quantity < amount) return interaction.reply({ content: `You don't ${amount}x of that item in your inventory.`, ephemeral: true });
-
     await interaction.deferReply();
 
     const worth = item.sellPrice * amount;
@@ -151,10 +148,7 @@ async function execSell(client, interaction, data) {
         });
     }
 
-    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-        $inc: { wallet: worth },
-    });
-
+    await client.tools.addMoney(interaction.guildId, interaction.member.id, worth);
     await interaction.editReply({ content: `You sold **${amount}x** \`${item.name}\` for :coin: ${worth}.` });
 }
 

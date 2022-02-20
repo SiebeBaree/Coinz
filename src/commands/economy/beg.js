@@ -1,10 +1,8 @@
-const guildUserSchema = require('../../database/schemas/guildUsers');
-
 module.exports.execute = async (client, interaction, data) => {
     const money = client.tools.randomNumber(1, 75);
 
     if (client.tools.commandPassed(50)) {
-        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, { $inc: { wallet: money } });
+        await client.tools.addMoney(interaction.guildId, interaction.member.id, money);
         await interaction.reply({ content: `You begged for money and got :coin: **${money}**.` });
     } else {
         await interaction.reply({ content: `You begged for money but nobody wanted to give you money.` });
