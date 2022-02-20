@@ -38,7 +38,7 @@ module.exports.execute = async (client, interaction, data) => {
     let multiplier = 1.0;
     let stoppedGame = false;
 
-    await interaction.reply({ embeds: [createEmbed(client, multiplier, profit)], components: [setButton()] });
+    await interaction.reply({ embeds: [createEmbed(client, multiplier, profit - bet)], components: [setButton()] });
     const interactionMessage = await interaction.fetchReply();
 
     const filter = async (i) => {
@@ -72,18 +72,18 @@ module.exports.execute = async (client, interaction, data) => {
                     $inc: { wallet: Math.floor(profit * multiplier) - bet }
                 });
 
-                return await interaction.editReply({ embeds: [createEmbed(client, multiplier, Math.floor(profit * multiplier), "GREEN")], components: [setButton(true)] });
+                return await interaction.editReply({ embeds: [createEmbed(client, multiplier, Math.floor(profit * multiplier) - bet, "GREEN")], components: [setButton(true)] });
             }
             else if (!userWon && stoppedGame) {
                 await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
                     $inc: { wallet: -bet }
                 });
 
-                return await interaction.editReply({ embeds: [createEmbed(client, multiplier, -profit, "RED")], components: [setButton(true)] });
+                return await interaction.editReply({ embeds: [createEmbed(client, multiplier, -bet, "RED")], components: [setButton(true)] });
             }
 
             multiplier = Math.round((multiplier + 0.2) * 10) / 10;
-            await interaction.editReply({ embeds: [createEmbed(client, multiplier, Math.floor(profit * multiplier))] });
+            await interaction.editReply({ embeds: [createEmbed(client, multiplier, Math.floor(profit * multiplier) - bet)] });
             if (client.tools.commandPassed(15)) {
                 userWon = false;
                 stoppedGame = true;
@@ -115,6 +115,6 @@ module.exports.help = {
     memberPermissions: [],
     botPermissions: ["SEND_MESSAGES", "EMBED_LINKS", "READ_MESSAGE_HISTORY"],
     ownerOnly: false,
-    cooldown: 3,
+    cooldown: 900,
     enabled: true
 }
