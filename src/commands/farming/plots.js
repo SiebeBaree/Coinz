@@ -137,13 +137,15 @@ async function calcBtns(data) {
 async function execList(client, interaction, data) {
     await interaction.deferReply();
     await interaction.editReply({ embeds: [await createEmbed(client, interaction, data)], components: [createRow(await calcBtns(data))] });
+    const interactionMessage = await interaction.fetchReply();
 
-    const filter = (i) => {
+    const filter = async (i) => {
         if (i.member.id === interaction.member.id) return true;
-        return i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: i.member })
+        await i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: i.member });
+        return false;
     }
 
-    const collector = interaction.channel.createMessageComponentCollector({ filter, max: 15, idle: 10000, time: 30000 });
+    const collector = interactionMessage.createMessageComponentCollector({ filter, max: 15, idle: 10000, time: 30000 });
 
     collector.on('collect', async (interactionCollector) => {
         if (interactionCollector.customId === 'plot_harvest') {

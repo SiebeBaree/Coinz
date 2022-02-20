@@ -50,13 +50,15 @@ module.exports.execute = async (client, interaction, data) => {
 
     let invStr = createInventory(invItems, currentPage);
     await interaction.editReply({ embeds: [createInvEmbed(client, member, invStr, currentPage, maxPages)], components: [client.tools.createSelectMenu(category), client.tools.setListButtons(currentPage, maxPages)] });
+    const interactionMessage = await interaction.fetchReply();
 
-    const filter = (i) => {
+    const filter = async (i) => {
         if (i.member.id === interaction.member.id) return true;
-        return i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: ButtonInteraction.member })
+        await i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: i.member });
+        return false;
     }
 
-    const collector = interaction.channel.createMessageComponentCollector({ filter, max: 20, idle: 10000, time: 30000 });
+    const collector = interactionMessage.createMessageComponentCollector({ filter, max: 20, idle: 15000, time: 60000 });
 
     collector.on('collect', async (interactionCollector) => {
         if (interactionCollector.componentType.toUpperCase() === "BUTTON") {
