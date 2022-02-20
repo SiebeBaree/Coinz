@@ -75,7 +75,6 @@ module.exports = mongoose.model("GuildUsers", new mongoose.Schema({
     wallet: { type: Number, default: 0 },
     bank: { type: Number, default: 0 },
     experience: { type: Number, default: 0 },
-    level: { type: Number, default: 0 },
     streaks: { type: Number, default: 0 },
     banned: { type: Boolean, default: false },
     passiveMode: { type: Boolean, default: false },
