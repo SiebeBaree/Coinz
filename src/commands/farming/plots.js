@@ -1,6 +1,5 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const guildUserSchema = require('../../database/schemas/guildUsers');
-const { MessageActionRow, MessageButton } = require('discord.js');
 
 function createVisualRow(element) {
     return element.repeat(6);
