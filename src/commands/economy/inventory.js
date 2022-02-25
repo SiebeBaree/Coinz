@@ -1,4 +1,4 @@
-const { MessageEmbed, ButtonInteraction } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const shopSchema = require('../../database/schemas/shop');
 
 const itemsPerPage = 10;
