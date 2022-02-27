@@ -237,7 +237,7 @@ module.exports.help = {
     category: "farming",
     extraFields: [],
     memberPermissions: [],
-    botPermissions: ["SEND_MESSAGES", "EMBED_LINKS", "READ_MESSAGE_HISTORY"],
+    botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
     ownerOnly: false,
     cooldown: 3,
     enabled: true
