@@ -130,3 +130,7 @@ module.exports.randomNumber = (min, max) => {
 module.exports.commandPassed = (chance) => {
     return chance >= this.randomNumber(1, 100);
 }
+
+module.exports.timeout = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
