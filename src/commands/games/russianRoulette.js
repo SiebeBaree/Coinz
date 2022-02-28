@@ -1,9 +1,5 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 
-function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 function createEmbed(client, data) {
     let color = client.config.embed.color;
     if (data.playerWon === true) color = "GREEN";
@@ -74,7 +70,7 @@ module.exports.execute = async (client, interaction, data) => {
 
     await interaction.reply({ content: getContent(data), embeds: [createEmbed(client, data)], components: [setButtons(true)] });
     data = calcBullets(data);
-    await timeout(2000);
+    await client.tools.timeout(2000);
     await interaction.editReply({ content: getContent(data), embeds: [createEmbed(client, data)], components: [setButtons(data.gameFinished)] });
     if (data.gameFinished) return;
     const interactionMessage = await interaction.fetchReply();
@@ -94,7 +90,7 @@ module.exports.execute = async (client, interaction, data) => {
                 data.playerWon = null;
                 await interaction.editReply({ content: getContent(data), embeds: [createEmbed(client, data)], components: [setButtons(true)] });
                 data = calcBullets(data);
-                await timeout(2000);
+                await client.tools.timeout(2000);
                 await interaction.editReply({ content: getContent(data), embeds: [createEmbed(client, data)], components: [setButtons(data.gameFinished)] });
             } else if (interactionCollector.customId === 'rr_stop') {
                 data.gameFinished = true;
