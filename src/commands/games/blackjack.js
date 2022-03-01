@@ -46,7 +46,17 @@ function getCards(cards) {
 
 function getValue(cards) {
     let value = 0;
-    for (let i = 0; i < cards.length; i++) value += cards[i].value;
+    for (let i = 0; i < cards.length; i++) {
+        let newValue = cards[i].value;
+
+        if (newValue === 14) {
+            newValue = 11;
+        } else if (newValue > 10) {
+            newValue = 10;
+        }
+
+        value += newValue;
+    }
     return value;
 }
 
@@ -201,6 +211,7 @@ module.exports.execute = async (client, interaction, data) => {
             data = checkGameStatus(data);
             if (data.gameFinished) {
                 data = getDealerCards(client, data);
+                data = checkGameStatus(data);
 
                 if (data.tie === undefined) {
                     if (data.playerWon) {
