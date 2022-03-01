@@ -183,82 +183,82 @@
         {
             "name": "jC",
             "emoteId": "946751209803481128",
-            "value": 10
+            "value": 11
         },
         {
             "name": "jD",
             "emoteId": "946751209480523877",
-            "value": 10
+            "value": 11
         },
         {
             "name": "jH",
             "emoteId": "946751209765761054",
-            "value": 10
+            "value": 11
         },
         {
             "name": "jS",
             "emoteId": "946751209979658310",
-            "value": 10
+            "value": 11
         },
         {
             "name": "qC",
             "emoteId": "946751210076127293",
-            "value": 10
+            "value": 12
         },
         {
             "name": "qD",
             "emoteId": "946751209644097628",
-            "value": 10
+            "value": 12
         },
         {
             "name": "qH",
             "emoteId": "946751210038374520",
-            "value": 10
+            "value": 12
         },
         {
             "name": "qS",
             "emoteId": "946751210000633857",
-            "value": 10
+            "value": 12
         },
         {
             "name": "kC",
             "emoteId": "946751209996439592",
-            "value": 10
+            "value": 13
         },
         {
             "name": "kD",
             "emoteId": "946751210000633856",
-            "value": 10
+            "value": 13
         },
         {
             "name": "kH",
             "emoteId": "946751209962881096",
-            "value": 10
+            "value": 13
         },
         {
             "name": "kS",
             "emoteId": "946751210097086514",
-            "value": 10
+            "value": 13
         },
         {
             "name": "aC",
             "emoteId": "946751293127532584",
-            "value": 11
+            "value": 14
         },
         {
             "name": "aD",
             "emoteId": "946751292745855018",
-            "value": 11
+            "value": 14
         },
         {
             "name": "aH",
             "emoteId": "946751293123350568",
-            "value": 11
+            "value": 14
         },
         {
             "name": "aS",
             "emoteId": "946751293110763601",
-            "value": 11
+            "value": 14
         }
     ],
     "hiddenCard": {
