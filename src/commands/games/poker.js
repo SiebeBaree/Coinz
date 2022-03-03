@@ -97,15 +97,16 @@ function checkHand(data) {
 }
 
 function checkSequential(hand) {
-    let values = []
+    let values = [];
     for (let i = 0; i < hand.length; i++) {
         values.push(hand[i].value);
     }
-    values = values.sort();
+    values = values.sort(function (a, b) { return a - b });
 
     let previousValue = values[0];
     for (let i = 1; i < values.length; i++) {
         if (previousValue + 1 !== values[i]) return false;
+        previousValue = values[i];
     }
     return true;
 }
@@ -126,21 +127,22 @@ function getDuplicates(hand) {
 }
 
 function checkRoyalFlush(hand) {
-    let suit = hand[0].name.charAt(0);
+    let suit = hand[0].name.charAt(hand[0].name.length - 1);
     let requiredValues = [10, 11, 12, 13, 14];
 
     for (let i = 0; i < hand.length; i++) {
-        if (!requiredValues.includes(hand[i].value) || hand[i].name.charAt(0) !== suit) return false;
+        if (!requiredValues.includes(hand[i].value) || hand[i].name.charAt(hand[i].name.length - 1) !== suit) return false;
     }
     return true;
 }
 
 function checkStraightFlush(hand) {
     if (!checkSequential(hand)) return false;
-    let suit = hand[0].name.charAt(0);
+    let suit = hand[0].name.charAt(hand[0].name.length - 1);
+    console.log(suit)
 
     for (let i = 0; i < hand.length; i++) {
-        if (hand[i].name.charAt(0) !== suit) return false;
+        if (hand[i].name.charAt(hand[i].name.length - 1) !== suit) return false;
     }
     return true;
 }
@@ -166,10 +168,10 @@ function checkFullHouse(hand) {
 }
 
 function checkFlush(hand) {
-    let suit = hand[0].name.charAt(0);
+    let suit = hand[0].name.charAt(hand[0].name.length - 1);
 
     for (let i = 0; i < hand.length; i++) {
-        if (hand[i].name.charAt(0) !== suit) return false;
+        if (hand[i].name.charAt(hand[i].name.length - 1) !== suit) return false;
     }
     return true;
 }
