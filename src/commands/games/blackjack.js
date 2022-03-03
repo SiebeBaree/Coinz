@@ -70,7 +70,7 @@ function getPrice(bet) {
 
 function checkAces(deck) {
     for (let i = 0; i < deck.length; i++) {
-        if (deck[i].value === 11) {
+        if (deck[i].value === 14) {
             deck[i].value = 1;
             return deck;
         }
@@ -97,20 +97,10 @@ function checkGameStatus(data) {
             data.color = "RED";
         }
     } else if (valueDealer > 21) {
-        // Check for Aces and set ace value to 1
-        let changedDeck = false;
-        do {
-            changedDeck = false;
-            changedDeck = checkAces(data.dealerHand);
-            if (changedDeck) data.dealerHand = changedDeck;
-        } while (changedDeck);
-
-        if (getValue(data.dealerHand) > 21) {
-            data.gameFinished = true;
-            data.playerWon = true;
-            data.description = `Dealer bust! You won :coin: ${getPrice(data.bet)}`;
-            data.color = "GREEN";
-        }
+        data.gameFinished = true;
+        data.playerWon = true;
+        data.description = `Dealer bust! You won :coin: ${getPrice(data.bet)}`;
+        data.color = "GREEN";
     } else if (valuePlayer === 21 && valueDealer === 21) {
         data.gameFinished = true;
         data.tie = true;
@@ -142,7 +132,17 @@ function checkGameStatus(data) {
 function getDealerCards(client, data) {
     do {
         data.dealerHand.push(getRandomCard(client));
+
+        if (getValue(data.dealerHand) > 21) {
+            let changedDeck = false;
+            do {
+                changedDeck = false;
+                changedDeck = checkAces(data.dealerHand);
+                if (changedDeck) data.dealerHand = changedDeck;
+            } while (changedDeck);
+        }
     } while (getValue(data.dealerHand) <= 16);
+
     data = checkGameStatus(data);
     return data;
 }
