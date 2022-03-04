@@ -1,28 +1,16 @@
 {
-    "stocks": [
-        [
-            "AAPL",
-            "MSFT",
-            "AMZN",
-            "GOOG",
-            "TSLA",
-            "NVDA",
-            "FB",
-            "PFE",
-            "DIS",
-            "KO"
-        ],
-        [
-            "ADBE",
-            "INTC",
-            "MCD",
-            "NKE",
-            "DHR",
-            "NFLX",
-            "BA",
-            "BLK",
-            "GM",
-            "FDX"
-        ]
-    ]
+    "marketCloseDays": [
+        17,
+        52,
+        105,
+        130,
+        171,
+        185,
+        248,
+        328,
+        329,
+        360
+    ],
+    "openingTime": "9:30",
+    "closeTime": "16:00"
 }
