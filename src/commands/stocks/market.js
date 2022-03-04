@@ -1,38 +1,87 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const stocksSchema = require('../../database/schemas/stocks');
 const guildUserSchema = require('../../database/schemas/guildUsers');
-const moment = require("moment-timezone");
+const moment = require('moment-timezone');
+const market = require('../../data/market/stocks.json');
 
-async function checkForNewPrice(client, stock) {
-    if (stock.lastPriceCheck < parseInt(Date.now() / 1000) - 4500) {
-        var now = moment().tz('America/New_York'); // set timezone to NY timezone to have same timezone as stocks
+const timezone = "America/New_York";
+const dateFormat = "DD/MM/YYYY";
+const timeFormat = "HH:mm";
+const dateTimeFormat = `${dateFormat} ${timeFormat}`;
 
-        // do not get stock API on weekends
-        if (now.day() === 0 || now.day() === 6) return stock;
+const maxOwnedStock = 50000000;
+const maxPurchase = 1000000;
+const itemsPerPage = 5;
 
-        // use the api to get new stocks
-        const newPrices = await client.tools.getNewStockData(stock.ticker);
-        if (newPrices === null) return stock;
-
-        for (const stock in newPrices) {
-            // update new stock price in db
-            await stocksSchema.updateOne({ ticker: newPrices[stock].symbol }, {
-                price: client.calc.roundNumber(newPrices[stock].close[newPrices[stock].close.length - 1]),
-                previousClose: client.calc.roundNumber(newPrices[stock].previousClose),
-                lastUpdated: newPrices[stock].timestamp[newPrices[stock].timestamp.length - 1],
-                lastPriceCheck: parseInt(Date.now() / 1000)
-            });
-        }
-        return await client.database.fetchStock(stock.ticker);
-    }
-    return stock;
+function createEmbed(client, stocks, currentPage, maxPages) {
+    const embed = new MessageEmbed()
+        .setAuthor({ name: `Market list` })
+        .setColor(client.config.embed.color)
+        .setDescription(`**More Info:** \`/market info <ticker>\`\n**Example:** \`/market info AAPL\`\n\n${createStocksStr(client, stocks, currentPage)}\nLast Updated: <t:${stocks[0].lastUpdated}:R>`)
+        .setFooter({ text: `Page ${currentPage + 1} of ${maxPages}.` })
+    return embed;
 }
 
-async function getStocks() {
+async function getStocks(category) {
+    return await stocksSchema.find({ type: category });
+}
+
+function createStocksStr(client, stocks, currentPage) {
     let str = "";
-    const stocks = await stocksSchema.find();
-    for (const stock in stocks) str += `• **${stocks[stock].fullName}** (${stocks[stock].ticker})\n`;
+    for (let i = 0; i < stocks.length; i++) {
+        if (i >= currentPage * itemsPerPage && i < currentPage * itemsPerPage + itemsPerPage) {
+            const change = calculateChange(client, stocks[i]);
+            str += `• **${stocks[i].fullName}** (${stocks[i].ticker})\n> :coin: ${stocks[i].price} (${change.icon} ${change.changePercentage}%)\n\n`
+        }
+    }
     return str;
+}
+
+function calculateChange(client, stock) {
+    let icon = ":chart_with_upwards_trend:"
+    let changePercentage = client.calc.roundNumber(((stock.price - stock.previousClose) / stock.previousClose * 100), 2);
+    if (changePercentage < 0) icon = ":chart_with_downwards_trend:";
+    return { icon: icon, changePercentage: changePercentage };
+}
+
+function createSelectMenu(defaultLabel, disabled = false) {
+    let options = [
+        { label: 'Stocks', value: 'Stock' },
+        { label: 'Crypto', value: 'Crypto' }
+    ]
+
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].value === defaultLabel) {
+            options[i].default = true;
+        }
+    }
+
+    const selectMenu = new MessageActionRow()
+        .addComponents(
+            new MessageSelectMenu()
+                .setCustomId('selectCategoryMarket')
+                .setPlaceholder('The interaction has ended')
+                .setDisabled(disabled)
+                .addOptions(options),
+        );
+    return selectMenu;
+}
+
+async function isMarketOpen() {
+    try {
+        const now = moment.tz(Date.now(), timezone);
+        const date = now.format(dateFormat);
+        const openDateTime = moment.tz(`${date} ${market.openingTime}`, dateTimeFormat, timezone);
+        const closeDateTime = moment.tz(`${date} ${market.closeTime}`, dateTimeFormat, timezone);
+
+        if (now.isBetween(openDateTime, closeDateTime) && !market.marketCloseDays.includes(parseInt(now.format("ddd")))) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        return false;
+    }
 }
 
 async function execInfo(client, interaction, data) {
@@ -40,29 +89,49 @@ async function execInfo(client, interaction, data) {
 
     if (ticker == null) {
         await interaction.deferReply();
-        let stocks = await getStocks();
-        if (stocks == "") stocks = "No stocks were found. Please try again.";
+        let category = "Stock";
+        let stocks = await getStocks(category);
+        let maxPages = Math.ceil(stocks.length / itemsPerPage);
+        let currentPage = 0;
 
-        const embed = new MessageEmbed()
-            .setAuthor({ name: `Stocks list` })
-            .setColor(client.config.embed.color)
-            .setDescription(`To view more info about a stock please use \`/market info <ticker>\`\n__Example:__ \`/market info AAPL\`\n\n${stocks}`)
+        await interaction.editReply({ embeds: [createEmbed(client, stocks, currentPage, maxPages)], components: [createSelectMenu(category), client.tools.setListButtons(currentPage, maxPages)] });
+        const interactionMessage = await interaction.fetchReply();
 
-        await interaction.editReply({ embeds: [embed] });
+        const filter = async (i) => {
+            if (i.member.id === interaction.member.id) return true;
+            await i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: i.member });
+            return false;
+        }
+
+        const collector = interactionMessage.createMessageComponentCollector({ filter, max: 20, idle: 15000, time: 60000 });
+
+        collector.on('collect', async (interactionCollector) => {
+            if (interactionCollector.componentType.toUpperCase() === "BUTTON") {
+                if (interactionCollector.customId === 'toLastPage') currentPage = maxPages - 1;
+                else if (interactionCollector.customId === 'toFirstPage') currentPage = 0;
+                else if (interactionCollector.customId === 'toNextPage') currentPage++;
+                else if (interactionCollector.customId === 'toPreviousPage') currentPage--;
+            } else if (interactionCollector.componentType.toUpperCase() === "SELECT_MENU") {
+                category = interactionCollector.values[0];
+                stocks = await getStocks(category);
+                maxPages = Math.ceil(stocks.length / itemsPerPage);
+                currentPage = 0;
+            }
+
+            await interactionCollector.deferUpdate();
+            await interaction.editReply({ embeds: [createEmbed(client, stocks, currentPage, maxPages)], components: [createSelectMenu(category), client.tools.setListButtons(currentPage, maxPages)] });
+        })
+
+        collector.on('end', async (interactionCollector) => {
+            await interaction.editReply({ components: [createSelectMenu("", true), client.tools.setListButtons(currentPage, maxPages, true)] });
+        })
     } else {
         let stock = await client.database.fetchStock(ticker.toUpperCase());
-        if (stock == null) return interaction.reply({ content: `Sorry we don't know any stock with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/market info\` to get all stocks.`, ephemeral: true });
+        if (stock == null) return interaction.reply({ content: `Sorry we don't know any asset with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/market info\` to get all stocks and crypto.`, ephemeral: true });
 
-        // defer reply to ensure api has enough time to get stocks
-        await interaction.deferReply();
-
-        // check for new price
-        stock = await checkForNewPrice(client, stock);
-
-        // calculate change compared to close stock yesterday
-        let icon = ":chart_with_upwards_trend:"
-        const changePercentage = client.calc.roundNumber(((stock.price - stock.previousClose) / stock.previousClose * 100), 2);
-        if (changePercentage < 0) icon = ":chart_with_downwards_trend:";
+        let market = "";
+        if (stock.type === "Stock") market = `\n:radio_button: **Market:** ${isMarketOpen() ? 'Open' : 'Closed'}`;
+        const change = calculateChange(client, stock);
 
         const embed = new MessageEmbed()
             .setAuthor({ name: `${stock.type}: ${stock.fullName}` })
@@ -70,77 +139,123 @@ async function execInfo(client, interaction, data) {
             .setThumbnail(`attachment://${stock.ticker}.png`)
             .addFields(
                 { name: `Info`, value: `:envelope: **Type:** ${stock.type}\n:tickets: **Ticker:** ${stock.ticker}\n:apple: **Full Name:** ${stock.fullName}\n:clock1: **Last Updated:** <t:${stock.lastUpdated}:R>`, inline: true },
-                { name: `Stats`, value: `:moneybag: **Price:** :coin: ${stock.price}\n${icon} **Change:** ${changePercentage}%\n:radio_button: **Market:** ${client.tools.marketIsOpen() ? 'Open' : 'Closed'}`, inline: true },
+                { name: `Stats`, value: `:moneybag: **Price:** :coin: ${stock.price}\n${change.icon} **Change:** ${change.changePercentage}%${market}`, inline: true },
             )
-        await interaction.editReply({ embeds: [embed], files: [`src/data/stocks/${stock.ticker}.png`] });
+        await interaction.reply({ embeds: [embed], files: [`src/data/stocks/${stock.ticker}.png`] });
     }
 }
 
 async function execBuy(client, interaction, data) {
     const ticker = interaction.options.getString('ticker');
-    const amount = interaction.options.getInteger('amount') || 1;
+    let amount = interaction.options.getInteger('amount');
+    let price = interaction.options.getInteger('price');
+
+    if (price === null && amount === null) return await interaction.reply({ content: `You have to give an amount that you wan't to buy or price to buy fractional.`, ephemeral: true });
+    if (price !== null && amount !== null) return await interaction.reply({ content: `You cannot buy an amount and give a price at the same time.`, ephemeral: true })
 
     let stock = await client.database.fetchStock(ticker.toUpperCase());
-    if (stock == null) return interaction.reply({ content: `Sorry we don't know any stock with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/market info\` to get all stocks.`, ephemeral: true });
-    await interaction.deferReply();
-    stock = await checkForNewPrice(client, stock);
+    if (stock == null) return interaction.reply({ content: `Sorry we don't know any stock or crypto with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/market info\` to get all stocks and crypto currencies.`, ephemeral: true });
 
-    const totalPrice = Math.round(stock.price * amount);
-    if (data.guildUser.wallet < totalPrice) {
+    if (amount !== null) {
+        price = Math.round(stock.price * amount);
+    } else {
+        amount = client.calc.roundNumber(price / stock.price, 3);
+    }
+
+    if (amount > maxOwnedStock) return await interaction.reply({ content: `You can't own more than ${maxOwnedStock} shares or crypto.`, ephemeral: true });
+    if (price > maxPurchase) return await interaction.reply({ content: `You can't buy more than :coin: ${maxPurchase} at once.`, ephemeral: true });
+
+    if (data.guildUser.wallet < price) {
         const embed = new MessageEmbed()
             .setTitle(`Not enough money`)
             .setColor("RED")
             .setDescription(`You do not have enough money in your wallet.`)
             .addFields(
-                { name: 'Total Price', value: `:coin: ${totalPrice}`, inline: true },
+                { name: 'Total Price', value: `:coin: ${price}`, inline: true },
                 { name: 'Money In Wallet', value: `:coin: ${data.guildUser.wallet}`, inline: true },
-                { name: 'Money Needed', value: `:coin: ${(totalPrice - data.guildUser.wallet) || 1}`, inline: true }
+                { name: 'Money Needed', value: `:coin: ${(price - data.guildUser.wallet) || 1}`, inline: true }
             )
-        return interaction.editReply({ embeds: [embed] });
+        return interaction.reply({ embeds: [embed], ephemeral: true });
+    }
+    await interaction.deferReply();
+
+    let userAlreadyHasStock = false;
+    for (let i = 0; i < data.guildUser.stocks.length; i++) {
+        if (data.guildUser.stocks[i].ticker === stock.ticker) {
+            userAlreadyHasStock = true;
+            break;
+        }
     }
 
-    const stocksObj = {
-        ticker: stock.ticker,
-        type: stock.type,
-        buyPrice: stock.price,
-        datePurchased: parseInt(Date.now() / 1000),
-        quantity: amount
-    };
+    if (userAlreadyHasStock) {
+        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'stocks.ticker': stock.ticker }, {
+            $inc: { 'stocks.$.quantity': amount }
+        });
+    } else {
+        const stocksObj = {
+            ticker: stock.ticker,
+            quantity: amount
+        };
 
-    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-        $push: { stocksBought: stocksObj },
-        $inc: { wallet: -totalPrice }
-    });
+        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
+            $push: { stocks: stocksObj }
+        });
+    }
+    await client.tools.removeMoney(interaction.guildId, interaction.member.id, price)
 
     const embed = new MessageEmbed()
-        .setAuthor({ name: `You just bought ${amount}x ${stock.fullName} stock` })
+        .setTitle(`You just bought ${amount}x ${stock.fullName}`)
         .setColor(client.config.embed.color)
+        .setThumbnail(`attachment://${stock.ticker}.png`)
         .addFields(
-            { name: 'Info', value: `:envelope: **Type:** ${stocksObj.type}\n:tickets: **Ticker:** ${stocksObj.ticker}\n:apple: **Full Name:** ${stock.fullName}\n:clock1: **Time Bought:** <t:${stocksObj.datePurchased}:f>`, inline: true },
-            { name: 'Stats', value: `:moneybag: **Buy Price:** :coin: ${stock.price}\n:1234: **Amount:** ${stocksObj.quantity}x\n:gem: **Total Price:** :coin: ${totalPrice}`, inline: true }
+            { name: 'Info', value: `:envelope: **Type:** ${stock.type}\n:tickets: **Ticker:** ${stock.ticker}\n:apple: **Full Name:** ${stock.fullName}`, inline: true },
+            { name: 'Stats', value: `:moneybag: **Unit Price:** :coin: ${stock.price}\n:1234: **Amount:** ${amount}x\n:gem: **Buy Price:** :coin: ${price}`, inline: true }
         )
-    await interaction.editReply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed], files: [`src/data/stocks/${stock.ticker}.png`] });
 }
 
 async function execSell(client, interaction, data) {
-    return interaction.reply({ content: "Feature not working yet" })
-    // const ticker = interaction.options.getString('ticker');
-    // const amount = interaction.options.getInteger('amount') || 1;
+    const ticker = interaction.options.getString('ticker');
+    const amount = interaction.options.getNumber('amount');
 
-    // const embed = new MessageEmbed()
-    //     .setAuthor({ name: `` })
-    //     .setColor(client.config.embed.color)
-    //     .addFields(
-    //         { name: '', value: ``, inline: true },
-    //         { name: '', value: ``, inline: true }
-    //     )
-    // await interaction.reply({ embeds: [embed] });
+    let stock = await client.database.fetchStock(ticker.toUpperCase());
+    if (stock == null) return interaction.reply({ content: `Sorry we don't know any stock or crypto with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/market info\` to get all stocks and crypto currencies.`, ephemeral: true });
+    await interaction.deferReply();
+
+    let userHasStock = false;
+    for (let i = 0; i < data.guildUser.stocks.length; i++) {
+        if (data.guildUser.stocks[i].ticker === stock.ticker) {
+            if (data.guildUser.stocks[i].quantity < amount) return await interaction.editReply({ content: `You only have ${data.guildUser.stocks[i].quantity}x of ${stock.fullName}.` });
+            userHasStock = true;
+            break;
+        }
+    }
+
+    if (!userHasStock) return await interaction.editReply({ content: `You don't own that stock or crypto.` });
+    const price = Math.round(stock.price * amount);
+
+    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'stocks.ticker': stock.ticker }, {
+        $inc: { 'stocks.$.quantity': -amount }
+    });
+
+    await client.tools.addMoney(interaction.guildId, interaction.member.id, price)
+
+    const embed = new MessageEmbed()
+        .setTitle(`You sold ${amount}x ${stock.fullName}`)
+        .setColor(client.config.embed.color)
+        .setThumbnail(`attachment://${stock.ticker}.png`)
+        .addFields(
+            { name: 'Info', value: `:envelope: **Type:** ${stock.type}\n:tickets: **Ticker:** ${stock.ticker}\n:apple: **Full Name:** ${stock.fullName}`, inline: true },
+            { name: 'Stats', value: `:moneybag: **Unit Price:** :coin: ${stock.price}\n:1234: **Amount:** ${amount}x\n:gem: **Sell Price:** :coin: ${price}`, inline: true }
+        )
+    await interaction.editReply({ embeds: [embed], files: [`src/data/stocks/${stock.ticker}.png`] });
 }
 
 module.exports.execute = async (client, interaction, data) => {
     if (interaction.options.getSubcommand() === "info") return await execInfo(client, interaction, data);
     if (interaction.options.getSubcommand() === "buy") return await execBuy(client, interaction, data);
     if (interaction.options.getSubcommand() === "sell") return await execSell(client, interaction, data);
+    return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${data.cmd.help.name}\`.`, ephemeral: true });
 }
 
 module.exports.help = {
@@ -168,16 +283,24 @@ module.exports.help = {
                 {
                     name: 'ticker',
                     type: 'STRING',
-                    description: 'The ticker of the stock you want to buy.',
+                    description: 'The ticker of the stock/crypto you want to buy.',
                     required: true
                 },
                 {
                     name: 'amount',
                     type: 'INTEGER',
-                    description: 'How much stocks you want to buy. Default = 1',
+                    description: 'How much stocks/crypto you want to buy. Use 0 to buy fractional.',
                     required: false,
-                    min_value: 1,
-                    max_value: 1000
+                    min_value: 0,
+                    max_value: 5000
+                },
+                {
+                    name: 'price',
+                    type: 'INTEGER',
+                    description: 'How much money wou want to buy stocks/crypto with.',
+                    required: false,
+                    min_value: 50,
+                    max_value: 250000
                 }
             ]
         },
@@ -194,11 +317,11 @@ module.exports.help = {
                 },
                 {
                     name: 'amount',
-                    type: 'INTEGER',
-                    description: 'How much stocks you want to sell. Default = 1',
-                    required: false,
-                    min_value: 1,
-                    max_value: 1000
+                    type: 'NUMBER',
+                    description: 'How much stocks/crypto you want to sell.',
+                    required: true,
+                    min_value: 0,
+                    max_value: maxOwnedStock
                 }
             ]
         }
