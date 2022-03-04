@@ -3,7 +3,6 @@ website/__pycache__/
 __pycache__/
 src/data/stocks
 src/data/shop
-src/data/market/markets.json
 
 # compiled output
 /dist
