@@ -43,8 +43,7 @@ const inventorySchema = new mongoose.Schema({
 
 const stocksSchema = new mongoose.Schema({
     ticker: { type: String, require: true },
-    totalBuyPrice: { type: Number, require: true },
-    quantity: { type: Number, default: 1 }
+    quantity: { type: mongoose.Types.Decimal128, require: true }
 })
 
 const minersSchema = new mongoose.Schema({
