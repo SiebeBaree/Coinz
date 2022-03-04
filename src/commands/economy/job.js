@@ -101,7 +101,7 @@ module.exports.execute = async (client, interaction, data) => {
     if (interaction.options.getSubcommand() === "list") return await execList(client, interaction, data);
     if (interaction.options.getSubcommand() === "leave") return await execLeave(client, interaction, data);
     if (interaction.options.getSubcommand() === "apply") return await execApply(client, interaction, data);
-    return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help job\`.`, ephemeral: true });
+    return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${data.cmd.help.name}\`.`, ephemeral: true });
 }
 
 module.exports.help = {
