@@ -6,6 +6,5 @@ module.exports = mongoose.model("Stocks", new mongoose.Schema({
     fullName: { type: String, require: true },
     price: { type: mongoose.Types.Decimal128, require: true },
     previousClose: { type: mongoose.Types.Decimal128, default: 0 },
-    lastUpdated: { type: Number, default: 0 },
-    lastPriceCheck: { type: Number, default: parseInt(Date.now() / 1000) }
+    lastUpdated: { type: Number, default: 0 }
 }))
