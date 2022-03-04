@@ -27,29 +27,28 @@ module.exports.setListButtons = (currentPage, maxPages, disableAll = false) => {
 
     if (currentPage <= 0) disablePrevious = true;
     if (currentPage + 1 >= maxPages) disableNext = true;
-    if (disableAll) disablePrevious, disableNext = true;
 
     let row = new MessageActionRow().addComponents(
         new MessageButton()
             .setCustomId("toFirstPage")
             .setStyle("PRIMARY")
             .setEmoji("⏮")
-            .setDisabled(disablePrevious),
+            .setDisabled(disablePrevious || disableAll),
         new MessageButton()
             .setCustomId("toPreviousPage")
             .setStyle("PRIMARY")
             .setEmoji("⬅️")
-            .setDisabled(disablePrevious),
+            .setDisabled(disablePrevious || disableAll),
         new MessageButton()
             .setCustomId("toNextPage")
             .setStyle("PRIMARY")
             .setEmoji("➡️")
-            .setDisabled(disableNext),
+            .setDisabled(disableNext || disableAll),
         new MessageButton()
             .setCustomId("toLastPage")
             .setStyle("PRIMARY")
             .setEmoji("⏭")
-            .setDisabled(disableNext)
+            .setDisabled(disableNext || disableAll)
     );
     return row;
 }
