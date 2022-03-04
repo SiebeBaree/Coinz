@@ -233,7 +233,6 @@ module.exports.help = {
             ]
         }
     ],
-    usage: "<list | buy | plant> [plot-id] [crop]",
     category: "farming",
     extraFields: [],
     memberPermissions: [],

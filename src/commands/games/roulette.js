@@ -136,7 +136,6 @@ module.exports.help = {
             required: true
         }
     ],
-    usage: "<bet> <space>",
     category: "games",
     extraFields: [{ name: 'Space Multiplier', value: '[x36] Straight (1, 2, 3, ..., 36)\n[x3] 1-12, 13-24, 25-36\n[x3] 1st, 2nd, 3rd\n[x2] 1-18, 19-36\n[x 2] Odd, Even\n[x2] red, black', inline: false }],
     image: "https://i.imgur.com/sQuGz7D.png",

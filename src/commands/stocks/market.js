@@ -326,7 +326,6 @@ module.exports.help = {
             ]
         }
     ],
-    usage: "<info | buy | sell> [ticker] [amount]",
     category: "stocks",
     extraFields: [],
     memberPermissions: [],

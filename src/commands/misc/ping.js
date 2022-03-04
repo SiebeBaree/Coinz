@@ -8,7 +8,6 @@ module.exports.help = {
     name: "ping",
     description: "Get the time between the bot and discord in milliseconds.",
     options: [],
-    usage: "",
     category: "misc",
     extraFields: [],
     memberPermissions: [],

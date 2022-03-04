@@ -219,7 +219,6 @@ module.exports.help = {
             ]
         }
     ],
-    usage: "[item]",
     category: "economy",
     extraFields: [],
     memberPermissions: [],

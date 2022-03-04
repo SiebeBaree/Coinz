@@ -94,7 +94,6 @@ module.exports.help = {
             required: false
         }
     ],
-    usage: "[user]",
     category: "economy",
     extraFields: [],
     memberPermissions: [],

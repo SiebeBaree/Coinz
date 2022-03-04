@@ -134,7 +134,6 @@ module.exports.help = {
             ]
         }
     ],
-    usage: "<list | leave | apply> [job]",
     category: "economy",
     extraFields: [],
     memberPermissions: [],

@@ -6,7 +6,6 @@ module.exports.help = {
     name: "invite",
     description: "Get a invite to our Official Support Discord Server",
     options: [],
-    usage: "",
     category: "misc",
     extraFields: [],
     memberPermissions: [],

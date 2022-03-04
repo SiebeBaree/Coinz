@@ -136,7 +136,6 @@ module.exports.help = {
             min_value: 50
         }
     ],
-    usage: "<bet>",
     category: "games",
     extraFields: [],
     memberPermissions: [],

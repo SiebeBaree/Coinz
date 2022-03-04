@@ -173,7 +173,6 @@ module.exports.help = {
     name: "work",
     description: "Work hard and get paid a unfair salary.",
     options: [],
-    usage: "",
     category: "economy",
     extraFields: [],
     memberPermissions: [],

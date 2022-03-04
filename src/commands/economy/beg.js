@@ -13,7 +13,6 @@ module.exports.help = {
     name: "beg",
     description: "If you really want money you can beg for it.",
     options: [],
-    usage: "",
     category: "economy",
     extraFields: [],
     memberPermissions: [],

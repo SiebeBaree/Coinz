@@ -35,7 +35,6 @@ module.exports.help = {
             min_value: 1
         }
     ],
-    usage: "<amount | all>",
     category: "economy",
     extraFields: [],
     memberPermissions: [],

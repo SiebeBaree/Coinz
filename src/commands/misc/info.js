@@ -21,7 +21,6 @@ module.exports.help = {
     name: "info",
     description: "Get some information about Coinz.",
     options: [],
-    usage: "",
     category: "misc",
     extraFields: [],
     memberPermissions: [],
