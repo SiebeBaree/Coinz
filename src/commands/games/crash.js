@@ -1,10 +1,9 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 
-function createEmbed(client, multiplier, profit, color = "none") {
-    if (color === "none") color = client.config.embed.color;
+function createEmbed(client, multiplier, profit, color = undefined) {
     const embed = new MessageEmbed()
         .setTitle(`Crash`)
-        .setColor(color)
+        .setColor(color || client.config.embed.color)
         .setDescription("Every 1.5 seconds the multiplier goes up by 0.2x.\nEvery time this happens you have 15% chance to lose all money.\nTo claim the profits, press the sell button.")
         .addFields(
             { name: 'Multiplier', value: `${Math.round(multiplier * 10) / 10}x`, inline: true },
@@ -62,15 +61,14 @@ module.exports.execute = async (client, interaction, data) => {
     });
 
     // this is a recursive function. Please be careful if you want to edit this function.
-    // If you don't know what your doeing you might end up with a infinite loop
+    // If you don't know what your doing you might end up with a infinite loop
     var updateStatus = async function (client, interaction, multiplier, profit) {
         return async function () {
             // returning in this function also stops the command
             if (userWon && stoppedGame) {
                 await client.tools.addMoney(interaction.guildId, interaction.member.id, Math.floor(profit * multiplier) - bet);
                 return await interaction.editReply({ embeds: [createEmbed(client, multiplier, Math.floor(profit * multiplier) - bet, "GREEN")], components: [setButton(true)] });
-            }
-            else if (!userWon && stoppedGame) {
+            } else if (!userWon && stoppedGame) {
                 await client.tools.removeMoney(interaction.guildId, interaction.member.id, bet);
                 return await interaction.editReply({ embeds: [createEmbed(client, multiplier, -bet, "RED")], components: [setButton(true)] });
             }
