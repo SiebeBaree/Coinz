@@ -5,7 +5,7 @@ const categories = [
     { name: "Economy", category: "economy", icon: ":coin: " },
     { name: "Games", category: "games", icon: ":video_game: " },
     // { name: "Pets", category: "pets", icon: ":dog: " },
-    // { name: "Business", category: "business", icon: ":office: " },
+    { name: "Business", category: "business", icon: ":office: " },
     { name: "Crop Farming", category: "farming", icon: ":carrot: " },
     { name: "Stocks", category: "stocks", icon: ":chart_with_upwards_trend: " },
     // { name: "Social Media", category: "social", icon: ":mobile_phone: " },
