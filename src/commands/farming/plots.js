@@ -157,8 +157,7 @@ async function execList(client, interaction, data) {
                     });
                 }
             }
-        }
-        else if (interactionCollector.customId === 'plot_water') {
+        } else if (interactionCollector.customId === 'plot_water') {
             await waterPlots(interaction, data);
             data.guildUser = await client.database.fetchGuildUser(interaction.guildId, interaction.member.id);
         } else if (interactionCollector.customId === 'plot_buy') {
@@ -196,14 +195,13 @@ async function execPlant(client, interaction, data) {
 
 module.exports.execute = async (client, interaction, data) => {
     if (interaction.options.getSubcommand() === "list") return await execList(client, interaction, data);
-    if (interaction.options.getSubcommand() === "buy") return await execBuy(client, interaction, data);
     if (interaction.options.getSubcommand() === "plant") return await execPlant(client, interaction, data);
     return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${data.cmd.help.name}\`.`, ephemeral: true });
 }
 
 module.exports.help = {
     name: "plot",
-    description: "Plant or get a list of your plots",
+    description: "Plant or get a list of your plots.",
     options: [
         {
             name: 'list',
