@@ -26,15 +26,12 @@ const mongoose = require('mongoose')
 //     lastAd: Date
 // })
 
-// const businessSchema = new mongoose.Schema({
-//     businessId: { type: Number, require: true },
-//     name: { type: String, require: true },
-//     employeeIds: [String],
-//     level: { type: Number, default: 1 },
-//     worth: { type: Number, default: 0 },
-//     workSalary: { type: Number, default: 0 },
-//     lastAdvertised: Date
-// })
+const businessSchema = new mongoose.Schema({
+    name: { type: String, require: true },
+    level: { type: Number, default: 1 },
+    workSalary: { type: Number, default: 0 },
+    lastAdvertised: { type: Number, default: parseInt(Date.now() / 1000) }
+})
 
 const inventorySchema = new mongoose.Schema({
     itemId: { type: String, require: true },
@@ -83,7 +80,7 @@ module.exports = mongoose.model("GuildUsers", new mongoose.Schema({
     // badges: [String],
     // pet: { type: petSchema, default: {} },
     // social: { type: socialSchema, default: {} },
-    // business: { type: businessSchema, default: {} },
+    business: { type: businessSchema },
     inventory: [{ type: inventorySchema }],
     stocks: [{ type: stocksSchema }],
     // miners: [{ type: minersSchema }],
