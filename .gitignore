@@ -3,6 +3,7 @@ website/__pycache__/
 __pycache__/
 src/data/stocks
 src/data/shop
+venv/
 
 # compiled output
 /dist
