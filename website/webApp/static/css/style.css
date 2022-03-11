@@ -1,0 +1,286 @@
+@font-face {
+    font-family: "Ginto Nord";
+    src: url('../fonts/GintoNord-Black.ttf');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Ginto Nord";
+    src: url('../fonts/GintoNord-Medium.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url('../fonts/Whitney-Semibold-Bas.otf');
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.nav-background {
+    background: rgb(238, 182, 9);
+    background: linear-gradient(90deg, rgba(238, 182, 9, 1) 0%, rgba(198, 147, 32, 1) 100%);
+}
+
+nav {
+    z-index: 1;
+    height: 75px;
+}
+
+nav .navbar-brand {
+    font-family: "Ginto Nord", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    color: #F5F5F7;
+}
+
+nav .nav-item a {
+    font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.2rem;
+    color: #F5F5F7;
+}
+
+nav .nav-item a:hover,
+nav .nav-item a:active,
+nav .navbar-brand:hover,
+nav .navbar-brand:active {
+    color: #1D1D1F;
+}
+
+nav .nav-item a:focus {
+    color: #F5F5F7;
+    outline: 0;
+}
+
+nav .dropdown-menu a {
+    color: #1D1D1F;
+}
+
+nav .dropdown-menu .logout,
+nav .dropdown-menu .logout:hover,
+nav .dropdown-menu .logout:active {
+    color: #F04647;
+}
+
+#hero {
+    position: absolute;
+    width: 100vw;
+    z-index: 0;
+    top: 0;
+    background: rgb(238, 182, 9);
+    background: linear-gradient(90deg, rgba(238, 182, 9, 1) 0%, rgba(198, 147, 32, 1) 100%);
+    min-height: 75vh;
+    color: #F5F5F7;
+}
+
+#hero h1 {
+    font-family: "Ginto Nord", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    font-size: 4rem;
+}
+
+#hero h3 {
+    font-family: "Ginto Nord", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.7rem;
+}
+
+#hero h6 {
+    font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.2rem;
+}
+
+#hero .inner-hero {
+    padding: 100px 0;
+    min-height: 75vh;
+}
+
+#hero .cta a {
+    margin: 10px 5px;
+    color: #1D1D1F;
+}
+
+#features {
+    margin-top: 80vh;
+    max-width: 1200px;
+}
+
+#features .feature-row {
+    margin: 75px 0;
+    max-height: 400px;
+}
+
+#features .feature-img img {
+    height: 100%;
+    width: auto;
+}
+
+#features .feature-text {
+    max-width: 40%;
+}
+
+#features h2 {
+    color: #1D1D1F;
+    font-family: "Ginto Nord", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 2.5rem;
+}
+
+#features h6 {
+    color: #1D1D1F;
+    font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.2rem;
+}
+
+#faq h6 {
+    color: #1D1D1F;
+    font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.2rem;
+}
+
+.section_padding {
+    padding: 100px 0;
+}
+
+.section_heading h2 {
+    font-family: "Ginto Nord", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 2.5rem;
+}
+
+.faq_area {
+    position: relative;
+    z-index: 1;
+    background-color: #ffffff;
+}
+
+.faq-accordian {
+    position: relative;
+    z-index: 1;
+}
+
+.faq-accordian .card {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1.5rem;
+    background-color: #E6F1FF;
+}
+
+.faq-accordian .card:last-child {
+    margin-bottom: 0;
+}
+
+.faq-accordian .card .card-header {
+    background-color: #f5f5ff;
+    padding: 0;
+}
+
+.faq-accordian .card .card-header h6 {
+    cursor: pointer;
+    padding: 1.75rem 2rem;
+    color: #1D1D1F;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -ms-grid-row-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+.faq-accordian .card .card-header h6 span {
+    color: #1D1D1F;
+    font-size: 1.5rem;
+}
+
+.faq-accordian .card .card-header h6.collapsed span {
+    -webkit-transform: rotate(-180deg);
+    transform: rotate(-180deg);
+}
+
+.faq-accordian .card .card-body {
+    padding: 1.75rem 2rem;
+}
+
+.faq-accordian .card .card-body p:last-child {
+    margin-bottom: 0;
+}
+
+@media only screen and (max-width: 575px) {
+    .support-button p {
+        font-size: 14px;
+    }
+}
+
+.support-button i {
+    color: #3f43fd;
+    font-size: 1.25rem;
+}
+
+@media only screen and (max-width: 575px) {
+    .support-button i {
+        font-size: 1rem;
+    }
+}
+
+.support-button a {
+    text-transform: capitalize;
+    color: #2ecc71;
+}
+
+@media only screen and (max-width: 575px) {
+    .support-button a {
+        font-size: 13px;
+    }
+}
+
+#dashboard {
+    margin: 100px 0;
+    min-height: calc(100vh - 350px);
+}
+
+#dashboard h2 {
+    color: #1D1D1F;
+    font-family: "Ginto Nord", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 3rem;
+    margin: 30px 0;
+}
+
+#dashboard .row {
+    margin: 80px 0;
+}
+
+#dashboard .col-sm {
+    border-radius: 25px;
+    background-color: #EEB609;
+    position: relative;
+    padding-top: 75px;
+    padding-bottom: 20px;
+    margin: 0 20px;
+}
+
+#dashboard .server-icon {
+    background-color: #1D1D1F;
+    border: #ffffff 8px solid;
+}
+
+#dashboard img {
+    position: absolute;
+    top: -64px;
+    left: calc(50% - 64px);
+}
+
+#dashboard h4 {
+    color: #F5F5F7;
+    font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.3rem;
+}
+
+#dashboard h5 {
+    color: #1D1D1F;
+    font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.3rem;
+}
+
