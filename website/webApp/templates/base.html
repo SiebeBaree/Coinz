@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-<div class="nav-background">
+<div class="gradient-bg">
     <div class="container-lg">
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
@@ -25,8 +25,8 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-{#                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">#}
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+{#                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">#}
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{{ url_for('main.commands') }}">Commands</a>
                         </li>
@@ -40,31 +40,31 @@
                             <a class="nav-link text-white" href="{{ url_for('main.invite', guild_id=None) }}">Invite</a>
                         </li>
                     </ul>
-{#                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">#}
-{#                        {% if logged_in and user %}#}
-{#                            <li class="nav-item dropdown">#}
-{#                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">#}
-{#                                    {% if user.avatar %}#}
-{#                                        <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.webp?size=32" class="rounded-circle" height="32" alt="Black and White Portrait of a Man" loading="lazy"/>#}
-{#                                    {% else %}#}
-{#                                        <img src="https://cdn.discordapp.com/embed/avatars/3.png" class="rounded-circle" height="32" alt="Black and White Portrait of a Man" loading="lazy"/>#}
-{#                                    {% endif %}#}
-{#                                    {{ user.username }}{{ user.discriminator }}#}
-{#                                </a>#}
-{#                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">#}
-{#                                    <li><a class="dropdown-item" href="{{ url_for('dashboard.dash') }}">My Servers</a></li>#}
-{#                                    <li>#}
-{#                                        <hr class="dropdown-divider">#}
-{#                                    </li>#}
-{#                                    <li><a class="dropdown-item logout" href="{{ url_for('login.logout') }}">Logout</a></li>#}
-{#                                </ul>#}
-{#                            </li>#}
-{#                        {% else %}#}
-{#                            <li class="nav-item">#}
-{#                                <a class="nav-link" href="{{ url_for('login.login_page') }}">Login via Discord</a>#}
-{#                            </li>#}
-{#                        {% endif %}#}
-{#                    </ul>#}
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        {% if logged_in and user %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {% if user.avatar %}
+                                        <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.webp?size=32" class="rounded-circle" height="32" alt="Black and White Portrait of a Man" loading="lazy"/>
+                                    {% else %}
+                                        <img src="https://cdn.discordapp.com/embed/avatars/3.png" class="rounded-circle" height="32" alt="Black and White Portrait of a Man" loading="lazy"/>
+                                    {% endif %}
+                                    {{ user.username }}{{ user.discriminator }}
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="{{ url_for('dashboard.dash') }}">My Servers</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item logout" href="{{ url_for('login.logout') }}">Logout</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{ url_for('login.login_page') }}">Login via Discord</a>
+                            </li>
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -74,11 +74,11 @@
 {% block content %}
 {% endblock %}
 
-<div class="nav-background">
+<div class="gradient-bg">
     <div class="container-lg">
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
-                <a class="navbar-brand" href="{{ url_for('main.index') }}">Coinz</a>
+                <a class="navbar-brand text-inner" href="{{ url_for('main.index') }}">Coinz</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -86,24 +86,24 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.commands') }}">Commands</a>
+                            <a class="nav-link text-inner" href="{{ url_for('main.commands') }}">Commands</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.donate') }}">Donate</a>
+                            <a class="nav-link text-inner" href="{{ url_for('main.donate') }}">Donate</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.discord') }}">Support Server</a>
+                            <a class="nav-link text-inner" href="{{ url_for('main.discord') }}">Support Server</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.invite', guild_id=None) }}">Invite</a>
+                            <a class="nav-link text-inner" href="{{ url_for('main.invite', guild_id=None) }}">Invite</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.terms_of_service') }}">Terms Of Service</a>
+                            <a class="nav-link text-inner" href="{{ url_for('main.terms_of_service') }}">Terms Of Service</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a>
+                            <a class="nav-link text-inner" href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a>
                         </li>
                     </ul>
                 </div>
