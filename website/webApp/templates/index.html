@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div id="hero">
+        <div class="inner-hero container text-center d-flex flex-column justify-content-center">
+            <h1>Coinz</h1>
+            <h3>Simply the best economy bot on the market</h3>
+            <h6>Coinz offers more than 40 ways to make money while still keeping it easy to use</h6>
+
+            <div class="cta flex-row">
+                <a href="{{ url_for('main.invite') }}" class="btn btn-light">ADD TO SERVER</a>
+                <a href="{{ url_for('main.vote') }}" class="btn btn-light">VOTE FOR COINZ</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="features" class="container mx-auto">
+        <div class="feature-row d-flex justify-content-between">
+            <div class="feature-img mx-auto">
+                <img src="{{ url_for('static', filename='img/test.webp') }}" alt="">
+            </div>
+            <div class="feature-text my-auto">
+                <h2>Buy, hold and sell stocks</h2>
+                <h6>Enhance your knowledge of the stock and crypto market by buying, holding and selling stocks and crypto within Coinz. All prices are updated every 10 minutes. Coinz currently has over 30 stocks and more than 10 crypto currencies. With more soon to come.</h6>
+            </div>
+        </div>
+
+        <div class="feature-row d-flex justify-content-between">
+            <div class="feature-text my-auto">
+                <h2>Start your own business</h2>
+                <h6>Enhance your knowledge of the stock and crypto market by buying, holding and selling stocks and crypto within Coinz. All prices are updated every 10 minutes. Coinz currently has over 30 stocks and more than 10 crypto currencies. With more soon to come.</h6>
+            </div>
+            <div class="feature-img">
+                <img src="{{ url_for('static', filename='img/test.webp') }}" alt="">
+            </div>
+        </div>
+
+        <div class="feature-row d-flex justify-content-between">
+            <div class="feature-img mx-auto">
+                <img src="{{ url_for('static', filename='img/test.webp') }}" alt="">
+            </div>
+            <div class="feature-text my-auto">
+                <h2>Play more than 20 games</h2>
+                <h6>Enhance your knowledge of the stock and crypto market by buying, holding and selling stocks and crypto within Coinz. All prices are updated every 10 minutes. Coinz currently has over 30 stocks and more than 10 crypto currencies. With more soon to come.</h6>
+            </div>
+        </div>
+
+        <div class="feature-row d-flex justify-content-between">
+            <div class="feature-text my-auto">
+                <h2>Buy farmland to grow crops on</h2>
+                <h6>Enhance your knowledge of the stock and crypto market by buying, holding and selling stocks and crypto within Coinz. All prices are updated every 10 minutes. Coinz currently has over 30 stocks and more than 10 crypto currencies. With more soon to come.</h6>
+            </div>
+            <div class="feature-img">
+                <img src="{{ url_for('static', filename='img/test.webp') }}" alt="">
+            </div>
+        </div>
+    </div>
+
+    <div id="faq" class="faq_area section_padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-8 col-lg-6">
+                    <div class="section_heading text-center wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                        <h2>Frequently Asked Questions</h2>
+                        <div class="line"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-lg-8">
+                    <div class="accordion faq-accordian" id="faqAccordion">
+                        <div class="card border-0 wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                            <div class="card-header" id="headingOne">
+                                <h6 class="mb-0 collapsed accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">How can I install this app?<span class="lni-chevron-up"></span></h6>
+                            </div>
+                            <div class="accordion-collapse collapse" id="collapseOne" aria-labelledby="headingOne" data-parent="#faqAccordion">
+                                <div class="card-body">
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto quidem facere deserunt sint animi sapiente vitae suscipit.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-0 wow fadeInUp" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">
+                            <div class="card-header" id="headingTwo">
+                                <h6 class="mb-0 collapsed accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">The apps isn't installing?<span class="lni-chevron-up"></span></h6>
+                            </div>
+                            <div class="accordion-collapse collapse" id="collapseTwo" aria-labelledby="headingTwo" data-parent="#faqAccordion">
+                                <div class="card-body">
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto quidem facere deserunt sint animi sapiente vitae suscipit.</p>
+                                    <p>Appland is completely creative, lightweight, clean &amp; super responsive app landing page.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-0 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+                            <div class="card-header" id="headingThree">
+                                <h6 class="mb-0 collapsed accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Contact form isn't working?<span class="lni-chevron-up"></span></h6>
+                            </div>
+                            <div class="accordion-collapse collapse" id="collapseThree" aria-labelledby="headingThree" data-parent="#faqAccordion">
+                                <div class="card-body">
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto quidem facere deserunt sint animi sapiente vitae suscipit.</p>
+                                    <p>Appland is completely creative, lightweight, clean &amp; super responsive app landing page.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="support-button text-center d-flex align-items-center justify-content-center mt-4 wow fadeInUp" data-wow-delay="0.5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
+                        <i class="lni-emoji-sad"></i>
+                        <p class="mb-0 px-2">Can't find your answers?</p>
+                        <a href="{{ url_for('main.discord') }}"> Ask your question here!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
