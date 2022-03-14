@@ -14,12 +14,12 @@ def dash():
 
     guilds = []
     index = -1
-    for i in range(0, len(valid_guilds)):
+    for i, guild in enumerate(valid_guilds):
         if i % 3 == 0:
             index += 1
             guilds.append([])
 
-        guilds[index].append(valid_guilds[i])
+        guilds[index].append(guild)
 
     return render_template('dashboard.html', title="Dashboard", logged_in=True, user=user, guilds=guilds)
 
