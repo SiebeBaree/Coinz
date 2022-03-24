@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-module.exports = mongoose.model("Shop", new mongoose.Schema({
+module.exports = mongoose.model("Items", new mongoose.Schema({
     itemId: { type: String, require: true },
     category: { type: String, require: true },
     name: { type: String, require: true },
