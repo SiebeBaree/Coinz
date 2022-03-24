@@ -1,6 +1,6 @@
 const guildsSchema = require("./schemas/guilds")
 const guildUsersSchema = require("./schemas/guildUsers")
-const shopSchema = require("./schemas/shop")
+const shopSchema = require("./schemas/items")
 const stocksSchema = require("./schemas/stocks")
 const usersSchema = require("./schemas/users")
 const cooldownsSchema = require("./schemas/cooldowns")
