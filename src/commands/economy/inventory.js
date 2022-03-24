@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const shopSchema = require('../../database/schemas/shop');
+const shopSchema = require('../../database/schemas/items');
 
 const itemsPerPage = 10;
 
@@ -20,7 +20,8 @@ function createInventory(item, currentPage) {
 
     for (let i = 0; i < item.length; i++) {
         if (i >= currentPage * itemsPerPage && i < currentPage * itemsPerPage + itemsPerPage) {
-            invStr += `${item[i].icon || ':heavy_multiplication_x:'} **${item[i].name}** ― ${item[i].quantity}\n**ID:** \`${item[i].itemId}\`\n\n`
+            let icon = item[i].emoteId === "" ? ':x:' : `<:${item[i].itemId}:${item[i].emoteId}>`;
+            invStr += `${icon} **${item[i].name}** ― ${item[i].quantity}\n**ID:** \`${item[i].itemId}\`\n\n`
         }
     }
     return invStr;

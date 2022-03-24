@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const shopSchema = require('../../database/schemas/shop');
+const shopSchema = require('../../database/schemas/items');
 const guildUserSchema = require('../../database/schemas/guildUsers');
 
 const itemsPerPage = 5;
@@ -16,7 +16,9 @@ function createShop(shopItems, currentPage) {
         if (i >= currentPage * itemsPerPage && i < currentPage * itemsPerPage + itemsPerPage) {
             let buyPrice = ':coin: ' + shopItems[i].buyPrice;
             if (shopItems[i].buyPrice === 0) buyPrice = "Not For Sale";
-            shopStr += `${shopItems[i].icon || ':heavy_multiplication_x:'} **${shopItems[i].name}** ― ${buyPrice}\n**ID:** \`${shopItems[i].itemId}\`\n> ${shopItems[i].shortDescription}\n\n`
+
+            let icon = item[i].emoteId === "" ? ':x:' : `<:${item[i].itemId}:${item[i].emoteId}>`;
+            shopStr += `${icon} **${shopItems[i].name}** ― ${buyPrice}\n**ID:** \`${shopItems[i].itemId}\`\n> ${shopItems[i].shortDescription}\n\n`
         }
     }
     return shopStr;
@@ -44,7 +46,7 @@ async function execList(client, interaction, data) {
             .setColor(client.config.embed.color)
             .setFooter({ text: client.config.embed.footer })
             .setDescription(`> ${item.longDescription || item.shortDescription}`)
-            .setThumbnail(`https://cdn.discordapp.com/emojis/${item.icon || '941682404500856922'}.png`)  // https://discord.com/developers/docs/reference#image-formatting
+            .setThumbnail(`https://cdn.discordapp.com/emojis/${item.emoteId || '941682404500856922'}.png`)  // https://discord.com/developers/docs/reference#image-formatting
 
         let buyPrice = ':coin: ' + item.buyPrice;
         let sellPrice = ':coin: ' + item.sellPrice;

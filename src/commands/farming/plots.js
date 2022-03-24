@@ -29,6 +29,7 @@ async function createEmbed(client, interaction, data) {
         let visualRow;
         let cropStatus;
         let plotstatusChanged = false;
+        let item;
 
         if (userPlots[i].status !== "empty") {
             if (userPlots[i].harvestOn + 172800 <= parseInt(Date.now() / 1000)) {
@@ -42,16 +43,18 @@ async function createEmbed(client, interaction, data) {
 
         switch (userPlots[i].status.toLowerCase()) {
             case 'growing':
+                item = await client.database.fetchItem(userPlots[i].crop);
                 visualRow = createVisualRow(':seedling:');
-                cropStatus = `:${userPlots[i].crop}: in ${client.calc.msToTime((userPlots[i].harvestOn * 1000) - Date.now())}`;
+                cropStatus = `<:${item.itemId}:${item.emoteId}> in ${client.calc.msToTime((userPlots[i].harvestOn * 1000) - Date.now())}`;
                 break;
             case 'rotten':
                 visualRow = createVisualRow(':wilted_rose:');
                 cropStatus = "Crops have rotten";
                 break;
             case 'harvest':
-                visualRow = createVisualRow(`:${userPlots[i].crop}:`);
-                cropStatus = `:${userPlots[i].crop}: ready to harvest`;
+                item = await client.database.fetchItem(userPlots[i].crop);
+                visualRow = createVisualRow(`<:${item.itemId}:${item.emoteId}>`);
+                cropStatus = `<:${item.itemId}:${item.emoteId}> ready to harvest`;
                 break;
             default:
                 visualRow = createVisualRow(':brown_square:');
@@ -179,7 +182,7 @@ async function execPlant(client, interaction, data) {
     const cropType = interaction.options.getString('crop');
 
     if (plotId > data.guildUser.plots.length) return await interaction.reply({ content: `You don't own a plot with id \`${plotId}\`.`, ephemeral: true });
-    const cropItem = await client.database.fetchItem(cropType);
+    const cropItem = await client.database.fetchItem(cropType.toLowerCase());
     if (cropItem == null) return await interaction.reply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use \`/shop list\` to view all crops.`, ephemeral: true });
 
     await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'plots.plotId': plotId - 1 }, {
