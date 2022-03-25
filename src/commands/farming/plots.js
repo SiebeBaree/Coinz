@@ -136,6 +136,35 @@ async function calcBtns(data) {
     return btnsDisabled;
 }
 
+function getPlots(plotId) {
+    let plots = [];
+
+    // remove all bad characters
+    plotId = plotId.replace(/[^0-9,-]/g, '');
+
+    let commaPlots = plotId.split(',');
+    for (let i = 0; i < commaPlots.length; i++) {
+        try {
+            if (commaPlots[i] === "") continue;
+
+            let hyphenPlots = commaPlots[i].split('-');
+            if (hyphenPlots.length === 2) {
+                for (let j = parseInt(hyphenPlots[0]); j <= parseInt(hyphenPlots[1]); j++) {
+                    if (!plots.includes(j)) {
+                        plots.push(j);
+                    }
+                }
+            } else {
+                if (!plots.includes(parseInt(hyphenPlots[0]))) {
+                    plots.push(parseInt(hyphenPlots[0]));
+                }
+            }
+        } catch (e) { }
+    }
+
+    return plots;
+}
+
 async function execList(client, interaction, data) {
     await interaction.deferReply();
     await interaction.editReply({ embeds: [await createEmbed(client, interaction, data)], components: [createRow(await calcBtns(data))] });
@@ -178,21 +207,25 @@ async function execList(client, interaction, data) {
 }
 
 async function execPlant(client, interaction, data) {
-    const plotId = interaction.options.getInteger('plot-id');
+    const plotId = interaction.options.getString('plot-id');
     const cropType = interaction.options.getString('crop');
 
-    if (plotId > data.guildUser.plots.length) return await interaction.reply({ content: `You don't own a plot with id \`${plotId}\`.`, ephemeral: true });
+    const plots = getPlots(plotId);
+    if (plots === []) return await interaction.reply({ content: `That are not valid plots.`, ephemeral: true });
+    if (Math.max(...plots) > data.guildUser.plots.length) return await interaction.reply({ content: `You don't own a plot with id \`${Math.max(...plots)}\`.`, ephemeral: true });
     const cropItem = await client.database.fetchItem(cropType.toLowerCase());
     if (cropItem == null) return await interaction.reply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use \`/shop list\` to view all crops.`, ephemeral: true });
 
-    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'plots.plotId': plotId - 1 }, {
-        $set: {
-            'plots.$.status': "growing",
-            'plots.$.harvestOn': parseInt(Date.now() / 1000) + cropItem.duration,
-            'plots.$.crop': cropItem.itemId
-        }
-    });
-    if (!await client.tools.takeItem(interaction, data, cropItem.itemId, 1)) return await interaction.reply({ content: `You don't have that crop in your inventory. Please buy a crop with \`/shop buy <crop-id>\`.`, ephemeral: true });
+    for (let i = 0; i < plots.length; i++) {
+        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'plots.plotId': plots[i] - 1 }, {
+            $set: {
+                'plots.$.status': "growing",
+                'plots.$.harvestOn': parseInt(Date.now() / 1000) + cropItem.duration,
+                'plots.$.crop': cropItem.itemId
+            }
+        });
+    }
+    if (!await client.tools.takeItem(interaction, data, cropItem.itemId, plots.length)) return await interaction.reply({ content: `You don't have that crop in your inventory. Please buy a crop with \`/shop buy <crop-id>\`.`, ephemeral: true });
     await interaction.reply({ content: `You successfully planted \`${cropItem.name}\` on plot ${plotId}`, ephemeral: true });
 }
 
@@ -219,8 +252,8 @@ module.exports.help = {
             options: [
                 {
                     name: 'plot-id',
-                    type: 'INTEGER',
-                    description: 'The plot ID of where you want to plant.',
+                    type: 'STRING',
+                    description: 'The plot ID of where you want to plant. Use , or - to plant on more than one plot.',
                     required: true,
                     min_value: 1,
                     max_value: 15
