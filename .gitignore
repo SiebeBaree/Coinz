@@ -2,7 +2,8 @@
 website/__pycache__/
 __pycache__/
 src/data/stocks
-src/data/shop
+src/data/shop/*.json
+!src/data/shop/template.json
 venv/
 
 # compiled output
