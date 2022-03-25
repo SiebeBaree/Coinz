@@ -1,0 +1,16 @@
+{
+    "items": [
+        {
+            "itemId": "",
+            "category": "",
+            "name": "",
+            "emoteId": "",
+            "shortDescription": "",
+            "longDescription": "",
+            "buyPrice": 0,
+            "sellPrice": 0,
+            "multiplier": 0.0,
+            "duration": 0
+        }
+    ]
+}
