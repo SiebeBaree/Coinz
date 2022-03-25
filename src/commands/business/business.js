@@ -162,7 +162,10 @@ async function execCreate(client, interaction, data) {
     }
 
     await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-        business: businessObj
+        business: businessObj,
+        $set: {
+            job: "business"
+        }
     });
 
     await interaction.editReply({ content: `You succesfully created a business with the name: \`${name.toLowerCase()}\`` });
