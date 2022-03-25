@@ -56,13 +56,13 @@ module.exports.setListButtons = (currentPage, maxPages, disableAll = false) => {
 module.exports.createSelectMenu = (defaultLabel, disabled = false) => {
     let options = [
         { label: 'Tools', value: 'tools' },
-        { label: 'Pets', value: 'pets' },
+        // { label: 'Pets', value: 'pets' },
         { label: 'Fish', value: 'fish' },
-        { label: 'Miners', value: 'miners' },
+        // { label: 'Miners', value: 'miners' },
         { label: 'Crops', value: 'crops' },
-        { label: 'Boosters', value: 'boosters' },
+        // { label: 'Boosters', value: 'boosters' },
         { label: 'Rare Items', value: 'rare_items' },
-        { label: 'Other', value: 'other' },
+        // { label: 'Other', value: 'other' },
         { label: 'All Items', value: 'all' }
     ]
 
