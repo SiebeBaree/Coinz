@@ -17,7 +17,7 @@ function createShop(shopItems, currentPage) {
             let buyPrice = ':coin: ' + shopItems[i].buyPrice;
             if (shopItems[i].buyPrice === 0) buyPrice = "Not For Sale";
 
-            let icon = item[i].emoteId === "" ? ':x:' : `<:${item[i].itemId}:${item[i].emoteId}>`;
+            let icon = shopItems[i].emoteId === "" ? ':x:' : `<:${shopItems[i].itemId}:${shopItems[i].emoteId}>`;
             shopStr += `${icon} **${shopItems[i].name}** ― ${buyPrice}\n**ID:** \`${shopItems[i].itemId}\`\n> ${shopItems[i].shortDescription}\n\n`
         }
     }
