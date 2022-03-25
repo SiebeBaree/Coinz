@@ -20,8 +20,8 @@ function getListEmbed(client, jobs, userData, currentPage) {
         .setFooter({ text: `/shop list [item-id] to get more info about an item. ─ Page ${currentPage + 1} of ${maxPages}.` })
 
     let currentJob = ``;
-    if (userData.job === "business") currentJob = `:briefcase: **You own a business. You can't apply for a job.\n`;
     if (userData.job != "") currentJob = `:briefcase: **You are currently working as a ${userData.job}.**\n`;
+    if (userData.job === "business") currentJob = `:briefcase: **You own a business. You can't apply for a job.\n`;
     let descField = `${currentJob}:moneybag: **To apply for a job use** \`/job apply <job>\`**.**\n:o: **You can only apply for jobs with** :white_check_mark:\n:mans_shoe: **Leave a job by using** \`/job leave\`**.**\n\n`;
     for (let job in jobs) {
         let icon = ':x:';
@@ -70,9 +70,9 @@ async function execList(client, interaction, data) {
 }
 
 async function execLeave(client, interaction, data) {
+    if (data.guildUser.job === "business") return await interaction.reply({ content: `You have a business. You can't quit your business.\nYou can sell your business using \`/business sell\`.`, ephemeral: true });
     const job = getJob(data.guildUser.job);
-    if (job === null) return interaction.reply({ content: `You don't have a job. Please apply for a job with \`/job apply <job>\`.`, ephemeral: true });
-    if (job === "business") return interaction.reply({ content: `You have a business. You can't quit your business.\nYou can sell your business using \`/business sell\`.`, ephemeral: true });
+    if (job === null) return await interaction.reply({ content: `You don't have a job. Please apply for a job with \`/job apply <job>\`.`, ephemeral: true });
 
     await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
         $set: { job: "" }
@@ -82,12 +82,12 @@ async function execLeave(client, interaction, data) {
 }
 
 async function execApply(client, interaction, data) {
+    if (data.guildUser.job === "business") return await interaction.reply({ content: `You cannot apply for a normal job when you have a business.`, ephemeral: true });
     const currentJob = getJob(data.guildUser.job);
-    if (currentJob === "business") return interaction.reply({ content: `You cannot apply for a normal job when you have a business.`, ephemeral: true });
-    if (currentJob !== null) return interaction.reply({ content: `You already have a job. Please leave your current job with \`/job leave\`.`, ephemeral: true });
+    if (currentJob !== null) return await interaction.reply({ content: `You already have a job. Please leave your current job with \`/job leave\`.`, ephemeral: true });
 
     const job = getJob(interaction.options.getString('job-name'));
-    if (job === null) return interaction.reply({ content: `That is not a valid job. Please use \`/job list\` to view all jobs.`, ephemeral: true });
+    if (job === null) return await interaction.reply({ content: `That is not a valid job. Please use \`/job list\` to view all jobs.`, ephemeral: true });
     if (job.minLvl > client.calc.getLevel(data.guildUser.experience)) return interaction.reply({ content: `Your level is too low to apply for this job.`, ephemeral: true });
 
     await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
