@@ -1,11 +1,6 @@
 const cooldownsSchema = require("../database/schemas/cooldowns");
 
 module.exports = async (client) => {
-    // removing all expired command cooldowns to clean database
-    client.logger.log(`Cleaning up cooldowns collection...`);
-    const deleted = await cooldownsSchema.deleteMany({ expiresOn: { $lte: parseInt(Date.now() / 1000) } });
-    client.logger.log(`Cleaned up ${deleted.deletedCount} documents.`);
-
     // Put all commands into an object and push it to an array.
     let data = [];
     client.commands.forEach(command => {
