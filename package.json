@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "setup": "node src/setup.js"
+    "items": "node src/createItems.js"
   },
   "repository": {
     "type": "git",
