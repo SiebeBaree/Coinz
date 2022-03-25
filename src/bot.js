@@ -55,6 +55,12 @@ async function init() {
             keepAliveInitialDelay: 300000
         });
         client.logger.ready(`Connected to MongoDB.`);
+
+        // removing all expired command cooldowns to clean database
+        const cooldownsSchema = require('./database/schemas/cooldowns');
+        client.logger.log(`Cleaning up cooldowns collection...`);
+        const deleted = await cooldownsSchema.deleteMany({ expiresOn: { $lte: parseInt(Date.now() / 1000) } });
+        client.logger.log(`Cleaned up ${deleted.deletedCount} documents.`);
     } catch (e) {
         client.logger.error('Unable to connect to MongoDB Database.\nError: ' + err);
     }
