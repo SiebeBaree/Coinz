@@ -1,6 +1,7 @@
+<img width="150" height="150" align="left" style="float: left; margin: 0 10px 10px 0;" alt="Crucian" src="https://cdn.coinzbot.xyz/logo.png">
+
 # Coinz
 ![Language](https://img.shields.io/badge/Language-Node.js-427E38?style=for-the-badge&logo=node.js)
-![Downloads](https://img.shields.io/github/downloads/SiebeBaree/Coinz/total?style=for-the-badge&logo=github)
 ![License](https://img.shields.io/github/license/SiebeBaree/Coinz?style=for-the-badge&logo=github)
 ![Repo Size](https://img.shields.io/github/languages/code-size/SiebeBaree/Coinz?style=for-the-badge&label=SIZE&logo=databricks&logoColor=white)
 [![invite](https://img.shields.io/badge/Invite-Coinz-DBA514?style=for-the-badge&logo=coil&logoColor=white)](https://coinzbot.xyz/invite)
