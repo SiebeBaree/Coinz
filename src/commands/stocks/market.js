@@ -189,12 +189,16 @@ async function execBuy(client, interaction, data) {
 
     if (userAlreadyHasStock) {
         await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'stocks.ticker': stock.ticker }, {
-            $inc: { 'stocks.$.quantity': amount }
+            $inc: {
+                'stocks.$.quantity': amount,
+                'stocks.$.buyPrice': price
+            }
         });
     } else {
         const stocksObj = {
             ticker: stock.ticker,
-            quantity: amount
+            quantity: amount,
+            buyPrice: price
         };
 
         await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
@@ -223,10 +227,12 @@ async function execSell(client, interaction, data) {
     await interaction.deferReply();
 
     let userHasStock = false;
+    let stockData;
     for (let i = 0; i < data.guildUser.stocks.length; i++) {
         if (data.guildUser.stocks[i].ticker === stock.ticker) {
             if (data.guildUser.stocks[i].quantity < amount) return await interaction.editReply({ content: `You only have ${data.guildUser.stocks[i].quantity}x of ${stock.fullName}.` });
             userHasStock = true;
+            stockData = data.guildUser.stocks[i];
             break;
         }
     }
@@ -235,7 +241,10 @@ async function execSell(client, interaction, data) {
     const price = Math.round(stock.price * amount);
 
     await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'stocks.ticker': stock.ticker }, {
-        $inc: { 'stocks.$.quantity': -amount }
+        $inc: {
+            'stocks.$.quantity': -amount,
+            'stocks.$.buyPrice': -parseInt(amount / stockData.quantity * stockData.buyPrice)
+        }
     });
 
     await client.tools.addMoney(interaction.guildId, interaction.member.id, price)
