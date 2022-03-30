@@ -136,12 +136,12 @@ async function execInfo(client, interaction, data) {
         const embed = new MessageEmbed()
             .setAuthor({ name: `${stock.type}: ${stock.fullName}` })
             .setColor(client.config.embed.color)
-            .setThumbnail(`attachment://${stock.ticker}.png`)
+            .setThumbnail(`https://cdn.coinzbot.xyz/ticker/${stock.ticker.toUpperCase()}.png`)
             .addFields(
                 { name: `Info`, value: `:envelope: **Type:** ${stock.type}\n:tickets: **Ticker:** ${stock.ticker}\n:apple: **Full Name:** ${stock.fullName}\n:clock1: **Last Updated:** <t:${stock.lastUpdated}:R>`, inline: true },
                 { name: `Stats`, value: `:moneybag: **Price:** :coin: ${stock.price}\n${change.icon} **Change:** ${change.changePercentage}%${market}`, inline: true },
             )
-        await interaction.reply({ embeds: [embed], files: [`src/data/stocks/${stock.ticker}.png`] });
+        await interaction.reply({ embeds: [embed] });
     }
 }
 
@@ -210,12 +210,12 @@ async function execBuy(client, interaction, data) {
     const embed = new MessageEmbed()
         .setTitle(`You just bought ${amount}x ${stock.fullName}`)
         .setColor(client.config.embed.color)
-        .setThumbnail(`attachment://${stock.ticker}.png`)
+        .setThumbnail(`https://cdn.coinzbot.xyz/ticker/${stock.ticker.toUpperCase()}.png`)
         .addFields(
             { name: 'Info', value: `:envelope: **Type:** ${stock.type}\n:tickets: **Ticker:** ${stock.ticker}\n:apple: **Full Name:** ${stock.fullName}`, inline: true },
             { name: 'Stats', value: `:moneybag: **Unit Price:** :coin: ${stock.price}\n:1234: **Amount:** ${amount}x\n:gem: **Buy Price:** :coin: ${price}`, inline: true }
         )
-    await interaction.editReply({ embeds: [embed], files: [`src/data/stocks/${stock.ticker}.png`] });
+    await interaction.editReply({ embeds: [embed] });
 }
 
 async function execSell(client, interaction, data) {
@@ -252,12 +252,12 @@ async function execSell(client, interaction, data) {
     const embed = new MessageEmbed()
         .setTitle(`You sold ${amount}x ${stock.fullName}`)
         .setColor(client.config.embed.color)
-        .setThumbnail(`attachment://${stock.ticker}.png`)
+        .setThumbnail(`https://cdn.coinzbot.xyz/ticker/${stock.ticker.toUpperCase()}.png`)
         .addFields(
             { name: 'Info', value: `:envelope: **Type:** ${stock.type}\n:tickets: **Ticker:** ${stock.ticker}\n:apple: **Full Name:** ${stock.fullName}`, inline: true },
             { name: 'Stats', value: `:moneybag: **Unit Price:** :coin: ${stock.price}\n:1234: **Amount:** ${amount}x\n:gem: **Sell Price:** :coin: ${price}`, inline: true }
         )
-    await interaction.editReply({ embeds: [embed], files: [`src/data/stocks/${stock.ticker}.png`] });
+    await interaction.editReply({ embeds: [embed] });
 }
 
 module.exports.execute = async (client, interaction, data) => {
