@@ -6,16 +6,7 @@ module.exports.execute = async (client, interaction, data) => {
     if (member.bot) return interaction.reply({ content: 'That user is a bot. You can only check the profile of a real person.', ephemeral: true });
     await interaction.deferReply();
     const memberData = await client.database.fetchGuildUser(interaction.guildId, member.id);
-
-    let invValue = 0;
-    let items = 0;
-    if (memberData.inventory !== undefined) {
-        for (let i = 0; i < memberData.inventory.length; i++) {
-            const item = await client.database.fetchItem(memberData.inventory[i].itemId);
-            invValue += parseInt(item.sellPrice * memberData.inventory[i].quantity);
-            items += memberData.inventory[i].quantity;
-        }
-    }
+    const netWorth = await client.calc.getNetWorth(client, memberData);
 
     let job = memberData.job === "" ? "None" : memberData.job;
     if (memberData.business !== undefined && memberData.business.name.length > 0) job = "Business CEO";
@@ -44,7 +35,8 @@ module.exports.execute = async (client, interaction, data) => {
         .addFields(
             { name: 'Experience', value: `Coming Soon`, inline: true },
             { name: 'Level', value: `Coming Soon`, inline: true },
-            { name: 'Balance', value: `:dollar: **Wallet:** :coin: ${memberData.wallet}\n:credit_card: **Bank:** :coin: ${memberData.bank}\n:moneybag: **Net Worth:** :coin: ${memberData.wallet + memberData.bank + invValue}\n:gem: **Inventory Worth:** \`${items} items\` valued at :coin: ${invValue}`, inline: false },
+            { name: 'Balance', value: `:dollar: **Wallet:** :coin: ${memberData.wallet}\n:credit_card: **Bank:** :coin: ${memberData.bank}\n:moneybag: **Net Worth:** :coin: ${netWorth.netWorth}\n:gem: **Inventory Worth:** \`${netWorth.items} items\` valued at :coin: ${netWorth.invValue}`, inline: false },
+            { name: 'Investment Portfolio', value: `:dollar: **Worth:** :coin: ${netWorth.portfolioValue}\n:credit_card: **Amount of Stocks:** ${parseInt(netWorth.stockItems)} stocks\n:moneybag: **Invested:** :coin: ${netWorth.initialValue}`, inline: false },
             { name: 'Misc', value: `:briefcase: **Current Job:** ${job}\n:sparkles: ** Streak:** ${memberData.streak} days\n:no_entry: ** Banned:** ${memberData.banned ? "Yes" : "No"}\n:shield: ** Passive Mode:** ${memberData.passiveMode ? "On" : "Off"}\n`, inline: false },
             { name: 'Cooldowns', value: `${cooldownStr}`, inline: false }
         )
