@@ -22,3 +22,43 @@ module.exports.roundNumber = (n, places = 2) => {
 module.exports.getLevel = (experience) => {
     return parseInt(experience / 100);
 }
+
+module.exports.getNetWorth = async (client, userData) => {
+    let returnData = {};
+
+    returnData.netWorth = 0;
+
+    // GET wallet
+    returnData.netWorth += userData.wallet;
+
+    // GET bank
+    returnData.netWorth += userData.bank;
+
+    // GET inventoryValue
+    returnData.invValue = 0;
+    returnData.items = 0;
+    if (userData.inventory !== undefined) {
+        for (let i = 0; i < userData.inventory.length; i++) {
+            const item = await client.database.fetchItem(userData.inventory[i].itemId);
+            returnData.invValue += parseInt(item.sellPrice * userData.inventory[i].quantity);
+            returnData.items += userData.inventory[i].quantity;
+        }
+    }
+    returnData.netWorth += returnData.invValue;
+
+    // GET stockPortfolio
+    returnData.portfolioValue = 0;
+    returnData.stockItems = 0;
+    returnData.initialValue = 0;
+    if (userData.stocks !== undefined) {
+        for (let i = 0; i < userData.stocks.length; i++) {
+            const item = await client.database.fetchStock(userData.stocks[i].ticker);
+            returnData.portfolioValue += parseInt(item.price * userData.stocks[i].quantity);
+            returnData.stockItems += userData.stocks[i].quantity;
+            returnData.initialValue += userData.stocks[i].buyPrice;
+        }
+    }
+    returnData.netWorth += returnData.portfolioValue;
+
+    return returnData;
+}
