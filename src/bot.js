@@ -62,7 +62,7 @@ async function init() {
         const deleted = await cooldownsSchema.deleteMany({ expiresOn: { $lte: parseInt(Date.now() / 1000) } });
         client.logger.log(`Cleaned up ${deleted.deletedCount} documents.`);
     } catch (e) {
-        client.logger.error('Unable to connect to MongoDB Database.\nError: ' + err);
+        client.logger.error('Unable to connect to MongoDB Database.\nError: ' + e);
     }
 
     await client.login(process.env.TOKEN);
