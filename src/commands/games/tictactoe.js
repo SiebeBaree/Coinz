@@ -234,8 +234,7 @@ module.exports.help = {
             name: 'user',
             type: 'USER',
             description: 'Tag your second player here.',
-            required: true,
-            min_value: 50
+            required: true
         }
     ],
     category: "games",
