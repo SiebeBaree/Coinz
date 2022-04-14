@@ -70,13 +70,21 @@ To selfhost the website yourself, you need to have:
 * A clone of the source code, this can be found [here](https://github.com/SiebeBaree/Coinz) and needs to be extracted to a folder.
 
 We will have to do this once:
-* Rename `example.config.py` to `config.py`.
-* Change `config.py` with your default values.
+* Create a file in `website/` named `.env`.
+* Change `website/.env` with your values.
 
 **OAuth2 Redirects:** *(For local testing change `https://www.your-website-here.com` to `http://127.0.0.1:5000`)*
 ```
 https://www.your-website-here.com/callback
 https://www.your-website-here.com/dashboard
+```
+
+**Example website/.env file:** *(Do not use `""` or `''`)*
+```
+APP_SECRET_KEY=
+DISCORD_BOT_TOKEN=
+DISCORD_CLIENT_SECRET=
+DISCORD_CLIENT_ID=
 ```
 
 After all this, run `python3 website/coinzbot.py`.
