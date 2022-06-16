@@ -109,13 +109,6 @@ async function mgMath(client, interaction, data) {
                 }
             } else {
                 await client.tools.addMoney(interaction.guildId, interaction.member.id, data.salary);
-
-                if (data.hasBusiness) {
-                    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-                        $set: { "business.workSalary": Math.ceil(data.salary * 1.1) }
-                    });
-                }
-
                 await interaction.followUp({ content: `GG! You are very good at math. You earned :coin: ${data.salary} this hour.` })
             }
 
@@ -134,7 +127,7 @@ async function mgMath(client, interaction, data) {
                 });
             }
 
-            buttons[correctAnswerIndex].style = "SUCCESS";
+            buttons[correctAnswerIndex].style = "DANGER";
             await interaction.followUp({ content: `You were too slow to pick the correct answer. You didn't earn anything.` })
             await interaction.editReply({ components: [setMathRow(buttons, true)] });
         }
