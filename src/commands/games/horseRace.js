@@ -4,7 +4,7 @@ function createEmbed(client, data) {
     const embed = new MessageEmbed()
         .setTitle(`Horse Race`)
         .setColor(data.color || client.config.embed.color)
-        .setDescription(`:moneybag: **Bet:** :coin: ${data.bet}\n:hourglass: **Status:** ${data.status}\n\n**1.** ${"-".repeat(data.horses[0])}:horse_racing:\n**2.** ${"-".repeat(data.horses[1])}:horse_racing:\n**3.** ${"-".repeat(data.horses[2])}:horse_racing:\n**4.** ${"-".repeat(data.horses[3])}:horse_racing:\n**5.** ${"-".repeat(data.horses[4])}:horse_racing:`)
+        .setDescription(`:moneybag: **Bet:** :coin: ${data.bet}\n:1234: **Your Horse:** \`${data.horseNr}\`\n:hourglass: **Status:** ${data.status}\n\n**1.** ${"-".repeat(data.horses[0])}:horse_racing:\n**2.** ${"-".repeat(data.horses[1])}:horse_racing:\n**3.** ${"-".repeat(data.horses[2])}:horse_racing:\n**4.** ${"-".repeat(data.horses[3])}:horse_racing:\n**5.** ${"-".repeat(data.horses[4])}:horse_racing:`)
     return embed;
 }
 
@@ -13,7 +13,7 @@ module.exports.execute = async (client, interaction, data) => {
     const horseNr = interaction.options.getInteger('horse');
 
     if (bet > data.guildUser.wallet) {
-        await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, data.help.name);
+        await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, data.cmd.help.name);
         return interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
     }
 
@@ -23,6 +23,7 @@ module.exports.execute = async (client, interaction, data) => {
     data.stoppedGame = false;
     data.horses = Array(5).fill(10);
     data.status = "Racing...";
+    data.horseNr = horseNr;
 
     await interaction.reply({ embeds: [createEmbed(client, data)] });
 
