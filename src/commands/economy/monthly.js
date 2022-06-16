@@ -1,6 +1,6 @@
 module.exports.execute = async (client, interaction, data) => {
     await client.tools.addMoney(interaction.guildId, interaction.member.id, 300);
-    await interaction.reply({ content: `You claimed your weekly reward and got :coin: 300.` });
+    await interaction.reply({ content: `You claimed your monthly reward and got :coin: 300.` });
 }
 
 module.exports.help = {
