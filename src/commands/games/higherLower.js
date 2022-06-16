@@ -2,7 +2,7 @@ const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 
 function createEmbed(client, data) {
     let desc = ":point_up: `Higher` ― **The next number is higher.**\n:point_down: `Lower` ― **The next number is lower.**\n:boom: `Jackpot` ― **The next number is the same.**\n:negative_squared_cross_mark: `Stop` ― **Stop the game an claim your money.**";
-    desc += `\n\n**Current Number:** \`${data.number}\`\n**Correct Guesses:** \`${data.correct}\`\n\n:money_with_wings: **Profit:** :coin: ${getPrice(data.bet, data.correct)}`;
+    desc += `\n\n**Current Number:** \`${data.number}\` *(Between 1-99)*\n**Correct Guesses:** \`${data.correct}\`\n\n:money_with_wings: **Profit:** :coin: ${getPrice(data.bet, data.correct)}`;
 
     const embed = new MessageEmbed()
         .setTitle(`Higher Lower`)
@@ -102,11 +102,15 @@ module.exports.execute = async (client, interaction, data) => {
                 if (data.playerWon) {
                     await client.tools.addMoney(interaction.guildId, interaction.member.id, getPrice(data.bet, data.correct));
                     data.color = "GREEN";
+
+                    await interaction.followUp({ content: `<@${interaction.member.id}>, You won :coin: ${getPrice(data.bet, data.correct)}!` })
                 } else {
                     await client.tools.removeMoney(interaction.guildId, interaction.member.id, data.bet);
                     data.color = "RED";
                     data.bet = 0;
                     data.number = newNumber;
+
+                    await interaction.followUp({ content: `<@${interaction.member.id}>, You clicked the wrong button... You lost your bet.` })
                 }
             } else {
                 data.correct++;
@@ -122,6 +126,7 @@ module.exports.execute = async (client, interaction, data) => {
             data.gameFinished = true;
             await client.tools.addMoney(interaction.guildId, interaction.member.id, getPrice(data.bet, data.correct));
             await interaction.editReply({ embeds: [createEmbed(client, data)], components: [setButtons(true)] });
+            await interaction.followUp({ content: `<@${interaction.member.id}>, You won :coin: ${getPrice(data.bet, data.correct)}!` })
         }
     })
 }
