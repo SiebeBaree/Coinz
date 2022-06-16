@@ -7,6 +7,7 @@ const maxLevel = 10;
 async function createEmbed(client, interaction, data) {
     // Add for future: ability to add custom company logo, slogan and color
     let level = data.userData.business.level;
+    let advertisementCosts = getAdvertisementCosts(level);
     let expandCost = getExpandCosts(level);
     let worth = getWorth(data.userData.business);
     let workSalary = data.userData.business.workSalary;
@@ -20,7 +21,8 @@ async function createEmbed(client, interaction, data) {
             { name: 'Worth', value: `:coin: ${worth}`, inline: true },
             { name: 'Level', value: `${level}`, inline: true },
             { name: 'Work Salary', value: `:coin: ${workSalary}`, inline: true },
-            { name: 'Expansion Cost', value: `:coin: ${expandCost}`, inline: true }
+            { name: 'Advertise Costs', value: `:coin: ${advertisementCosts}`, inline: true },
+            { name: 'Expansion Costs', value: `:coin: ${expandCost}`, inline: true }
         )
     return embed;
 }
@@ -48,7 +50,7 @@ function createRow(data, disabled = false) {
 
 function getNewSalary(business) {
     const newSalary = business.workSalary + (business.level * 2 + 5);
-    return newSalary > 750 ? 750 : newSalary;
+    return newSalary > 400 ? 400 : newSalary;
 }
 
 function getAdvertisementCosts(level) {
@@ -111,6 +113,9 @@ async function execInfo(client, interaction, data) {
 
             await client.tools.removeMoney(interaction.guildId, interaction.member.id, advertiseCost);
             data.userData = await guildUserSchema.findOne({ guildId: interaction.guildId, "business.name": name.toLowerCase() });
+
+            data.canAdvertise = false;
+            data.advertise = "in " + client.calc.msToTime(parseInt((data.userData.business.lastAdvertised + advertiseTime) * 1000 - Date.now()));
         } else if (interactionCollector.customId === 'bus_expand') {
             if (data.userData.business.level < maxLevel) {
                 await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
@@ -208,7 +213,7 @@ module.exports.help = {
             ]
         }
     ],
-    category: "business",
+    category: "businesses",
     extraFields: [],
     memberPermissions: [],
     botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
