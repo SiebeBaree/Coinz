@@ -34,7 +34,7 @@ module.exports.execute = async (client, interaction, data) => {
     const bet = interaction.options.getInteger('bet');
 
     if (bet > data.guildUser.wallet) {
-        await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, data.help.name);
+        await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, data.cmd.help.name);
         return interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
     }
 
