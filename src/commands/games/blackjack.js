@@ -81,6 +81,7 @@ function checkAces(deck) {
 function checkGameStatus(data) {
     const valuePlayer = getValue(data.playerHand);
     const valueDealer = getValue(data.dealerHand);
+    data.playerWon = false;
 
     if (valuePlayer > 21) {
         // Check for Aces and set ace value to 1
@@ -215,7 +216,7 @@ module.exports.execute = async (client, interaction, data) => {
 
                 if (data.tie === undefined) {
                     if (data.playerWon) {
-                        await client.tools.addMoney(interaction.guildId, interaction.member.id, getPrice(data.bet));
+                        await client.tools.addMoney(interaction.guildId, interaction.member.id, parseInt(getPrice(data.bet) - data.bet));
                     } else {
                         await client.tools.removeMoney(interaction.guildId, interaction.member.id, data.bet);
                     }
