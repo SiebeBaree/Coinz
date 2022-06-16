@@ -5,7 +5,7 @@ const categories = [
     { name: "Economy", category: "economy", icon: ":coin: " },
     { name: "Games", category: "games", icon: ":video_game: " },
     // { name: "Pets", category: "pets", icon: ":dog: " },
-    { name: "Business", category: "business", icon: ":office: " },
+    { name: "Businesses", category: "businesses", icon: ":office: " },
     { name: "Crop Farming", category: "farming", icon: ":carrot: " },
     { name: "Stocks", category: "stocks", icon: ":chart_with_upwards_trend: " },
     // { name: "Social Media", category: "social", icon: ":mobile_phone: " },
@@ -30,7 +30,7 @@ module.exports.execute = async (client, interaction, data) => {
 
                     let allCommands = [];
                     client.commands.forEach(cmd => {
-                        if ((cmd.help.category).toLowerCase() == categoryObj.category.toLowerCase()) allCommands.push(`\`${cmd.help.name}\``);
+                        if ((cmd.help.category).toLowerCase() == categoryObj.category.toLowerCase() && cmd.help.enabled) allCommands.push(`\`${cmd.help.name}\``);
                     });
                     if (allCommands.length) {
                         embed.setDescription(`To get more info about a command use \`/help [command]\`\n\n**All Commands:**\n${allCommands.join(", ")}`);
