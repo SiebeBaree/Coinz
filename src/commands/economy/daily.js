@@ -1,15 +1,15 @@
 const guildUserSchema = require('../../database/schemas/guildUsers');
 
 const defaultReward = 15;
-const daysOffset = 3;
+const daysOffset = 2;
 
 module.exports.execute = async (client, interaction, data) => {
     let streakReward = defaultReward;
     const lastStreakAgo = parseInt(Date.now() / 1000) - data.guildUser.lastStreak;
 
     if (data.guildUser.lastStreak === 0 || lastStreakAgo <= 86400 * daysOffset) {
-        streakReward += 10 * (data.guildUser.streak + 1);
-        streakReward = streakReward > 75 ? 75 : streakReward; // cap daily reward at 75
+        streakReward += 5 * (data.guildUser.streak + 1);
+        streakReward = streakReward > 100 ? 100 : streakReward; // cap daily reward at 100
     } else {
         await client.tools.addMoney(interaction.guildId, interaction.member.id, defaultReward);
         return await interaction.reply({ content: `You lost your streak and now get a normal reward of :coin: ${defaultReward}.` });
