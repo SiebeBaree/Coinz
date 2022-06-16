@@ -55,7 +55,10 @@ function getLoot(client, key, lootTable) {
 }
 
 module.exports.execute = async (client, interaction, data) => {
-    if (!await client.tools.userHasItem(data.guildUser.inventory, "fishing_rod")) return await interaction.reply({ content: "You need a fishing rod to use this command. Use `/shop buy item_id:fishing_rod` to buy a fishing rod.", ephemeral: true });
+    if (!await client.tools.userHasItem(data.guildUser.inventory, "fishing_rod")) {
+        await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, data.cmd.help.name);
+        return await interaction.reply({ content: "You need a fishing rod to use this command. Use `/shop buy item_id:fishing_rod` to buy a fishing rod.", ephemeral: true });
+    }
 
     let key = randomKey(client, lootTable);
     if (key === "fail") return await interaction.reply({ content: "You haven't caught any fish today :(" });

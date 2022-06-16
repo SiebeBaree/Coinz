@@ -89,7 +89,10 @@ function setLootItems(client, lootBoard) {
 }
 
 module.exports.execute = async (client, interaction, data) => {
-    if (!await client.tools.userHasItem(data.guildUser.inventory, "shovel")) return await interaction.reply({ content: "You need a shovel to use this command. Use `/shop buy item_id:shovel` to buy a shovel.", ephemeral: true });
+    if (!await client.tools.userHasItem(data.guildUser.inventory, "shovel")) {
+        await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, data.cmd.help.name);
+        return await interaction.reply({ content: "You need a shovel to use this command. Use `/shop buy item_id:shovel` to buy a shovel.", ephemeral: true });
+    }
     await interaction.deferReply();
 
     data.gameFinished = false;
