@@ -60,6 +60,12 @@ module.exports.execute = async (client, interaction, data) => {
         return await interaction.reply({ content: "You need a fishing rod to use this command. Use `/shop buy item_id:fishing_rod` to buy a fishing rod.", ephemeral: true });
     }
 
+    if (client.tools.randomNumber(1, 100) <= 5) {
+        await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, data.cmd.help.name);
+        await client.tools.takeItem(interaction, data, "fishing_rod", 1);
+        return await interaction.reply({ content: "Oh No! Your Fishing Rod broke... You have to buy a new fishing rod. Use `/shop buy item_id:fishing_rod` to buy a fishing rod." });
+    }
+
     let key = randomKey(client, lootTable);
     if (key === "fail") return await interaction.reply({ content: "You haven't caught any fish today :(" });
 
