@@ -93,6 +93,13 @@ module.exports.execute = async (client, interaction, data) => {
         await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, data.cmd.help.name);
         return await interaction.reply({ content: "You need a shovel to use this command. Use `/shop buy item_id:shovel` to buy a shovel.", ephemeral: true });
     }
+
+    if (client.tools.randomNumber(1, 100) <= 3) {
+        await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, data.cmd.help.name);
+        await client.tools.takeItem(interaction, data, "shovel", 1);
+        return await interaction.reply({ content: "Oh No! Your shovel broke... You have to buy a new shovel. Use `/shop buy item_id:shovel` to buy a shovel." });
+    }
+
     await interaction.deferReply();
 
     data.gameFinished = false;
