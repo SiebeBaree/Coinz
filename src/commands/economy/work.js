@@ -1,6 +1,11 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const workList = require('../../data/jobs/jobs.json').jobs;
+const wordList = require('../../data/games/wordlist.json').words;
 const guildUserSchema = require('../../database/schemas/guildUsers');
+
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function getJob(jobName) {
     for (let i = 0; i < workList.length; i++) {
@@ -9,7 +14,7 @@ function getJob(jobName) {
     return null;
 }
 
-function setMathRow(buttons, isDisabled = false) {
+function setButtonsRow(buttons, isDisabled = false) {
     let row = new MessageActionRow().addComponents(
         new MessageButton()
             .setCustomId("work_btn0")
@@ -79,7 +84,7 @@ async function mgMath(client, interaction, data) {
     const correctAnswerIndex = client.tools.randomNumber(0, 3);
     buttons = insert(buttons, correctAnswerIndex, { name: answer })
 
-    await interaction.editReply({ content: `What is the result of \`${mathStr}\`?`, components: [setMathRow(buttons)] });
+    await interaction.editReply({ content: `What is the result of \`${mathStr}\`?`, components: [setButtonsRow(buttons)] });
     const interactionMessage = await interaction.fetchReply();
 
     const filter = async (i) => {
@@ -113,7 +118,7 @@ async function mgMath(client, interaction, data) {
             }
 
             buttons[correctAnswerIndex].style = "SUCCESS";
-            await interaction.editReply({ components: [setMathRow(buttons, true)] });
+            await interaction.editReply({ components: [setButtonsRow(buttons, true)] });
         }
     })
 
@@ -129,7 +134,81 @@ async function mgMath(client, interaction, data) {
 
             buttons[correctAnswerIndex].style = "DANGER";
             await interaction.followUp({ content: `You were too slow to pick the correct answer. You didn't earn anything.` })
-            await interaction.editReply({ components: [setMathRow(buttons, true)] });
+            await interaction.editReply({ components: [setButtonsRow(buttons, true)] });
+        }
+    })
+}
+
+async function mgRememberWord(client, interaction, data) {
+    let gameInProgress = true;
+
+    const answer = wordList[client.tools.randomNumber(0, wordList.length - 1)];
+    let buttons = [];
+
+    for (let i = 0; i < 5; i++) {
+        let wordIndex;
+        do {
+            wordIndex = client.tools.randomNumber(0, wordList.length - 1)
+        } while (buttons.includes(wordList[wordIndex]) || wordList[wordIndex] === answer)
+
+        buttons.push({ name: wordList[wordIndex] });
+    }
+    const correctAnswerIndex = client.tools.randomNumber(0, buttons.length - 1);
+    buttons[correctAnswerIndex] = { name: answer };
+
+    await interaction.editReply({ content: `Remember this word: \`${answer}\`` });
+    await timeout(3000);
+    await interaction.editReply({ content: `What was the word?`, components: [setButtonsRow(buttons)] });
+    const interactionMessage = await interaction.fetchReply();
+
+    const filter = async (i) => {
+        if (i.member.id === interaction.member.id) return true;
+        await i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: i.member });
+        return false;
+    }
+
+    const collector = interactionMessage.createMessageComponentCollector({ filter, time: 10000 });
+
+    collector.on('collect', async (interactionCollector) => {
+        if (gameInProgress) {
+            gameInProgress = false;
+            let selectedPage;
+            if (interactionCollector.customId.startsWith('work_btn')) selectedPage = interactionCollector.customId.charAt(interactionCollector.customId.length - 1);
+            await interactionCollector.deferUpdate();
+
+            if (buttons[selectedPage].name != answer) {
+                buttons[selectedPage].style = "DANGER";
+
+                await interaction.followUp({ content: `That is not the correct answer. You did not earn anything this hour.` })
+
+                if (data.hasBusiness) {
+                    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
+                        $set: { "business.workSalary": Math.ceil(data.salary * 0.9) }
+                    });
+                }
+            } else {
+                await client.tools.addMoney(interaction.guildId, interaction.member.id, data.salary);
+                await interaction.followUp({ content: `GG! You are very good at remembering words. You earned :coin: ${data.salary} this hour.` })
+            }
+
+            buttons[correctAnswerIndex].style = "SUCCESS";
+            await interaction.editReply({ components: [setButtonsRow(buttons, true)] });
+        }
+    })
+
+    collector.on('end', async (interactionCollector) => {
+        if (gameInProgress) {
+            gameInProgress = false;
+
+            if (data.hasBusiness) {
+                await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
+                    $set: { "business.workSalary": Math.ceil(data.salary * 0.9) }
+                });
+            }
+
+            buttons[correctAnswerIndex].style = "DANGER";
+            await interaction.followUp({ content: `You were too slow to pick the correct answer. You didn't earn anything.` })
+            await interaction.editReply({ components: [setButtonsRow(buttons, true)] });
         }
     })
 }
@@ -159,7 +238,16 @@ module.exports.execute = async (client, interaction, data) => {
     }
     data.salary = salary;
     await interaction.deferReply();
-    await mgMath(client, interaction, data);
+
+    const minigame = client.tools.randomNumber(0, 1);
+    switch (minigame) {
+        case 1:
+            await mgRememberWord(client, interaction, data);
+            break;
+        default:
+            await mgMath(client, interaction, data);
+            break;
+    }
 }
 
 module.exports.help = {
