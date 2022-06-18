@@ -58,6 +58,7 @@ module.exports.createSelectMenu = (defaultLabel, disabled = false) => {
         { label: 'Tools', value: 'tools' },
         // { label: 'Pets', value: 'pets' },
         { label: 'Fish', value: 'fish' },
+        { label: 'Animals', value: 'animals' },
         // { label: 'Miners', value: 'miners' },
         { label: 'Crops', value: 'crops' },
         // { label: 'Boosters', value: 'boosters' },
