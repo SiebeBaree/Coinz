@@ -6,7 +6,7 @@ function createVisualRow(element) {
 }
 
 function calcPlotPrice(plots) {
-    return plots * 3000 + 7500;
+    return plots * 800 + 2000;
 }
 
 async function createEmbed(client, interaction, data) {
