@@ -4,7 +4,7 @@
 // How to use this file?
 // 1. Create a file 'src/data/shop/items.json'
 // 2. Copy the data from 'src/data/shop/template.json' and paste it in your file
-// 3. Add ad many elements in the array you want.
+// 3. Add as many elements in the array you want.
 // EXTRA: elements with a empty string as itemId will be ignored
 
 // How to run this file?
