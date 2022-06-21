@@ -3,6 +3,7 @@ website/__pycache__/
 __pycache__/
 src/data/shop/*.json
 !src/data/shop/template.json
+src/data/events
 venv/
 
 # compiled output
