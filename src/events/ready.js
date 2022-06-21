@@ -1,5 +1,3 @@
-const cooldownsSchema = require("../database/schemas/cooldowns");
-
 module.exports = async (client) => {
     // Put all commands into an object and push it to an array.
     let data = [];
@@ -20,5 +18,5 @@ module.exports = async (client) => {
     await client.guilds.cache.get(client.config.rootServerId)?.commands.set(data);
 
     client.user.setPresence({ activities: [{ name: client.config.presence.name, type: client.config.presence.type }], status: client.config.presence.status });
-    client.logger.ready(`Shard ${client.shard.ids[0]} loaded.`)
+    client.logger.ready(`Shard ${client.shard.ids[0]} loaded.`);
 }
