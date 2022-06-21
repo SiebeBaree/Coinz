@@ -254,9 +254,7 @@ module.exports.help = {
                     name: 'plot-id',
                     type: 'STRING',
                     description: 'The plot ID of where you want to plant. Use , or - to plant on more than one plot.',
-                    required: true,
-                    min_value: 1,
-                    max_value: 15
+                    required: true
                 },
                 {
                     name: 'crop',
