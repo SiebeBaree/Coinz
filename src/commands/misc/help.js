@@ -5,12 +5,27 @@ const categories = [
     { name: "Economy", category: "economy", icon: ":coin: " },
     { name: "Games", category: "games", icon: ":video_game: " },
     // { name: "Pets", category: "pets", icon: ":dog: " },
-    { name: "Businesses", category: "businesses", icon: ":office: " },
+    { name: "Business", category: "business", icon: ":office: " },
     { name: "Crop Farming", category: "farming", icon: ":carrot: " },
     { name: "Stocks", category: "stocks", icon: ":chart_with_upwards_trend: " },
     // { name: "Social Media", category: "social", icon: ":mobile_phone: " },
     // { name: "Crypto Mining", category: "mining", icon: ":zap: " }
 ];
+
+function addNewUsage(usage, commandName, type, optionsName, parameter, i) {
+    if (type === "SUB_COMMAND") {
+        usage += `\`/${commandName} ${optionsName}`;
+        for (let j = 0; j < parameter.length; j++) {
+            usage += `${parameter[j].required ? " <" : " ["}${parameter[j].name}${parameter[j].required ? ">" : "]"}`
+        }
+        usage += "`\n";
+    } else {
+        if (i === 0) usage += `\`/${commandName}`;
+        usage += `${parameter.required ? " <" : " ["}${optionsName}${parameter.required ? ">" : "]"}`
+    }
+
+    return usage;
+}
 
 module.exports.execute = async (client, interaction, data) => {
     let commandName = interaction.options.getString('command');
@@ -43,18 +58,15 @@ module.exports.execute = async (client, interaction, data) => {
             const command = client.commands.get(commandName.toLowerCase());
             if (!command) return interaction.reply({ content: `Sorry, we couldn't find any category or command with the name \`${commandName}\`.`, ephemeral: true })
 
-            const options = command.help.options;
+            let options = command.help.options;
             let usage = "";
             for (let i = 0; i < options.length; i++) {
-                if (options[i].type === "SUB_COMMAND") {
-                    usage += `/${command.help.name} ${options[i].name}`;
+                if (options[i].type === "SUB_COMMAND_GROUP") {
                     for (let j = 0; j < options[i].options.length; j++) {
-                        usage += `${options[i].options[j].required ? " <" : " ["}${options[i].options[j].name}${options[i].options[j].required ? ">" : "]"}`
+                        usage = addNewUsage(usage, `${command.help.name} ${options[i].name}`, options[i].options[j].type, options[i].options[j].name, options[i].options[j].options, i);
                     }
-                    usage += "\n";
                 } else {
-                    if (i === 0) usage += `/${command.help.name}`;
-                    usage += `${options[i].required ? " <" : " ["}${options[i].name}${options[i].required ? ">" : "]"}`
+                    usage = addNewUsage(usage, command.help.name, options[i].type, options[i].name, options[i].options, i);
                 }
             }
 
@@ -64,16 +76,22 @@ module.exports.execute = async (client, interaction, data) => {
                 .setFooter({ text: client.config.embed.footer })
                 .setDescription(command.help.description || "No Description.")
                 .addFields(
-                    { name: 'Command Usage', value: `\`${usage === "" ? "/" + command.help.name : usage}\``, inline: false },
+                    { name: 'Command Usage', value: `${usage === "" ? `\`/${command.help.name}\`` : usage}`, inline: false },
                     { name: 'Cooldown', value: client.calc.msToTime(command.help.cooldown * 1000), inline: false }
                 )
 
-            let perms = [];
+            let botPerms = [];
             command.help.botPermissions.forEach(perm => {
-                perms.push(`\`${perm}\``);
+                botPerms.push(`\`${perm}\``);
             });
 
-            embed.addField('Permissions Needed', perms.join(', '), false);
+            let userPerms = [];
+            command.help.memberPermissions.forEach(perm => {
+                userPerms.push(`\`${perm}\``);
+            });
+
+            if (botPerms.length > 0) embed.addField('Permissions Required (For Bot)', botPerms.join(', '), false);
+            if (userPerms.length > 0) embed.addField('Permissions Needed (For User)', userPerms.join(', '), false);
 
             if (command.help.extraFields !== undefined && command.help.extraFields.length > 0) {
                 command.help.extraFields.forEach(field => {
@@ -92,7 +110,7 @@ module.exports.execute = async (client, interaction, data) => {
             .setAuthor({ name: "Commands List", iconURL: `${client.user.avatarURL() || client.config.embed.defaultIcon}` })
             .setColor(client.config.embed.color)
             .setFooter({ text: client.config.embed.footer })
-            .setDescription(`Want to get more information about Coinz?\nVisit our website: <${client.config.website}>\n_ _`)
+            .setDescription(`:question: **Need help with Coinz?**\n:gear: **Visit our** [**support server**](https://discord.gg/asnZQwc6kW)**!**`)
 
         categories.forEach(categoryObj => {
             embed.addField(`${categoryObj.icon || ""}${categoryObj.name}`, `\`/help ${categoryObj.category}\``, true);
@@ -116,7 +134,7 @@ module.exports.help = {
     category: "misc",
     extraFields: [],
     memberPermissions: [],
-    botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
+    botPermissions: [],
     ownerOnly: false,
     cooldown: 3,
     enabled: true
