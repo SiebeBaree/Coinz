@@ -10,9 +10,9 @@ module.exports.addMoney = async (guildId, userId, amount) => {
     });
 }
 
-module.exports.removeMoney = async (guildId, userId, amount) => {
+module.exports.removeMoney = async (guildId, userId, amount, goNegative = false) => {
     let guildUserData = await database.fetchGuildUser(guildId, userId);
-    if (guildUserData.wallet - amount < 0) amount = guildUserData.wallet;
+    if (guildUserData.wallet - amount < 0 && !goNegative) amount = guildUserData.wallet;
 
     await guildUserSchema.updateOne({ guildId: guildId, userId: userId }, {
         $inc: {
