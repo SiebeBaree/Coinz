@@ -11,7 +11,7 @@ function createEmbed(client, data) {
         .setDescription("You have a 1/6 chance of shooting the gun with a bullet in the chamber.\n\n:boom: `Shoot` ― **shoot the gun.**\n:no_entry: `Stop` ― **end the game.**")
         .addFields(
             { name: 'Bet Mulitplier', value: `${data.multiplier}x`, inline: true },
-            { name: 'Money', value: `:coin: ${parseInt(data.multiplier * data.bet)}`, inline: true }
+            { name: 'Profit', value: `:coin: ${parseInt(data.multiplier * data.bet)}`, inline: true }
         )
     return embed;
 }
@@ -37,7 +37,7 @@ function calcBullets(data) {
         data.playerWon = false;
         data.gameFinished = true;
     } else {
-        data.multiplier += 1
+        data.multiplier += 0.5
         data.playerWon = true;
     }
 
@@ -116,7 +116,7 @@ module.exports.execute = async (client, interaction, data) => {
             if (data.playerWon) {
                 await client.tools.addMoney(interaction.guildId, interaction.member.id, parseInt(data.bet * data.multiplier));
             } else {
-                await client.tools.removeMoney(interaction.guildId, interaction.member.id, data.bet);
+                await client.tools.removeMoney(interaction.guildId, interaction.member.id, data.bet, true);
             }
 
             await interaction.editReply({ content: getContent(data), embeds: [createEmbed(client, data)], components: [setButtons(data.gameFinished)] });
