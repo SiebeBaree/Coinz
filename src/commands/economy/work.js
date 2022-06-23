@@ -257,7 +257,7 @@ module.exports.help = {
     category: "economy",
     extraFields: [],
     memberPermissions: [],
-    botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
+    botPermissions: [],
     ownerOnly: false,
     cooldown: 3600,
     enabled: true

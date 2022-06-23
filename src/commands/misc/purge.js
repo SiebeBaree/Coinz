@@ -60,7 +60,7 @@ module.exports.help = {
     category: "misc",
     extraFields: [],
     memberPermissions: ["ADMINISTRATOR"],
-    botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
+    botPermissions: [],
     ownerOnly: false,
     cooldown: 300,
     enabled: true

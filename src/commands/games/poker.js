@@ -320,7 +320,7 @@ module.exports.help = {
     extraFields: [{ name: 'Multipliers', value: '[x100] Royal Flush\n[x50] Straight Flush\n[x25] Four of a Kind\n[x9] Full House\n[x6] Flush\n[x4] Straight\n[x3] Three of a Kind\n[x2] Two Pairs', inline: false }],
     image: "https://i.imgur.com/0FTZa3d.png",
     memberPermissions: [],
-    botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
+    botPermissions: [],
     ownerOnly: false,
     cooldown: 900,
     enabled: true
