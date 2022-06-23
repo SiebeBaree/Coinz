@@ -138,9 +138,9 @@ module.exports.help = {
     ],
     category: "games",
     extraFields: [{ name: 'Space Multiplier', value: '[x36] Straight (1, 2, 3, ..., 36)\n[x3] 1-12, 13-24, 25-36\n[x3] 1st, 2nd, 3rd\n[x2] 1-18, 19-36\n[x 2] Odd, Even\n[x2] red, black', inline: false }],
-    image: "https://i.imgur.com/sQuGz7D.png",
+    image: "https://cdn.coinzbot.xyz/games/roulette/table.png",
     memberPermissions: [],
-    botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
+    botPermissions: [],
     ownerOnly: false,
     cooldown: 900,
     enabled: true
