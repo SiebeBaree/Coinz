@@ -5,7 +5,7 @@ function createBanEmbed(client, member, description) {
         .setAuthor({ name: `Sorry, you can't use the bot.`, iconURL: `${member.displayAvatarURL() || client.config.embed.defaultIcon}` })
         .setColor("RED")
         .setFooter({ text: client.config.embed.footer })
-        .setThumbnail(`https://www.freeiconspng.com/thumbs/stop-sign-png/stop-sign-png-26.png`)
+        .setThumbnail(`https://cdn.coinzbot.xyz/bot/ban.png`)
         .setDescription(description)
     return embed;
 }
