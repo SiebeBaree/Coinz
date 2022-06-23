@@ -14,6 +14,7 @@ const categories = [
 
 function addNewUsage(usage, commandName, type, optionsName, parameter, i) {
     if (type === "SUB_COMMAND") {
+        parameter = parameter.options;
         usage += `\`/${commandName} ${optionsName}`;
         for (let j = 0; j < parameter.length; j++) {
             usage += `${parameter[j].required ? " <" : " ["}${parameter[j].name}${parameter[j].required ? ">" : "]"}`
@@ -66,9 +67,12 @@ module.exports.execute = async (client, interaction, data) => {
                         usage = addNewUsage(usage, `${command.help.name} ${options[i].name}`, options[i].options[j].type, options[i].options[j].name, options[i].options[j].options, i);
                     }
                 } else {
-                    usage = addNewUsage(usage, command.help.name, options[i].type, options[i].name, options[i].options, i);
+                    usage = addNewUsage(usage, command.help.name, options[i].type, options[i].name, options[i], i);
                 }
             }
+
+            usage = usage.trim();
+            if (!usage.endsWith('`')) usage += "`";
 
             var embed = new MessageEmbed()
                 .setAuthor({ name: `Help: ${command.help.name}`, iconURL: `${client.user.avatarURL() || client.config.embed.defaultIcon}` })
@@ -76,7 +80,7 @@ module.exports.execute = async (client, interaction, data) => {
                 .setFooter({ text: client.config.embed.footer })
                 .setDescription(command.help.description || "No Description.")
                 .addFields(
-                    { name: 'Command Usage', value: `${usage === "" ? `\`/${command.help.name}\`` : usage}`, inline: false },
+                    { name: 'Command Usage', value: `${usage === "`" ? `\`/${command.help.name}\`` : usage}`, inline: false },
                     { name: 'Cooldown', value: client.calc.msToTime(command.help.cooldown * 1000), inline: false }
                 )
 
