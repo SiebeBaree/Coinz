@@ -1,4 +1,5 @@
 from webApp import config
+from webApp.utils import is_authorized
 from flask import render_template, session, redirect, Blueprint, abort
 
 main = Blueprint('main', __name__)
@@ -6,15 +7,9 @@ main = Blueprint('main', __name__)
 
 @main.route("/")
 def index():
-    # logged_in = "token" in session
-    # user = session.get('user')
-    return render_template("index.html")  # , logged_in=logged_in, user=user)
-
-
-@main.route("/commands")
-def commands():
-    # logged_in = "token" in session
-    return render_template("commands.html")  # , logged_in=logged_in)
+    logged_in = is_authorized()  # "token" in session
+    user = session.get('user')
+    return render_template("index.html", logged_in=logged_in, user=user)
 
 
 @main.route("/donate")
@@ -42,14 +37,14 @@ def invite(guild_id=None):
 @main.route("/terms-of-service")
 @main.route("/tos")
 def terms_of_service():
-    # logged_in = "token" in session
-    return render_template("terms_of_service.html")  # , logged_in=logged_in)
+    logged_in = "token" in session
+    return render_template("terms_of_service.html", logged_in=logged_in)
 
 
 @main.route("/privacy-policy")
 def privacy_policy():
-    # logged_in = "token" in session
-    return render_template("privacy_policy.html")  # , logged_in=logged_in)
+    logged_in = "token" in session
+    return render_template("privacy_policy.html", logged_in=logged_in)
 
 
 @main.route("/vote")
