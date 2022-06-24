@@ -6,6 +6,8 @@ dashboard = Blueprint('dashboard', __name__)
 
 @dashboard.route("/")
 def dash():
+    return redirect(url_for("main.index"))
+
     if not is_authorized():
         return redirect(url_for("login.login_page"))
 
@@ -26,6 +28,8 @@ def dash():
 
 @dashboard.route("/<guild_id>")
 def dash_guild(guild_id):
+    return redirect(url_for("main.index"))
+
     if not is_authorized():
         return redirect(url_for("login.login_page"))
     if not is_guild_valid(guild_id, session.get("valid")):
