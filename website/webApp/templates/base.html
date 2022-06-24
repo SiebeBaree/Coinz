@@ -28,9 +28,6 @@
 {#                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">#}
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ url_for('main.commands') }}">Commands</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-white" href="{{ url_for('main.donate') }}">Donate</a>
                         </li>
                         <li class="nav-item">
@@ -40,31 +37,32 @@
                             <a class="nav-link text-white" href="{{ url_for('main.invite', guild_id=None) }}">Invite</a>
                         </li>
                     </ul>
-{#                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">#}
-{#                        {% if logged_in and user %}#}
-{#                            <li class="nav-item dropdown">#}
-{#                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">#}
-{#                                    {% if user.avatar %}#}
-{#                                        <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.webp?size=32" class="rounded-circle" height="32" alt="Black and White Portrait of a Man" loading="lazy"/>#}
-{#                                    {% else %}#}
-{#                                        <img src="https://cdn.discordapp.com/embed/avatars/3.png" class="rounded-circle" height="32" alt="Black and White Portrait of a Man" loading="lazy"/>#}
-{#                                    {% endif %}#}
-{#                                    {{ user.username }}{{ user.discriminator }}#}
-{#                                </a>#}
-{#                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">#}
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        {% if logged_in and user %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {% if user.avatar %}
+                                        <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.webp?size=32" class="rounded-circle" height="32" alt="Black and White Portrait of a Man" loading="lazy"/>
+                                    {% else %}
+                                        <img src="https://cdn.discordapp.com/embed/avatars/3.png" class="rounded-circle" height="32" alt="Black and White Portrait of a Man" loading="lazy"/>
+                                    {% endif %}
+                                    {{ user.username }}#{{ user.discriminator }}
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 {#                                    <li><a class="dropdown-item" href="{{ url_for('dashboard.dash') }}">My Servers</a></li>#}
-{#                                    <li>#}
-{#                                        <hr class="dropdown-divider">#}
-{#                                    </li>#}
-{#                                    <li><a class="dropdown-item logout" href="{{ url_for('login.logout') }}">Logout</a></li>#}
-{#                                </ul>#}
-{#                            </li>#}
-{#                        {% else %}#}
-{#                            <li class="nav-item">#}
-{#                                <a class="nav-link text-white" href="{{ url_for('login.login_page') }}">Login via Discord</a>#}
-{#                            </li>#}
-{#                        {% endif %}#}
-{#                    </ul>#}
+                                    <li><a class="dropdown-item" href="{{ url_for('main.invite') }}">Invite Coinz</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item logout" href="{{ url_for('login.logout') }}">Logout</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{ url_for('login.login_page') }}">Login via Discord</a>
+                            </li>
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -85,9 +83,6 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link text-inner" href="{{ url_for('main.commands') }}">Commands</a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-inner" href="{{ url_for('main.donate') }}">Donate</a>
                         </li>
