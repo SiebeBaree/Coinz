@@ -17,7 +17,6 @@ def login_page():
 def callback():
     try:
         token = Oauth2.exchange_code(request.args.get("code"))
-        print(token)
         session["token"] = token.get("access_token")
     except HTTPError:
         clear_session()
