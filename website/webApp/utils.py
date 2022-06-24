@@ -7,6 +7,7 @@ def clear_session():
     session.pop("token", None)
     session.pop("user", None)
     session.pop("guilds", None)
+    session.pop("bot_guilds", None)
 
 
 def is_authorized():
@@ -19,15 +20,15 @@ def is_authorized():
         if "user" not in session:
             session["user"] = Oauth2.get_user_data(token)
 
-        if "guilds" not in session:
-            session["guilds"] = Oauth2.get_guild_data(token)
+        # if "guilds" not in session:
+        #     session["guilds"] = Oauth2.get_guild_data(token)
 
-        if "bot_guilds" not in session:
-            session["bot_guilds"] = Oauth2.get_bot_guilds()
-            session["valid"] = get_valid_guilds(session.get("guilds"), session["bot_guilds"])
+        # if "bot_guilds" not in session:
+        #     session["bot_guilds"] = Oauth2.get_bot_guilds()
+        #     session["valid"] = get_valid_guilds(session.get("guilds"), session["bot_guilds"])
 
-        if "valid" not in session:
-            session["valid"] = get_valid_guilds(session.get("guilds"), session["bot_guilds"])
+        # if "valid" not in session:
+        #     session["valid"] = get_valid_guilds(session.get("guilds"), session["bot_guilds"])
     except HTTPError:
         clear_session()
         return False
