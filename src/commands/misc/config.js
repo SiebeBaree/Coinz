@@ -2,7 +2,8 @@ const { MessageEmbed, Permissions } = require('discord.js');
 const guildUserSchema = require('../../database/schemas/guildUsers');
 
 async function execBan(client, interaction, data) {
-    const user = interaction.options.getString('user');
+    const user = interaction.options.getUser('user');
+    if (user.bot) return await interaction.reply({ content: "You can't ban a bot...", ephemeral: true });
     if (user.id === interaction.member.id) return await interaction.reply({ content: "You can't ban yourself...", ephemeral: true });
     if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return await interaction.reply({ content: "You can't ban an admin from using the bot...", ephemeral: true });
 

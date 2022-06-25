@@ -7,11 +7,11 @@ module.exports.execute = async (client, interaction, data) => {
     const memberData = await client.database.fetchGuildUser(interaction.guildId, member.id);
 
     if (data.guildUser.wallet < amount) {
-        return await interaction.editReply({ content: `You don't have :coin: ${amount} in your wallet.`, ephemeral: true });
+        return await interaction.reply({ content: `You don't have :coin: ${amount} in your wallet.`, ephemeral: true });
     } else {
         await client.tools.addMoney(interaction.guildId, member.id, amount);
         await client.tools.removeMoney(interaction.guildId, interaction.member.id, amount, true);
-        return await interaction.editReply({ content: `You sent :coin: ${amount} to ${member.username}!` });
+        return await interaction.reply({ content: `You sent :coin: ${amount} to ${member.username}!` });
     }
 }
 
