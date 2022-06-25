@@ -1,8 +1,12 @@
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed, Permissions } = require('discord.js');
 const guildUsersSchema = require("../../database/schemas/guildUsers");
 
 module.exports.execute = async (client, interaction, data) => {
     const member = interaction.options.getUser('user') || interaction.member;
+
+    if (member.id !== interaction.member.id && !interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+        return await interaction.reply({ content: "You don't have the permission `ADMINISTRATOR`.", ephemeral: true });
+    }
 
     const confirmEmbed = new MessageEmbed()
         .setAuthor({ name: `Reset account of ${member.displayName || member.username}`, iconURL: `${member.displayAvatarURL() || client.config.embed.defaultIcon}` })
