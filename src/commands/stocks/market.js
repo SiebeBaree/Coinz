@@ -162,6 +162,7 @@ async function execBuy(client, interaction, data) {
         amount = client.calc.roundNumber(price / stock.price, 3);
     }
 
+    if (price < 10) return await interaction.reply({ content: `You have to buy at least :coin: 10 at once.`, ephemeral: true });
     if (amount > maxOwnedStock) return await interaction.reply({ content: `You can't own more than ${maxOwnedStock} shares or crypto.`, ephemeral: true });
     if (price > maxPurchase) return await interaction.reply({ content: `You can't buy more than :coin: ${maxPurchase} at once.`, ephemeral: true });
 
