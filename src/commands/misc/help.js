@@ -64,7 +64,7 @@ module.exports.execute = async (client, interaction, data) => {
             for (let i = 0; i < options.length; i++) {
                 if (options[i].type === "SUB_COMMAND_GROUP") {
                     for (let j = 0; j < options[i].options.length; j++) {
-                        usage = addNewUsage(usage, `${command.help.name} ${options[i].name}`, options[i].options[j].type, options[i].options[j].name, options[i].options[j].options, i);
+                        usage = addNewUsage(usage, `${command.help.name} ${options[i].name}`, options[i].options[j].type, options[i].options[j].name, options[i].options[j], i);
                     }
                 } else {
                     usage = addNewUsage(usage, command.help.name, options[i].type, options[i].name, options[i], i);
