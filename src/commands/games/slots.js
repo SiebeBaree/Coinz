@@ -100,7 +100,9 @@ module.exports.help = {
         }
     ],
     category: "games",
-    extraFields: [],
+    extraFields: [
+        { name: 'Multipliers', value: '[1x] :100:\n[2.5x] :moneybag:\n[3x] :dollar:\n[4x] :gem:\n[6x] :first_place:', inline: false }
+    ],
     memberPermissions: [],
     botPermissions: [],
     ownerOnly: false,
