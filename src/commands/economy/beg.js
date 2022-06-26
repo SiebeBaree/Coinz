@@ -18,6 +18,6 @@ module.exports.help = {
     memberPermissions: [],
     botPermissions: [],
     ownerOnly: false,
-    cooldown: 900,
+    cooldown: 300,
     enabled: true
 }
