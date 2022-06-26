@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const util = require('util');
 const readdir = util.promisify(fs.readdir);
 const { Client, Collection, Intents } = require('discord.js');
+const dbots = require('dbots');
 
 // Initialising a Client object
 const intents = [Intents.FLAGS.GUILDS];
@@ -35,14 +36,17 @@ async function init() {
     // Command Handler
     let commandFolder = await readdir("./src/commands/");
     commandFolder.forEach(dir => {
-        const commandFiles = fs.readdirSync('./src/commands/' + dir + "/").filter(file => file.endsWith('.js'));
-        for (const file of commandFiles) {
-            const command = require(`${process.cwd()}/src/commands/${dir}/${file}`);
+        // Ignored . folders
+        if (!dir.startsWith(".")) {
+            const commandFiles = fs.readdirSync('./src/commands/' + dir + "/").filter(file => file.endsWith('.js'));
+            for (const file of commandFiles) {
+                const command = require(`${process.cwd()}/src/commands/${dir}/${file}`);
 
-            try {
-                client.commands.set(command.help.name, command);
-            } catch (err) {
-                client.logger.error(`An unexpected error occured with COMMAND ${file}.`);
+                try {
+                    client.commands.set(command.help.name, command);
+                } catch (err) {
+                    client.logger.error(`An unexpected error occured with COMMAND ${file}.`);
+                }
             }
         }
     })
@@ -66,6 +70,30 @@ async function init() {
     }
 
     await client.login(process.env.TOKEN);
+
+    // Make sure the client has logged in before initializing a poster.
+    client.on('ready', () => {
+        const poster = new dbots.Poster({
+            client,
+            apiKeys: {
+                discordbotlist: process.env.API_DISCORDBOTLIST,
+                discordbotsgg: {
+                    token: process.env.API_DISCORDBOTSGG,
+                    userAgent: {
+                        clientID: '938771676433362955',
+                        library: 'discord.js'
+                    }
+                },
+                discords: process.env.API_DISCORDS,
+                disforge: process.env.API_DISFORGE,
+                topgg: process.env.API_TOPGG
+            },
+            clientLibrary: 'discord.js'
+        })
+
+        // Starts an interval thats posts to all services every 30 minutes.
+        poster.startInterval().then(client.logger.ready("Poster is online."));
+    })
 }
 
 init();
