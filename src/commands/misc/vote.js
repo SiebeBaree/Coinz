@@ -10,7 +10,7 @@ async function execLinks(client, interaction, data) {
         .setTitle(`Coinz Vote Links`)
         .setColor(client.config.embed.color)
         .addFields(
-            { name: 'Links', value: `<:topgg:990540015853506590> **Top.gg:** [Click Here](https://top.gg/bot/938771676433362955/vote)\n<:dbl:990540323967103036> **Discordbotlist.com:** [Click Here](https://discordbotlist.com/bots/coinz/upvote)`, inline: false },
+            { name: 'Links', value: `<:topgg:990540015853506590> **Top.gg:** [Click Here](https://top.gg/bot/938771676433362955/vote)\n<:dbl:990540323967103036> **Discordbotlist.com:** [Click Here](https://discordbotlist.com/bots/coinz/upvote)\n<:discords:990631234113781851> **Discords.com:** [Click Here](https://discords.com/bots/bot/938771676433362955/vote)`, inline: false },
             { name: 'Rewards (For each vote)', value: `1x <:${item.itemId}:${item.emoteId}> ${item.name} worth :coin: ${item.sellPrice}\n\n:exclamation: Get 2x <:${item.itemId}:${item.emoteId}> ${item.name} per vote in the weekends when voting on top.gg!`, inline: false }
         )
         .setFooter({ text: client.config.embed.footer })
