@@ -54,10 +54,10 @@ module.exports.execute = async (client, interaction, data) => {
 
     collector.on('collect', async (interactionCollector) => {
         if (interactionCollector.componentType.toUpperCase() === "BUTTON") {
-            if (interactionCollector.customId === 'toLastPage') currentPage = maxPages - 1;
-            else if (interactionCollector.customId === 'toFirstPage') currentPage = 0;
-            else if (interactionCollector.customId === 'toNextPage') currentPage++;
-            else if (interactionCollector.customId === 'toPreviousPage') currentPage--;
+            if (interactionCollector.customId === 'toLastPage') data.currentPage = data.maxPages - 1;
+            else if (interactionCollector.customId === 'toFirstPage') data.currentPage = 0;
+            else if (interactionCollector.customId === 'toNextPage') data.currentPage++;
+            else if (interactionCollector.customId === 'toPreviousPage') data.currentPage--;
         }
 
         await interactionCollector.deferUpdate();
