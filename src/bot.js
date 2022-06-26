@@ -92,7 +92,8 @@ async function init() {
         })
 
         // Starts an interval thats posts to all services every 30 minutes.
-        poster.startInterval().then(client.logger.ready("Poster is online."));
+        poster.startInterval();
+        client.logger.ready("Poster is online.");
     })
 }
 
