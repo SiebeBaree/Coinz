@@ -219,6 +219,8 @@ module.exports.execute = async (client, interaction, data) => {
         return interaction.reply({ content: `You don't have a job. Please find a job using \`/job list\`.`, ephemeral: true });
     }
 
+    await interaction.deferReply();
+
     let salary = 0;
     data.hasBusiness = false;
     if (data.guildUser.job === "business") {
@@ -231,13 +233,12 @@ module.exports.execute = async (client, interaction, data) => {
                 $set: { job: "" }
             });
             await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, "work");
-            return interaction.reply({ content: `Something went wrong. Please try again.`, ephemeral: true });
+            return interaction.editReply({ content: `You don't have a valid job... Please apply for a LEGAL job next time. You can't work if you dont have a LEGAL job.` });
         }
 
         salary = job.salary;
     }
     data.salary = salary;
-    await interaction.deferReply();
 
     const minigame = client.tools.randomNumber(0, 1);
     switch (minigame) {
