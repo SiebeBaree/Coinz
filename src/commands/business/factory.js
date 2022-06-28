@@ -30,7 +30,7 @@ async function execView(client, interaction, data) {
         }
 
         const factories = data.company.factories;
-        const maxFactories = data.company.employees.length * 2 + 3;
+        const maxFactories = data.company.employees.length * 2 + 2;
         let buyFactory = ``;
 
         if (factories.length < maxFactories) {
@@ -42,7 +42,7 @@ async function execView(client, interaction, data) {
         const e = new MessageEmbed()
             .setTitle(`:factory: Factories of ${data.company.name}`)
             .setColor(client.config.embed.color)
-            .setDescription(`:gear: **Use** \`/factory set-production\` **to produce an item.**\n:hammer_pick: **All produced products are found in** \`/company inventory\`**.**${buyFactory}`)
+            .setDescription(`:gear: **Use** \`/factory set-production\` **to produce an item.**\n:hammer_pick: **All collected products are found in** \`/company inventory\`**.**${buyFactory}`)
 
         if (factories.length == 0) {
             e.addField(`Buy a Factory`, `Please press the button below to buy a factory.`, false);
@@ -102,15 +102,14 @@ async function execView(client, interaction, data) {
         let btnsDisabled = [true, false];
 
         if (!disabled) {
-            for (let i = 0; i < data.guildUser.plots.length; i++) {
-                if (data.company.factories[i].status === "ready" || data.guildUser.plots[i].status === "destroyed") {
+            for (let i = 0; i < data.company.factories.length; i++) {
+                if (data.company.factories[i].status === "ready" || data.company.factories[i].status === "destroyed") {
                     btnsDisabled[0] = false;
                     break;
                 }
             }
 
-            const maxFactories = data.company.employees.length * 2 + 3;
-            console.log(maxFactories);
+            const maxFactories = data.company.employees.length * 2 + 2;
             if (data.company.factories.length >= 15 || data.guildUser.wallet < calcFactoryPrice(data.company.factories.length) || data.company.factories.length >= maxFactories) btnsDisabled[1] = true;
         } else {
             btnsDisabled = [true, true];
@@ -189,7 +188,7 @@ async function execView(client, interaction, data) {
                     if (data.company.factories[i].status === "ready") await giveItem(data, product.itemId, product.quantity);
 
                     data.company.factories[i].status = "standby";
-                    await companiesSchema.updateOne({ guildId: company.guildId, ownerId: company.ownerId, 'factories.factoryId': data.company.factories[i].factoryId }, {
+                    await companiesSchema.updateOne({ guildId: data.company.guildId, ownerId: data.company.ownerId, 'factories.factoryId': data.company.factories[i].factoryId }, {
                         $set: { 'factories.$.status': "standby" }
                     });
                 }
@@ -248,22 +247,22 @@ async function execSetProduction(client, interaction, data) {
 
     const factories = getFactories(factoryId);
     if (factories === []) return await interaction.editReply({ content: `Those are not valid factories.` });
-    if (Math.max(...factories) > data.company.factories.length) return await interaction.editReply({ content: `You don't own a plot with id \`${Math.max(...plots)}\`.` });
+    if (Math.max(...factories) > data.company.factories.length) return await interaction.editReply({ content: `You don't own a factory with id \`${Math.max(...factories)}\`.` });
 
     const product = client.tools.getProduct(productId.toLowerCase());
-    if (product == null) return await interaction.editReply({ content: `\`${productId.toLowerCase()}\` is not a valid product. Use \`/factory list-products\` to view all products.` });
+    if (product === undefined) return await interaction.editReply({ content: `\`${productId.toLowerCase()}\` is not a valid product. Use \`/factory list-products\` to view all products.` });
 
     for (let i = 0; i < factories.length; i++) {
         await companiesSchema.updateOne({ guildId: data.company.guildId, ownerId: data.company.ownerId, 'factories.factoryId': factories[i] - 1 }, {
             $set: {
                 'factories.$.product': product.itemId,
-                'factories.$.status': "Creating Product",
-                'factories.$.collectOn': parseInt(Date.now() / 1000) + product.duration
+                'factories.$.status': "producing",
+                'factories.$.collectOn': parseInt(Date.now() / 1000) + product.produceTime
             }
         });
     }
 
-    await interaction.editReply({ content: `You are currently producing \`${product.name}\` in ${factories.length === 1 ? "factory" : "factories"} \`${factories.join(", ")}\`` });
+    await interaction.editReply({ content: `You are currently producing **${product.quantity}x** <:${product.itemId}:${product.emoteId}> **${product.name}** in ${factories.length === 1 ? "factory" : "factories"} \`${factories.join(", ")}\`` });
 }
 
 async function execListProducts(client, interaction, data) {
