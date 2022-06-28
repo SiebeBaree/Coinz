@@ -1,0 +1,58 @@
+{
+    "items": [
+        {
+            "itemId": "soccer_ball",
+            "name": "Soccer Ball",
+            "emoteId": "991232154321305680",
+            "buyPrice": 0,
+            "sellPrice": 2,
+            "produceTime": 3600,
+            "quantity": 9
+        },
+        {
+            "itemId": "processor",
+            "name": "Processor",
+            "emoteId": "991232152060563486",
+            "buyPrice": 0,
+            "sellPrice": 30,
+            "produceTime": 43200,
+            "quantity": 6
+        },
+        {
+            "itemId": "graphics_card",
+            "name": "Graphics Card",
+            "emoteId": "991232150961659974",
+            "buyPrice": 0,
+            "sellPrice": 75,
+            "produceTime": 86400,
+            "quantity": 4
+        },
+        {
+            "itemId": "desktop",
+            "name": "Desktop",
+            "emoteId": "991232149896298546",
+            "buyPrice": 0,
+            "sellPrice": 300,
+            "produceTime": 259200,
+            "quantity": 3
+        },
+        {
+            "itemId": "server",
+            "name": "Server",
+            "emoteId": "991232153188847626",
+            "buyPrice": 0,
+            "sellPrice": 500,
+            "produceTime": 432000,
+            "quantity": 2
+        },
+        {
+            "itemId": "car",
+            "name": "Car",
+            "emoteId": "991232148797399050",
+            "buyPrice": 0,
+            "sellPrice": 1500,
+            "produceTime": 604800,
+            "quantity": 1
+        }
+    ]
+}
