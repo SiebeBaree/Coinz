@@ -1,94 +1,92 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const guildUserSchema = require('../../database/schemas/guildUsers');
+const companiesSchema = require('../../database/schemas/companies');
 
-const advertiseTime = 43200;
-const maxLevel = 10;
-
-async function createEmbed(client, interaction, data) {
-    // Add for future: ability to add custom company logo, slogan and color
-    let level = data.userData.business.level;
-    let advertisementCosts = getAdvertisementCosts(level);
-    let expandCost = getExpandCosts(level);
-    let worth = getWorth(data.userData.business);
-    let workSalary = data.userData.business.workSalary;
-
-    let embed = new MessageEmbed()
-        .setAuthor({ name: `Business: ${data.userData.business.name}` })
-        .setColor(client.config.embed.color)
-        .addFields(
-            { name: 'Owner', value: `<@${data.userData.userId}>`, inline: false },
-            { name: 'Can Advertise?', value: `${data.advertise}`, inline: true },
-            { name: 'Worth', value: `:coin: ${worth}`, inline: true },
-            { name: 'Level', value: `${level}`, inline: true },
-            { name: 'Work Salary', value: `:coin: ${workSalary}`, inline: true },
-            { name: 'Advertise Costs', value: `:coin: ${advertisementCosts}`, inline: true },
-            { name: 'Expansion Costs', value: `:coin: ${expandCost}`, inline: true }
-        )
-    return embed;
+const positions = {
+    "employee": {
+        name: "Normal Employee",
+        defaultWage: 15
+    },
+    "admin": {
+        name: "Chief Operations Officier",
+        defaultWage: 100
+    },
+    "ceo": {
+        name: "Chief Executive Officier",
+        defaultWage: 200
+    }
 }
 
-function createRow(data, disabled = false) {
-    let row = new MessageActionRow().addComponents(
-        new MessageButton()
-            .setCustomId("bus_advertise")
-            .setLabel("Advertise")
-            .setStyle("PRIMARY")
-            .setDisabled(!data.canAdvertise || disabled),
-        new MessageButton()
-            .setCustomId("bus_expand")
-            .setLabel("Expand")
-            .setStyle("SUCCESS")
-            .setDisabled(!data.canExpand || disabled),
-        new MessageButton()
-            .setCustomId("bus_sell")
-            .setLabel("Sell Business")
-            .setStyle("DANGER")
-            .setDisabled(disabled)
-    );
-    return row;
+async function calcWorth(client, inventory, factories) {
+    let worth = 0;
+
+    for (let i = 0; i < inventory.length; i++) {
+        // const item = await shopSchema.findOne({ itemId: inventory[i].itemId });
+        if (item !== null || item !== undefined) worth += item.sellPrice * inventory[i].quantity;
+    }
+
+    return Math.round(worth * (factories * 500));
 }
 
-function getNewSalary(business) {
-    const newSalary = business.workSalary + (business.level * 2 + 5);
-    return newSalary > 400 ? 400 : newSalary;
+function getEmployees(client, employees) {
+    let employeesStr = "";
+
+    for (let i = 0; i < employees.length; i++) {
+        employeesStr += `${positions[employees[i].role].name} <@${employees[i].userId}> - Wage: :coin: ${employees[i].wage}\n`;
+    }
+
+    return employeesStr === "" ? "No Employees Found!" : employeesStr;
 }
 
-function getAdvertisementCosts(level) {
-    return 250 + (level * 50);
-}
-
-function getExpandCosts(level) {
-    return 250 * (level >= 10 ? 0 : level);
-}
-
-function getWorth(business) {
-    return (business.level < 5 ? 0 : business.level) * 80 + (business.workSalary < 100 ? 0 : business.workSalary) * 2;
+async function removeEmployee(company, employeeId) {
+    await companiesSchema.updateOne({ guildId: company.guildId, ownerId: company.ownerId }, {
+        $pull: {
+            employees: { userId: employeeId }
+        }
+    })
 }
 
 async function execInfo(client, interaction, data) {
-    let name = interaction.options.getString('name') || 1;
-    if (name === 1 && data.guildUser.business === undefined) return await interaction.reply({ content: `You don't have a business. Please create one using \`/business create <name>\` or give a valid business name.`, ephemeral: true });
-
-    if (name === 1) name = data.guildUser.business.name;
-    data.userData = await guildUserSchema.findOne({ guildId: interaction.guildId, "business.name": name.toLowerCase() });
-    if (data.userData == null) return await interaction.reply({ content: `That business doesn't exist. Please try another name.`, ephemeral: true })
-    if (data.userData.userId === interaction.member.id) data.ownBusiness = true;
     await interaction.deferReply();
+    data = await client.tools.hasBusiness(interaction, data, positions);
+    const company = data.company;
+    if (!company) return await interaction.editReply({ content: `You might want to create a company to use this command. Please create one using \`/company create <name>\`.` });
 
-    data.advertise = "yes";
-    if (data.userData.business.lastAdvertised + advertiseTime > parseInt(Date.now() / 1000)) {
-        data.advertise = "in " + client.calc.msToTime(parseInt((data.userData.business.lastAdvertised + advertiseTime) * 1000 - Date.now()));
+    const embed = async function (client, company) {
+        let em = new MessageEmbed()
+            .setAuthor({ name: `Company: ${company.name}` })
+            .setColor(client.config.embed.color)
+            .addFields(
+                { name: 'Information', value: `:sunglasses: **Owner:** <@${company.ownerId}>\n:credit_card: **Bank Balance:** :coin: ${company.balance}\n:moneybag: **Worth:** :coin: ${await calcWorth(client, company.inventory, company.factories.length)}\n:factory: **Factories:** \`${company.factories.length}\``, inline: false },
+                { name: 'Employees', value: getEmployees(client, company.employees), inline: false },
+                { name: 'Your Information', value: `**Position:** ${positions[data.employee.role.toLowerCase()].name}\n**Wage:** :coin: ${data.employee.wage}`, inline: false }
+            )
+        return em;
     }
 
-    if (!data.ownBusiness) return await interaction.editReply({ embeds: [await createEmbed(client, interaction, data)] });
+    const row = function (data, disabled = false) {
+        if (data.isEmployee === true) {
+            let r = new MessageActionRow().addComponents(
+                new MessageButton()
+                    .setCustomId("company_leave")
+                    .setLabel("Leave Company")
+                    .setStyle("DANGER")
+                    .setDisabled(disabled)
+            );
+            return r;
+        } else {
+            let r = new MessageActionRow().addComponents(
+                new MessageButton()
+                    .setCustomId("company_sell")
+                    .setLabel("Sell Company")
+                    .setStyle("DANGER")
+                    .setDisabled(disabled)
+            );
+            return r;
+        }
+    }
 
-    let advertiseCost = getAdvertisementCosts(data.userData.business.level);
-    let expandCost = getExpandCosts(data.userData.business.level);
-    data.canAdvertise = advertiseCost <= data.guildUser.wallet && data.userData.business.lastAdvertised + advertiseTime <= parseInt(Date.now() / 1000);
-    data.canExpand = data.userData.business.level < 10 && expandCost <= data.guildUser.wallet;
-
-    await interaction.editReply({ embeds: [await createEmbed(client, interaction, data)], components: [createRow(data)] });
-    const interactionMessage = await interaction.fetchReply();
+    const interactionMessage = await interaction.editReply({ embeds: [await embed(client, company)], components: [row(data)], fetchReply: true });
 
     const filter = async (i) => {
         if (i.member.id === interaction.member.id) return true;
@@ -96,127 +94,422 @@ async function execInfo(client, interaction, data) {
         return false;
     }
 
-    const collector = interactionMessage.createMessageComponentCollector({ filter, max: 15, idle: 15000, time: 60000 });
+    const collector = interactionMessage.createMessageComponentCollector({ filter, time: 20000 });
 
     collector.on('collect', async (interactionCollector) => {
         await interactionCollector.deferUpdate();
 
-        if (interactionCollector.customId === 'bus_advertise') {
-            data.canAdvertise = false;
-
-            await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-                $set: {
-                    "business.lastAdvertised": parseInt(Date.now() / 1000),
-                    "business.workSalary": getNewSalary(data.userData.business)
-                }
-            });
-
-            await client.tools.removeMoney(interaction.guildId, interaction.member.id, advertiseCost);
-            data.userData = await guildUserSchema.findOne({ guildId: interaction.guildId, "business.name": name.toLowerCase() });
-
-            data.canAdvertise = false;
-            data.advertise = "in " + client.calc.msToTime(parseInt((data.userData.business.lastAdvertised + advertiseTime) * 1000 - Date.now()));
-        } else if (interactionCollector.customId === 'bus_expand') {
-            if (data.userData.business.level < maxLevel) {
-                await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-                    $inc: {
-                        "business.level": 1
-                    }
-                });
-                await client.tools.removeMoney(interaction.guildId, interaction.member.id, expandCost);
-                data.userData = await guildUserSchema.findOne({ guildId: interaction.guildId, "business.name": name.toLowerCase() });
-            }
-            data.canExpand = data.userData.business.level < 10;
-
-            advertiseCost = getAdvertisementCosts(data.userData.business.level);
-            expandCost = getExpandCosts(data.userData.business.level);
-        } else if (interactionCollector.customId === 'bus_sell') {
-            const worth = getWorth(data.userData.business);
-            await interaction.editReply({ components: [createRow(data, true)] });
-
-            guildUserSchema.findOne({ guildId: interaction.guildId, userId: interaction.member.id }, function (err, user) {
-                user.business = undefined;
-                user.save();
-            });
-
+        if (interactionCollector.customId === 'company_sell') {
+            const worth = calcWorth(client, company.inventory, company.factories.length);
+            await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, { $set: { job: "" } });
+            await companiesSchema.deleteOne({ guildId: interaction.guildId, ownerId: interaction.member.id });
             await client.tools.addMoney(interaction.guildId, interaction.member.id, worth);
-            return await interaction.followUp({ content: `You sold your business for :coin: ${worth}.` });
+
+            return await interaction.followUp({ content: `You sold \`${company.name}\` for :coin: ${worth}. Let's buy a yacht and do nothing with your live...` });
+        } else if (interactionCollector.customId === 'company_leave') {
+            await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, { $set: { job: "" } });
+            await removeEmployee(company, interaction.member.id);
+
+            return await interaction.followUp({ content: `You left ${company.name}. Go find a new job before you're broke!` });
         }
 
-        await interaction.editReply({ embeds: [await createEmbed(client, interaction, data)], components: [createRow(data)] });
+        await interaction.editReply({ embeds: [await embed(client, company)], components: [row(data, true)] });
     })
 
     collector.on('end', async (interactionCollector) => {
-        await interaction.editReply({ components: [createRow(data, true)] });
+        await interaction.editReply({ components: [row(data, true)] });
     })
 }
 
-async function execCreate(client, interaction, data) {
-    const name = interaction.options.getString('name');
-
-    if (data.guildUser.business != undefined && data.guildUser.business.name != undefined) return await interaction.reply({ content: `You already have a business. If you want to change the name you'll have to sell your business, using: \`/business info\`.`, ephemeral: true });
-    const existingBusiness = await guildUserSchema.findOne({ guildId: interaction.guildId, "business.name": name.toLowerCase() });
-    if (existingBusiness != null) return await interaction.reply({ content: `A business with that name already exists in this server. Please try another one.`, ephemeral: true })
+async function execInventory(client, interaction, data) {
+    data = await client.tools.hasBusiness(interaction, data, positions);
     await interaction.deferReply();
+    const company = data.company;
+    if (!company) return await interaction.editReply({ content: `To view your companies inventory you may need a company? Am I right? Please create one using \`/company create <name>\`.` });
 
-    const businessObj = {
-        name: name.toLowerCase(),
-        level: 1,
-        workSalary: 25,
-        lastAdvertised: parseInt(Date.now() / 1000)
+    const embed = async function (client, company) {
+        let inventory = "";
+
+        for (let i = 0; i < company.inventory; i++) {
+            inventory += `**${company.inventory[i].quantity}x** ${company.inventory[i].itemId}\n`;
+        }
+
+        let em = new MessageEmbed()
+            .setAuthor({ name: `Inventory of ${company.name}` })
+            .setColor(client.config.embed.color)
+            .setDescription(`:credit_card: **Bank Balance:** :coin: ${company.balance}\n:moneybag: **Total Inventory Worth:** :coin: ${await calcWorth(client, company.inventory, company.factories.length)}`)
+            .addField("Inventory", inventory === "" ? "Your company has no inventory." : inventory, false)
+        return em;
     }
 
+    await interaction.editReply({ embeds: [await embed(client, company)] });
+}
+
+async function execEmployeeAdd(client, interaction, data) {
+    const user = interaction.options.getUser('user');
+    await interaction.deferReply();
+    data = await client.tools.hasBusiness(interaction, data, positions);
+    const company = data.company;
+
+    if (!company) return await interaction.editReply({ content: `You don't have a company. Please create one using \`/company create <name>\`.` });
+    if (data.employee.role !== "ceo" && data.employee.role !== "admin") return await interaction.editReply({ content: `You don't have the power to hire new people.` });
+
+    if (user.bot) return await interaction.editReply({ content: `Do you really want to invite a bot?! I don't think so. The bots don't want to work for your company...` });
+    if (user.id === interaction.member.id) return await interaction.editReply({ content: `Why are you trying to invite yourself?!` });
+    if (company.employees.length >= 5) return await interaction.editReply({ content: `You are not Apple. Please don't invite the whole world...\nYou already have the maximum allowed staff for a company. Check your employees using \`/company info\`` });
+    for (let i = 0; i < company.employees.length; i++) {
+        if (company.employees[i].userId === user.id) {
+            return await interaction.editReply({ content: `You really want to invite this user? That's already an employee of your company...` });
+        }
+    }
+
+    data.interactionHasEnded = false;
+
+    const confirmEmbed = new MessageEmbed()
+        .setAuthor({ name: `Join ${company.name}?` })
+        .setColor(client.config.embed.color)
+        .setDescription(`${user.username}, do you want to work for ${company.name} (Owner: <@${company.ownerId}>)\nYou have 30 seconds to respond. If you want to deny, don't press anything!`)
+
+    const row = function (disabled = false) {
+        const r = new MessageActionRow().addComponents(
+            new MessageButton()
+                .setCustomId("company_addEmployee")
+                .setLabel("Join the company")
+                .setStyle("PRIMARY")
+                .setDisabled(disabled)
+        );
+        return r;
+    }
+
+    const interactionMessage = await interaction.editReply({ content: `<@${user.id}>`, embeds: [confirmEmbed], components: [row(false)], fetchReply: true });
+
+    const filter = async (i) => {
+        if (i.member.id === user.id) return true;
+        await i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: i.member });
+        return false;
+    }
+
+    const collector = interactionMessage.createMessageComponentCollector({ filter, time: 30000 });
+
+    collector.on('collect', async (interactionCollector) => {
+        await interactionCollector.deferUpdate();
+
+        if (interactionCollector.customId === 'company_addEmployee') {
+            data.interactionHasEnded = true;
+            const respondsEmbed = new MessageEmbed()
+                .setAuthor({ name: `${company.name} just got another employee!` })
+                .setColor("GREEN")
+                .setDescription(`<@${user.id}> has signed a contract with \`${company.name}\`.`)
+
+            await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: user.id }, {
+                $set: {
+                    job: `business-${company.ownerId}`
+                }
+            });
+
+            await companiesSchema.updateOne({ guildId: company.guildId, ownerId: company.ownerId }, {
+                $push: {
+                    employees: {
+                        userId: user.id,
+                        role: "employee",
+                        wage: positions["employee"].defaultWage
+                    }
+                }
+            })
+
+            return await interaction.editReply({ embeds: [respondsEmbed], components: [row(true)] });
+        }
+    })
+
+    collector.on('end', async (interactionCollector) => {
+        if (!data.interactionHasEnded) {
+            const respondsEmbed = new MessageEmbed()
+                .setAuthor({ name: `${user.username} has denied the invitation of ${company.name}` })
+                .setColor("RED")
+                .setDescription(`<@${user.id}> won't be working for \`${company.name}\`.`)
+
+            await interaction.editReply({ embeds: [respondsEmbed], components: [row(true)] });
+        }
+    })
+}
+
+async function execEmployeeFire(client, interaction, data) {
+    const user = interaction.options.getUser('user');
+    await interaction.deferReply();
+    data = await client.tools.hasBusiness(interaction, data, positions);
+    const company = data.company;
+
+    if (!company) return await interaction.editReply({ content: `You don't have a company. Please create one using \`/company create <name>\`.` });
+    if (data.employee.role !== "ceo" && data.employee.role !== "admin") return await interaction.editReply({ content: `You don't have the power to fire employees.` });
+    if (user.id === interaction.member.id) return await interaction.editReply({ content: `Why do you want to fire yourself?!` });
+    if (user.id === company.ownerId) return await interaction.editReply({ content: `You can't invite the CEO of this company...` });
+
+    let removedEmployee = false;
+    for (let i = 0; i < company.employees.length; i++) {
+        if (company.employees[i].userId === user.id) {
+            removedEmployee = true;
+
+            await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: user.id }, {
+                $set: {
+                    job: ""
+                }
+            });
+
+            await removeEmployee(company, user.id);
+            break;
+        }
+    }
+
+    const embed = new MessageEmbed()
+        .setTitle(`Fire Employee`)
+        .setColor("RED")
+        .setDescription(removedEmployee ? `You fired ${user.username}#${user.discriminator} from your company.` : `<@${user.id}> is not an employee of your company.`)
+    await interaction.editReply({ embeds: [embed] });
+}
+
+async function execEmployeeSetWage(client, interaction, data) {
+    const user = interaction.options.getUser('user');
+    const wage = interaction.options.getInteger('wage');
+    await interaction.deferReply();
+    data = await client.tools.hasBusiness(interaction, data, positions);
+    const company = data.company;
+
+    if (!company) return await interaction.editReply({ content: `You don't have a company. Please create one using \`/company create <name>\`.` });
+    if (data.employee.role !== "ceo" && data.employee.role !== "admin") return await interaction.editReply({ content: `You don't have the power to set wages.` });
+
+    let employeeExists = false;
+    for (let i = 0; i < company.employees.length; i++) {
+        if (company.employees[i].userId === user.id) {
+            employeeExists = true;
+            await companiesSchema.updateOne({ guildId: company.guildId, ownerId: company.ownerId, 'employees.userId': user.id }, {
+                $set: {
+                    "employees.$.wage": wage
+                }
+            });
+            break;
+        }
+    }
+
+    const embed = new MessageEmbed()
+        .setTitle(`Set Wage`)
+        .setColor(client.config.embed.color)
+        .setDescription(employeeExists ? `You set the wage of ${user.username}#${user.discriminator} to :coin: ${wage}.` : `<@${user.id}> is not an employee of your company.`)
+    await interaction.editReply({ embeds: [embed] });
+}
+
+async function execEmployeeSetPosition(client, interaction, data) {
+    const user = interaction.options.getUser('user');
+    await interaction.deferReply();
+    data = await client.tools.hasBusiness(interaction, data, positions);
+    const company = data.company;
+
+    if (!company) return await interaction.editReply({ content: `You don't have a company. Please create one using \`/company create <name>\`.` });
+    if (data.employee.role !== "ceo" && data.employee.role !== "admin") return await interaction.editReply({ content: `You don't have the power to set positions.` });
+    if (user.id === company.ownerId) return await interaction.editReply({ content: `You can't change the position of the CEO.` });
+
+    const position = positions[interaction.options.getString('position')];
+
+    let employeeExists = false;
+    for (let i = 0; i < company.employees.length; i++) {
+        if (company.employees[i].userId === user.id) {
+            employeeExists = true;
+            await companiesSchema.updateOne({ guildId: company.guildId, ownerId: company.ownerId, 'employees.userId': user.id }, {
+                $set: {
+                    "employees.$.role": interaction.options.getString('position')
+                }
+            });
+            break;
+        }
+    }
+
+    const embed = new MessageEmbed()
+        .setTitle(`Set Position`)
+        .setColor(client.config.embed.color)
+        .setDescription(employeeExists ? `You set the position of ${user.username}#${user.discriminator} to ${position.name}.` : `<@${user.id}> is not an employee of your company.`)
+    await interaction.editReply({ embeds: [embed] });
+}
+
+async function execCreate(client, interaction, data) {
+    await interaction.deferReply();
+    data = await client.tools.hasBusiness(interaction, data, positions);
+    const company = data.company;
+    if (company) return await interaction.editReply({ content: "You already have a company! If you don't know how this feature works, please use `/help company`." });
+
+    if (data.guildUser.job.startsWith("business")) {
+        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
+            $set: {
+                job: ""
+            }
+        });
+    } else if (data.guildUser.job !== "") {
+        return await interaction.editReply({ content: `You already have a job. Please leave your job to create a company!` });
+    }
+
+    const name = interaction.options.getString('name').trim();
+    if (name.length > 32) return await interaction.editReply({ content: `You can only use a maximum of 32 characters for your company name.` });
+    if (!/^[A-Za-z][a-zA-Z0-9 _-]*$/.test(name)) return await interaction.editReply({ content: `Your company name can only use \`A-Z, a-z, 0-9, whitespaces, -, _\` and you have to start with a letter.` });
+    if (data.guildUser.wallet < 1000) return await interaction.editReply({ content: `You need :coin: 1500 in your wallet to create a company.` });
+
+    const nameAlreadyExists = await companiesSchema.findOne({ guildId: interaction.guildId, name: name });
+    if (nameAlreadyExists) return await interaction.editReply({ content: `A company with the name \`${name}\` already exists in this server.` });
+
+    // create the company
+    await client.database.fetchCompany(interaction.guildId, interaction.member.id, name);
     await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-        business: businessObj,
         $set: {
             job: "business"
+        },
+        $inc: {
+            wallet: -1500
         }
     });
 
-    await interaction.editReply({ content: `You succesfully created a business with the name: \`${name.toLowerCase()}\`` });
+    await interaction.editReply({ content: `You succesfully created a company called \`${name}\`` });
 }
 
 module.exports.execute = async (client, interaction, data) => {
-    if (interaction.options.getSubcommand() === "info") return await execInfo(client, interaction, data);
-    if (interaction.options.getSubcommand() === "create") return await execCreate(client, interaction, data);
-    return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${data.cmd.help.name}\`.`, ephemeral: true });
+    switch (interaction.options.getSubcommand()) {
+        case "info":
+            return await execInfo(client, interaction, data);
+        case "inventory":
+            return await execInventory(client, interaction, data);
+        case "add":
+            return await execEmployeeAdd(client, interaction, data);
+        case "fire":
+            return await execEmployeeFire(client, interaction, data);
+        case "set-wage":
+            return await execEmployeeSetWage(client, interaction, data);
+        case "set-position":
+            return await execEmployeeSetPosition(client, interaction, data);
+        case "create":
+            return await execCreate(client, interaction, data);
+        default:
+            return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${data.cmd.help.name}\`.`, ephemeral: true });
+    }
 }
 
 module.exports.help = {
-    name: "business",
-    description: "Start your own business and become richer than Elon Musk!",
+    name: "company",
+    description: "Start your own company and become richer than Elon Musk!",
     options: [
         {
             name: 'info',
             type: 'SUB_COMMAND',
             description: 'Get more info about a company.',
+            options: []
+        },
+        {
+            name: 'inventory',
+            type: 'SUB_COMMAND',
+            description: 'View the inventory of your company.',
+            options: []
+        },
+        {
+            name: 'employee',
+            type: 'SUB_COMMAND_GROUP',
+            description: 'Do stuff with employees.',
             options: [
                 {
-                    name: 'name',
-                    type: 'STRING',
-                    description: 'The name of the business you want to get more info about.',
-                    required: false
+                    name: 'add',
+                    type: 'SUB_COMMAND',
+                    description: 'Add an employee to your company.',
+                    options: [
+                        {
+                            name: 'user',
+                            type: 'USER',
+                            description: 'The user you want to add to your company.',
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    name: 'fire',
+                    type: 'SUB_COMMAND',
+                    description: 'Fire an employee from your company.',
+                    options: [
+                        {
+                            name: 'user',
+                            type: 'USER',
+                            description: 'The user you want to fire from your company.',
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    name: 'set-wage',
+                    type: 'SUB_COMMAND',
+                    description: 'Set a wage for an employee.',
+                    options: [
+                        {
+                            name: 'user',
+                            type: 'USER',
+                            description: 'The employee you want to change the wage of.',
+                            required: true
+                        },
+                        {
+                            name: 'wage',
+                            type: 'INTEGER',
+                            description: 'The wage of that employee. (Leave blank to reset to 15)',
+                            required: false,
+                            min_value: 10,
+                            max_value: 200
+                        }
+                    ]
+                },
+                {
+                    name: 'set-position',
+                    type: 'SUB_COMMAND',
+                    description: 'Give your employee a job title.',
+                    options: [
+                        {
+                            name: 'user',
+                            type: 'USER',
+                            description: 'The employee you want to change the wage of.',
+                            required: true
+                        },
+                        {
+                            name: 'position',
+                            type: 'STRING',
+                            description: 'The position of that employee.',
+                            required: true,
+                            choices: [
+                                {
+                                    name: "Normal Employee",
+                                    value: "employee",
+                                    focused: true
+                                },
+                                {
+                                    name: "Chief Operations Officier (ADMIN)",
+                                    value: "admin"
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
         {
             name: 'create',
             type: 'SUB_COMMAND',
-            description: 'Create your own business.',
+            description: 'Create your own company.',
             options: [
                 {
                     name: 'name',
                     type: 'STRING',
-                    description: 'The name of the business you want to create.',
+                    description: 'The name of the company you want to create.',
                     required: true
                 }
             ]
         }
     ],
-    category: "businesses",
-    extraFields: [],
+    category: "business",
+    extraFields: [
+        { name: "General Information", value: "Create a business and buy factories. You can produce items in those factories and sell them for a profit when the items are produced.", inline: false },
+        { name: "Factories", value: "Factories are responsible to produce items. For more information use `/help factory`.", inline: false },
+        { name: "Inventory", value: "View your inventory and sell any items. All sold items will be paid into your companies bank account. To deposit or withdraw money from that bank account please use `/company deposit <amount>` or `/company withdraw <amount>`.", inline: false }
+    ],
     memberPermissions: [],
-    botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
+    botPermissions: [],
     ownerOnly: false,
     cooldown: 3,
     enabled: true
