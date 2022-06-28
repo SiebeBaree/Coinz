@@ -1,8 +1,11 @@
 const mongoose = require('mongoose')
 
 const factorySchema = new mongoose.Schema({
+    factoryId: { type: Number, required: true },
     level: { type: Number, default: 1 },
-    producing: { type: String, default: "" },
+    product: { type: String, default: "" },
+    status: { type: String, default: "standby" },
+    collectOn: { type: Number, require: true, default: parseInt(Date.now() / 1000) },
     maintenanceLevel: { type: Number, min: 0, max: 100, default: 100 }
 })
 
