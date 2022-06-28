@@ -1,6 +1,8 @@
 const guildUserSchema = require('../database/schemas/guildUsers');
 const database = require('../database/mongoose');
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
+const companiesSchema = require('../database/schemas/companies');
+const items = require('../commands/business/items.json').items;
 
 module.exports.addMoney = async (guildId, userId, amount) => {
     await guildUserSchema.updateOne({ guildId: guildId, userId: userId }, {
@@ -128,4 +130,47 @@ module.exports.commandPassed = (chance) => {
 
 module.exports.timeout = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+module.exports.hasBusiness = async (interaction, data, positions) => {
+    data.isEmployee = false;
+    data.employee = {
+        userId: interaction.member.id,
+        role: "ceo",
+        wage: positions.ceo.defaultWage
+    };
+
+    if (data.guildUser.job === "business") {
+        data.company = await companiesSchema.findOne({ guildId: interaction.guildId, ownerId: interaction.member.id });
+    } else if (data.guildUser.job.startsWith("business-")) {
+        const companyOwner = data.guildUser.job.split("-")[1];
+        data.company = await companiesSchema.findOne({ guildId: interaction.guildId, ownerId: companyOwner });
+
+        // double check if employee is part of the company
+        for (let i = 0; i < data.company.employees.length; i++) {
+            if (data.company.employees[i].userId === interaction.member.id) {
+                data.isEmployee = true;
+                data.employee = data.company.employees[i];
+                break;
+            }
+        }
+
+        if (!data.isEmployee) data.company = null;
+    }
+
+    if (data.company === undefined || data.company === null) data.company = false;
+    return data;
+}
+
+module.exports.getProduct = (productId) => {
+    let product;
+
+    for (let i = 0; i < items; i++) {
+        if (items[i].itemId === productId) {
+            product = items[i];
+            break;
+        }
+    }
+
+    return product;
 }
