@@ -163,14 +163,8 @@ module.exports.hasBusiness = async (interaction, data, positions) => {
 }
 
 module.exports.getProduct = (productId) => {
-    let product;
-
-    for (let i = 0; i < items; i++) {
-        if (items[i].itemId === productId) {
-            product = items[i];
-            break;
-        }
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].itemId === productId) return items[i];
     }
-
-    return product;
+    return undefined;
 }
