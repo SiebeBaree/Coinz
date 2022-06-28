@@ -17,15 +17,15 @@ const positions = {
     }
 }
 
-async function calcWorth(client, inventory, factories) {
+function calcWorth(client, inventory, factories) {
     let worth = 0;
 
     for (let i = 0; i < inventory.length; i++) {
-        // const item = await shopSchema.findOne({ itemId: inventory[i].itemId });
-        if (item !== null || item !== undefined) worth += item.sellPrice * inventory[i].quantity;
+        const item = client.tools.getProduct(inventory[i].itemId);
+        if (item !== null && item !== undefined) worth += item.sellPrice * inventory[i].quantity;
     }
 
-    return Math.round(worth * (factories * 500));
+    return Math.round(worth + (factories * 500));
 }
 
 function getEmployees(client, employees) {
@@ -57,7 +57,7 @@ async function execInfo(client, interaction, data) {
             .setAuthor({ name: `Company: ${company.name}` })
             .setColor(client.config.embed.color)
             .addFields(
-                { name: 'Information', value: `:sunglasses: **Owner:** <@${company.ownerId}>\n:credit_card: **Bank Balance:** :coin: ${company.balance}\n:moneybag: **Worth:** :coin: ${await calcWorth(client, company.inventory, company.factories.length)}\n:factory: **Factories:** \`${company.factories.length}\``, inline: false },
+                { name: 'Information', value: `:sunglasses: **Owner:** <@${company.ownerId}>\n:credit_card: **Bank Balance:** :coin: ${company.balance}\n:moneybag: **Worth:** :coin: ${calcWorth(client, company.inventory, company.factories.length)}\n:factory: **Factories:** \`${company.factories.length}\``, inline: false },
                 { name: 'Employees', value: getEmployees(client, company.employees), inline: false },
                 { name: 'Your Information', value: `**Position:** ${positions[data.employee.role.toLowerCase()].name}\n**Wage:** :coin: ${data.employee.wage}`, inline: false }
             )
@@ -124,25 +124,70 @@ async function execInfo(client, interaction, data) {
 async function execInventory(client, interaction, data) {
     data = await client.tools.hasBusiness(interaction, data, positions);
     await interaction.deferReply();
-    const company = data.company;
-    if (!company) return await interaction.editReply({ content: `To view your companies inventory you may need a company? Am I right? Please create one using \`/company create <name>\`.` });
+    if (!data.company) return await interaction.editReply({ content: `To view your companies inventory you may need a company? Am I right? Please create one using \`/company create <name>\`.` });
 
     const embed = async function (client, company) {
         let inventory = "";
 
-        for (let i = 0; i < company.inventory; i++) {
-            inventory += `**${company.inventory[i].quantity}x** ${company.inventory[i].itemId}\n`;
+        for (let i = 0; i < company.inventory.length; i++) {
+            const item = client.tools.getProduct(company.inventory[i].itemId);
+            if (item !== undefined) inventory += `**${company.inventory[i].quantity}x** <:${item.itemId}:${item.emoteId}> ${item.name}\n`;
         }
 
         let em = new MessageEmbed()
             .setAuthor({ name: `Inventory of ${company.name}` })
             .setColor(client.config.embed.color)
-            .setDescription(`:credit_card: **Bank Balance:** :coin: ${company.balance}\n:moneybag: **Total Inventory Worth:** :coin: ${await calcWorth(client, company.inventory, company.factories.length)}`)
+            .setDescription(`:credit_card: **Bank Balance:** :coin: ${company.balance}\n:moneybag: **Total Inventory Worth:** :coin: ${calcWorth(client, company.inventory, 0)}`)
             .addField("Inventory", inventory === "" ? "Your company has no inventory." : inventory, false)
         return em;
     }
 
-    await interaction.editReply({ embeds: [await embed(client, company)] });
+    if (data.employee.role !== "ceo" && data.employee.role !== "admin") return await interaction.editReply({ embeds: [await embed(client, data.company)] });
+
+    const row = function (data, disabled = false) {
+        if (data.company.inventory.length <= 0) disabled = true;
+
+        let r = new MessageActionRow().addComponents(
+            new MessageButton()
+                .setCustomId("company_sellInventory")
+                .setLabel("Sell Inventory")
+                .setStyle("DANGER")
+                .setDisabled(disabled)
+        );
+        return r;
+    }
+
+    const interactionMessage = await interaction.editReply({ embeds: [await embed(client, data.company)], components: [row(data)], fetchReply: true });
+
+    const filter = async (i) => {
+        if (i.member.id === interaction.member.id) return true;
+        await i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: i.member });
+        return false;
+    }
+
+    const collector = interactionMessage.createMessageComponentCollector({ filter, time: 20000 });
+
+    collector.on('collect', async (interactionCollector) => {
+        await interactionCollector.deferUpdate();
+
+        if (interactionCollector.customId === 'company_sellInventory') {
+            data.company.balance += calcWorth(client, data.company.inventory, 0);
+            data.company.inventory = [];
+
+            await companiesSchema.updateOne({ guildId: data.company.guildId, ownerId: data.company.ownerId }, {
+                $set: {
+                    inventory: [],
+                    balance: data.company.balance
+                }
+            })
+        }
+
+        await interaction.editReply({ embeds: [await embed(client, data.company)], components: [row(data, true)] });
+    })
+
+    collector.on('end', async (interactionCollector) => {
+        await interaction.editReply({ components: [row(data, true)] });
+    })
 }
 
 async function execEmployeeAdd(client, interaction, data) {
