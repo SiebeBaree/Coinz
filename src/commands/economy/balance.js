@@ -5,7 +5,6 @@ module.exports.execute = async (client, interaction, data) => {
     if (member.bot) return interaction.reply({ content: 'That user is a bot. You can only check the balance of a real person.', ephemeral: true });
     await interaction.deferReply();
     const memberData = await client.database.fetchGuildUser(interaction.guildId, member.id);
-    const netWorth = await client.calc.getNetWorth(client, memberData);
 
     const embed = new MessageEmbed()
         .setAuthor({ name: `${member.displayName || member.username}'s balance`, iconURL: `${member.displayAvatarURL() || client.config.embed.defaultIcon}` })
@@ -13,7 +12,7 @@ module.exports.execute = async (client, interaction, data) => {
         .addFields(
             { name: 'Wallet', value: `:coin: ${memberData.wallet}`, inline: true },
             { name: 'Bank', value: `:coin: ${memberData.bank}`, inline: true },
-            { name: 'Net Worth', value: `:coin: ${netWorth.netWorth}`, inline: true }
+            { name: 'Net Worth', value: `:coin: ${memberData.wallet + memberData.bank}`, inline: true }
         )
     await interaction.editReply({ embeds: [embed] });
 }
