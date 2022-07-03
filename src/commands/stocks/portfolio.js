@@ -5,7 +5,7 @@ const itemsPerPage = 3;
 
 async function createEmbed(client, interaction, category, stocks, currentPage, maxPages) {
     let embed = new MessageEmbed()
-        .setAuthor({ name: `Portfolio of ${interaction.member.nickname || interaction.member.user.username}`, iconURL: `${interaction.member.avatarURL() || client.config.embed.defaultIcon}` })
+        .setAuthor({ name: `Portfolio of ${interaction.member.nickname || interaction.member.user.username}`, iconURL: `${interaction.member.displayAvatarURL() || client.config.embed.defaultIcon}` })
         .setColor(client.config.embed.color)
         .setFooter({ text: `Page ${currentPage + 1} of ${maxPages}.` })
     embed = await createPortfolioField(client, embed, stocks[category], currentPage);
