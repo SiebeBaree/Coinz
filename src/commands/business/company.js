@@ -554,7 +554,7 @@ module.exports.help = {
     extraFields: [
         { name: "General Information", value: "Create a business and buy factories. You can produce items in those factories and sell them for a profit when the items are produced.", inline: false },
         { name: "Factories", value: "Factories are responsible to produce items. For more information use `/help factory`.", inline: false },
-        { name: "Inventory", value: "View your inventory and sell any items. All sold items will be paid into your companies bank account. To deposit or withdraw money from that bank account please use `/company deposit <amount>` or `/company withdraw <amount>`.", inline: false }
+        { name: "Inventory", value: "View your inventory and sell any items. All sold items will be paid into your companies bank account. To earn money from your company please use `/work`.", inline: false }
     ],
     memberPermissions: [],
     botPermissions: [],
