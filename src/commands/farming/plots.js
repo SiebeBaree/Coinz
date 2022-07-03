@@ -211,7 +211,7 @@ async function execPlant(client, interaction, data) {
     const cropType = interaction.options.getString('crop');
 
     const plots = getPlots(plotId);
-    if (plots === []) return await interaction.reply({ content: `That are not valid plots.`, ephemeral: true });
+    if (plots.length <= 0) return await interaction.reply({ content: `That are not valid plots.`, ephemeral: true });
     if (Math.max(...plots) > data.guildUser.plots.length) return await interaction.reply({ content: `You don't own a plot with id \`${Math.max(...plots)}\`.`, ephemeral: true });
     const cropItem = await client.database.fetchItem(cropType.toLowerCase());
     if (cropItem == null) return await interaction.reply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use \`/shop list\` to view all crops.`, ephemeral: true });
