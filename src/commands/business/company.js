@@ -208,6 +208,9 @@ async function execEmployeeAdd(client, interaction, data) {
         }
     }
 
+    const employeeData = await client.database.fetchGuildUser(interaction.guildId, user.id);
+    if (employeeData.job.startsWith("business")) return await interaction.editReply({ content: `That user is already working for another company.` });
+
     data.interactionHasEnded = false;
 
     const confirmEmbed = new MessageEmbed()
