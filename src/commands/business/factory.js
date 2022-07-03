@@ -246,7 +246,7 @@ async function execSetProduction(client, interaction, data) {
     }
 
     const factories = getFactories(factoryId);
-    if (factories === []) return await interaction.editReply({ content: `Those are not valid factories.` });
+    if (factories.length <= 0) return await interaction.editReply({ content: `Those are not valid factories.` });
     if (Math.max(...factories) > data.company.factories.length) return await interaction.editReply({ content: `You don't own a factory with id \`${Math.max(...factories)}\`.` });
 
     const product = client.tools.getProduct(productId.toLowerCase());
