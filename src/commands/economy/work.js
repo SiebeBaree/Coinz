@@ -2,6 +2,22 @@ const { MessageActionRow, MessageButton } = require('discord.js');
 const workList = require('../../data/jobs/jobs.json').jobs;
 const wordList = require('../../data/games/wordlist.json').words;
 const guildUserSchema = require('../../database/schemas/guildUsers');
+const companiesSchema = require('../../database/schemas/companies');
+
+const positions = {
+    "employee": {
+        name: "Normal Employee",
+        defaultWage: 15
+    },
+    "admin": {
+        name: "Chief Operations Officier",
+        defaultWage: 100
+    },
+    "ceo": {
+        name: "Chief Executive Officier",
+        defaultWage: 200
+    }
+}
 
 function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -84,8 +100,7 @@ async function mgMath(client, interaction, data) {
     const correctAnswerIndex = client.tools.randomNumber(0, 3);
     buttons = insert(buttons, correctAnswerIndex, { name: answer })
 
-    await interaction.editReply({ content: `What is the result of \`${mathStr}\`?`, components: [setButtonsRow(buttons)] });
-    const interactionMessage = await interaction.fetchReply();
+    const interactionMessage = await interaction.editReply({ content: `What is the result of \`${mathStr}\`?`, components: [setButtonsRow(buttons)], fetchReply: true });
 
     const filter = async (i) => {
         if (i.member.id === interaction.member.id) return true;
@@ -106,12 +121,7 @@ async function mgMath(client, interaction, data) {
                 buttons[selectedPage].style = "DANGER";
 
                 await interaction.followUp({ content: `That is not the correct answer. You did not earn anything this hour.` })
-
-                if (data.hasBusiness) {
-                    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-                        $set: { "business.workSalary": Math.ceil(data.salary * 0.9) }
-                    });
-                }
+                if (data.hasBusiness) await companiesSchema.updateOne({ guildId: interaction.guildId, ownerId: data.company.ownerId }, { $inc: { balance: -data.salary } });
             } else {
                 await client.tools.addMoney(interaction.guildId, interaction.member.id, data.salary);
                 await interaction.followUp({ content: `GG! You are very good at math. You earned :coin: ${data.salary} this hour.` })
@@ -125,13 +135,6 @@ async function mgMath(client, interaction, data) {
     collector.on('end', async (interactionCollector) => {
         if (gameInProgress) {
             gameInProgress = false;
-
-            if (data.hasBusiness) {
-                await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-                    $set: { "business.workSalary": Math.ceil(data.salary * 0.9) }
-                });
-            }
-
             buttons[correctAnswerIndex].style = "DANGER";
             await interaction.followUp({ content: `You were too slow to pick the correct answer. You didn't earn anything.` })
             await interaction.editReply({ components: [setButtonsRow(buttons, true)] });
@@ -158,8 +161,7 @@ async function mgRememberWord(client, interaction, data) {
 
     await interaction.editReply({ content: `Remember this word: \`${answer}\`` });
     await timeout(3000);
-    await interaction.editReply({ content: `What was the word?`, components: [setButtonsRow(buttons)] });
-    const interactionMessage = await interaction.fetchReply();
+    const interactionMessage = await interaction.editReply({ content: `What was the word?`, components: [setButtonsRow(buttons)], fetchReply: true });
 
     const filter = async (i) => {
         if (i.member.id === interaction.member.id) return true;
@@ -180,12 +182,7 @@ async function mgRememberWord(client, interaction, data) {
                 buttons[selectedPage].style = "DANGER";
 
                 await interaction.followUp({ content: `That is not the correct answer. You did not earn anything this hour.` })
-
-                if (data.hasBusiness) {
-                    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-                        $set: { "business.workSalary": Math.ceil(data.salary * 0.9) }
-                    });
-                }
+                if (data.hasBusiness) await companiesSchema.updateOne({ guildId: interaction.guildId, ownerId: data.company.ownerId }, { $inc: { balance: -data.salary } });
             } else {
                 await client.tools.addMoney(interaction.guildId, interaction.member.id, data.salary);
                 await interaction.followUp({ content: `GG! You are very good at remembering words. You earned :coin: ${data.salary} this hour.` })
@@ -199,13 +196,6 @@ async function mgRememberWord(client, interaction, data) {
     collector.on('end', async (interactionCollector) => {
         if (gameInProgress) {
             gameInProgress = false;
-
-            if (data.hasBusiness) {
-                await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-                    $set: { "business.workSalary": Math.ceil(data.salary * 0.9) }
-                });
-            }
-
             buttons[correctAnswerIndex].style = "DANGER";
             await interaction.followUp({ content: `You were too slow to pick the correct answer. You didn't earn anything.` })
             await interaction.editReply({ components: [setButtonsRow(buttons, true)] });
@@ -221,24 +211,23 @@ module.exports.execute = async (client, interaction, data) => {
 
     await interaction.deferReply();
 
-    let salary = 0;
     data.hasBusiness = false;
-    if (data.guildUser.job === "business") {
-        salary = data.guildUser.business.workSalary;
+    if (data.guildUser.job.startsWith("business")) {
+        data = await client.tools.hasBusiness(interaction, data, positions);
+        data.salary = data.employee.wage;
         data.hasBusiness = true;
+
+        if (data.employee.wage > data.company.balance) return await interaction.editReply({ content: `Your company hasn't enough money to pay you. Please produce items in the factories.` });
     } else {
         const job = getJob(data.guildUser.job);
         if (job == null) {
-            await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-                $set: { job: "" }
-            });
+            await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, { $set: { job: "" } });
             await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, "work");
             return interaction.editReply({ content: `You don't have a valid job... Please apply for a LEGAL job next time. You can't work if you dont have a LEGAL job.` });
         }
 
-        salary = job.salary;
+        data.salary = job.salary;
     }
-    data.salary = salary;
 
     const minigame = client.tools.randomNumber(0, 1);
     switch (minigame) {
