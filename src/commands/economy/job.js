@@ -21,7 +21,7 @@ function getListEmbed(client, jobs, userData, currentPage) {
 
     let currentJob = ``;
     if (userData.job != "") currentJob = `:briefcase: **You are currently working as a ${userData.job}.**\n`;
-    if (userData.job === "business") currentJob = `:briefcase: **You own a business. You can't apply for a job.\n`;
+    if (userData.job.startsWith("business")) currentJob = `:briefcase: **You work at a company. Leave your company using \`/company info\`\n`;
     let descField = `${currentJob}:moneybag: **To apply for a job use** \`/job apply <job>\`**.**\n:o: **You can only apply for jobs with** :white_check_mark:\n:mans_shoe: **Leave a job by using** \`/job leave\`**.**\n\n`;
     for (let job in jobs) {
         let icon = ':x:';
