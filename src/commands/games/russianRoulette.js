@@ -52,6 +52,16 @@ function getContent(data) {
     return data.playerWon ? ":tada: **You lived! Your multiplier has increased.**" : ":skull: **You died... You lost your bet.**";
 }
 
+async function endGame(client, interaction, data) {
+    if (data.gameFinished) {
+        if (data.playerWon) {
+            await client.tools.addMoney(interaction.guildId, interaction.member.id, parseInt(data.bet * data.multiplier));
+        } else {
+            await client.tools.removeMoney(interaction.guildId, interaction.member.id, data.bet);
+        }
+    }
+}
+
 module.exports.execute = async (client, interaction, data) => {
     const bet = interaction.options.getInteger('bet');
     if (bet > data.guildUser.wallet) {
@@ -72,7 +82,7 @@ module.exports.execute = async (client, interaction, data) => {
     data = calcBullets(data);
     await client.tools.timeout(2000);
     await interaction.editReply({ content: getContent(data), embeds: [createEmbed(client, data)], components: [setButtons(data.gameFinished)] });
-    if (data.gameFinished) return;
+    if (data.gameFinished) return await endGame(client, interaction, data);
     const interactionMessage = await interaction.fetchReply();
 
     const filter = async (i) => {
@@ -97,14 +107,7 @@ module.exports.execute = async (client, interaction, data) => {
                 await interaction.editReply({ content: getContent(data), embeds: [createEmbed(client, data)], components: [setButtons(data.gameFinished)] });
             }
 
-            if (data.gameFinished) {
-                if (data.playerWon) {
-                    await client.tools.addMoney(interaction.guildId, interaction.member.id, parseInt(data.bet * data.multiplier));
-                } else {
-                    await client.tools.removeMoney(interaction.guildId, interaction.member.id, data.bet);
-                }
-            }
-
+            await endGame(client, interaction, data)
             await interaction.editReply({ content: getContent(data), embeds: [createEmbed(client, data)], components: [setButtons(data.gameFinished)] });
         }
     })
@@ -113,12 +116,7 @@ module.exports.execute = async (client, interaction, data) => {
         if (!data.gameFinished) {
             data.gameFinished = true;
 
-            if (data.playerWon) {
-                await client.tools.addMoney(interaction.guildId, interaction.member.id, parseInt(data.bet * data.multiplier));
-            } else {
-                await client.tools.removeMoney(interaction.guildId, interaction.member.id, data.bet, true);
-            }
-
+            await endGame(client, interaction, data)
             await interaction.editReply({ content: getContent(data), embeds: [createEmbed(client, data)], components: [setButtons(data.gameFinished)] });
         }
     })
