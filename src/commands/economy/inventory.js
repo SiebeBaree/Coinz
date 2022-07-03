@@ -28,6 +28,7 @@ function createInventory(item, currentPage) {
 }
 
 function createInvEmbed(client, member, desc, currentPage, maxPages) {
+    if (desc.trim() === "") desc = "Nothing found. Please buy or earn items.";
     let embed = new MessageEmbed()
         .setAuthor({ name: `${member.displayName || member.username}'s inventory`, iconURL: `${member.displayAvatarURL() || client.config.embed.defaultIcon}` })
         .setColor(client.config.embed.color)
