@@ -2,6 +2,7 @@
 website/__pycache__/
 __pycache__/
 src/assets/guildJoinLeave.json
+src/assets/commands.json
 venv/
 
 # compiled output
