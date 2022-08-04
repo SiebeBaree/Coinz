@@ -1,80 +1,69 @@
-const { MessageActionRow, MessageButton, MessageEmbed, Permissions } = require('discord.js');
-const guildUsersSchema = require("../../database/schemas/guildUsers");
+const Command = require('../../structures/Command.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors } = require('discord.js');
+const MemberModel = require("../../models/Member");
+const CompanyModel = require("../../models/Company");
 
-module.exports.execute = async (client, interaction, data) => {
-    const member = interaction.options.getUser('user') || interaction.member;
+class Reset extends Command {
+    info = {
+        name: "reset",
+        description: "Reset your account on EVERY server.",
+        options: [],
+        category: "misc",
+        extraFields: [],
+        memberPermissions: [],
+        botPermissions: [],
+        cooldown: 300,
+        enabled: true
+    };
 
-    if (member.id !== interaction.member.id && !interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
-        return await interaction.reply({ content: "You don't have the permission `ADMINISTRATOR`.", ephemeral: true });
+    constructor(...args) {
+        super(...args);
     }
 
-    const confirmEmbed = new MessageEmbed()
-        .setAuthor({ name: `Reset account of ${member.displayName || member.username}`, iconURL: `${member.displayAvatarURL() || client.config.embed.defaultIcon}` })
-        .setColor("RED")
-        .setFooter({ text: client.config.embed.footer })
-        .setDescription(`Are you sure you want to reset the account of ${member.displayName || member.username}?`)
+    async run(interaction, data) {
+        const confirmEmbed = new EmbedBuilder()
+            .setAuthor({ name: `Reset your account?`, iconURL: `${interaction.member.displayAvatarURL() || bot.config.embed.defaultIcon}` })
+            .setColor(Colors.Red)
+            .setFooter({ text: bot.config.embed.footer })
+            .setDescription(`Are you sure you want to reset your account? This will also reset your company if you have one.\nThis won't reset your cooldowns!`)
 
-    const confirmRow = new MessageActionRow().addComponents(
-        new MessageButton()
-            .setCustomId("reset_yes")
-            .setLabel("Yes")
-            .setStyle("DANGER"),
-        new MessageButton()
-            .setCustomId("reset_no")
-            .setLabel("No")
-            .setStyle("SECONDARY")
-    );
+        const confirmRow = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId("reset_yes")
+                .setLabel("Yes")
+                .setStyle(ButtonStyle.Danger),
+            new ButtonBuilder()
+                .setCustomId("reset_no")
+                .setLabel("No")
+                .setStyle(ButtonStyle.Secondary)
+        );
 
-    await interaction.reply({ embeds: [confirmEmbed], components: [confirmRow] });
-    const interactionMessage = await interaction.fetchReply();
+        const interactionMessage = await interaction.reply({ embeds: [confirmEmbed], components: [confirmRow], fetchReply: true });
+        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 1, time: 15_000 })
 
-    const filter = async (i) => {
-        if (i.member.id === interaction.member.id) return true;
-        await i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: i.member });
-        return false;
+        collector.on('collect', async (interactionCollector) => {
+            await interactionCollector.deferUpdate();
+
+            let embed = new EmbedBuilder()
+                .setAuthor({ name: `Reset your account`, iconURL: `${interaction.member.displayAvatarURL() || bot.config.embed.defaultIcon}` })
+                .setColor(Colors.Green)
+                .setFooter({ text: bot.config.embed.footer })
+                .setDescription(`You canceled the reset.`)
+
+            if (interactionCollector.customId === 'reset_yes') {
+                embed.setColor(Colors.Red);
+                embed.setDescription(`You successfully reset your account.`);
+                await MemberModel.deleteOne({ id: interaction.member.id });
+                await CompanyModel.deleteOne({ id: interaction.member.id });
+            }
+
+            await interaction.editReply({ embeds: [embed] });
+        });
+
+        collector.on('end', async (interactionCollector) => {
+            await interaction.editReply({ components: [] });
+        });
     }
-
-    const collector = interactionMessage.createMessageComponentCollector({ filter, max: 1, time: 15000 });
-
-    collector.on('collect', async (interactionCollector) => {
-        await interactionCollector.deferUpdate();
-
-        let embed = new MessageEmbed()
-            .setAuthor({ name: `Reset account of ${member.displayName || member.username}`, iconURL: `${member.displayAvatarURL() || client.config.embed.defaultIcon}` })
-            .setColor("GREEN")
-            .setFooter({ text: client.config.embed.footer })
-            .setDescription(`You canceled the reset, ${member.displayName || member.username} keeps their stats.`)
-
-        if (interactionCollector.customId === 'reset_yes') {
-            embed.setColor("RED");
-            embed.setDescription(`You succesfully reset the account of ${member.displayName || member.username}.`);
-            await guildUsersSchema.deleteOne({ guildId: interaction.guildId, userId: member.id });
-        }
-
-        await interaction.editReply({ embeds: [embed] });
-    })
-
-    collector.on('end', async (interactionCollector) => {
-        await interaction.editReply({ components: [] });
-    })
 }
 
-module.exports.help = {
-    name: "reset",
-    description: "Reset your account on this server.",
-    options: [
-        {
-            name: 'user',
-            type: 'USER',
-            description: 'Tag the player you want to reset (default = yourself, ADMINISTATOR REQUIRED).',
-            required: false
-        }
-    ],
-    category: "misc",
-    extraFields: [],
-    memberPermissions: [],
-    botPermissions: [],
-    ownerOnly: false,
-    cooldown: 60,
-    enabled: true
-}
+module.exports = Reset;
