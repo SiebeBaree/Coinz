@@ -1,128 +1,73 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div id="hero" class="gradient-bg">
-        <div class="inner-hero container text-center d-flex flex-column justify-content-center">
-            <h1 class="text-inner">Coinz</h1>
-            <h3 class="text-inner">Simply the best economy bot on the market</h3>
-            <h6 class="text-inner">Coinz offers more than 40 ways to make money while still keeping it easy to use</h6>
+    <div id="hero">
+        <div class="hero-content container d-flex flex-row justify-content-center">
+            <div class="hero-text d-flex flex-column justify-content-center">
+                <h2 class="text-color">Become The Richest Person Alive</h2>
+                <p class="text-color">Compete against 170k+ users to be the richest person on Coinz. With loads of fun commands to keep you and your server entertained.</p>
 
-            <div class="cta flex-row">
-                <a href="{{ url_for('main.invite') }}" class="btn btn-light">ADD TO SERVER</a>
-                <a href="{{ url_for('main.vote') }}" class="btn btn-light">VOTE FOR COINZ</a>
+                <div class="hero-btns flex-row">
+                    <a href="{{ url_for('main.invite') }}" class="btn">Add To Your Server</a>
+                    <a href="{{ url_for('main.discord') }}" class="btn">Ask For Support</a>
+                </div>
             </div>
-        </div>
-
-        <div class="waves">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
-            </svg>
-        </div>
-    </div>
-
-    <div id="features" class="container mx-auto">
-        <div class="feature-row d-flex justify-content-between">
-            <div class="feature-img me-auto">
-                <img src="{{ url_for('static', filename='img/stocks.svg') }}" alt="">
-            </div>
-            <div class="feature-text my-auto">
-                <h2>Buy, hold and sell stocks</h2>
-                <h6>Enhance your knowledge of the stock and crypto market by buying, holding and selling stocks and crypto within Coinz. All prices are updated every 5 minutes. Coinz currently has 20 stocks and more than 15 crypto currencies. With more soon to come.</h6>
-            </div>
-        </div>
-
-        <div class="feature-row d-flex justify-content-between">
-            <div class="feature-text my-auto">
-                <h2>Start your own company</h2>
-                <h6>Create your own company, buy factories and produce items that you can sell for a big profit. Repeat this step over and over and become richer than Elon Musk! Did I mention that you can employ real users?!</h6>
-            </div>
-            <div class="feature-img ms-auto">
-                <img src="{{ url_for('static', filename='img/company.svg') }}" alt="">
-            </div>
-        </div>
-
-        <div class="feature-row d-flex justify-content-between">
-            <div class="feature-img me-auto">
-                <img src="{{ url_for('static', filename='img/stocks.svg') }}" alt="">
-            </div>
-            <div class="feature-text my-auto">
-                <h2>Play more than 15 games</h2>
-                <h6>Play all sorts of minigames inside of discord! You will never get bored when playing these minigames. We release at least 1 new minigame every update. Some examples are: Blackjack, Poker, Roulette, Crash, ...</h6>
-            </div>
-        </div>
-
-        <div class="feature-row d-flex justify-content-between">
-            <div class="feature-text my-auto">
-                <h2>Buy farmland to grow crops on</h2>
-                <h6>Become a farmer and live a peaceful live. Buy up to 15 plots to grow crops on! Each crop has different stats that can make you rich or lose you money. Don't forget to water your crops once in a while!</h6>
-            </div>
-            <div class="feature-img ms-auto">
-                <img src="{{ url_for('static', filename='img/stocks.svg') }}" alt="">
+            <div class="hero-img">
+                <img src="{{ url_for('static', filename='img/hero-img.png') }}" alt="">
             </div>
         </div>
     </div>
 
-    <div id="faq" class="faq_area section_padding">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12 col-sm-8 col-lg-6">
-                    <div class="section_heading text-center wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
-                        <h2>Frequently Asked Questions</h2>
-                        <div class="line"></div>
-                    </div>
-                </div>
+    <div id="vote" class="dark-bg">
+        <div class="container text-center d-flex flex-column justify-content-center">
+            <h3>Help Coinz by Voting Daily</h3>
+            <p>Get awesome rewards when voting for Coinz. Check the rewards using <code>/vote</code> in Coinz.</p>
+
+            <div class="d-flex flex-row justify-content-center">
+                <a class="btn" href="https://top.gg/bot/938771676433362955/vote">Vote on Top.gg</a>
+                <a class="btn" href="https://discordbotlist.com/bots/coinz/upvote">Vote on Discordbotlist</a>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-12 col-sm-10 col-lg-8">
-                    <div class="accordion faq-accordian" id="faqAccordion">
-                        <div class="card border-0 wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
-                            <div class="card-header" id="headingOne">
-                                <h6 class="mb-0 collapsed accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">What is Coinz and why should I use it?<span class="lni-chevron-up"></span></h6>
-                            </div>
-                            <div class="accordion-collapse collapse" id="collapseOne" aria-labelledby="headingOne" data-parent="#faqAccordion">
-                                <div class="card-body">
-                                    <p>Coinz is a feature-packed discord economy bot. We have everything from A-Z!</p>
-                                    <p>Some Features Are:</p>
-                                    <ul>
-                                        <li><p>Trade real-time stocks and crypto.</p></li>
-                                        <li><p>Buy Pets, train them and fight with other players.</p></li>
-                                        <li><p>Create an account on social media and engage with your followers.</p></li>
-                                        <li><p>Manage your business, produce items and hire other users, ...</p></li>
-                                        <li><p>Mine your own crypto to sell and become rich.</p></li>
-                                        <li><p>And so much more...</p></li>
-                                    </ul>
-                                    <p>Do you want to make your server more active? Invite Coinz! Members will love it and have more reason to chat in the other channels!</p>
-                                    <p>Are You bored? Use Coinz! Coinz is a great way to kill time when you're bored.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card border-0 wow fadeInUp" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">
-                            <div class="card-header" id="headingTwo">
-                                <h6 class="mb-0 collapsed accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">What benefits do I get with Coinz Premium?<span class="lni-chevron-up"></span></h6>
-                            </div>
-                            <div class="accordion-collapse collapse" id="collapseTwo" aria-labelledby="headingTwo" data-parent="#faqAccordion">
-                                <div class="card-body">
-                                    <p><b>Coinz Premium doesn't exist yet! All commands are currently 100% free to use!</b></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card border-0 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
-                            <div class="card-header" id="headingThree">
-                                <h6 class="mb-0 collapsed accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Can I get Coinz Premium for free?<span class="lni-chevron-up"></span></h6>
-                            </div>
-                            <div class="accordion-collapse collapse" id="collapseThree" aria-labelledby="headingThree" data-parent="#faqAccordion">
-                                <div class="card-body">
-                                    <p><b>Coinz Premium doesn't exist yet! All commands are currently 100% free to use!</b></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="support-button text-center d-flex align-items-center justify-content-center mt-4 wow fadeInUp" data-wow-delay="0.5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
-                        <i class="lni-emoji-sad"></i>
-                        <p class="mb-0 px-2">Can't find your answers?</p>
-                        <a href="{{ url_for('main.discord') }}"> Ask your question here!</a>
-                    </div>
-                </div>
+        </div>
+    </div>
+
+    <div id="features" class="container">
+        <div class="feature-row d-flex justify-content-between">
+            <div class="feature-img">
+                <img src="{{ url_for('static', filename='img/investing.png') }}" alt="Feature: Stocks and Crypto">
+            </div>
+            <div class="feature-text my-auto">
+                <h3>Buy, hold and sell stocks</h3>
+                <p>Enhance your knowledge of the stock and crypto market by buying, holding and selling stocks and crypto within Coinz. All prices are updated every 5 minutes. Coinz currently has 20 stocks and more than 15 crypto currencies. With more soon to come.</p>
+            </div>
+        </div>
+
+        <div class="feature-row d-flex justify-content-between">
+            <div class="feature-img">
+                <img src="{{ url_for('static', filename='img/company.png') }}" alt="Feature: Own a Company">
+            </div>
+            <div class="feature-text my-auto">
+                <h3>Start your own company</h3>
+                <p>Create your own company, buy factories and produce items that you can sell for a big profit. Repeat this step over and over and become richer than Elon Musk! Did I mention that you can employ real users?!</p>
+            </div>
+        </div>
+
+        <div class="feature-row d-flex justify-content-between">
+            <div class="feature-img">
+                <img src="{{ url_for('static', filename='img/games.png') }}" alt="Feature: Play some Minigames">
+            </div>
+            <div class="feature-text my-auto">
+                <h3>Play more than 15 games</h3>
+                <p>Play all sorts of minigames inside of discord! You will never get bored when playing these minigames. We release at least 1 new minigame every update. Some examples are: Blackjack, Poker, Roulette, Crash, ...</p>
+            </div>
+        </div>
+
+        <div class="feature-row d-flex justify-content-between">
+            <div class="feature-img">
+                <img src="{{ url_for('static', filename='img/farming.png') }}" alt="Feature: Become a farmer">
+            </div>
+            <div class="feature-text my-auto">
+                <h3>Become a farmer</h3>
+                <p>Buy farmland to grow crops on and live a peaceful live. Buy up to 15 plots to grow crops on! Each crop has different stats that can make you rich or lose you money. Don't forget to water your crops once in a while!</p>
             </div>
         </div>
     </div>
