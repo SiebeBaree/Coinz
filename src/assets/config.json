@@ -1,12 +1,8 @@
 {
-    "rootServerId": "940542575704686593",
+    "rootServerId": "938177962698735616",
     "ownerId": "643072638075273248",
     "website": "https://coinzbot.xyz/",
-    "presence": {
-        "name": "coinzbot.xyz",
-        "type": "WATCHING",
-        "status": "online"
-    },
+    "defaultTimeout": 5,
     "embed": {
         "footer": "Coinz | coinzbot.xyz",
         "color": "#DBA514",
