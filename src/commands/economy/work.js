@@ -1,254 +1,243 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
-const workList = require('../../data/jobs/jobs.json').jobs;
-const wordList = require('../../data/games/wordlist.json').words;
-const guildUserSchema = require('../../database/schemas/guildUsers');
-const companiesSchema = require('../../database/schemas/companies');
+const Command = require('../../structures/Command.js');
+const { ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
+const workList = require('../../assets/jobList.json').jobs;
+const wordList = require('../../assets/wordlist.json').words;
+const MemberModel = require('../../models/Member');
+const CompanyModel = require('../../models/Company');
 
-const positions = {
-    "employee": {
-        name: "Normal Employee",
-        defaultWage: 15
-    },
-    "admin": {
-        name: "Chief Operations Officier",
-        defaultWage: 100
-    },
-    "ceo": {
-        name: "Chief Executive Officier",
-        defaultWage: 200
-    }
-}
+class Work extends Command {
+    info = {
+        name: "work",
+        description: "Work hard and get paid a unfair salary.",
+        options: [],
+        category: "economy",
+        extraFields: [],
+        memberPermissions: [],
+        botPermissions: [],
+        cooldown: 1800,
+        enabled: true
+    };
 
-function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function getJob(jobName) {
-    for (let i = 0; i < workList.length; i++) {
-        if (jobName === workList[i].name) return workList[i];
-    }
-    return null;
-}
-
-function setButtonsRow(buttons, isDisabled = false) {
-    let row = new MessageActionRow().addComponents(
-        new MessageButton()
-            .setCustomId("work_btn0")
-            .setLabel(buttons[0].name.toString())
-            .setStyle(buttons[0].style || "SECONDARY")
-            .setDisabled(isDisabled),
-        new MessageButton()
-            .setCustomId("work_btn1")
-            .setLabel(buttons[1].name.toString())
-            .setStyle(buttons[1].style || "SECONDARY")
-            .setDisabled(isDisabled),
-        new MessageButton()
-            .setCustomId("work_btn2")
-            .setLabel(buttons[2].name.toString())
-            .setStyle(buttons[2].style || "SECONDARY")
-            .setDisabled(isDisabled),
-        new MessageButton()
-            .setCustomId("work_btn3")
-            .setLabel(buttons[3].name.toString())
-            .setStyle(buttons[3].style || "SECONDARY")
-            .setDisabled(isDisabled),
-        new MessageButton()
-            .setCustomId("work_btn4")
-            .setLabel(buttons[4].name.toString())
-            .setStyle(buttons[4].style || "SECONDARY")
-            .setDisabled(isDisabled)
-    );
-    return row;
-}
-
-async function mgMath(client, interaction, data) {
-    let gameInProgress = true;
-    const operators = ["+", "-", "*"]
-    const operatorIndex = client.tools.randomNumber(0, operators.length - 1);
-
-    let maxNumber = operators[operatorIndex] === "*" ? 10 : 50;
-    let number1 = client.tools.randomNumber(1, maxNumber);
-    let number2 = client.tools.randomNumber(0, maxNumber);
-
-    const mathStr = `${number1} ${operators[operatorIndex]} ${number2}`
-    const answer = eval(mathStr.replace(/[^-()\d/*+.]/g, ''));
-
-    let buttons = [];
-
-    for (let i = 0; i < 4; i++) {
-        let fakeNumber1 = 1;
-        let fakeNumber2 = 0;
-        let fakeAnswer = `0`;
-        do {
-            fakeNumber1 = client.tools.randomNumber(1, maxNumber);
-            fakeNumber2 = client.tools.randomNumber(0, maxNumber);
-            fakeAnswer = eval(`${fakeNumber1}${operators[operatorIndex]}${fakeNumber2}`.replace(/[^-()\d/*+.]/g, ''))
-        } while (fakeAnswer == answer);
-        buttons.push({ name: fakeAnswer });
+    constructor(...args) {
+        super(...args);
     }
 
-    // from https://stackoverflow.com/a/38181008/13712977
-    const insert = (arr, index, newItem) => [
-        // part of the array before the specified index
-        ...arr.slice(0, index),
-        // inserted item
-        newItem,
-        // part of the array after the specified index
-        ...arr.slice(index)
-    ]
+    async run(interaction, data) {
+        if (data.user.job == "" || data.user.job == null) {
+            await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
+            return await interaction.reply({ content: `You don't have a job. Please find a job using \`/job list\`.`, ephemeral: true });
+        }
 
-    const correctAnswerIndex = client.tools.randomNumber(0, 3);
-    buttons = insert(buttons, correctAnswerIndex, { name: answer })
+        await interaction.deferReply();
 
-    const interactionMessage = await interaction.editReply({ content: `What is the result of \`${mathStr}\`?`, components: [setButtonsRow(buttons)], fetchReply: true });
+        data.hasBusiness = false;
+        data.gameInProgress = true;
+        if (data.user.job.startsWith("business")) {
+            data = await bot.tools.hasCompany(interaction.member.id, data);
+            data.salary = data.employee.wage;
+            data.hasBusiness = true;
 
-    const filter = async (i) => {
-        if (i.member.id === interaction.member.id) return true;
-        await i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: i.member });
-        return false;
-    }
-
-    const collector = interactionMessage.createMessageComponentCollector({ filter, time: 10000 });
-
-    collector.on('collect', async (interactionCollector) => {
-        if (gameInProgress) {
-            gameInProgress = false;
-            let selectedPage;
-            if (interactionCollector.customId.startsWith('work_btn')) selectedPage = interactionCollector.customId.charAt(interactionCollector.customId.length - 1);
-            await interactionCollector.deferUpdate();
-
-            if (buttons[selectedPage].name != answer) {
-                buttons[selectedPage].style = "DANGER";
-
-                await interaction.followUp({ content: `That is not the correct answer. You did not earn anything this hour.` })
-                if (data.hasBusiness) await companiesSchema.updateOne({ guildId: interaction.guildId, ownerId: data.company.ownerId }, { $inc: { balance: -data.salary } });
-            } else {
-                await client.tools.addMoney(interaction.guildId, interaction.member.id, data.salary);
-                await interaction.followUp({ content: `GG! You are very good at math. You earned :coin: ${data.salary} this hour.` })
+            if (data.employee.wage > data.company.balance) return await interaction.editReply({ content: `Your company hasn't enough money to pay you. Please produce items in the factories.` });
+        } else {
+            const job = this.getJob(data.user.job);
+            if (job == null) {
+                await MemberModel.updateOne({ id: interaction.member.id }, { $set: { job: "" } });
+                await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
+                return await interaction.editReply({ content: `You don't have a valid job... Please apply for a LEGAL job next time. You can't work if you dont have a LEGAL job.` });
             }
 
-            buttons[correctAnswerIndex].style = "SUCCESS";
-            await interaction.editReply({ components: [setButtonsRow(buttons, true)] });
+            data.salary = job.salary;
         }
-    })
 
-    collector.on('end', async (interactionCollector) => {
-        if (gameInProgress) {
-            gameInProgress = false;
-            buttons[correctAnswerIndex].style = "DANGER";
-            await interaction.followUp({ content: `You were too slow to pick the correct answer. You didn't earn anything.` })
-            await interaction.editReply({ components: [setButtonsRow(buttons, true)] });
-        }
-    })
-}
-
-async function mgRememberWord(client, interaction, data) {
-    let gameInProgress = true;
-
-    const answer = wordList[client.tools.randomNumber(0, wordList.length - 1)];
-    let buttons = [];
-
-    for (let i = 0; i < 5; i++) {
-        let wordIndex;
-        do {
-            wordIndex = client.tools.randomNumber(0, wordList.length - 1)
-        } while (buttons.includes(wordList[wordIndex]) || wordList[wordIndex] === answer)
-
-        buttons.push({ name: wordList[wordIndex] });
-    }
-    const correctAnswerIndex = client.tools.randomNumber(0, buttons.length - 1);
-    buttons[correctAnswerIndex] = { name: answer };
-
-    await interaction.editReply({ content: `Remember this word: \`${answer}\`` });
-    await timeout(3000);
-    const interactionMessage = await interaction.editReply({ content: `What was the word?`, components: [setButtonsRow(buttons)], fetchReply: true });
-
-    const filter = async (i) => {
-        if (i.member.id === interaction.member.id) return true;
-        await i.reply({ content: `Those buttons are not meant for you.`, ephemeral: true, target: i.member });
-        return false;
+        const minigames = ["mgRememberWord", "mgMath", "mgOrder"];
+        await eval(`this.${minigames[bot.tools.randomNumber(0, minigames.length - 1)]}(interaction, data)`);
     }
 
-    const collector = interactionMessage.createMessageComponentCollector({ filter, time: 10000 });
+    async mgMath(interaction, data) {
+        const operators = ["+", "-", "*"];
+        const operatorIndex = bot.tools.randomNumber(0, operators.length - 1);
 
-    collector.on('collect', async (interactionCollector) => {
-        if (gameInProgress) {
-            gameInProgress = false;
-            let selectedPage;
-            if (interactionCollector.customId.startsWith('work_btn')) selectedPage = interactionCollector.customId.charAt(interactionCollector.customId.length - 1);
+        let maxNumber = operators[operatorIndex] === "*" ? 10 : 50;
+        let number1 = bot.tools.randomNumber(1, maxNumber);
+        let number2 = bot.tools.randomNumber(0, maxNumber);
+
+        const mathStr = `${number1} ${operators[operatorIndex]} ${number2}`;
+        data.answer = eval(mathStr.replace(/[^-()\d/*+.]/g, ''));
+
+        let buttons = [];
+        for (let i = 0; i < 4; i++) {
+            let fakeNumber1 = 1;
+            let fakeNumber2 = 0;
+            let fakeAnswer = `0`;
+            do {
+                fakeNumber1 = bot.tools.randomNumber(1, maxNumber);
+                fakeNumber2 = bot.tools.randomNumber(0, maxNumber);
+                fakeAnswer = eval(`${fakeNumber1}${operators[operatorIndex]}${fakeNumber2}`.replace(/[^-()\d/*+.]/g, ''));
+            } while (fakeAnswer == data.answer);
+            buttons.push({ name: fakeAnswer });
+        }
+
+        const insert = (arr, index, newItem) => [...arr.slice(0, index), newItem, ...arr.slice(index)];
+        data.correctAnswerIndex = bot.tools.randomNumber(0, 3);
+        buttons = insert(buttons, data.correctAnswerIndex, { name: data.answer });
+
+        const interactionMessage = await interaction.editReply({ content: `What is the result of \`${mathStr}\`?`, components: [this.setButtonsRow(buttons)], fetchReply: true });
+        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { time: 10000 });
+        await this.collectorOnCollect(collector, interaction, data, buttons, `GG! You are very good at math. You earned :coin: ${data.salary} this hour.`, `You were too slow to pick the correct answer. You didn't earn anything.`);
+    }
+
+    async mgRememberWord(interaction, data) {
+        data.answer = wordList[bot.tools.randomNumber(0, wordList.length - 1)];
+
+        let buttons = [];
+        for (let i = 0; i < 5; i++) {
+            let wordIndex;
+            do {
+                wordIndex = bot.tools.randomNumber(0, wordList.length - 1);
+            } while (buttons.includes(wordList[wordIndex]) || wordList[wordIndex] === data.answer);
+
+            buttons.push({ name: wordList[wordIndex] });
+        }
+        data.correctAnswerIndex = bot.tools.randomNumber(0, buttons.length - 1);
+        buttons[data.correctAnswerIndex] = { name: data.answer };
+
+        await interaction.editReply({ content: `Remember this word: \`${data.answer}\`` });
+        await bot.tools.timeout(3000);
+        const interactionMessage = await interaction.editReply({ content: `What was the word?`, components: [this.setButtonsRow(buttons)], fetchReply: true });
+        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { time: 10000 });
+        await this.collectorOnCollect(collector, interaction, data, buttons, `GG! You are very good at remembering words. You earned :coin: ${data.salary} this hour.`, `You were too slow to pick the correct answer. You didn't earn anything.`);
+    }
+
+    async mgOrder(interaction, data) {
+        data.currentButton = 0;
+
+        let buttons = [];
+        let buttonNames = [];
+
+        for (let i = 0; i < 5; i++) {
+            let buttonName;
+            do {
+                buttonName = bot.tools.randomNumber(1, 100);
+            } while (buttonNames.includes(buttonName));
+
+            buttonNames.push(buttonName);
+            buttons.push({ name: `${buttonName}` });
+        }
+
+        buttonNames.sort((a, b) => a - b);
+        const interactionMessage = await interaction.editReply({ content: `Press the buttons in the correct order from low to high!`, components: [this.setButtonsRow(buttons)], fetchReply: true });
+        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 6, time: 10000 });
+
+        collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
 
-            if (buttons[selectedPage].name != answer) {
-                buttons[selectedPage].style = "DANGER";
+            if (data.gameInProgress) {
+                let selectedPage;
+                if (interactionCollector.customId.startsWith('work_btn')) selectedPage = interactionCollector.customId.charAt(interactionCollector.customId.length - 1);
 
-                await interaction.followUp({ content: `That is not the correct answer. You did not earn anything this hour.` })
-                if (data.hasBusiness) await companiesSchema.updateOne({ guildId: interaction.guildId, ownerId: data.company.ownerId }, { $inc: { balance: -data.salary } });
-            } else {
-                await client.tools.addMoney(interaction.guildId, interaction.member.id, data.salary);
-                await interaction.followUp({ content: `GG! You are very good at remembering words. You earned :coin: ${data.salary} this hour.` })
+                if (parseInt(buttons[selectedPage].name) != buttonNames[data.currentButton]) {
+                    data.gameInProgress = false;
+                    buttons[selectedPage].style = ButtonStyle.Danger;
+
+                    await interaction.editReply({ components: [this.setButtonsRow(buttons, true)] });
+                    await interaction.followUp({ content: `That is not the correct answer. You did not earn anything this hour.` })
+                    if (data.hasBusiness) await CompanyModel.updateOne({ id: data.company.ownerId }, { $inc: { balance: -data.salary } });
+                } else {
+                    data.currentButton++;
+                    buttons[selectedPage].style = ButtonStyle.Success;
+
+                    if (data.currentButton === buttons.length) {
+                        data.gameInProgress = false;
+                        await bot.tools.addMoney(interaction.member.id, data.salary);
+                        await interaction.editReply({ components: [this.setButtonsRow(buttons, true)] });
+                        return await interaction.followUp({ content: `GG! You ordered these buttons correctly and earned :coin: ${data.salary} this hour.` })
+                    }
+
+                    await interaction.editReply({ components: [this.setButtonsRow(buttons)] });
+                }
             }
+        });
 
-            buttons[correctAnswerIndex].style = "SUCCESS";
-            await interaction.editReply({ components: [setButtonsRow(buttons, true)] });
-        }
-    })
-
-    collector.on('end', async (interactionCollector) => {
-        if (gameInProgress) {
-            gameInProgress = false;
-            buttons[correctAnswerIndex].style = "DANGER";
-            await interaction.followUp({ content: `You were too slow to pick the correct answer. You didn't earn anything.` })
-            await interaction.editReply({ components: [setButtonsRow(buttons, true)] });
-        }
-    })
-}
-
-module.exports.execute = async (client, interaction, data) => {
-    if (data.guildUser.job == "" || data.guildUser.job == null) {
-        await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, "work");
-        return interaction.reply({ content: `You don't have a job. Please find a job using \`/job list\`.`, ephemeral: true });
+        collector.on('end', async (interactionCollector) => {
+            if (data.gameInProgress) {
+                data.gameInProgress = false;
+                await interaction.editReply({ components: [this.setButtonsRow(buttons, true)] });
+                await interaction.followUp({ content: `You were too slow to order the buttons in the correct order. You didn't earn anything this hour.` })
+            }
+        });
     }
 
-    await interaction.deferReply();
+    async collectorOnCollect(collector, interaction, data, buttons, winMsg, loseMsg) {
+        collector.on('collect', async (interactionCollector) => {
+            await interactionCollector.deferUpdate();
 
-    data.hasBusiness = false;
-    if (data.guildUser.job.startsWith("business")) {
-        data = await client.tools.hasBusiness(interaction, data, positions);
-        data.salary = data.employee.wage;
-        data.hasBusiness = true;
+            if (data.gameInProgress) {
+                data.gameInProgress = false;
+                let selectedPage;
+                if (interactionCollector.customId.startsWith('work_btn')) selectedPage = interactionCollector.customId.charAt(interactionCollector.customId.length - 1);
 
-        if (data.employee.wage > data.company.balance) return await interaction.editReply({ content: `Your company hasn't enough money to pay you. Please produce items in the factories.` });
-    } else {
-        const job = getJob(data.guildUser.job);
-        if (job == null) {
-            await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, { $set: { job: "" } });
-            await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, "work");
-            return interaction.editReply({ content: `You don't have a valid job... Please apply for a LEGAL job next time. You can't work if you dont have a LEGAL job.` });
+                if (buttons[selectedPage].name != data.answer) {
+                    buttons[selectedPage].style = ButtonStyle.Danger;
+
+                    await interaction.followUp({ content: `That is not the correct answer. You did not earn anything this hour.` })
+                    if (data.hasBusiness) await CompanyModel.updateOne({ id: data.company.ownerId }, { $inc: { balance: -data.salary } });
+                } else {
+                    await bot.tools.addMoney(interaction.member.id, data.salary);
+                    await interaction.followUp({ content: winMsg })
+                }
+
+                buttons[data.correctAnswerIndex].style = ButtonStyle.Success;
+                await interaction.editReply({ components: [this.setButtonsRow(buttons, true)] });
+            }
+        });
+
+        collector.on('end', async (interactionCollector) => {
+            if (data.gameInProgress) {
+                data.gameInProgress = false;
+                buttons[data.correctAnswerIndex].style = ButtonStyle.Danger;
+                await interaction.followUp({ content: loseMsg })
+                await interaction.editReply({ components: [this.setButtonsRow(buttons, true)] });
+            }
+        });
+    }
+
+    getJob(jobName) {
+        for (let i = 0; i < workList.length; i++) {
+            if (jobName === workList[i].name) return workList[i];
         }
-
-        data.salary = job.salary;
+        return null;
     }
 
-    const minigame = client.tools.randomNumber(0, 1);
-    switch (minigame) {
-        case 1:
-            await mgRememberWord(client, interaction, data);
-            break;
-        default:
-            await mgMath(client, interaction, data);
-            break;
+    setButtonsRow(buttons, isDisabled = false) {
+        let row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId("work_btn0")
+                .setLabel(buttons[0].name.toString())
+                .setStyle(buttons[0].style || ButtonStyle.Secondary)
+                .setDisabled(isDisabled),
+            new ButtonBuilder()
+                .setCustomId("work_btn1")
+                .setLabel(buttons[1].name.toString())
+                .setStyle(buttons[1].style || ButtonStyle.Secondary)
+                .setDisabled(isDisabled),
+            new ButtonBuilder()
+                .setCustomId("work_btn2")
+                .setLabel(buttons[2].name.toString())
+                .setStyle(buttons[2].style || ButtonStyle.Secondary)
+                .setDisabled(isDisabled),
+            new ButtonBuilder()
+                .setCustomId("work_btn3")
+                .setLabel(buttons[3].name.toString())
+                .setStyle(buttons[3].style || ButtonStyle.Secondary)
+                .setDisabled(isDisabled),
+            new ButtonBuilder()
+                .setCustomId("work_btn4")
+                .setLabel(buttons[4].name.toString())
+                .setStyle(buttons[4].style || ButtonStyle.Secondary)
+                .setDisabled(isDisabled)
+        );
+        return row;
     }
 }
 
-module.exports.help = {
-    name: "work",
-    description: "Work hard and get paid a unfair salary.",
-    options: [],
-    category: "economy",
-    extraFields: [],
-    memberPermissions: [],
-    botPermissions: [],
-    ownerOnly: false,
-    cooldown: 1800,
-    enabled: true
-}
+module.exports = Work;
