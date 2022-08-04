@@ -1,23 +1,33 @@
-module.exports.execute = async (client, interaction, data) => {
-    const money = client.tools.randomNumber(1, 75);
+const Command = require('../../structures/Command.js');
 
-    if (client.tools.commandPassed(50)) {
-        await client.tools.addMoney(interaction.guildId, interaction.member.id, money);
-        await interaction.reply({ content: `You begged for money and got :coin: **${money}**.` });
-    } else {
-        await interaction.reply({ content: `You begged for money but nobody wanted to give you money.` });
+class Beg extends Command {
+    info = {
+        name: "beg",
+        description: "If you really want money you can beg for it.",
+        options: [],
+        category: "economy",
+        extraFields: [],
+        memberPermissions: [],
+        botPermissions: [],
+        cooldown: 300,
+        enabled: true
+    };
+
+    constructor(...args) {
+        super(...args);
+    }
+
+    async run(interaction, data) {
+        await interaction.deferReply();
+        const money = bot.tools.randomNumber(1, 75);
+
+        if (bot.tools.commandPassed(50)) {
+            await bot.tools.addMoney(interaction.member.id, money);
+            await interaction.editReply({ content: `You begged for money and got :coin: **${money}**.` });
+        } else {
+            await interaction.editReply({ content: `You begged for money but nobody wanted to give you money.` });
+        }
     }
 }
 
-module.exports.help = {
-    name: "beg",
-    description: "If you really want money you can beg for it.",
-    options: [],
-    category: "economy",
-    extraFields: [],
-    memberPermissions: [],
-    botPermissions: [],
-    ownerOnly: false,
-    cooldown: 300,
-    enabled: true
-}
+module.exports = Beg;

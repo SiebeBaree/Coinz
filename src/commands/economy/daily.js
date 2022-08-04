@@ -1,42 +1,53 @@
-const guildUserSchema = require('../../database/schemas/guildUsers');
+const Command = require('../../structures/Command.js');
+const MemberModel = require('../../models/Member');
 
-const defaultReward = 15;
-const daysOffset = 2;
+class Daily extends Command {
+    info = {
+        name: "daily",
+        description: "Claim your daily reward.",
+        options: [],
+        category: "economy",
+        extraFields: [],
+        memberPermissions: [],
+        botPermissions: [],
+        cooldown: 86400,
+        enabled: true
+    };
 
-module.exports.execute = async (client, interaction, data) => {
-    let streakReward = defaultReward;
-    const lastStreakAgo = parseInt(Date.now() / 1000) - data.guildUser.lastStreak;
+    defaultReward = 15;
+    daysOffset = 2;
+    dailyStreakCap = 125;
+    dailyStreakMoney = 5;
 
-    if (data.guildUser.lastStreak === 0 || lastStreakAgo <= 86400 * daysOffset) {
-        streakReward += 5 * (data.guildUser.streak + 1);
-        streakReward = streakReward > 100 ? 100 : streakReward; // cap daily reward at 100
-    } else {
-        await client.tools.addMoney(interaction.guildId, interaction.member.id, defaultReward);
-        return await interaction.reply({ content: `You lost your streak and now get a normal reward of :coin: ${defaultReward}.` });
+    constructor(...args) {
+        super(...args);
     }
 
-    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
-        $inc: {
-            wallet: streakReward,
-            streak: 1
-        },
-        $set: {
-            lastStreak: parseInt(Date.now() / 1000)
+    async run(interaction, data) {
+        await interaction.deferReply();
+        let streakReward = this.defaultReward;
+        const lastStreakAgo = parseInt(Date.now() / 1000) - data.user.lastStreak;
+
+        if (data.user.lastStreak === 0 || lastStreakAgo <= 86400 * this.daysOffset) {
+            streakReward += this.dailyStreakMoney * (data.user.streak + 1);
+            streakReward = streakReward > this.dailyStreakCap ? this.dailyStreakCap : streakReward; // cap daily reward at this.dailyStreakCap
+        } else {
+            await bot.tools.addMoney(interaction.member.id, this.streakReward);
+            return await interaction.editReply({ content: `You lost your streak and now get a normal reward of :coin: ${this.streakReward}.` });
         }
-    });
 
-    await interaction.reply({ content: `You claimed your daily reward and got :coin: ${streakReward}. (:coin: ${streakReward - defaultReward} for ${data.guildUser.streak + 1} day streak.)` });
+        await MemberModel.updateOne({ id: interaction.member.id }, {
+            $inc: {
+                wallet: streakReward,
+                streak: 1
+            },
+            $set: {
+                lastStreak: parseInt(Date.now() / 1000)
+            }
+        });
+
+        await interaction.editReply({ content: `You claimed your daily reward and got :coin: ${streakReward}. (:coin: ${streakReward - this.defaultReward} for ${data.user.streak + 1} day streak.)` });
+    }
 }
 
-module.exports.help = {
-    name: "daily",
-    description: "Claim your daily reward.",
-    options: [],
-    category: "economy",
-    extraFields: [],
-    memberPermissions: [],
-    botPermissions: [],
-    ownerOnly: false,
-    cooldown: 86400,
-    enabled: true
-}
+module.exports = Daily;
