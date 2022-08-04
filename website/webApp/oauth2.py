@@ -6,7 +6,7 @@ class Oauth2:
     API_ENDPOINT = "https://discord.com/api/v10"
     CLIENT_ID = config.get("DISCORD_CLIENT_ID")
     CLIENT_SECRET = config.get("DISCORD_CLIENT_SECRET")
-    REDIRECT_URI = "http://127.0.0.1:5000/callback"
+    REDIRECT_URI = "http://127.0.0.1:5001/callback"
     SCOPE = "identify%20guilds"
     LOGIN_URI = f"{API_ENDPOINT}/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope={SCOPE}&prompt=consent"
 
