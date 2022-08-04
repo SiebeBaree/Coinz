@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div id="page-title" class="container">
+        <h2>Frequently Asked Questions</h2>
+        <p>Check this page first before asking a question in our support server. Your question might already be answered here!</p>
+    </div>
+
+    <div id="faq" class="container">
+    </div>
+
+    <script type="module" src="{{ url_for('static', filename='js/faq.js') }}"></script>
+{% endblock %}
