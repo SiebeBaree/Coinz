@@ -1,6 +1,6 @@
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const stocksSchema = require('../../database/schemas/stocks');
-const guildUserSchema = require('../../database/schemas/guildUsers');
+const userSchema = require('../../database/schemas/users');
 const moment = require('moment-timezone');
 const market = require('../../data/market/stocks.json');
 
@@ -166,30 +166,30 @@ async function execBuy(client, interaction, data) {
     if (amount > maxOwnedStock) return await interaction.reply({ content: `You can't own more than ${maxOwnedStock} shares or crypto.`, ephemeral: true });
     if (price > maxPurchase) return await interaction.reply({ content: `You can't buy more than :coin: ${maxPurchase} at once.`, ephemeral: true });
 
-    if (data.guildUser.wallet < price) {
+    if (data.user.wallet < price) {
         const embed = new MessageEmbed()
             .setTitle(`Not enough money`)
             .setColor("RED")
             .setDescription(`You do not have enough money in your wallet.`)
             .addFields(
                 { name: 'Total Price', value: `:coin: ${price}`, inline: true },
-                { name: 'Money In Wallet', value: `:coin: ${data.guildUser.wallet}`, inline: true },
-                { name: 'Money Needed', value: `:coin: ${(price - data.guildUser.wallet) || 1}`, inline: true }
+                { name: 'Money In Wallet', value: `:coin: ${data.user.wallet}`, inline: true },
+                { name: 'Money Needed', value: `:coin: ${(price - data.user.wallet) || 1}`, inline: true }
             )
         return interaction.reply({ embeds: [embed], ephemeral: true });
     }
     await interaction.deferReply();
 
     let userAlreadyHasStock = false;
-    for (let i = 0; i < data.guildUser.stocks.length; i++) {
-        if (data.guildUser.stocks[i].ticker === stock.ticker) {
+    for (let i = 0; i < data.user.stocks.length; i++) {
+        if (data.user.stocks[i].ticker === stock.ticker) {
             userAlreadyHasStock = true;
             break;
         }
     }
 
     if (userAlreadyHasStock) {
-        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'stocks.ticker': stock.ticker }, {
+        await userSchema.updateOne({ userId: interaction.member.id, 'stocks.ticker': stock.ticker }, {
             $inc: {
                 'stocks.$.quantity': amount,
                 'stocks.$.buyPrice': price
@@ -202,11 +202,11 @@ async function execBuy(client, interaction, data) {
             buyPrice: price
         };
 
-        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
+        await userSchema.updateOne({ userId: interaction.member.id }, {
             $push: { stocks: stocksObj }
         });
     }
-    await client.tools.removeMoney(interaction.guildId, interaction.member.id, price)
+    await client.tools.removeMoney(interaction.member.id, price)
 
     const embed = new MessageEmbed()
         .setTitle(`You just bought ${amount}x ${stock.fullName}`)
@@ -229,11 +229,11 @@ async function execSell(client, interaction, data) {
 
     let userHasStock = false;
     let stockData;
-    for (let i = 0; i < data.guildUser.stocks.length; i++) {
-        if (data.guildUser.stocks[i].ticker === stock.ticker) {
-            if (data.guildUser.stocks[i].quantity < amount) return await interaction.editReply({ content: `You only have ${data.guildUser.stocks[i].quantity}x of ${stock.fullName}.` });
+    for (let i = 0; i < data.user.stocks.length; i++) {
+        if (data.user.stocks[i].ticker === stock.ticker) {
+            if (data.user.stocks[i].quantity < amount) return await interaction.editReply({ content: `You only have ${data.user.stocks[i].quantity}x of ${stock.fullName}.` });
             userHasStock = true;
-            stockData = data.guildUser.stocks[i];
+            stockData = data.user.stocks[i];
             break;
         }
     }
@@ -241,14 +241,14 @@ async function execSell(client, interaction, data) {
     if (!userHasStock) return await interaction.editReply({ content: `You don't own that stock or crypto.` });
     const price = Math.round(stock.price * amount);
 
-    await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'stocks.ticker': stock.ticker }, {
+    await userSchema.updateOne({ userId: interaction.member.id, 'stocks.ticker': stock.ticker }, {
         $inc: {
             'stocks.$.quantity': -amount,
             'stocks.$.buyPrice': -parseInt(amount / stockData.quantity * stockData.buyPrice)
         }
     });
 
-    await client.tools.addMoney(interaction.guildId, interaction.member.id, price)
+    await client.tools.addMoney(interaction.member.id, price)
 
     const embed = new MessageEmbed()
         .setTitle(`You sold ${amount}x ${stock.fullName}`)
