@@ -1,24 +1,24 @@
-const guildUserSchema = require('../database/schemas/guildUsers');
+const userSchema = require('../database/schemas/users');
 const database = require('../database/mongoose');
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 const companiesSchema = require('../database/schemas/companies');
 const items = require('../commands/business/items.json').items;
 
-module.exports.addMoney = async (guildId, userId, amount) => {
-    await guildUserSchema.updateOne({ guildId: guildId, userId: userId }, {
+const addMoney = async (userId, amount) => {
+    await userSchema.updateOne({ userId: userId }, {
         $inc: {
             wallet: amount
         }
     });
 }
 
-module.exports.removeMoney = async (guildId, userId, amount, goNegative = false) => {
-    let guildUserData = await database.fetchGuildUser(guildId, userId);
-    if (guildUserData.wallet - amount < 0 && !goNegative) amount = guildUserData.wallet;
-    await this.addMoney(guildId, userId, -amount);
+const removeMoney = async (userId, amount, goNegative = false) => {
+    let userData = await database.fetchUser(userId);
+    if (userData.wallet - amount < 0 && !goNegative) amount = userData.wallet;
+    await this.addMoney(userId, -amount);
 }
 
-module.exports.setListButtons = (currentPage, maxPages, disableAll = false) => {
+const setListButtons = (currentPage, maxPages, disableAll = false) => {
     var disablePrevious = false;
     var disableNext = false;
 
@@ -50,7 +50,7 @@ module.exports.setListButtons = (currentPage, maxPages, disableAll = false) => {
     return row;
 }
 
-module.exports.createSelectMenu = (defaultLabel, disabled = false) => {
+const createSelectMenu = (defaultLabel, disabled = false) => {
     let options = [
         { label: 'Tools', value: 'tools' },
         // { label: 'Pets', value: 'pets' },
@@ -81,14 +81,14 @@ module.exports.createSelectMenu = (defaultLabel, disabled = false) => {
     return selectMenu;
 }
 
-module.exports.userHasItem = async (inv, itemId) => {
+const userHasItem = (inv, itemId) => {
     for (let i = 0; i < inv.length; i++) if (inv[i].itemId === itemId) return true;
     return false;
 }
 
-module.exports.giveItem = async (interaction, data, itemId, quantity) => {
-    if (await this.userHasItem(data.guildUser.inventory, itemId)) {
-        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'inventory.itemId': itemId }, {
+const giveItem = async (userId, itemId, quantity, inventory) => {
+    if (await this.userHasItem(inventory, itemId)) {
+        await userSchema.updateOne({ userId: userId, 'inventory.itemId': itemId }, {
             $inc: { 'inventory.$.quantity': quantity }
         });
     } else {
@@ -97,42 +97,42 @@ module.exports.giveItem = async (interaction, data, itemId, quantity) => {
             quantity: quantity
         };
 
-        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
+        await userSchema.updateOne({ userId: userId }, {
             $push: { inventory: invObj },
         });
     }
 }
 
-module.exports.takeItem = async (interaction, data, itemId, quantity) => {
+const takeItem = async (userId, itemId, quantity, inventory) => {
     let item;
-    for (let i = 0; i < data.guildUser.inventory.length; i++) if (data.guildUser.inventory[i].itemId === itemId) item = data.guildUser.inventory[i];
+    for (let i = 0; i < inventory.length; i++) if (inventory[i].itemId === itemId) item = inventory[i];
     if (item === undefined) return false;
 
     if (item.quantity - quantity > 0) {
-        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id, 'inventory.itemId': item.itemId }, {
+        await userSchema.updateOne({ userId: userId, 'inventory.itemId': item.itemId }, {
             $inc: { 'inventory.$.quantity': -quantity }
         });
     } else {
-        await guildUserSchema.updateOne({ guildId: interaction.guildId, userId: interaction.member.id }, {
+        await userSchema.updateOne({ userId: userId }, {
             $pull: { 'inventory': { itemId: item.itemId } }
         });
     }
     return true;
 }
 
-module.exports.randomNumber = (min, max) => {
+const randomNumber = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-module.exports.commandPassed = (chance) => {
+const commandPassed = (chance) => {
     return chance >= this.randomNumber(1, 100);
 }
 
-module.exports.timeout = (ms) => {
+const timeout = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-module.exports.hasBusiness = async (interaction, data, positions) => {
+const hasBusiness = async (interaction, data, positions) => {
     data.isEmployee = false;
     data.employee = {
         userId: interaction.member.id,
@@ -141,10 +141,10 @@ module.exports.hasBusiness = async (interaction, data, positions) => {
     };
 
     if (data.guildUser.job === "business") {
-        data.company = await companiesSchema.findOne({ guildId: interaction.guildId, ownerId: interaction.member.id });
+        data.company = await companiesSchema.findOne({ ownerId: interaction.member.id });
     } else if (data.guildUser.job.startsWith("business-")) {
         const companyOwner = data.guildUser.job.split("-")[1];
-        data.company = await companiesSchema.findOne({ guildId: interaction.guildId, ownerId: companyOwner });
+        data.company = await companiesSchema.findOne({ ownerId: companyOwner });
 
         // double check if employee is part of the company
         for (let i = 0; i < data.company.employees.length; i++) {
@@ -162,9 +162,13 @@ module.exports.hasBusiness = async (interaction, data, positions) => {
     return data;
 }
 
-module.exports.getProduct = (productId) => {
+const getProduct = (productId) => {
     for (let i = 0; i < items.length; i++) {
         if (items[i].itemId === productId) return items[i];
     }
     return undefined;
+}
+
+module.exports = {
+
 }
