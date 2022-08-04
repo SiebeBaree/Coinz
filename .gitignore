@@ -1,9 +1,7 @@
 # Project unique ignore
 website/__pycache__/
 __pycache__/
-src/data/shop/*.json
-!src/data/shop/template.json
-src/data/events
+src/assets/guildJoinLeave.json
 venv/
 
 # compiled output
