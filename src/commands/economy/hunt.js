@@ -1,106 +1,148 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const Command = require('../../structures/Command.js');
+const huntData = require('../../assets/lootTables/hunt.json');
 
-const lootTable = {
-    "fail": {
-        "chance": 40,
-        "loot": []
-    },
-    "common": {
-        "chance": 30,
-        "loot": ["fly", "worm", "slug", "ladybug"]
-    },
-    "uncommon": {
-        "chance": 24,
-        "loot": ["cow", "pig", "chicken", "bird", "sheep"]
-    },
-    "rare": {
-        "chance": 4.9,
-        "loot": ["fox", "rabbit", "duck", "deer"]
-    },
-    "super_rare": {
-        "chance": 1,
-        "loot": ["penguin", "bear", "elephant"]
-    },
-    "legendary": {
-        "chance": 0.1,
-        "loot": ["dragon"]
+class Hunt extends Command {
+    info = {
+        name: "hunt",
+        description: "Hunt for animals and get money selling their meat and skin.",
+        options: [],
+        category: "economy",
+        extraFields: [],
+        memberPermissions: [],
+        botPermissions: [],
+        cooldown: 900,
+        enabled: true
+    };
+
+    lootQuantity = {
+        "easy": [2, 5],
+        "medium": [2, 3],
+        "hard": [1, 2]
+    };
+
+    constructor(...args) {
+        super(...args);
+    }
+
+    async run(interaction, data) {
+        if (!await bot.tools.checkItem(data.user.inventory, "hunting_rifle")) {
+            await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
+            return await interaction.reply({ content: "You need a hunting rifle to use this command. Use `/shop buy item-id:hunting_rifle` to buy a hunting rifle.", ephemeral: true });
+        }
+
+        await interaction.deferReply();
+        let finishedCommand = false;
+
+        const preEmbed = new EmbedBuilder()
+            .setAuthor({ name: `Hunt of ${interaction.member.displayName}`, iconURL: interaction.member.displayAvatarURL() })
+            .setColor(bot.config.embed.color)
+            .setDescription(`You can choose where you want to hunt on animals. Be careful what you choose because it might cost you money!`)
+            .addFields(
+                { name: `Public Hunting Area (easy)`, value: `A safe place to hunt for animals. You won't find any large animals here...`, inline: false },
+                { name: `The Forest (medium)`, value: `You can find expensive animals here but it's very dangerous to walk in the forest. You might lose your gun or die!`, inline: false },
+                { name: `The Zoo (hard)`, value: `You can find the most exotic animals here but there is a big chance you will be fined for this illegal activity.`, inline: false }
+            )
+
+        const interactionMessage = await interaction.editReply({ embeds: [preEmbed], components: [this.getRow()], fetchReply: true });
+        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { time: 30000 });
+
+        collector.on('collect', async (interactionCollector) => {
+            await interactionCollector.deferUpdate();
+
+            if (!finishedCommand) {
+                finishedCommand = true;
+
+                if (interactionCollector.customId.startsWith('hunt_')) {
+                    if (bot.tools.randomNumber(1, 100) <= 4) {
+                        await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
+                        await bot.tools.takeItem(interaction.member.id, "hunting_rifle", data.user.inventory, 1);
+                        return await interaction.editReply({ content: "Oh No! Your Hunting Rifle broke... You have to buy a new hunting rifle. Use `/shop buy item-id:hunting_rifle` to buy a hunting rifle." });
+                    }
+
+                    const location = interactionCollector.customId.replace('hunt_', '');
+                    const huntCategory = huntData[location];
+
+                    if (bot.tools.randomNumber(1, 100) <= huntCategory.risk) {
+                        let failReward = 0;
+                        if (huntCategory.failReward[0] > 0) {
+                            failReward = bot.tools.randomNumber(...huntCategory.failReward);
+                            await bot.tools.takeMoney(interaction.member.id, failReward, true);
+                        }
+
+                        if (location !== "easy") await bot.tools.takeItem(interaction.member.id, "hunting_rifle", data.user.inventory, 1);
+
+                        let embed = new EmbedBuilder()
+                            .setAuthor({ name: `Hunt of ${interaction.member.displayName}`, iconURL: interaction.member.displayAvatarURL() })
+                            .setColor(bot.config.embed.color)
+                            .setDescription(huntCategory.failMessage.replace("%AMOUNT%", `${failReward}`))
+                        return await interaction.editReply({ embeds: [embed], components: [] });
+                    }
+
+                    const lootTable = huntCategory.loot;
+                    const loot = bot.tools.getRandomLoot(lootTable, this.lootQuantity[location][0], this.lootQuantity[location][1]);
+
+                    let mappedLoot = [];
+                    for (let obj of loot) {
+                        const index = mappedLoot.findIndex(item => item.itemId === obj.itemId);
+                        if (index === -1) {
+                            obj.quantity = 1;
+                            mappedLoot.push(obj);
+                        } else {
+                            mappedLoot[index].quantity++;
+                        }
+                    }
+
+                    let embed = new EmbedBuilder()
+                        .setAuthor({ name: `Hunt of ${interaction.member.displayName}`, iconURL: interaction.member.displayAvatarURL() })
+                        .setColor(bot.config.embed.color)
+
+                    let lootText = "";
+                    let totalPrice = 0;
+                    for (let i = 0; i < mappedLoot.length; i++) {
+                        lootText += `${mappedLoot[i].quantity}x ${mappedLoot[i].name} <:${mappedLoot[i].itemId}:${mappedLoot[i].emoteId}> ― :coin: ${parseInt(mappedLoot[i].sellPrice * mappedLoot[i].quantity)}\n`;
+                        totalPrice += parseInt(mappedLoot[i].sellPrice * mappedLoot[i].quantity);
+                    }
+
+                    if (lootText.length > 0 && totalPrice > 0) {
+                        embed.addFields({ name: "Animals Hunted", value: lootText, inline: false });
+                        embed.setDescription(huntCategory.successMessage.replace("%AMOUNT%", `${totalPrice}`));
+                        await bot.tools.addMoney(interaction.member.id, totalPrice);
+                    }
+
+                    await interaction.editReply({ embeds: [embed], components: [] });
+                }
+            }
+        });
+
+        collector.on('end', async (interactionCollector) => {
+            if (!finishedCommand) {
+                finishedCommand = true;
+                await interaction.editReply({ components: [this.getRow(true)] });
+            }
+        });
+    }
+
+    getRow(disabled = false) {
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId("hunt_easy")
+                .setLabel("Public Hunting Area")
+                .setStyle(ButtonStyle.Success)
+                .setDisabled(disabled),
+            new ButtonBuilder()
+                .setCustomId("hunt_medium")
+                .setLabel("The Forest")
+                .setStyle(ButtonStyle.Primary)
+                .setDisabled(disabled),
+            new ButtonBuilder()
+                .setCustomId("hunt_hard")
+                .setLabel("The Zoo")
+                .setStyle(ButtonStyle.Danger)
+                .setDisabled(disabled)
+        );
+        return row;
     }
 }
 
-function randomKey(client, lootTable) {
-    const keys = Object.keys(lootTable);
-    let randomNumber = client.tools.randomNumber(1, 1000);
-    randomNumber = randomNumber / 10.0;
-
-    let totalChance = 0;
-    for (let i = 0; i < keys.length; i++) {
-        if (randomNumber < totalChance + lootTable[keys[i]].chance) return keys[i];
-        totalChance += lootTable[keys[i]].chance;
-    }
-    return keys[0];
-}
-
-function getLoot(client, key, lootTable) {
-    let allLoot = lootTable[key].loot;
-    if (key === "legendary") return allLoot[client.tools.randomNumber(0, allLoot.length - 1)];
-
-    let itemCount = client.tools.randomNumber(1, 7);
-    let loot = [];
-    for (let i = 0; i < itemCount; i++) {
-        loot.push(allLoot[client.tools.randomNumber(0, allLoot.length - 1)]);
-    }
-
-    // To make sure at least 1 item is returned.
-    return loot === [] ? [allLoot[0]] : loot;
-}
-
-module.exports.execute = async (client, interaction, data) => {
-    if (!await client.tools.userHasItem(data.guildUser.inventory, "hunting_rifle")) {
-        await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, data.cmd.help.name);
-        return await interaction.reply({ content: "You need a hunting rifle to use this command. Use `/shop buy item_id:hunting_rifle` to buy a hunting rifle.", ephemeral: true });
-    }
-
-    if (client.tools.randomNumber(1, 100) <= 4) {
-        await client.cooldown.removeCooldown(interaction.guildId, interaction.member.id, data.cmd.help.name);
-        await client.tools.takeItem(interaction, data, "hunting_rifle", 1);
-        return await interaction.reply({ content: "Oh No! Your Hunting Rifle broke... You have to buy a new hunting rifle. Use `/shop buy item_id:hunting_rifle` to buy a hunting rifle." });
-    }
-
-    let key = randomKey(client, lootTable);
-    if (key === "fail") return await interaction.reply({ content: "You haven't caught any animals today :(" });
-
-    await interaction.deferReply();
-    let loot = getLoot(client, key, lootTable);
-    let lootText = "";
-
-    let mappedLoot = loot.reduce((cnt, cur) => (cnt[cur] = cnt[cur] + 1 || 1, cnt), {});
-    let keys = Object.keys(mappedLoot);
-
-    for (let i = 0; i < keys.length; i++) {
-        const item = await client.database.fetchItem(keys[i]);
-        lootText += `${mappedLoot[keys[i]]}x ${item.name} <:${item.itemId}:${item.emoteId}>\n`;
-        await client.tools.giveItem(interaction, data, item.itemId, mappedLoot[keys[i]]);
-    }
-
-    if (lootText === "") lootText = "They got away :(";
-
-    const embed = new MessageEmbed()
-        .setTitle("Hunt")
-        .setColor(client.config.embed.color)
-        .setDescription("You caught some animals!")
-        .addField('Loot', `${lootText}`, false)
-    await interaction.editReply({ embeds: [embed] });
-}
-
-module.exports.help = {
-    name: "hunt",
-    description: "Hunt for animals and get money selling their meat.",
-    options: [],
-    category: "economy",
-    extraFields: [],
-    memberPermissions: [],
-    botPermissions: [],
-    ownerOnly: false,
-    cooldown: 1800,
-    enabled: true
-}
+module.exports = Hunt;
