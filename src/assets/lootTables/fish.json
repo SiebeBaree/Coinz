@@ -1,0 +1,102 @@
+{
+    "loot": [
+        {
+            "itemId": "goldfish",
+            "category": "fish",
+            "name": "Goldfish",
+            "emoteId": "956848497963982889",
+            "sellPrice": 17
+        },
+        {
+            "itemId": "blobfish",
+            "category": "fish",
+            "name": "Blobfish",
+            "emoteId": "956848497976561734",
+            "sellPrice": 75
+        },
+        {
+            "itemId": "crab",
+            "category": "fish",
+            "name": "Crab",
+            "emoteId": "956848497959780382",
+            "sellPrice": 40
+        },
+        {
+            "itemId": "cod",
+            "category": "fish",
+            "name": "Cod",
+            "emoteId": "956848497951399986",
+            "sellPrice": 5
+        },
+        {
+            "itemId": "salmon",
+            "category": "fish",
+            "name": "Salmon",
+            "emoteId": "956848497989152818",
+            "sellPrice": 12
+        },
+        {
+            "itemId": "tuna",
+            "category": "fish",
+            "name": "tuna",
+            "emoteId": "956848497955577867",
+            "sellPrice": 10
+        },
+        {
+            "itemId": "jellyfish",
+            "category": "fish",
+            "name": "Jellyfish",
+            "emoteId": "956848497682968608",
+            "sellPrice": 30
+        },
+        {
+            "itemId": "sardine",
+            "category": "fish",
+            "name": "Sardine",
+            "emoteId": "956848497980760064",
+            "sellPrice": 8
+        },
+        {
+            "itemId": "catfish",
+            "category": "fish",
+            "name": "Catfish",
+            "emoteId": "956848497955577866",
+            "sellPrice": 18
+        },
+        {
+            "itemId": "sea_turtle",
+            "category": "fish",
+            "name": "Sea Turtle",
+            "emoteId": "956848497984950363",
+            "sellPrice": 75
+        },
+        {
+            "itemId": "starfish",
+            "category": "fish",
+            "name": "Starfish",
+            "emoteId": "956848497838157855",
+            "sellPrice": 55
+        },
+        {
+            "itemId": "octopus",
+            "category": "fish",
+            "name": "Octopus",
+            "emoteId": "956848497682968607",
+            "sellPrice": 57
+        },
+        {
+            "itemId": "lobster",
+            "category": "fish",
+            "name": "Lobster",
+            "emoteId": "956848498043654154",
+            "sellPrice": 45
+        },
+        {
+            "itemId": "squid",
+            "category": "fish",
+            "name": "Squid",
+            "emoteId": "956848498190471238",
+            "sellPrice": 60
+        }
+    ]
+}

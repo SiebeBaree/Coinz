@@ -1,0 +1,14 @@
+{
+    "employee": {
+        "name": "Normal Employee",
+        "defaultWage": 15
+    },
+    "admin": {
+        "name": "Chief Operations Officier",
+        "defaultWage": 100
+    },
+    "ceo": {
+        "name": "Chief Executive Officier",
+        "defaultWage": 200
+    }
+}

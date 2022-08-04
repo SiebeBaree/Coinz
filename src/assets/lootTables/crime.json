@@ -1,0 +1,55 @@
+{
+    "fail": {
+        "chance": 35,
+        "loot": []
+    },
+    "common": {
+        "chance": 35,
+        "loot": [
+            "shoe",
+            "doll",
+            "mirror",
+            "lamp",
+            "trash",
+            "socks",
+            "book",
+            "rubber_duck",
+            "fidget_spinner"
+        ]
+    },
+    "uncommon": {
+        "chance": 20,
+        "loot": [
+            "shovel",
+            "pocket_watch",
+            "chair",
+            "computer_mouse"
+        ]
+    },
+    "rare": {
+        "chance": 8.9,
+        "loot": [
+            "playstation",
+            "pocket_watch",
+            "tv",
+            "hunting_rifle",
+            "shovel",
+            "fishing_rod"
+        ]
+    },
+    "super_rare": {
+        "chance": 1,
+        "loot": [
+            "gold",
+            "toilet_paper",
+            "ring"
+        ]
+    },
+    "legendary": {
+        "chance": 0.1,
+        "loot": [
+            "diamond",
+            "trophy"
+        ]
+    }
+}
