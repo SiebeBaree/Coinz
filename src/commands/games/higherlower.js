@@ -104,7 +104,7 @@ class HigherLower extends Command {
 
     createEmbed(data) {
         let desc = ":point_up: `Higher` ― **The next number is higher.**\n:point_down: `Lower` ― **The next number is lower.**\n:boom: `Jackpot` ― **The next number is the same.**\n:negative_squared_cross_mark: `Stop` ― **Stop the game an claim your money.**";
-        desc += `\n\n**Current Number:** \`${data.number}\` *(Between 1-99)*\n**Correct Guesses:** \`${data.correct}\`\n\n:money_with_wings: **Profit:** :coin: ${getPrice(data.bet, data.correct)}`;
+        desc += `\n\n**Current Number:** \`${data.number}\` *(Between 1-99)*\n**Correct Guesses:** \`${data.correct}\`\n\n:money_with_wings: **Profit:** :coin: ${this.getPrice(data.bet, data.correct)}`;
 
         const embed = new EmbedBuilder()
             .setTitle(`Higher Lower`)
