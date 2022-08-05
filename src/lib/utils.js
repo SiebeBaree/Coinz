@@ -31,7 +31,7 @@ const addItem = async (userId, itemId, quantity = 1, inventory = []) => {
             },
         });
     }
-}
+};
 
 const takeItem = async (userId, itemId, inventory, quantity = 1) => {
     const item = checkItem(inventory, itemId, true);
@@ -109,7 +109,7 @@ const createSelectMenu = (options, customId, defaultLabel, disabled = false) => 
         );
 
     return SelectMenu;
-}
+};
 
 const categoriesSelectMenu = (defaultLabel, disabled = false) => {
     let options = [
@@ -134,15 +134,15 @@ const investingSelectMenu = (defaultLabel, disabled = false) => {
 
 const randomNumber = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
 
 const commandPassed = (chance) => {
     return chance >= randomNumber(1, 100);
-}
+};
 
 const timeout = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
-}
+};
 
 // Utils for companies
 const hasCompany = async (userId, data) => {
@@ -206,12 +206,12 @@ const msToTime = (ms) => {
 const calculateChange = (buyPrice, currentPrice) => {
     const changePercentage = roundNumber(((currentPrice - buyPrice) / buyPrice * 100), 2);
     return { icon: changePercentage < 0 ? ":chart_with_downwards_trend:" : ":chart_with_upwards_trend:", changePercentage: changePercentage };
-}
+};
 
 const roundNumber = (n, places = 2) => {
     const x = Math.pow(10, places);
     return Math.round(n * x) / x;
-}
+};
 
 const getRandomLoot = (lootTable, min, max = 0) => {
     const quantity = max === 0 || max <= min ? min : randomNumber(min, max);
@@ -219,7 +219,7 @@ const getRandomLoot = (lootTable, min, max = 0) => {
     let loot = [];
     for (let i = 0; i < quantity; i++) loot.push(lootTable[randomNumber(0, lootTable.length - 1)]);
     return loot === [] ? [lootTable[0]] : loot;
-}
+};
 
 module.exports = {
     addMoney,
