@@ -22,6 +22,7 @@ const Member = Schema({
     id: { type: String, required: true, unique: true, index: true },
     banned: { type: Boolean, default: false },
     votes: { type: Number, default: 0 },
+    spins: { type: Number, default: 0 },
     wallet: { type: Number, default: 0 },
     bank: { type: Number, default: 0 },
     experience: { type: Number, default: 0 },
