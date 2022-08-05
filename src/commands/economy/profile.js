@@ -62,8 +62,6 @@ class Profile extends Command {
             .setColor(bot.config.embed.color)
             .setThumbnail(member.displayAvatarURL() || bot.config.embed.defaultIcon)
             .addFields(
-                // { name: 'Experience', value: `Coming Soon`, inline: true },
-                // { name: 'Level', value: `Coming Soon`, inline: true },
                 { name: 'Balance', value: `:dollar: **Wallet:** :coin: ${memberData.wallet}\n:credit_card: **Bank:** :coin: ${memberData.bank}\n:moneybag: **Net Worth:** :coin: ${memberData.wallet + memberData.bank}\n:gem: **Inventory Worth:** \`${inventory.totalItems} items\` valued at :coin: ${inventory.value}`, inline: false },
                 { name: 'Investment Portfolio', value: `:dollar: **Worth:** :coin: ${stocks.currentWorth}\n:credit_card: **Amount of Stocks:** ${parseInt(stocks.totalStocks)} stocks\n:moneybag: **Invested:** :coin: ${stocks.initialWorth}`, inline: false },
                 { name: 'Misc', value: `:briefcase: **Current Job:** ${job}\n:sparkles: **Streak:** ${memberData.streak} days\n:no_entry: **Banned:** ${memberData.banned ? "Yes" : "No"}`, inline: false },
