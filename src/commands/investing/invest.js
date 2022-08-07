@@ -57,7 +57,7 @@ class Invest extends Command {
                         description: 'How much money you want to spend on the investment.',
                         required: false,
                         min_value: 50,
-                        max_value: 250000
+                        max_value: 50000
                     }
                 ]
             },
