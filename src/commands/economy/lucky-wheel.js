@@ -3,7 +3,7 @@ const { EmbedBuilder, ApplicationCommandOptionType } = require('discord.js');
 const items = require('../../assets/lootTables/luckyWheel.json').rewards;
 const MemberModel = require('../../models/Member');
 
-class Balance extends Command {
+class LuckyWheel extends Command {
     info = {
         name: "lucky-wheel",
         description: "Spin the lucky wheel and get awesome rewards",
@@ -118,7 +118,7 @@ class Balance extends Command {
             }
         }
 
-        if (rewardsTxt === "") rewardsTxt = "I could not find any rewards.";
+        if (rewardsTxt === "") rewardsTxt = "You got no extra loot. You only got money.";
         let bonusTxt = bonus === 0 ? "" : `\n:moneybag: **You also got a :coin: ${bonus} bonus!**`;
 
         await MemberModel.updateOne(
@@ -139,4 +139,4 @@ class Balance extends Command {
     }
 }
 
-module.exports = Balance;
+module.exports = LuckyWheel;
