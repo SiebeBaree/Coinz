@@ -47,7 +47,7 @@ class LuckyWheel extends Command {
     async run(interaction, data) {
         if (interaction.options.getSubcommand() === "rewards") return await this.execRewards(interaction, data);
         if (interaction.options.getSubcommand() === "spin") return await this.execSpin(interaction, data);
-        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
+        return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.` });
     }
 
     async execRewards(interaction, data) {

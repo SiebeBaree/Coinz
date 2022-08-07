@@ -201,7 +201,7 @@ class Invest extends Command {
         if (price !== null && amount !== null) return await interaction.editReply({ content: `You cannot buy an amount and give a price at the same time.` })
 
         let stock = await bot.database.fetchStock(ticker.toUpperCase());
-        if (stock == null) return await interaction.reply({ content: `Sorry we don't know any investment with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/${this.info.name} info\` to get all investments.`, ephemeral: true });
+        if (stock == null) return await interaction.editReply({ content: `Sorry we don't know any investment with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/${this.info.name} info\` to get all investments.` });
 
         if (amount !== null) {
             price = Math.round(stock.price * amount);
