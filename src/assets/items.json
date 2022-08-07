@@ -103,8 +103,8 @@
             "emoteId": "956861323352883230",
             "shortDescription": "This allows you to use the /dig command.",
             "longDescription": "This item allows you to use the /dig command. You can get a lot of different items from that command. It has a small chance to break.",
-            "buyPrice": 150,
-            "sellPrice": 65,
+            "buyPrice": 250,
+            "sellPrice": 80,
             "multiplier": 0.0,
             "duration": 0
         },
@@ -115,8 +115,8 @@
             "emoteId": "956861323617107968",
             "shortDescription": "With this item you can fish.",
             "longDescription": "You need this item to be able to use the fish command. It has a small chance to break.",
-            "buyPrice": 175,
-            "sellPrice": 50,
+            "buyPrice": 280,
+            "sellPrice": 100,
             "multiplier": 0.0,
             "duration": 0
         },
@@ -127,8 +127,8 @@
             "emoteId": "987701755770994718",
             "shortDescription": "Use this to hunt for some animals.",
             "longDescription": "You need this item to be able to use the hunt command. It has a small chance to break.",
-            "buyPrice": 330,
-            "sellPrice": 170,
+            "buyPrice": 630,
+            "sellPrice": 270,
             "multiplier": 0.0,
             "duration": 0
         },
@@ -380,7 +380,7 @@
             "shortDescription": "Can be collected or sold.",
             "longDescription": "This item has no purpose other than to be sold or collected.",
             "buyPrice": 250,
-            "sellPrice": 130,
+            "sellPrice": 120,
             "multiplier": 0.0,
             "duration": 0
         },
@@ -391,8 +391,8 @@
             "emoteId": "956919874494533642",
             "shortDescription": "Show your royalty.",
             "longDescription": "Buy this item and show that you have royal blood.",
-            "buyPrice": 15000,
-            "sellPrice": 5000,
+            "buyPrice": 12000,
+            "sellPrice": 3000,
             "multiplier": 0.0,
             "duration": 0
         },
@@ -404,7 +404,7 @@
             "shortDescription": "Ooooh shiny!",
             "longDescription": "You have a extremely low chance of getting this item using the dig command.",
             "buyPrice": 0,
-            "sellPrice": 7000,
+            "sellPrice": 6000,
             "multiplier": 0.0,
             "duration": 0
         },
@@ -416,7 +416,7 @@
             "shortDescription": "Never trust money more than gold.",
             "longDescription": "\"Gold is a treasure, and he who possesses it does all he wishes to in this world and succeeds in helping souls into paradise\"\n> - Christopher Columbus",
             "buyPrice": 4000,
-            "sellPrice": 2400,
+            "sellPrice": 2200,
             "multiplier": 0.0,
             "duration": 0
         },
