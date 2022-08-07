@@ -11,7 +11,8 @@ class Crash extends Command {
                 type: ApplicationCommandOptionType.Integer,
                 description: 'The bet you want to place.',
                 required: true,
-                min_value: 50
+                min_value: 50,
+                max_value: 5000
             }
         ],
         category: "games",
@@ -36,15 +37,15 @@ class Crash extends Command {
 
         // setup variable
         let userWon = false;
-        let profit = bet;
-        let multiplier = 1.0;
+        let profit = -parseInt(bet * 0.2);
+        let multiplier = 0.8;
         let stoppedGame = false;
 
         const createEmbed = (multiplier, profit, color = undefined) => {
             const embed = new EmbedBuilder()
                 .setTitle(`Crash`)
                 .setColor(color || bot.config.embed.color)
-                .setDescription("Every 1.5 seconds the multiplier goes up by 0.2x.\nEvery time this happens you have 15% chance to lose all money.\nTo claim the profits, press the sell button.")
+                .setDescription("Every 1.5 seconds the multiplier goes up by 0.1x.\nEvery time this happens you have 20% chance to lose all money.\nTo claim the profits, press the sell button.")
                 .addFields(
                     { name: 'Multiplier', value: `${Math.round(multiplier * 10) / 10}x`, inline: true },
                     { name: 'Profit', value: `:coin: ${profit}`, inline: true }
@@ -92,9 +93,9 @@ class Crash extends Command {
                     return await interaction.editReply({ embeds: [createEmbed(multiplier, -bet, Colors.Red)], components: [setButton(true)] });
                 }
 
-                multiplier = Math.round((multiplier + 0.2) * 10) / 10;
+                multiplier = Math.round((multiplier + 0.1) * 10) / 10;
                 await interaction.editReply({ embeds: [createEmbed(multiplier, Math.floor(profit * multiplier) - bet)] });
-                if (bot.tools.commandPassed(15)) {
+                if (bot.tools.commandPassed(20)) {
                     userWon = false;
                     stoppedGame = true;
                 }

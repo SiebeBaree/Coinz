@@ -12,7 +12,8 @@ class Poker extends Command {
                 type: ApplicationCommandOptionType.Integer,
                 description: 'The bet you want to place.',
                 required: true,
-                min_value: 50
+                min_value: 50,
+                max_value: 5000
             }
         ],
         usage: "<bet>",
