@@ -15,9 +15,10 @@ module.exports = class extends Event {
         //If it isn't a command then return
         if (!cmd) return;
 
-        if (cmd.memberRequired === true || cmd.guildRequired === true) await interaction.deferReply();
-        const memberData = cmd.memberRequired === true ? await this.database.fetchMember(interaction.member.id) : undefined;
-        const guildData = cmd.guildRequired === true ? await this.database.fetchGuild(interaction.guild.id) : undefined;
+        if (cmd.info.memberRequired === true || cmd.info.guildRequired === true) await interaction.deferReply();
+        const memberData = cmd.info.memberRequired === true ? await this.database.fetchMember(interaction.member.id) : undefined;
+        const guildData = cmd.info.guildRequired === true ? await this.database.fetchGuild(interaction.guild.id) : undefined;
+
 
         if (await cmd.cool(cmd.info.name, interaction.member, cmd.info.cooldown)) {
             return await interaction.editReply({ content: `:x: You have to wait ${this.tools.msToTime(await this.cooldown.getCooldown(interaction.member.id, cmd.info.name) * 1000)} to use this command again.` });
