@@ -2,8 +2,6 @@
 
 # Coinz
 ![Language](https://img.shields.io/badge/Language-Node.js-427E38?style=for-the-badge&logo=node.js)
-![License](https://img.shields.io/github/license/SiebeBaree/Coinz?style=for-the-badge&logo=github)
-![Repo Size](https://img.shields.io/github/languages/code-size/SiebeBaree/Coinz?style=for-the-badge&label=SIZE&logo=databricks&logoColor=white)
 [![invite](https://img.shields.io/badge/Invite-Coinz-DBA514?style=for-the-badge&logo=coil&logoColor=white)](https://coinzbot.xyz/invite)
 [![Discord](https://img.shields.io/discord/938177962698735616?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/asnZQwc6kW)
 
@@ -31,9 +29,9 @@ Want to contribute? Great, we love that! Please take your time on [opening a new
 *If you need any more help, consider joining our [Coinz support discord](https://coinzbot.xyz/discord).*
 
 ## Support Coinz
-If you really like this bot, consider donating to Coinz on Ko-fi.
+If you really like this bot, consider donating to Coinz on Patreon.
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/J3J54IS5U)
+[![patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/coinz_bot)
 
 If you can't/don't want to donate, that's fine. You can also support Coinz by starring or forking this repository. To make this bot even better consider opening a pull request or issue with a new feature.
 
@@ -51,11 +49,11 @@ To selfhost the bot yourself, you need to have:
 We will have to do this once:
 * Do `npm i` inside the folder, and wait for it to finish.
 * Create a file `.env` in the root of the folder.
-* Change `/src/config.json` with your default values.
+* Change `/src/assets/config.json` with your default values.
 
 **Example .env file:** *(Do not use `""` or `''`)*
 ```
-TOKEN=YOUR_BOT_TOKEN_HERE
+DISCORD_TOKEN=YOUR_BOT_TOKEN_HERE
 DATABASE_URI=mongodb://127.0.0.1:27017/
 ```
 
