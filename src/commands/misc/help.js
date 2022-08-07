@@ -18,7 +18,9 @@ class Help extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 0,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: false
     };
 
     categories = [
@@ -42,6 +44,7 @@ class Help extends Command {
             this.categories.forEach(categoryObj => { if (commandName.toLowerCase() == categoryObj.category.toLowerCase()) commandIsCategory = true })
 
             if (commandIsCategory) {
+                await interaction.deferReply();
                 var embed = new EmbedBuilder()
                     .setColor(bot.config.embed.color)
                     .setFooter({ text: bot.config.embed.footer })
@@ -64,7 +67,8 @@ class Help extends Command {
                 });
             } else {
                 const command = bot.commands.get(commandName.toLowerCase());
-                if (!command) return interaction.reply({ content: `Sorry, we couldn't find any category or command with the name \`${commandName}\`.`, ephemeral: true })
+                if (!command) return interaction.reply({ content: `Sorry, we couldn't find any category or command with the name \`${commandName}\`.`, ephemeral: true });
+                await interaction.deferReply();
 
                 let options = command.info.options;
                 let usage = "";
@@ -91,26 +95,9 @@ class Help extends Command {
                         { name: 'Cooldown', value: `${command.info.cooldown > 0 ? bot.tools.msToTime(command.info.cooldown * 1000) : `${bot.config.defaultTimeout}s`}`, inline: false }
                     )
 
-                let botPerms = [];
-                command.info.botPermissions.forEach(perm => {
-                    botPerms.push(`\`${perm}\``);
-                });
-
-                let userPerms = [];
-                command.info.memberPermissions.forEach(perm => {
-                    userPerms.push(`\`${perm}\``);
-                });
-
-                if (botPerms.length > 0) embed.addFields([
-                    { name: 'Permissions Required (For Bot)', value: otPerms.join(', '), inline: false }
-                ]);
-                if (userPerms.length > 0) embed.addFields([
-                    { name: 'Permissions Needed (For User)', value: userPerms.join(', '), inline: false }
-                ]);
-
                 if (command.info.extraFields !== undefined && command.info.extraFields.length > 0) {
                     command.info.extraFields.forEach(field => {
-                        embed.addFields([{ name: field.name, value: field.value, inline: field.inline }]);
+                        embed.addFields({ name: field.name, value: field.value, inline: field.inline });
                     });
                 }
 
@@ -119,8 +106,9 @@ class Help extends Command {
                 }
             }
 
-            await interaction.reply({ embeds: [embed] });
+            await interaction.editReply({ embeds: [embed] });
         } else {
+            await interaction.deferReply();
             let embed = new EmbedBuilder()
                 .setAuthor({ name: "Commands List", iconURL: `${bot.user.avatarURL() || bot.config.embed.defaultIcon}` })
                 .setColor(bot.config.embed.color)
@@ -133,7 +121,7 @@ class Help extends Command {
                 ]);
             });
 
-            return await interaction.reply({ embeds: [embed] });
+            return await interaction.editReply({ embeds: [embed] });
         }
     }
 

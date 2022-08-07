@@ -23,7 +23,9 @@ class Poker extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 300,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -34,7 +36,7 @@ class Poker extends Command {
         const bet = interaction.options.getInteger('bet');
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
+            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
         }
 
         // initialize variables
@@ -46,7 +48,6 @@ class Poker extends Command {
         data.deck = deck;
         data.pickedCards = [];
 
-        await interaction.deferReply();
         data = this.startGame(data);
         const interactionMessage = await interaction.editReply({ embeds: [this.createEmbed(data)], components: this.setButtons(data.hand, data.gameFinished), fetchReply: true });
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { time: 60000 });

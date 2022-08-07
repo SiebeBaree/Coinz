@@ -20,7 +20,9 @@ class Deposit extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 0,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -29,7 +31,7 @@ class Deposit extends Command {
 
     async run(interaction, data) {
         let amount = interaction.options.getInteger('amount');
-        if (amount > data.user.wallet) return interaction.reply({ content: `You don't have that much in your wallet. You only have :coin: ${data.user.wallet}.`, ephemeral: true });
+        if (amount > data.user.wallet) return interaction.editReply({ content: `You don't have that much in your wallet. You only have :coin: ${data.user.wallet}.` });
 
         await MemberModel.updateOne({ id: interaction.member.id }, {
             $inc: {
@@ -46,7 +48,7 @@ class Deposit extends Command {
                 { name: 'New Wallet Balance', value: `:coin: ${data.user.wallet - amount}`, inline: true },
                 { name: 'New Bank Balance', value: `:coin: ${data.user.bank + amount}`, inline: true }
             )
-        await interaction.reply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
     }
 }
 

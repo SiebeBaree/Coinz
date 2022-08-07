@@ -26,7 +26,9 @@ class TicTacToe extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 300,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     boardSize = 3; // this.boardSize = 3 means 3 columns, 3 rows; Maximum this.boardSize: 5
@@ -43,12 +45,12 @@ class TicTacToe extends Command {
 
         if (user.id === interaction.member.id) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You cannot choose yourself as a second player.`, ephemeral: true });
+            return await interaction.editReply({ content: `You cannot choose yourself as a second player.` });
         }
 
         if (user.bot) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You can't invite a bot to play a game of tic tac toe.`, ephemeral: true });
+            return await interaction.editReply({ content: `You can't invite a bot to play a game of tic tac toe.` });
         }
 
         const secondUserData = await bot.database.fetchMember(user.id);
@@ -57,16 +59,16 @@ class TicTacToe extends Command {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
 
             if (bet > data.user.wallet) {
-                return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
+                return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
             } else {
-                return await interaction.reply({ content: `${user} doesn't have enough money in their wallet.`, ephemeral: true });
+                return await interaction.editReply({ content: `${user} doesn't have enough money in their wallet.` });
             }
         }
 
         data.gameStarted = false;
         data.currentPlayer = user.id; // set to used.id to accept the confirm message
 
-        const interactionMessage = await interaction.reply({ content: `<@${user.id}>\nDo you accept to play a game of Tic Tac Toe with <@${interaction.member.id}>?\nYou have 60 seconds to accept.\n*If you accept, you have to place a bet of :coin: ${bet}.*`, components: [this.getConfirmButtons(false)], fetchReply: true });
+        const interactionMessage = await interaction.editReply({ content: `<@${user.id}>\nDo you accept to play a game of Tic Tac Toe with <@${interaction.member.id}>?\nYou have 60 seconds to accept.\n*If you accept, you have to place a bet of :coin: ${bet}.*`, components: [this.getConfirmButtons(false)], fetchReply: true });
 
         // wait for player to accept
         const filter = async (i) => {

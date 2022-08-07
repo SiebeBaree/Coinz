@@ -10,7 +10,9 @@ class Beg extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 300,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -18,7 +20,6 @@ class Beg extends Command {
     }
 
     async run(interaction, data) {
-        await interaction.deferReply();
         const money = bot.tools.randomNumber(1, 75);
 
         if (bot.tools.commandPassed(50)) {

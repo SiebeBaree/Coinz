@@ -38,7 +38,9 @@ class Plot extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 0,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -48,11 +50,10 @@ class Plot extends Command {
     async run(interaction, data) {
         if (interaction.options.getSubcommand() === "list") return await this.execList(interaction, data);
         if (interaction.options.getSubcommand() === "plant") return await this.execPlant(interaction, data);
-        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
+        return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.` });
     }
 
     async execList(interaction, data) {
-        await interaction.deferReply();
         const interactionMessage = await interaction.editReply({ embeds: [await this.createEmbed(interaction, data)], components: [this.createRow(await this.calcBtns(data))], fetchReply: true });
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 15, idle: 15000, time: 60000 });
 
@@ -85,15 +86,14 @@ class Plot extends Command {
     }
 
     async execPlant(interaction, data) {
-        await interaction.deferReply({ ephemeral: true });
         const plotId = interaction.options.getString('plot-id');
         const cropType = interaction.options.getString('crop');
 
         const plots = this.getPlots(plotId);
-        if (plots.length <= 0) return await interaction.editReply({ content: `That are not valid plots.`, ephemeral: true });
-        if (Math.max(...plots) > data.user.plots.length) return await interaction.editReply({ content: `You don't own a plot with id \`${Math.max(...plots)}\`.`, ephemeral: true });
+        if (plots.length <= 0) return await interaction.editReply({ content: `That are not valid plots.` });
+        if (Math.max(...plots) > data.user.plots.length) return await interaction.editReply({ content: `You don't own a plot with id \`${Math.max(...plots)}\`.` });
         const cropItem = await bot.database.fetchItem(cropType.toLowerCase());
-        if (cropItem == null) return await interaction.editReply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use \`/shop list\` to view all crops.`, ephemeral: true });
+        if (cropItem == null) return await interaction.editReply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use \`/shop list\` to view all crops.` });
 
         for (let i = 0; i < plots.length; i++) {
             await MemberModel.updateOne({ id: interaction.member.id, 'plots.plotId': plots[i] - 1 }, {
@@ -104,8 +104,8 @@ class Plot extends Command {
                 }
             });
         }
-        if (!await bot.tools.takeItem(interaction.member.id, cropItem.itemId, data.user.inventory, plots.length)) return await interaction.editReply({ content: `You don't have that crop in your inventory. Please buy a crop with \`/shop buy <crop-id>\`.`, ephemeral: true });
-        await interaction.editReply({ content: `You successfully planted \`${cropItem.name}\` on plot ${plotId}`, ephemeral: true });
+        if (!await bot.tools.takeItem(interaction.member.id, cropItem.itemId, data.user.inventory, plots.length)) return await interaction.editReply({ content: `You don't have that crop in your inventory. Please buy a crop with \`/shop buy <crop-id>\`.` });
+        await interaction.editReply({ content: `You successfully planted \`${cropItem.name}\` on plot ${plotId}` });
     }
 
     createVisualRow(element) {

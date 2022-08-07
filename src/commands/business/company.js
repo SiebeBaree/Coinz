@@ -149,7 +149,9 @@ class Company extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 0,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -173,12 +175,11 @@ class Company extends Command {
             case "create":
                 return await this.execCreate(interaction, data);
             default:
-                return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
+                return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.` });
         }
     }
 
     async execInfo(interaction, data) {
-        await interaction.deferReply();
         data = await bot.tools.hasCompany(interaction.member.id, data);
         const company = data.company;
         if (!company) return await interaction.editReply({ content: `You might want to create a company to use this command. Please create one using \`/${this.info.name} create <name>\`.` });
@@ -247,7 +248,6 @@ class Company extends Command {
 
     async execInventory(interaction, data) {
         data = await bot.tools.hasCompany(interaction.member.id, data);
-        await interaction.deferReply();
         if (!data.company) return await interaction.editReply({ content: `To view your companies inventory you may need a company? Am I right? Please create one using \`/${this.info.name} create <name>\`.` });
 
         const embed = async function (company) {
@@ -309,7 +309,6 @@ class Company extends Command {
 
     async execEmployeeAdd(interaction, data) {
         const user = interaction.options.getUser('user');
-        await interaction.deferReply();
         data = await bot.tools.hasCompany(interaction.member.id, data);
         const company = data.company;
 
@@ -400,7 +399,6 @@ class Company extends Command {
 
     async execEmployeeFire(interaction, data) {
         const user = interaction.options.getUser('user');
-        await interaction.deferReply();
         data = await bot.tools.hasCompany(interaction.member.id, data);
         const company = data.company;
 
@@ -435,7 +433,6 @@ class Company extends Command {
     async execEmployeeSetWage(interaction, data) {
         const user = interaction.options.getUser('user');
         const wage = interaction.options.getInteger('wage');
-        await interaction.deferReply();
         data = await bot.tools.hasCompany(interaction.member.id, data);
         const company = data.company;
 
@@ -464,7 +461,6 @@ class Company extends Command {
 
     async execEmployeeSetPosition(interaction, data) {
         const user = interaction.options.getUser('user');
-        await interaction.deferReply();
         data = await bot.tools.hasCompany(interaction.member.id, data);
         const company = data.company;
 
@@ -495,7 +491,6 @@ class Company extends Command {
     }
 
     async execCreate(interaction, data) {
-        await interaction.deferReply();
         data = await bot.tools.hasCompany(interaction.member.id, data);
         const company = data.company;
         if (company) return await interaction.editReply({ content: `You already have a company! If you don't know how this feature works, please use \`/help ${this.info.name}\`.` });

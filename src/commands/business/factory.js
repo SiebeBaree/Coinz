@@ -46,7 +46,9 @@ class Factory extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 0,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -62,13 +64,11 @@ class Factory extends Command {
             case "list-products":
                 return await this.execListProducts(interaction, data);
             default:
-                return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
+                return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.` });
         }
     }
 
     async execView(interaction, data) {
-        await interaction.deferReply();
-
         const calcFactoryPrice = (factories) => {
             return factories * 3000 + 3000;
         }
@@ -250,7 +250,6 @@ class Factory extends Command {
     }
 
     async execSetProduction(interaction, data) {
-        await interaction.deferReply();
         data = await bot.tools.hasCompany(interaction.member.id, data);
 
         if (!data.company) return await interaction.editReply({ content: `You don't have a company. Please create one using \`/company create <name>\`.` });
@@ -309,8 +308,6 @@ class Factory extends Command {
     }
 
     async execListProducts(interaction, data) {
-        await interaction.deferReply();
-
         const listProducts = () => {
             let listStr = "";
             for (let i = 0; i < items.length; i++) {

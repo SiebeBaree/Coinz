@@ -27,7 +27,9 @@ class Roulette extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 300,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     redColors = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
@@ -41,7 +43,7 @@ class Roulette extends Command {
 
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
+            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
         }
         const space = interaction.options.getString('space');
 
@@ -53,7 +55,7 @@ class Roulette extends Command {
         data.multiplier = 1;
         data = this.playerWon(data);
         data.color = this.redColors.includes(data.ball) ? "red" : "black";
-        if (data.space === -1) return interaction.reply({ content: `That is not a valid space. Please check all spaces with \`/help ${this.info.name}\`.`, epehermal: true });
+        if (data.space === -1) return interaction.editReply({ content: `That is not a valid space. Please check all spaces with \`/help ${this.info.name}\`.` });
 
         if (data.playerWon) {
             await bot.tools.addMoney(interaction.member.id, parseInt(data.bet * data.multiplier));
@@ -67,7 +69,7 @@ class Roulette extends Command {
             .setDescription("Spinning the wheel...")
             .setImage("https://media3.giphy.com/media/26uf2YTgF5upXUTm0/giphy.gif");
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
         await bot.tools.timeout(5000);
         await interaction.editReply({ embeds: [this.createEmbed(data)] });
     }

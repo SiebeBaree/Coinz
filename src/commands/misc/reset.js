@@ -13,7 +13,9 @@ class Reset extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 300,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: false
     };
 
     constructor(...args) {
@@ -21,6 +23,7 @@ class Reset extends Command {
     }
 
     async run(interaction, data) {
+        await interaction.deferReply();
         const confirmEmbed = new EmbedBuilder()
             .setAuthor({ name: `Reset your account?`, iconURL: `${interaction.member.displayAvatarURL() || bot.config.embed.defaultIcon}` })
             .setColor(Colors.Red)
@@ -38,7 +41,7 @@ class Reset extends Command {
                 .setStyle(ButtonStyle.Secondary)
         );
 
-        const interactionMessage = await interaction.reply({ embeds: [confirmEmbed], components: [confirmRow], fetchReply: true });
+        const interactionMessage = await interaction.editReply({ embeds: [confirmEmbed], components: [confirmRow], fetchReply: true });
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 1, time: 15_000 })
 
         collector.on('collect', async (interactionCollector) => {

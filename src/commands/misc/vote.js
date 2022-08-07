@@ -24,7 +24,9 @@ class Vote extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 0,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -42,7 +44,7 @@ class Vote extends Command {
             )
             .setFooter({ text: bot.config.embed.footer })
 
-        await interaction.reply({ embeds: [embed], components: [row] });
+        await interaction.editReply({ embeds: [embed], components: [row] });
     }
 }
 

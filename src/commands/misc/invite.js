@@ -10,7 +10,9 @@ class Invite extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 0,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: false
     };
 
     constructor(...args) {

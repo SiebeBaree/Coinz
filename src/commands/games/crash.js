@@ -20,7 +20,9 @@ class Crash extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 300,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -32,7 +34,7 @@ class Crash extends Command {
 
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
+            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
         }
 
         // setup variable
@@ -64,7 +66,7 @@ class Crash extends Command {
             return row;
         };
 
-        const interactionMessage = await interaction.reply({ embeds: [createEmbed(multiplier, profit - bet)], components: [setButton()], fetchReply: true });
+        const interactionMessage = await interaction.editReply({ embeds: [createEmbed(multiplier, profit - bet)], components: [setButton()], fetchReply: true });
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { time: 20000 })
 
         collector.on('collect', async (interactionCollector) => {

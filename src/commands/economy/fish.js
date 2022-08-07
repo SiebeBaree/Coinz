@@ -12,7 +12,9 @@ class Fish extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 900,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -20,8 +22,6 @@ class Fish extends Command {
     }
 
     async run(interaction, data) {
-        await interaction.deferReply();
-
         if (!await bot.tools.checkItem(data.user.inventory, "fishing_rod")) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
             return await interaction.editReply({ content: "You need a fishing rod to use this command. Use `/shop buy item-id:fishing_rod` to buy a fishing rod." });

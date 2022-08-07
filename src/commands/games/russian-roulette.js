@@ -20,7 +20,9 @@ class RussianRoulette extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 300,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -32,7 +34,7 @@ class RussianRoulette extends Command {
 
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
+            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
         }
 
         // initialize variables
@@ -44,7 +46,7 @@ class RussianRoulette extends Command {
         data.slot = 0; // the current slot of the gun
         data.multiplier = 0;
 
-        const interactionMessage = await interaction.reply({ content: this.getContent(data), embeds: [this.createEmbed(data)], components: [this.setButtons(true)], fetchReply: true });
+        const interactionMessage = await interaction.editReply({ content: this.getContent(data), embeds: [this.createEmbed(data)], components: [this.setButtons(true)], fetchReply: true });
         data = this.calcBullets(data);
         await bot.tools.timeout(2000);
         await interaction.editReply({ content: this.getContent(data), embeds: [this.createEmbed(data)], components: [this.setButtons(data.gameFinished)] });

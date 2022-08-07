@@ -10,7 +10,9 @@ class Monthly extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 2592000,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -19,7 +21,7 @@ class Monthly extends Command {
 
     async run(interaction, data) {
         await bot.tools.addMoney(interaction.member.id, 300);
-        await interaction.reply({ content: `You claimed your monthly reward and got :coin: 300.` });
+        await interaction.editReply({ content: `You claimed your monthly reward and got :coin: 300.` });
     }
 }
 

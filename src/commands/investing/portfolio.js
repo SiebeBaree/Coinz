@@ -14,7 +14,9 @@ class Portfolio extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 0,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -22,7 +24,6 @@ class Portfolio extends Command {
     }
 
     async run(interaction, data) {
-        await interaction.deferReply();
         let category = "Stock";
         const allStocks = await this.getInvestments(interaction, category);
         let maxPages = this.calculateMaxPages(allStocks[category]);

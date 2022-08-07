@@ -19,6 +19,8 @@ class Balance extends Command {
         botPermissions: [],
         cooldown: 0,
         enabled: true,
+        guildRequired: false,
+        memberRequired: false
     };
 
     constructor(...args) {

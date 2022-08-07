@@ -11,7 +11,9 @@ class Info extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 0,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: false
     };
 
     guides = {
@@ -54,7 +56,6 @@ class Info extends Command {
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
 
-            // for (let i = 0; i < this.selectMenuOptions.length; i++) this.selectMenuOptions[i].default = false;
             defaultLabel = interactionCollector.values[0];
             await interaction.editReply({ embeds: [this.getEmbed(defaultLabel)], components: [bot.tools.createSelectMenu(this.getSelectMenuOptions(), "guide_selectMenu", defaultLabel, false)] });
         });

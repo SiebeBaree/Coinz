@@ -12,7 +12,9 @@ class Crime extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 900,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -20,7 +22,6 @@ class Crime extends Command {
     }
 
     async run(interaction, data) {
-        await interaction.deferReply();
         let key = this.randomKey();
 
         if (key === "fail") {

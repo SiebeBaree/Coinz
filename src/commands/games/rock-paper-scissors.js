@@ -20,7 +20,9 @@ class RockPaperScissors extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 300,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     hand = {
@@ -50,7 +52,7 @@ class RockPaperScissors extends Command {
 
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
+            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
         }
 
         // initialize variables
@@ -61,7 +63,7 @@ class RockPaperScissors extends Command {
         data.playerHand = null;
         data.botHand = null;
 
-        const interactionMessage = await interaction.reply({ embeds: [this.createEmbed(data)], components: [this.setButtons(false, true)], fetchReply: true });
+        const interactionMessage = await interaction.editReply({ embeds: [this.createEmbed(data)], components: [this.setButtons(false, true)], fetchReply: true });
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { idle: 15000, max: 30000 });
 
         collector.on('collect', async (interactionCollector) => {

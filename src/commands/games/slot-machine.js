@@ -22,7 +22,9 @@ class SlotMachine extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 300,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     spinningEmote = "<a:spinning_slots:949712124165365810>";
@@ -36,7 +38,7 @@ class SlotMachine extends Command {
 
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
+            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
         }
 
         // setup variable
@@ -75,7 +77,7 @@ class SlotMachine extends Command {
             return slotStr;
         }
 
-        await interaction.reply({ embeds: [createEmbed(data)] });
+        await interaction.editReply({ embeds: [createEmbed(data)] });
 
         // this is a recursive function. Please be careful if you want to edit this function.
         // If you don't know what your doing you might end up with a infinite loop.

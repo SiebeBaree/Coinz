@@ -21,7 +21,9 @@ class Blackjack extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 300,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -33,7 +35,7 @@ class Blackjack extends Command {
 
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
+            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
         }
         let disableDoubleDown = data.user.wallet < bet * 2;
 
@@ -44,7 +46,6 @@ class Blackjack extends Command {
         data.playerHand = [];
         data.dealerHand = [];
 
-        await interaction.deferReply();
         data = this.startGame(data);
         const interactionMessage = await interaction.editReply({ embeds: [this.createEmbed(data)], components: [this.setButtons(data.gameFinished, disableDoubleDown)], fetchReply: true });
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 6, idle: 15000 });

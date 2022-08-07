@@ -36,6 +36,8 @@ class LuckyWheel extends Command {
         botPermissions: [],
         cooldown: 0,
         enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -49,7 +51,6 @@ class LuckyWheel extends Command {
     }
 
     async execRewards(interaction, data) {
-        await interaction.deferReply();
         const spinsLeft = data.user.spins === undefined ? 0 : data.user.spins;
 
         let rewardsTxt = "";
@@ -80,12 +81,10 @@ class LuckyWheel extends Command {
         const amount = interaction.options.getInteger('amount') || 1;
 
         if (data.user.spins === undefined || data.user.spins <= 0) {
-            return await interaction.reply({ content: `You don't have any spins left. If you want to spin the lucky wheel, consider voting (\`/vote\`). You get 1x free spin for each vote.`, ephemeral: true });
+            return await interaction.editReply({ content: `You don't have any spins left. If you want to spin the lucky wheel, consider voting (\`/vote\`). You get 1x free spin for each vote.` });
         } else if (data.user.spins < amount) {
-            return await interaction.reply({ content: `You only have ${data.user.spins} spins left.`, ephemeral: true });
+            return await interaction.editReply({ content: `You only have ${data.user.spins} spins left.` });
         }
-
-        await interaction.deferReply();
 
         const preEmbed = new EmbedBuilder()
             .setAuthor({ name: `${interaction.member.displayName || interaction.member.username}'s Lucky Wheel`, iconURL: `${interaction.member.displayAvatarURL() || bot.config.embed.defaultIcon}` })

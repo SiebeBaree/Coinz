@@ -12,7 +12,9 @@ class Hunt extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 900,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     lootQuantity = {
@@ -28,10 +30,9 @@ class Hunt extends Command {
     async run(interaction, data) {
         if (!await bot.tools.checkItem(data.user.inventory, "hunting_rifle")) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: "You need a hunting rifle to use this command. Use `/shop buy item-id:hunting_rifle` to buy a hunting rifle.", ephemeral: true });
+            return await interaction.editReply({ content: "You need a hunting rifle to use this command. Use `/shop buy item-id:hunting_rifle` to buy a hunting rifle." });
         }
 
-        await interaction.deferReply();
         let finishedCommand = false;
 
         const preEmbed = new EmbedBuilder()

@@ -19,7 +19,9 @@ class Inventory extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 0,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: false
     };
 
     itemsPerPage = 10;
@@ -29,12 +31,12 @@ class Inventory extends Command {
     }
 
     async run(interaction, data) {
+        await interaction.deferReply();
         const member = interaction.options.getUser('user') || interaction.member;
 
         const memberData = await bot.database.fetchMember(member.id);
-        if (memberData.inventory.length <= 0 && member.id === interaction.member.id) return await interaction.reply({ content: `You don't have anything in your inventory.`, ephemeral: true });
-        if (memberData.inventory.length <= 0) return await interaction.reply({ content: `This user doesn't have anything in his inventory.`, ephemeral: true });
-        await interaction.deferReply();
+        if (memberData.inventory.length <= 0 && member.id === interaction.member.id) return await interaction.editReply({ content: `You don't have anything in your inventory.` });
+        if (memberData.inventory.length <= 0) return await interaction.editReply({ content: `This user doesn't have anything in his inventory.` });
 
         let category = "all";
         let invItems = await this.getItems(memberData.inventory, category);

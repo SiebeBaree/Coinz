@@ -10,7 +10,9 @@ class Weekly extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 604800,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -19,7 +21,7 @@ class Weekly extends Command {
 
     async run(interaction, data) {
         await bot.tools.addMoney(interaction.member.id, 100);
-        await interaction.reply({ content: `You claimed your weekly reward and got :coin: 100.` });
+        await interaction.editReply({ content: `You claimed your weekly reward and got :coin: 100.` });
     }
 }
 

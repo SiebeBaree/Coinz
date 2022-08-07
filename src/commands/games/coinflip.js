@@ -36,7 +36,9 @@ class Coinflip extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 300,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -48,10 +50,9 @@ class Coinflip extends Command {
 
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
+            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
         }
 
-        await interaction.deferReply();
         const side = interaction.options.getString('coin-side');
         const randomNumber = bot.tools.randomNumber(0, 1);
         const sideLanded = randomNumber === 0 ? "HEAD" : "TAILS";
@@ -62,7 +63,7 @@ class Coinflip extends Command {
             .setFooter({ text: bot.config.embed.footer })
             .setDescription(`:coin: **You chose:** ${side}\n:moneybag: **Your Bet:** :coin: ${bet}\n\n**The coin landed on:** ${sideLanded}\n${side === sideLanded ? "**You won:** :coin: " + parseInt(bet * 1.5) : "**You lost:** :coin: " + bet}`)
             .setThumbnail(sideLanded === "HEAD" ? "https://cdn.coinzbot.xyz/games/coinflip/coin-head.png" : "https://cdn.coinzbot.xyz/games/coinflip/coin-tail.png")
-        await interaction.editReply({ embeds: [newEmbed], ephemeral: false });
+        await interaction.editReply({ embeds: [newEmbed] });
 
         if (sideLanded === side) {
             await bot.tools.addMoney(interaction.member.id, parseInt(bet * 0.5));

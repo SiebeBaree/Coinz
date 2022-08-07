@@ -11,7 +11,9 @@ class Daily extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 86400,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     defaultReward = 15;
@@ -24,7 +26,6 @@ class Daily extends Command {
     }
 
     async run(interaction, data) {
-        await interaction.deferReply();
         let streakReward = this.defaultReward;
         const lastStreakAgo = parseInt(Date.now() / 1000) - data.user.lastStreak;
 

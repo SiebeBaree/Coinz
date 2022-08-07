@@ -15,7 +15,9 @@ class Work extends Command {
         memberPermissions: [],
         botPermissions: [],
         cooldown: 1800,
-        enabled: true
+        enabled: true,
+        guildRequired: false,
+        memberRequired: true
     };
 
     constructor(...args) {
@@ -25,10 +27,8 @@ class Work extends Command {
     async run(interaction, data) {
         if (data.user.job == "" || data.user.job == null) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You don't have a job. Please find a job using \`/job list\`.`, ephemeral: true });
+            return await interaction.editReply({ content: `You don't have a job. Please find a job using \`/job list\`.` });
         }
-
-        await interaction.deferReply();
 
         data.hasBusiness = false;
         data.gameInProgress = true;
