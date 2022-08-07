@@ -10,10 +10,10 @@
 // How to run this file?
 // npm run items
 
-const items = require('./data/shop/items.json').items;
+const items = require('../assets/items.json').items;
 require('dotenv').config();
 const mongoose = require('mongoose');
-const itemsSchema = require('./database/schemas/items');
+const itemsSchema = require('../models/Item');
 
 // If you enable this, you will override all existing items in the database
 const overrideItems = false;
@@ -34,7 +34,7 @@ async function createItem(item) {
     // Connect to the database
     try {
         await mongoose.connect(process.env.DATABASE_URI, {
-            dbName: 'coinz',
+            dbName: 'coinz_v2',
             keepAlive: true,
             keepAliveInitialDelay: 300000
         });
