@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "items": "node src/lib/addItems.js",
-    "migrate": "node src/lib/migrate.js"
+    "items": "node src/lib/addItems.js"
   },
   "repository": {
     "type": "git",
