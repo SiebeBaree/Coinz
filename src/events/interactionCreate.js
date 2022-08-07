@@ -19,7 +19,6 @@ module.exports = class extends Event {
         const memberData = cmd.info.memberRequired === true ? await this.database.fetchMember(interaction.member.id) : undefined;
         const guildData = cmd.info.guildRequired === true ? await this.database.fetchGuild(interaction.guild.id) : undefined;
 
-
         if (await cmd.cool(cmd.info.name, interaction.member, cmd.info.cooldown)) {
             return await interaction.editReply({ content: `:x: You have to wait ${this.tools.msToTime(await this.cooldown.getCooldown(interaction.member.id, cmd.info.name) * 1000)} to use this command again.` });
         }
