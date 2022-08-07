@@ -113,7 +113,7 @@ class Plot extends Command {
     }
 
     calcPlotPrice(plots) {
-        return plots * 800 + 2000;
+        return plots * 2000 + 3000;
     }
 
     async createEmbed(interaction, data) {
