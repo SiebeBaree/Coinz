@@ -58,7 +58,7 @@ class Hunt extends Command {
                     if (bot.tools.randomNumber(1, 100) <= 4) {
                         await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
                         await bot.tools.takeItem(interaction.member.id, "hunting_rifle", data.user.inventory, 1);
-                        return await interaction.editReply({ content: "Oh No! Your Hunting Rifle broke... You have to buy a new hunting rifle. Use `/shop buy item-id:hunting_rifle` to buy a hunting rifle." });
+                        return await interaction.editReply({ content: "Oh No! Your Hunting Rifle broke... You have to buy a new hunting rifle. Use `/shop buy item-id:hunting_rifle` to buy a hunting rifle.", embeds: [], components: [] });
                     }
 
                     const location = interactionCollector.customId.replace('hunt_', '');
