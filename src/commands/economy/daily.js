@@ -33,8 +33,17 @@ class Daily extends Command {
             streakReward += this.dailyStreakMoney * (data.user.streak + 1);
             streakReward = streakReward > this.dailyStreakCap ? this.dailyStreakCap : streakReward; // cap daily reward at this.dailyStreakCap
         } else {
-            await bot.tools.addMoney(interaction.member.id, this.streakReward);
-            return await interaction.editReply({ content: `You lost your streak and now get a normal reward of :coin: ${this.streakReward}.` });
+            await MemberModel.updateOne({ id: interaction.member.id }, {
+                $inc: {
+                    wallet: streakReward,
+                    streak: 0
+                },
+                $set: {
+                    lastStreak: parseInt(Date.now() / 1000)
+                }
+            });
+
+            return await interaction.editReply({ content: `You lost your streak and now get a normal reward of :coin: ${streakReward}.` });
         }
 
         await MemberModel.updateOne({ id: interaction.member.id }, {
