@@ -1,12 +1,13 @@
 {
   "name": "coinz",
-  "version": "1.0.0",
+  "version": "2.1.1",
   "description": "A economic discord bot with a lot of features",
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "items": "node src/createItems.js"
+    "items": "node src/lib/addItems.js",
+    "migrate": "node src/lib/migrate.js"
   },
   "repository": {
     "type": "git",
