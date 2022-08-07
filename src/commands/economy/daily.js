@@ -10,7 +10,7 @@ class Daily extends Command {
         extraFields: [],
         memberPermissions: [],
         botPermissions: [],
-        cooldown: 86400,
+        cooldown: 82800,
         enabled: true,
         guildRequired: false,
         memberRequired: true
