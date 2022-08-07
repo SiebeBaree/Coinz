@@ -70,7 +70,7 @@ class Factory extends Command {
         await interaction.deferReply();
 
         const calcFactoryPrice = (factories) => {
-            return factories * 1000 + 3000;
+            return factories * 3000 + 3000;
         }
 
         const embed = async (interaction, data) => {

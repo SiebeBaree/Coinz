@@ -513,7 +513,7 @@ class Company extends Command {
         const name = interaction.options.getString('name').trim();
         if (name.length > 32) return await interaction.editReply({ content: `You can only use a maximum of 32 characters for your company name.` });
         if (!/^[A-Za-z][a-zA-Z0-9 _-]*$/.test(name)) return await interaction.editReply({ content: `Your company name can only use \`A-Z, a-z, 0-9, whitespaces, -, _\` and you have to start with a letter.` });
-        if (data.user.wallet < 1000) return await interaction.editReply({ content: `You need :coin: 1500 in your wallet to create a company.` });
+        if (data.user.wallet < 3000) return await interaction.editReply({ content: `You need :coin: 3000 in your wallet to create a company.` });
 
         const nameAlreadyExists = await CompanyModel.findOne({ name: name });
         if (nameAlreadyExists) return await interaction.editReply({ content: `A company with the name \`${name}\` already exists. Please choose another name.` });
