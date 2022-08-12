@@ -20,7 +20,6 @@ const Plot = Schema({
 
 const Member = Schema({
     id: { type: String, required: true, unique: true, index: true },
-    banned: { type: Boolean, default: false },
     votes: { type: Number, default: 0 },
     spins: { type: Number, default: 0 },
     wallet: { type: Number, default: 0 },
@@ -33,7 +32,9 @@ const Member = Schema({
     inventory: [{ type: Inventory }],
     stocks: [{ type: Stock }],
     plots: [{ type: Plot }],
-    lastWater: { type: Number, default: parseInt(Date.now() / 1000) }
+    lastWater: { type: Number, default: parseInt(Date.now() / 1000) },
+    displayedBadge: { type: String, default: "" },
+    badges: [{ type: String }]
 });
 
 module.exports = model('Member', Member, 'members');
