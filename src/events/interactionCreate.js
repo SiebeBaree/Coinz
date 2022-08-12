@@ -15,14 +15,12 @@ module.exports = class extends Event {
         //If it isn't a command then return
         if (!cmd) return;
 
-        if (cmd.info.memberRequired === true || cmd.info.guildRequired === true) await interaction.deferReply();
-        const memberData = cmd.info.memberRequired === true ? await this.database.fetchMember(interaction.member.id) : undefined;
-        const guildData = cmd.info.guildRequired === true ? await this.database.fetchGuild(interaction.guild.id) : undefined;
-
         if (await cmd.cool(cmd.info.name, interaction.member, cmd.info.cooldown)) {
-            return await interaction.editReply({ content: `:x: You have to wait ${this.tools.msToTime(await this.cooldown.getCooldown(interaction.member.id, cmd.info.name) * 1000)} to use this command again.` });
+            return await interaction.reply({ content: `:x: You have to wait ${this.tools.msToTime(await this.cooldown.getCooldown(interaction.member.id, cmd.info.name) * 1000)} to use this command again.`, ephemeral: true });
         }
 
-        await cmd.run(interaction, { user: memberData, guild: guildData });
+        if (cmd.info.deferReply === true) await interaction.deferReply();
+        const memberData = cmd.info.memberRequired === true ? await this.database.fetchMember(interaction.member.id) : undefined;
+        await cmd.run(interaction, { user: memberData });
     }
 };
