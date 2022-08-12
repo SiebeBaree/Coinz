@@ -64,10 +64,10 @@ class Profile extends Command {
             cooldownStr = "There are no cooldowns found for this user.";
         }
 
-        const displayedBadge = data.user.displayedBadge === undefined || data.user.displayedBadge === "" ? "" : ` <:${data.user.displayedBadge}:${idAchievements[data.user.displayedBadge]}>`;
+        const displayedBadge = memberData.displayedBadge === undefined || memberData.displayedBadge === "" ? "" : ` <:${memberData.displayedBadge}:${idAchievements[memberData.displayedBadge]}>`;
 
         let badgesStr = "";
-        const badges = data.user.badges === undefined ? [] : data.user.badges;
+        const badges = memberData.badges === undefined ? [] : memberData.badges;
         for (let i = 0; i < badges.length; i++) {
             badgesStr += `<:${badges[i]}:${idAchievements[badges[i]]}> `;
         }
