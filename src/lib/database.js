@@ -5,6 +5,7 @@ const MemberModel = require("../models/Member");
 const CooldownModel = require("../models/Cooldown");
 const CompanyModel = require("../models/Company");
 const PremiumModel = require("../models/Premium");
+const StatsModel = require("../models/Stats");
 
 const fetchGuild = async function (guildId) {
     let obj = await GuildModel.findOne({ id: guildId });
@@ -76,6 +77,17 @@ const fetchPremium = async function (id) {
     }
 }
 
+const fetchStats = async function (id) {
+    let obj = await StatsModel.findOne({ id: id });
+    if (obj) {
+        return obj;
+    } else {
+        obj = new StatsModel({ id: id });
+        await obj.save().catch(err => bot.logger.error(err));
+        return obj;
+    }
+}
+
 module.exports = {
     fetchGuild,
     fetchMember,
@@ -83,5 +95,6 @@ module.exports = {
     fetchStock,
     fetchCooldown,
     fetchCompany,
-    fetchPremium
+    fetchPremium,
+    fetchStats
 };
