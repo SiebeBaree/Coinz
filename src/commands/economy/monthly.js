@@ -7,12 +7,10 @@ class Monthly extends Command {
         options: [],
         category: "economy",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 2592000,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: true
     };
 
     constructor(...args) {

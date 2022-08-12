@@ -20,12 +20,10 @@ class Poker extends Command {
         category: "games",
         extraFields: [{ name: 'Multipliers', value: '[x100] Royal Flush\n[x50] Straight Flush\n[x25] Four of a Kind\n[x9] Full House\n[x6] Flush\n[x4] Straight\n[x3] Three of a Kind\n[x2] Two Pairs', inline: false }],
         image: "https://i.imgur.com/0FTZa3d.png",
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 300,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     constructor(...args) {
@@ -36,8 +34,9 @@ class Poker extends Command {
         const bet = interaction.options.getInteger('bet');
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
+            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
         }
+        await interaction.deferReply();
 
         // initialize variables
         data.bet = bet;

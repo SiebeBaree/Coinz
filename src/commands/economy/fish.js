@@ -9,12 +9,10 @@ class Fish extends Command {
         options: [],
         category: "economy",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 900,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     constructor(...args) {
@@ -24,14 +22,15 @@ class Fish extends Command {
     async run(interaction, data) {
         if (!await bot.tools.checkItem(data.user.inventory, "fishing_rod")) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.editReply({ content: "You need a fishing rod to use this command. Use `/shop buy item-id:fishing_rod` to buy a fishing rod." });
+            return await interaction.reply({ content: "You need a fishing rod to use this command. Use `/shop buy item-id:fishing_rod` to buy a fishing rod.", ephemeral: true });
         }
 
         if (bot.tools.randomNumber(1, 100) <= 5) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
             await bot.tools.takeItem(interaction.member.id, "fishing_rod", data.user.inventory, 1);
-            return await interaction.editReply({ content: "Oh No! Your Fishing Rod broke... You have to buy a new fishing rod. Use `/shop buy item-id:fishing_rod` to buy a fishing rod." });
+            return await interaction.reply({ content: "Oh No! Your Fishing Rod broke... You have to buy a new fishing rod. Use `/shop buy item-id:fishing_rod` to buy a fishing rod.", ephemeral: true });
         }
+        await interaction.deferReply();
 
         let status = "too soon";
         let finishedCommand = false;

@@ -17,12 +17,10 @@ class Deposit extends Command {
         ],
         category: "economy",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     constructor(...args) {
@@ -31,7 +29,8 @@ class Deposit extends Command {
 
     async run(interaction, data) {
         let amount = interaction.options.getInteger('amount');
-        if (amount > data.user.wallet) return interaction.editReply({ content: `You don't have that much in your wallet. You only have :coin: ${data.user.wallet}.` });
+        if (amount > data.user.wallet) return interaction.reply({ content: `You don't have that much in your wallet. You only have :coin: ${data.user.wallet}.`, ephemeral: true });
+        await interaction.deferReply();
 
         await MemberModel.updateOne({ id: interaction.member.id }, {
             $inc: {

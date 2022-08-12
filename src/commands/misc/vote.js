@@ -21,12 +21,10 @@ class Vote extends Command {
         options: [],
         category: "misc",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: true
     };
 
     constructor(...args) {

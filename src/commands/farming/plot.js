@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, ApplicationCommandOptionType } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ApplicationCommandOptionType } = require('discord.js');
 const MemberModel = require('../../models/Member');
 
 class Plot extends Command {
@@ -35,12 +35,10 @@ class Plot extends Command {
         ],
         category: "farming",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     constructor(...args) {
@@ -50,10 +48,11 @@ class Plot extends Command {
     async run(interaction, data) {
         if (interaction.options.getSubcommand() === "list") return await this.execList(interaction, data);
         if (interaction.options.getSubcommand() === "plant") return await this.execPlant(interaction, data);
-        return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.` });
+        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
     }
 
     async execList(interaction, data) {
+        await interaction.deferReply();
         const interactionMessage = await interaction.editReply({ embeds: [await this.createEmbed(interaction, data)], components: [this.createRow(await this.calcBtns(data))], fetchReply: true });
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 15, idle: 15000, time: 60000 });
 
@@ -90,10 +89,11 @@ class Plot extends Command {
         const cropType = interaction.options.getString('crop');
 
         const plots = this.getPlots(plotId);
-        if (plots.length <= 0) return await interaction.editReply({ content: `That are not valid plots.` });
-        if (Math.max(...plots) > data.user.plots.length) return await interaction.editReply({ content: `You don't own a plot with id \`${Math.max(...plots)}\`.` });
+        if (plots.length <= 0) return await interaction.reply({ content: `That are not valid plots.`, ephemeral: true });
+        if (Math.max(...plots) > data.user.plots.length) return await interaction.reply({ content: `You don't own a plot with id \`${Math.max(...plots)}\`.`, ephemeral: true });
         const cropItem = await bot.database.fetchItem(cropType.toLowerCase());
-        if (cropItem == null) return await interaction.editReply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use \`/shop list\` to view all crops.` });
+        if (cropItem == null) return await interaction.reply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use \`/shop list\` to view all crops.`, ephemeral: true });
+        await interaction.deferReply();
 
         for (let i = 0; i < plots.length; i++) {
             await MemberModel.updateOne({ id: interaction.member.id, 'plots.plotId': plots[i] - 1 }, {
@@ -204,16 +204,10 @@ class Plot extends Command {
 
     async waterPlots(interaction, data) {
         for (let i = 0; i < data.user.plots.length; i++) {
-            if (data.user.plots[i].status === "growing") {
-                await MemberModel.updateOne({ id: interaction.member.id, 'plots.plotId': data.user.plots[i].plotId }, {
-                    $inc: { 'plots.$.harvestOn': -3600 }
-                });
-            }
+            if (data.user.plots[i].status === "growing") await MemberModel.updateOne({ id: interaction.member.id, 'plots.plotId': data.user.plots[i].plotId }, { $inc: { 'plots.$.harvestOn': -3600 } });
         }
 
-        await MemberModel.updateOne({ id: interaction.member.id }, {
-            $set: { lastWater: parseInt(Date.now() / 1000) }
-        });
+        await MemberModel.updateOne({ id: interaction.member.id }, { $set: { lastWater: parseInt(Date.now() / 1000) } });
     }
 
     async buyPlot(interaction, data) {

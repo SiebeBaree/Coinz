@@ -9,12 +9,10 @@ class Info extends Command {
         options: [],
         category: "misc",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: false
+        memberRequired: false,
+        deferReply: true
     };
 
     constructor(...args) {
@@ -22,7 +20,6 @@ class Info extends Command {
     }
 
     async run(interaction, data) {
-        await interaction.deferReply();
         const usedMemory = process.memoryUsage().heapUsed / 1024 / 1024;
 
         const promises = [

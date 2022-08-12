@@ -23,12 +23,10 @@ class TicTacToe extends Command {
         ],
         category: "games",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 300,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     boardSize = 3; // this.boardSize = 3 means 3 columns, 3 rows; Maximum this.boardSize: 5
@@ -45,14 +43,15 @@ class TicTacToe extends Command {
 
         if (user.id === interaction.member.id) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.editReply({ content: `You cannot choose yourself as a second player.` });
+            return await interaction.reply({ content: `You cannot choose yourself as a second player.`, ephemeral: true });
         }
 
         if (user.bot) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.editReply({ content: `You can't invite a bot to play a game of tic tac toe.` });
+            return await interaction.reply({ content: `You can't invite a bot to play a game of tic tac toe.`, ephemeral: true });
         }
 
+        await interaction.deferReply();
         const secondUserData = await bot.database.fetchMember(user.id);
 
         if (bet > data.user.wallet || bet > secondUserData.wallet) {

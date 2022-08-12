@@ -7,12 +7,10 @@ class Invite extends Command {
         options: [],
         category: "misc",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: false
+        memberRequired: false,
+        deferReply: true
     };
 
     constructor(...args) {
@@ -20,7 +18,7 @@ class Invite extends Command {
     }
 
     async run(interaction, data) {
-        await interaction.reply({ content: `:pushpin: **Invite Coinz yourself:** [**Click Here**](https://discord.com/oauth2/authorize?client_id=938771676433362955&permissions=313344&scope=bot%20applications.commands)\n:wave: **Join our Official Support Discord Server:** discord.gg/asnZQwc6kW` });
+        await interaction.editReply({ content: `:pushpin: **Invite Coinz yourself:** [**Click Here**](https://discord.com/oauth2/authorize?client_id=938771676433362955&permissions=313344&scope=bot%20applications.commands)\n:wave: **Join our Official Support Discord Server:** discord.gg/asnZQwc6kW` });
     }
 }
 

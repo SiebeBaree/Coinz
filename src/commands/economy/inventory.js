@@ -16,12 +16,10 @@ class Inventory extends Command {
         ],
         category: "economy",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: false
+        memberRequired: false,
+        deferReply: false
     };
 
     itemsPerPage = 10;
@@ -31,13 +29,13 @@ class Inventory extends Command {
     }
 
     async run(interaction, data) {
-        await interaction.deferReply();
         const member = interaction.options.getUser('user') || interaction.member;
 
         const memberData = await bot.database.fetchMember(member.id);
-        if (memberData.inventory.length <= 0 && member.id === interaction.member.id) return await interaction.editReply({ content: `You don't have anything in your inventory.` });
-        if (memberData.inventory.length <= 0) return await interaction.editReply({ content: `This user doesn't have anything in his inventory.` });
+        if (memberData.inventory.length <= 0 && member.id === interaction.member.id) return await interaction.reply({ content: `You don't have anything in your inventory.`, ephemeral: true });
+        if (memberData.inventory.length <= 0) return await interaction.reply({ content: `This user doesn't have anything in his inventory.`, ephemeral: true });
 
+        await interaction.deferReply();
         let category = "all";
         let invItems = await this.getItems(memberData.inventory, category);
         let maxPages = Math.ceil(invItems.length / this.itemsPerPage);
@@ -99,7 +97,7 @@ class Inventory extends Command {
         let embed = new EmbedBuilder()
             .setAuthor({ name: `${member.displayName || member.username}'s inventory`, iconURL: `${member.displayAvatarURL() || bot.config.embed.defaultIcon}` })
             .setColor(bot.config.embed.color)
-            .setFooter({ text: `/${this.info.name} list [item-id] to get more info about an item. ─ Page ${currentPage + 1} of ${maxPages}.` })
+            .setFooter({ text: `/shop list [item-id] to get more info about an item. ─ Page ${currentPage + 1} of ${maxPages}.` })
             .setDescription(desc)
         return embed;
     }

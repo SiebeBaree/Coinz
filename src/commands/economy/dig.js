@@ -8,12 +8,10 @@ class Dig extends Command {
         options: [],
         category: "economy",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 900,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     boardSize = 5;
@@ -41,14 +39,16 @@ class Dig extends Command {
     async run(interaction, data) {
         if (!await bot.tools.checkItem(data.user.inventory, "shovel")) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.editReply({ content: "You need a shovel to use this command. Use `/shop buy item-id:shovel` to buy a shovel." });
+            return await interaction.reply({ content: "You need a shovel to use this command. Use `/shop buy item-id:shovel` to buy a shovel.", ephemeral: true });
         }
 
         if (bot.tools.randomNumber(1, 100) <= 3) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
             await bot.tools.takeItem(interaction.member.id, "shovel", data.user.inventory, 1);
-            return await interaction.editReply({ content: "Oh No! Your shovel broke... You have to buy a new shovel. Use `/shop buy item-id:shovel` to buy a shovel." });
+            return await interaction.reply({ content: "Oh No! Your shovel broke... You have to buy a new shovel. Use `/shop buy item-id:shovel` to buy a shovel.", ephemeral: true });
         }
+
+        await interaction.deferReply();
 
         data.gameFinished = false;
         data.board = this.createBoard();

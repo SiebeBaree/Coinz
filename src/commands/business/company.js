@@ -146,12 +146,10 @@ class Company extends Command {
             { name: "Factories", value: "Factories are responsible to produce items. For more information use `/help factory`.", inline: false },
             { name: "Inventory", value: "View your inventory and sell any items. All sold items will be paid into your companies bank account. To earn money from your company please use `/work`.", inline: false }
         ],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: true
     };
 
     constructor(...args) {

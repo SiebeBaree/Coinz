@@ -1,6 +1,7 @@
 const Command = require('../../structures/Command.js');
 const { EmbedBuilder, ApplicationCommandOptionType } = require('discord.js');
 const CooldownModel = require("../../models/Cooldown");
+const idAchievements = require('../../assets/achievements.json');
 
 class Profile extends Command {
     info = {
@@ -16,12 +17,10 @@ class Profile extends Command {
         ],
         category: "economy",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: false
+        memberRequired: false,
+        deferReply: false
     };
 
     constructor(...args) {
@@ -43,30 +42,45 @@ class Profile extends Command {
         if (memberData.job === "business") job = "Company CEO";
 
         let cooldownsAmount = 0;
+        let totalCooldowns = 0;
         const cooldowns = await CooldownModel.find({ id: member.id });
         let cooldownStr = "";
 
+        const now = parseInt(Date.now() / 1000);
+
         for (let i = 0; i < cooldowns.length; i++) {
-            if (cooldowns[i].expiresOn > parseInt(Date.now() / 1000) && cooldownsAmount <= 10) {
-                cooldownStr += `**${cooldowns[i].command}:** ${bot.tools.msToTime(cooldowns[i].expiresOn * 1000 - Date.now())}\n`;
-                cooldownsAmount++;
+            if (cooldowns[i].expiresOn > now) {
+                totalCooldowns++;
+                if (cooldownsAmount <= 10) {
+                    cooldownStr += `**${cooldowns[i].command}:** ${bot.tools.msToTime(cooldowns[i].expiresOn * 1000 - Date.now())}\n`;
+                    cooldownsAmount++;
+                }
             }
         }
 
-        if (cooldowns.length > 10) {
-            cooldownStr += `and \`${cooldowns.length - cooldownsAmount}\` more cooldowns...`;
+        if (totalCooldowns > 10) {
+            cooldownStr += `and \`${totalCooldowns - cooldownsAmount}\` more cooldowns...`;
         } else if (cooldownStr === "") {
             cooldownStr = "There are no cooldowns found for this user.";
         }
 
+        const displayedBadge = data.user.displayedBadge === undefined || data.user.displayedBadge === "" ? "" : ` <:${data.user.displayedBadge}:${idAchievements[data.user.displayedBadge]}>`;
+
+        let badgesStr = "";
+        const badges = data.user.badges === undefined ? [] : data.user.badges;
+        for (let i = 0; i < badges.length; i++) {
+            badgesStr += `<:${badges[i]}:${idAchievements[badges[i]]}> `;
+        }
+
         const embed = new EmbedBuilder()
-            .setAuthor({ name: `${member.displayName || member.username}'s profile`, iconURL: `${member.displayAvatarURL() || bot.config.embed.defaultIcon}` })
+            .setTitle(`${member.displayName || member.username}'s profile${displayedBadge}`)
             .setColor(bot.config.embed.color)
             .setThumbnail(member.displayAvatarURL() || bot.config.embed.defaultIcon)
             .addFields(
                 { name: 'Balance', value: `:dollar: **Wallet:** :coin: ${memberData.wallet}\n:credit_card: **Bank:** :coin: ${memberData.bank}\n:moneybag: **Net Worth:** :coin: ${memberData.wallet + memberData.bank}\n:gem: **Inventory Worth:** \`${inventory.totalItems} items\` valued at :coin: ${inventory.value}`, inline: false },
                 { name: 'Investment Portfolio', value: `:dollar: **Worth:** :coin: ${stocks.currentWorth}\n:credit_card: **Amount of Stocks:** ${parseInt(stocks.totalStocks)} stocks\n:moneybag: **Invested:** :coin: ${stocks.initialWorth}`, inline: false },
-                { name: 'Misc', value: `:briefcase: **Current Job:** ${job}\n:sparkles: **Streak:** ${memberData.streak} days\n:no_entry: **Banned:** ${memberData.banned ? "Yes" : "No"}`, inline: false },
+                { name: 'Misc', value: `:briefcase: **Current Job:** ${job}\n:sparkles: **Streak:** ${memberData.streak} days\n:no_entry: **Banned:** No`, inline: false },
+                { name: 'Badges (Achievements)', value: `${badgesStr === "" ? "None" : badgesStr}`, inline: false },
                 { name: 'Cooldowns', value: `${cooldownStr}`, inline: false }
             )
         await interaction.editReply({ embeds: [embed] });

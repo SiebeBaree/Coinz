@@ -17,12 +17,10 @@ class Crash extends Command {
         ],
         category: "games",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 300,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     constructor(...args) {
@@ -34,12 +32,13 @@ class Crash extends Command {
 
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
+            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
         }
+        await interaction.deferReply();
 
         // setup variable
         let userWon = false;
-        let profit = -parseInt(bet * 0.2);
+        let profit = bet;
         let multiplier = 0.8;
         let stoppedGame = false;
 
@@ -47,7 +46,7 @@ class Crash extends Command {
             const embed = new EmbedBuilder()
                 .setTitle(`Crash`)
                 .setColor(color || bot.config.embed.color)
-                .setDescription("Every 1.5 seconds the multiplier goes up by 0.1x.\nEvery time this happens you have 20% chance to lose all money.\nTo claim the profits, press the sell button.")
+                .setDescription("Every 2 seconds the multiplier goes up by 0.2x.\nEvery time this happens you have 25% chance to lose all money.\nTo claim the profits, press the sell button.")
                 .addFields(
                     { name: 'Multiplier', value: `${Math.round(multiplier * 10) / 10}x`, inline: true },
                     { name: 'Profit', value: `:coin: ${profit}`, inline: true }
@@ -66,7 +65,7 @@ class Crash extends Command {
             return row;
         };
 
-        const interactionMessage = await interaction.editReply({ embeds: [createEmbed(multiplier, profit - bet)], components: [setButton()], fetchReply: true });
+        const interactionMessage = await interaction.editReply({ embeds: [createEmbed(multiplier, (profit * 0.8) - bet)], components: [setButton()], fetchReply: true });
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { time: 20000 })
 
         collector.on('collect', async (interactionCollector) => {
@@ -97,17 +96,17 @@ class Crash extends Command {
 
                 multiplier = Math.round((multiplier + 0.1) * 10) / 10;
                 await interaction.editReply({ embeds: [createEmbed(multiplier, Math.floor(profit * multiplier) - bet)] });
-                if (bot.tools.commandPassed(20)) {
+                if (bot.tools.commandPassed(25)) {
                     userWon = false;
                     stoppedGame = true;
                 }
 
-                setTimeout(await updateStatus(interaction, multiplier, profit), 1500);
+                setTimeout(await updateStatus(interaction, multiplier, profit), 2000);
             }
         }
 
         const wait = (func, timeToDelay) => new Promise((resolve) => setTimeout(func, timeToDelay));
-        await wait(await updateStatus(interaction, multiplier, profit), 1500);
+        await wait(await updateStatus(interaction, multiplier, profit), 2000);
     }
 }
 

@@ -7,12 +7,10 @@ class Ping extends Command {
         options: [],
         category: "misc",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: false
+        memberRequired: false,
+        deferReply: true
     };
 
     constructor(...args) {
@@ -20,7 +18,6 @@ class Ping extends Command {
     }
 
     async run(interaction, data) {
-        await interaction.deferReply();
         const dateNow = Date.now();
         await interaction.editReply({ content: `:ping_pong: **Ping:** ${bot.ws.ping} ms\n:speech_balloon: **Responds Time:** ${dateNow - interaction.createdTimestamp} ms\n:white_check_mark: **Uptime:** ${bot.tools.msToTime(bot.uptime)}` });
     }

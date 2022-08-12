@@ -10,12 +10,10 @@ class Reset extends Command {
         options: [],
         category: "misc",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 300,
         enabled: true,
-        guildRequired: false,
-        memberRequired: false
+        memberRequired: false,
+        deferReply: true
     };
 
     constructor(...args) {
@@ -23,7 +21,6 @@ class Reset extends Command {
     }
 
     async run(interaction, data) {
-        await interaction.deferReply();
         const confirmEmbed = new EmbedBuilder()
             .setAuthor({ name: `Reset your account?`, iconURL: `${interaction.member.displayAvatarURL() || bot.config.embed.defaultIcon}` })
             .setColor(Colors.Red)

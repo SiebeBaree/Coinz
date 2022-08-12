@@ -8,12 +8,10 @@ class Daily extends Command {
         options: [],
         category: "economy",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 82800,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: true
     };
 
     defaultReward = 15;

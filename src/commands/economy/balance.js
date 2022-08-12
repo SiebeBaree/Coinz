@@ -15,12 +15,10 @@ class Balance extends Command {
         ],
         category: "economy",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: false
+        memberRequired: false,
+        deferReply: false
     };
 
     constructor(...args) {

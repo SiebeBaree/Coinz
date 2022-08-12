@@ -66,12 +66,10 @@ class Shop extends Command {
         ],
         category: "economy",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     itemsPerPage = 5;
@@ -84,7 +82,7 @@ class Shop extends Command {
         if (interaction.options.getSubcommand() === "list") return await this.execList(interaction, data);
         if (interaction.options.getSubcommand() === "buy") return await this.execBuy(interaction, data);
         if (interaction.options.getSubcommand() === "sell") return await this.execSell(interaction, data);
-        return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.` });
+        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
     }
 
     async execList(interaction, data) {
@@ -92,7 +90,13 @@ class Shop extends Command {
 
         if (itemId) {
             const item = await bot.database.fetchItem(itemId.toLowerCase());
-            if (item == null) return await interaction.editReply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.` });
+            if (item == null) return await interaction.reply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.`, ephemeral: true });
+            await interaction.deferReply();
+
+            let buyPrice = ':coin: ' + item.buyPrice;
+            let sellPrice = ':coin: ' + item.sellPrice;
+            if (item.buyPrice === 0) buyPrice = "You can't buy this item";
+            if (item.sellPrice === 0) sellPrice = "You can't sell this item";
 
             const embed = new EmbedBuilder()
                 .setTitle(item.name)
@@ -100,19 +104,14 @@ class Shop extends Command {
                 .setFooter({ text: bot.config.embed.footer })
                 .setDescription(`> ${item.longDescription || item.shortDescription}`)
                 .setThumbnail(`https://cdn.discordapp.com/emojis/${item.emoteId || '941682404500856922'}.png`)  // https://discord.com/developers/docs/reference#image-formatting
-
-            let buyPrice = ':coin: ' + item.buyPrice;
-            let sellPrice = ':coin: ' + item.sellPrice;
-            if (item.buyPrice === 0) buyPrice = "You can't buy this item";
-            if (item.sellPrice === 0) sellPrice = "You can't sell this item";
-
-            embed.addFields(
-                { name: 'Prices', value: `**BUY:** ${buyPrice}\n**SELL:** ${sellPrice}`, inline: true },
-                { name: 'Item Info', value: `**Category:** \`${item.category}\`\n**Item ID:** \`${item.itemId}\``, inline: true }
-            )
+                .addFields(
+                    { name: 'Prices', value: `**BUY:** ${buyPrice}\n**SELL:** ${sellPrice}`, inline: true },
+                    { name: 'Item Info', value: `**Category:** \`${item.category}\`\n**Item ID:** \`${item.itemId}\``, inline: true }
+                )
 
             await interaction.editReply({ embeds: [embed] })
         } else {
+            await interaction.deferReply();
             let category = "tools";
             let shopItems = await this.getItems(category);
             let maxPages = Math.ceil(shopItems.length / this.itemsPerPage);
@@ -151,11 +150,12 @@ class Shop extends Command {
         const amount = interaction.options.getInteger('amount') || 1;
 
         const item = await bot.database.fetchItem(itemId.toLowerCase());
-        if (item == null) return await interaction.editReply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.` });
-        if (item.buyPrice == 0) return await interaction.editReply({ content: `This item is not for sale.` });
+        if (item == null) return await interaction.reply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.`, ephemeral: true });
+        if (item.buyPrice == 0) return await interaction.reply({ content: `This item is not for sale.`, ephemeral: true });
 
         const totalPrice = item.buyPrice * amount;
-        if (data.user.wallet < totalPrice) return await interaction.editReply({ content: `You don't have enough money in your wallet. You need :coin: ${totalPrice}.` });
+        if (data.user.wallet < totalPrice) return await interaction.reply({ content: `You don't have enough money in your wallet. You need :coin: ${totalPrice}.`, ephemeral: true });
+        await interaction.deferReply();
         await bot.tools.addItem(interaction.member.id, item.itemId, amount, data.user.inventory);
         await bot.tools.takeMoney(interaction.member.id, totalPrice);
 
@@ -167,8 +167,9 @@ class Shop extends Command {
         const amount = interaction.options.getInteger('amount') || 1;
 
         const item = await bot.database.fetchItem(itemId.toLowerCase());
-        if (item == null) return await interaction.editReply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.` });
-        if (item.sellPrice == 0) return await interaction.editReply({ content: `You can't sell this item.` });
+        if (item == null) return await interaction.reply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.`, ephemeral: true });
+        if (item.sellPrice == 0) return await interaction.reply({ content: `You can't sell this item.`, ephemeral: true });
+        await interaction.deferReply();
 
         let inventoryItem;
         for (let i = 0; i < data.user.inventory.length; i++) {
@@ -183,13 +184,9 @@ class Shop extends Command {
 
         const worth = item.sellPrice * amount;
         if (inventoryItem.quantity - amount <= 0) {
-            await MemberModel.updateOne({ id: interaction.member.id, 'inventory.itemId': item.itemId }, {
-                $pull: { 'inventory': { itemId: item.itemId } }
-            });
+            await MemberModel.updateOne({ id: interaction.member.id, 'inventory.itemId': item.itemId }, { $pull: { 'inventory': { itemId: item.itemId } } });
         } else {
-            await MemberModel.updateOne({ id: interaction.member.id, 'inventory.itemId': item.itemId }, {
-                $inc: { 'inventory.$.quantity': -amount }
-            });
+            await MemberModel.updateOne({ id: interaction.member.id, 'inventory.itemId': item.itemId }, { $inc: { 'inventory.$.quantity': -amount } });
         }
 
         await bot.tools.addMoney(interaction.member.id, worth);

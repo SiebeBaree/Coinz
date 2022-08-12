@@ -85,12 +85,10 @@ class Invest extends Command {
         ],
         category: "investing",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     constructor(...args) {
@@ -101,10 +99,11 @@ class Invest extends Command {
         if (interaction.options.getSubcommand() === "info") return await this.execInfo(interaction, data);
         if (interaction.options.getSubcommand() === "buy") return await this.execBuy(interaction, data);
         if (interaction.options.getSubcommand() === "sell") return await this.execSell(interaction, data);
-        return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.` });
+        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
     }
 
     async execInfo(interaction, data) {
+        await interaction.deferReply();
         const ticker = interaction.options.getString('ticker');
 
         if (ticker == null) {
@@ -197,11 +196,11 @@ class Invest extends Command {
         let amount = interaction.options.getInteger('amount');
         let price = interaction.options.getInteger('price');
 
-        if (price === null && amount === null) return await interaction.editReply({ content: `You have to give an amount that you want to buy or price to buy fractional.` });
-        if (price !== null && amount !== null) return await interaction.editReply({ content: `You cannot buy an amount and give a price at the same time.` })
+        if (price === null && amount === null) return await interaction.reply({ content: `You have to give an amount that you want to buy or price to buy fractional.`, ephemeral: true });
+        if (price !== null && amount !== null) return await interaction.reply({ content: `You cannot buy an amount and give a price at the same time.`, ephemeral: true })
 
         let stock = await bot.database.fetchStock(ticker.toUpperCase());
-        if (stock == null) return await interaction.editReply({ content: `Sorry we don't know any investment with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/${this.info.name} info\` to get all investments.` });
+        if (stock == null) return await interaction.reply({ content: `Sorry we don't know any investment with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/${this.info.name} info\` to get all investments.`, ephemeral: true });
 
         if (amount !== null) {
             price = Math.round(stock.price * amount);
@@ -209,9 +208,10 @@ class Invest extends Command {
             amount = bot.tools.roundNumber(price / stock.price, 3);
         }
 
-        if (price < 10) return await interaction.editReply({ content: `You have to buy at least :coin: 10 at once.` });
-        if (amount > maxOwnedStock) return await interaction.editReply({ content: `You can't buy more than ${maxOwnedStock} items at once.` });
-        if (price > maxPurchase) return await interaction.editReply({ content: `You can't buy more than :coin: ${maxPurchase} at once.` });
+        if (price < 10) return await interaction.reply({ content: `You have to buy at least :coin: 10 at once.`, ephemeral: true });
+        if (amount > maxOwnedStock) return await interaction.reply({ content: `You can't buy more than ${maxOwnedStock} items at once.`, ephemeral: true });
+        if (price > maxPurchase) return await interaction.reply({ content: `You can't buy more than :coin: ${maxPurchase} at once.`, ephemeral: true });
+        await interaction.deferReply();
 
         if (data.user.wallet < price) {
             const embed = new EmbedBuilder()
@@ -270,20 +270,21 @@ class Invest extends Command {
         const amount = interaction.options.getNumber('amount');
 
         let stock = await bot.database.fetchStock(ticker.toUpperCase());
-        if (stock == null) return await interaction.editReply({ content: `Sorry we don't know any investment with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/${this.info.name} info\` to get all investments.` });
+        if (stock == null) return await interaction.reply({ content: `Sorry we don't know any investment with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/${this.info.name} info\` to get all investments.`, ephemeral: true });
 
         let userHasStock = false;
         let stockData;
         for (let i = 0; i < data.user.stocks.length; i++) {
             if (data.user.stocks[i].ticker === stock.ticker) {
-                if (data.user.stocks[i].quantity < amount) return await interaction.editReply({ content: `You only have ${data.user.stocks[i].quantity}x of ${stock.fullName}.` });
+                if (data.user.stocks[i].quantity < amount) return await interaction.reply({ content: `You only have ${data.user.stocks[i].quantity}x of ${stock.fullName}.`, ephemeral: true });
                 userHasStock = true;
                 stockData = data.user.stocks[i];
                 break;
             }
         }
 
-        if (!userHasStock) return await interaction.editReply({ content: `You don't own that investment.` });
+        if (!userHasStock) return await interaction.reply({ content: `You don't own that investment.`, ephemeral: true });
+        await interaction.deferReply();
         const price = Math.round(stock.price * amount);
 
         await MemberModel.updateOne({ id: interaction.member.id, 'stocks.ticker': stock.ticker }, {

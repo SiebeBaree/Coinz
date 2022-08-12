@@ -19,12 +19,10 @@ class SlotMachine extends Command {
         extraFields: [
             { name: 'Multipliers', value: '[1x] :100:\n[2.5x] :moneybag:\n[3x] :dollar:\n[4x] :gem:\n[6x] :first_place:', inline: false }
         ],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 300,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     spinningEmote = "<a:spinning_slots:949712124165365810>";
@@ -38,8 +36,9 @@ class SlotMachine extends Command {
 
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
+            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
         }
+        await interaction.deferReply();
 
         // setup variable
         data.bet = bet;

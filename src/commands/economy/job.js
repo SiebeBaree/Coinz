@@ -41,12 +41,10 @@ class Job extends Command {
         ],
         category: "economy",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     constructor(...args) {
@@ -57,10 +55,11 @@ class Job extends Command {
         if (interaction.options.getSubcommand() === "list") return await this.execList(interaction, data);
         if (interaction.options.getSubcommand() === "leave") return await this.execLeave(interaction, data);
         if (interaction.options.getSubcommand() === "apply") return await this.execApply(interaction, data);
-        return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.` });
+        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
     }
 
     async execList(interaction, data) {
+        await interaction.deferReply();
         let currentPage = 0;
         const interactionMessage = await interaction.editReply({ embeds: [this.getListEmbed(this.getJobs(currentPage), data.user, currentPage)], components: [bot.tools.pageButtons(currentPage, maxPages)], fetchReply: true });
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 15, idle: 15_000, time: 60_000 });
@@ -80,29 +79,25 @@ class Job extends Command {
     }
 
     async execLeave(interaction, data) {
-        if (data.user.job.startsWith("business")) return await interaction.editReply({ content: `You work at a company. Please leave or sell your company using \`/company info\`` });
+        if (data.user.job.startsWith("business")) return await interaction.reply({ content: `You work at a company. Please leave or sell your company using \`/company info\``, ephemeral: true });
         const job = this.getJob(data.user.job);
-        if (job === null) return await interaction.editReply({ content: `You don't have a job. Please apply for a job with \`/${this.info.name} apply <job>\`.` });
+        if (job === null) return await interaction.reply({ content: `You don't have a job. Please apply for a job with \`/${this.info.name} apply <job>\`.`, ephemeral: true });
 
-        await MemberModel.updateOne({ id: interaction.member.id }, {
-            $set: { job: "" }
-        });
-
+        await interaction.deferReply();
+        await MemberModel.updateOne({ id: interaction.member.id }, { $set: { job: "" } });
         await interaction.editReply({ content: `You successfully left your job (\`${job.name}\`).` });
     }
 
     async execApply(interaction, data) {
-        if (data.user.job.startsWith("business")) return await interaction.editReply({ content: `You cannot apply for a normal job when you work at a company.` });
+        if (data.user.job.startsWith("business")) return await interaction.reply({ content: `You cannot apply for a normal job when you work at a company.`, ephemeral: true });
         const currentJob = this.getJob(data.user.job);
-        if (currentJob !== null) return await interaction.editReply({ content: `You already have a job. Please leave your current job with \`/${this.info.name} leave\`.` });
+        if (currentJob !== null) return await interaction.reply({ content: `You already have a job. Please leave your current job with \`/${this.info.name} leave\`.`, ephemeral: true });
 
         const job = this.getJob(interaction.options.getString('job-name'));
-        if (job === null) return await interaction.editReply({ content: `That is not a valid job. Please use \`/${this.info.name} list\` to view all jobs.` });
+        if (job === null) return await interaction.reply({ content: `That is not a valid job. Please use \`/${this.info.name} list\` to view all jobs.`, ephemeral: true });
 
-        await MemberModel.updateOne({ id: interaction.member.id }, {
-            $set: { job: job.name }
-        });
-
+        await interaction.deferReply();
+        await MemberModel.updateOne({ id: interaction.member.id }, { $set: { job: job.name } });
         await interaction.editReply({ content: `GG, you got the job (\`${job.name}\`).` });
     }
 

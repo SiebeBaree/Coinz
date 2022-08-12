@@ -23,12 +23,10 @@ class Pay extends Command {
         ],
         category: "economy",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 1800,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     constructor(...args) {
@@ -38,8 +36,9 @@ class Pay extends Command {
     async run(interaction, data) {
         const member = interaction.options.getUser('user');
         const amount = interaction.options.getInteger('amount');
-        if (member.bot) return await interaction.editReply({ content: 'That user is a bot. You can only check the balance of a real person.' });
-        if (member.id === interaction.member.id) return await interaction.editReply({ content: 'You can\'t pay yourself.' });
+        if (member.bot) return await interaction.reply({ content: 'That user is a bot. You can only check the balance of a real person.', ephemeral: true });
+        if (member.id === interaction.member.id) return await interaction.reply({ content: 'You can\'t pay yourself.', ephemeral: true });
+        await interaction.deferReply();
 
         // To create a document
         await bot.database.fetchMember(member.id);

@@ -32,12 +32,10 @@ class LuckyWheel extends Command {
         ],
         category: "economy",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     constructor(...args) {
@@ -47,10 +45,11 @@ class LuckyWheel extends Command {
     async run(interaction, data) {
         if (interaction.options.getSubcommand() === "rewards") return await this.execRewards(interaction, data);
         if (interaction.options.getSubcommand() === "spin") return await this.execSpin(interaction, data);
-        return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.` });
+        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
     }
 
     async execRewards(interaction, data) {
+        await interaction.deferReply();
         const spinsLeft = data.user.spins === undefined ? 0 : data.user.spins;
 
         let rewardsTxt = "";
@@ -81,10 +80,11 @@ class LuckyWheel extends Command {
         const amount = interaction.options.getInteger('amount') || 1;
 
         if (data.user.spins === undefined || data.user.spins <= 0) {
-            return await interaction.editReply({ content: `You don't have any spins left. If you want to spin the lucky wheel, consider voting (\`/vote\`). You get 1x free spin for each vote.` });
+            return await interaction.reply({ content: `You don't have any spins left. If you want to spin the lucky wheel, consider voting (\`/vote\`). You get 1x free spin for each vote.`, ephemeral: true });
         } else if (data.user.spins < amount) {
-            return await interaction.editReply({ content: `You only have ${data.user.spins} spins left.` });
+            return await interaction.reply({ content: `You only have ${data.user.spins} spins left.`, ephemeral: true });
         }
+        await interaction.deferReply();
 
         const preEmbed = new EmbedBuilder()
             .setAuthor({ name: `${interaction.member.displayName || interaction.member.username}'s Lucky Wheel`, iconURL: `${interaction.member.displayAvatarURL() || bot.config.embed.defaultIcon}` })

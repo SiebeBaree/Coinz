@@ -43,12 +43,10 @@ class Factory extends Command {
         ],
         category: "business",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: true
     };
 
     constructor(...args) {
@@ -180,7 +178,7 @@ class Factory extends Command {
         }
 
         const giveItem = async (data, itemId, quantity) => {
-            if (await bot.tools.checkItem(data.company.inventory, itemId)) {
+            if (bot.tools.checkItem(data.company.inventory, itemId)) {
                 await CompanyModel.updateOne({ id: data.company.id, 'inventory.itemId': itemId }, {
                     $inc: { 'inventory.$.quantity': quantity }
                 });

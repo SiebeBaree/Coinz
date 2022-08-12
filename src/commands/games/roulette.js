@@ -24,12 +24,10 @@ class Roulette extends Command {
         category: "games",
         extraFields: [{ name: 'Space Multiplier', value: '[x36] Straight (1, 2, 3, ..., 36)\n[x3] 1-12, 13-24, 25-36\n[x3] 1st, 2nd, 3rd\n[x2] 1-18, 19-36\n[x 2] Odd, Even\n[x2] red, black', inline: false }],
         image: "https://cdn.coinzbot.xyz/games/roulette/table.png",
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 300,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     redColors = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
@@ -43,8 +41,9 @@ class Roulette extends Command {
 
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
+            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
         }
+        await interaction.deferReply();
         const space = interaction.options.getString('space');
 
         // initialize variables

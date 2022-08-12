@@ -18,12 +18,10 @@ class Blackjack extends Command {
         ],
         category: "games",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 300,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     constructor(...args) {
@@ -35,8 +33,9 @@ class Blackjack extends Command {
 
         if (bet > data.user.wallet) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
+            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
         }
+        await interaction.deferReply();
         let disableDoubleDown = data.user.wallet < bet * 2;
 
         // initialize variables

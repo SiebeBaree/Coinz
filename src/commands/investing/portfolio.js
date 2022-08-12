@@ -11,12 +11,10 @@ class Portfolio extends Command {
         options: [],
         category: "investing",
         extraFields: [],
-        memberPermissions: [],
-        botPermissions: [],
         cooldown: 0,
         enabled: true,
-        guildRequired: false,
-        memberRequired: true
+        memberRequired: true,
+        deferReply: false
     };
 
     constructor(...args) {
@@ -101,7 +99,7 @@ class Portfolio extends Command {
     }
 
     calculateMaxPages(stocks) {
-        return stocks === undefined ? 0 : Math.ceil(stocks.length / itemsPerPage);
+        return stocks === undefined ? 1 : Math.ceil(stocks.length / itemsPerPage);
     }
 }
 
