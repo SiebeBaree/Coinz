@@ -68,7 +68,7 @@ class Dig extends Command {
                     let row = parseInt(boardId.charAt(0));
                     let column = parseInt(boardId.charAt(1));
 
-                    if (data.lootBoard[row][column].icon === null && data.lootBoard[row][column].correctGuessed === null) {
+                    if (data.lootBoard[row][column].icon === null) {
                         data.board[row][column].correctGuessed = data.lootBoard[row][column].correctGuessed = false;
                     } else {
                         data.loot += this.lootValues[data.lootBoard[row][column].icon].value;
