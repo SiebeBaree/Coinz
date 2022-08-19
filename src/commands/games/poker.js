@@ -314,7 +314,7 @@ class Poker extends Command {
         data = this.checkHand(data);
 
         if (data.playerWon) {
-            await bot.tools.addMoney(interaction.member.id, getPrice(data.bet, data.multiplier));
+            await bot.tools.addMoney(interaction.member.id, this.getPrice(data.bet, data.multiplier));
         } else {
             await bot.tools.takeMoney(interaction.member.id, data.bet);
         }
