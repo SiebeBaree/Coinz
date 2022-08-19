@@ -69,7 +69,7 @@ class Crime extends Command {
 
     getLoot(key) {
         let allLoot = lootTable[key].loot;
-        if (key === "legendary") return allLoot[bot.tools.randomNumber(0, allLoot.length - 1)];
+        if (key === "legendary") return [allLoot[bot.tools.randomNumber(0, allLoot.length - 1)]];
 
         let itemCount = bot.tools.randomNumber(2, 6);
         let loot = [];
