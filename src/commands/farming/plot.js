@@ -57,10 +57,15 @@ class Plot extends Command {
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 15, idle: 15000, time: 60000 });
 
         collector.on('collect', async (interactionCollector) => {
+            await interactionCollector.deferUpdate();
             if (interactionCollector.customId === 'plot_harvest') {
                 for (let i = 0; i < data.user.plots.length; i++) {
                     if (data.user.plots[i].status === "harvest" || data.user.plots[i].status === "rotten") {
-                        if (data.user.plots[i].status === "harvest") await bot.tools.addItem(interaction.member.id, data.user.plots[i].crop, 6, data.user.inventory);
+                        if (data.user.plots[i].status === "harvest") {
+                            data.user = await bot.database.fetchMember(interaction.member.id);
+                            await bot.tools.addItem(interaction.member.id, data.user.plots[i].crop, 6, data.user.inventory);
+                        }
+
                         data.user.plots[i].status = "empty";
                         await MemberModel.updateOne({ id: interaction.member.id, 'plots.plotId': data.user.plots[i].plotId }, {
                             $set: { 'plots.$.status': "empty" }
@@ -75,7 +80,6 @@ class Plot extends Command {
                 data.user = await bot.database.fetchMember(interaction.member.id);
             }
 
-            await interactionCollector.deferUpdate();
             await interaction.editReply({ embeds: [await this.createEmbed(interaction, data)], components: [this.createRow(await this.calcBtns(data))] });
         });
 
