@@ -227,6 +227,7 @@ class Factory extends Command {
                     if (data.company.factories[i].status === "ready" || data.company.factories[i].status === "destroyed") {
                         const product = bot.tools.getProduct(data.company.factories[i].product);
                         if (data.company.factories[i].status === "ready") await giveItem(data, product.itemId, product.quantity);
+                        data.company = await CompanyModel.findOne({ id: data.company.id });
 
                         data.company.factories[i].status = "standby";
                         await CompanyModel.updateOne({ id: data.company.id, 'factories.factoryId': data.company.factories[i].factoryId }, {
