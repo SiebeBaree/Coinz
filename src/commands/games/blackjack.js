@@ -46,6 +46,8 @@ class Blackjack extends Command {
         data.dealerHand = [];
 
         data = this.startGame(data);
+        if (data.playerWon === true) await MemberModel.updateOne({ id: interaction.member.id }, { $push: { badges: "easy_blackjack" } });
+
         const interactionMessage = await interaction.editReply({ embeds: [this.createEmbed(data)], components: [this.setButtons(data.gameFinished, disableDoubleDown)], fetchReply: true });
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 6, idle: 15000 });
 
@@ -173,7 +175,11 @@ class Blackjack extends Command {
         const valueDealer = this.getValue(data.dealerHand);
         data.playerWon = false;
 
-        if (valuePlayer > 21) {
+        if (valuePlayer === 21 && valueDealer === 21) {
+            data.gameFinished = true;
+            data.tie = true;
+            data.description = `Blackjack Push! You got your :coin: ${data.bet} back.`;
+        } else if (valuePlayer > 21) {
             // Check for Aces and set ace value to 1
             let changedDeck = false;
             do {
@@ -192,10 +198,6 @@ class Blackjack extends Command {
             data.playerWon = true;
             data.description = `Dealer bust! You won :coin: ${this.getPrice(data.bet)}`;
             data.color = Colors.Green;
-        } else if (valuePlayer === 21 && valueDealer === 21) {
-            data.gameFinished = true;
-            data.tie = true;
-            data.description = `Blackjack Tie! You got your :coin: ${data.bet} back.`;
         } else if (valuePlayer === 21) {
             data.gameFinished = true;
             data.playerWon = true;
