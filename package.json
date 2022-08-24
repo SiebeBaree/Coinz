@@ -1,6 +1,6 @@
 {
   "name": "coinz",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "A economic discord bot with a lot of features",
   "main": "src/index.js",
   "scripts": {
