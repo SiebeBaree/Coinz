@@ -56,6 +56,12 @@ class Fish extends Command {
                     } else if (status === "ready") {
                         const loot = bot.tools.getRandomLoot(lootTable, 1, 5);
 
+                        await StatsModel.updateOne(
+                            { id: interaction.member.id },
+                            { $inc: { catchedFish: loot.length } },
+                            { upsert: true }
+                        );
+
                         let mappedLoot = [];
                         for (let obj of loot) {
                             const index = mappedLoot.findIndex(item => item.itemId === obj.itemId);
