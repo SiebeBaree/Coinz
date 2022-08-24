@@ -178,11 +178,17 @@ class Work extends Command {
                 if (buttons[selectedPage].name != data.answer) {
                     buttons[selectedPage].style = ButtonStyle.Danger;
 
-                    await interaction.followUp({ content: `That is not the correct answer. You did not earn anything this hour.` })
+                    await interaction.followUp({ content: `That is not the correct answer. You did not earn anything this hour.` });
                     if (data.hasBusiness) await CompanyModel.updateOne({ id: data.company.ownerId }, { $inc: { balance: -data.salary } });
                 } else {
                     await bot.tools.addMoney(interaction.member.id, data.salary);
-                    await interaction.followUp({ content: winMsg })
+                    await interaction.followUp({ content: winMsg });
+
+                    await StatsModel.updateOne(
+                        { id: interaction.member.id },
+                        { $inc: { workComplete: 1 } },
+                        { upsert: true }
+                    );
                 }
 
                 buttons[data.correctAnswerIndex].style = ButtonStyle.Success;
