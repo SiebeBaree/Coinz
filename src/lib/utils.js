@@ -204,7 +204,8 @@ const msToTime = (ms) => {
 
 // Investing
 const calculateChange = (buyPrice, currentPrice) => {
-    const changePercentage = roundNumber(((currentPrice - buyPrice) / buyPrice * 100), 2);
+    let changePercentage = roundNumber(((currentPrice - buyPrice) / buyPrice * 100), 2);
+    if (isNaN(changePercentage)) changePercentage = 0;
     return { icon: changePercentage < 0 ? ":chart_with_downwards_trend:" : ":chart_with_upwards_trend:", changePercentage: changePercentage };
 };
 
