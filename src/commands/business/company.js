@@ -377,8 +377,9 @@ class Company extends Command {
                             wage: positions["employee"].defaultWage
                         }
                     }
-                })
+                });
 
+                if (company.employees.length + 1 >= 5) await MemberModel.updateOne({ id: interaction.member.id }, { $push: { badges: "going_places" } });
                 return await interaction.editReply({ embeds: [respondsEmbed], components: [row(true)] });
             }
         })
