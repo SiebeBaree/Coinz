@@ -1,4 +1,5 @@
 const Event = require('../structures/Event.js');
+const StatsModel = require('../models/Stats');
 
 module.exports = class extends Event {
     constructor(...args) {
@@ -22,5 +23,11 @@ module.exports = class extends Event {
         if (cmd.info.deferReply === true) await interaction.deferReply();
         const memberData = cmd.info.memberRequired === true ? await this.database.fetchMember(interaction.member.id) : undefined;
         await cmd.run(interaction, { user: memberData });
+
+        await StatsModel.updateOne(
+            { id: interaction.member.id },
+            { $inc: { commandsExecuted: 1 } },
+            { upsert: true }
+        );
     }
 };
