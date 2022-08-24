@@ -1,3 +1,4 @@
+const { EmbedBuilder } = require('discord.js');
 const Command = require('../../structures/Command.js');
 const MemberModel = require('../../models/Member');
 
@@ -54,7 +55,11 @@ class Daily extends Command {
             }
         });
 
-        await interaction.editReply({ content: `You claimed your daily reward and got :coin: ${streakReward}. (:coin: ${streakReward - this.defaultReward} for ${data.user.streak + 1} day streak.)` });
+        const embed = new EmbedBuilder()
+            .setAuthor({ name: `Daily`, iconURL: interaction.member.displayAvatarURL() || bot.config.embed.defaultIcon })
+            .setColor(bot.config.embed.color)
+            .setDescription(`:moneybag: **You claimed your daily reward!**\n\n**Daily Reward:** :coin: ${this.defaultReward}\n**Streak Reward:** :coin: ${streakReward - this.defaultReward} for a \`${data.user.streak + 1} ${data.user.streak + 1 === 1 ? "day" : "days"}\` streak\n**Total:** :coin: ${streakReward}\n\n:shushing_face: *Psss, if you want more money consider voting. Use* \`/vote\` *for more information!*`)
+        await interaction.editReply({ embeds: [embed] });
     }
 }
 
