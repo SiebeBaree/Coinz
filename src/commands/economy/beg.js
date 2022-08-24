@@ -10,7 +10,7 @@ class Beg extends Command {
         cooldown: 300,
         enabled: true,
         memberRequired: true,
-        deferReply: false
+        deferReply: true
     };
 
     constructor(...args) {

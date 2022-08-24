@@ -1,6 +1,7 @@
 const Command = require('../../structures/Command.js');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors } = require('discord.js');
 const lootTable = require('../../assets/lootTables/fish.json').loot;
+const StatsModel = require('../../models/Stats');
 
 class Fish extends Command {
     info = {

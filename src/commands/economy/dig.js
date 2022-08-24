@@ -1,5 +1,6 @@
 const Command = require('../../structures/Command.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
+const StatsModel = require('../../models/Stats');
 
 class Dig extends Command {
     info = {

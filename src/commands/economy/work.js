@@ -4,6 +4,7 @@ const workList = require('../../assets/jobList.json').jobs;
 const wordList = require('../../assets/wordlist.json').words;
 const MemberModel = require('../../models/Member');
 const CompanyModel = require('../../models/Company');
+const StatsModel = require('../../models/Stats');
 
 class Work extends Command {
     info = {
