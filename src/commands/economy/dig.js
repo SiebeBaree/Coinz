@@ -74,6 +74,14 @@ class Dig extends Command {
                         data.loot += this.lootValues[data.lootBoard[row][column].icon].value;
                         data.board[row][column].icon = data.lootBoard[row][column].icon;
                         data.board[row][column].correctGuessed = data.lootBoard[row][column].correctGuessed = true;
+
+                        if (data.lootBoard[row][column].icon === "💎") {
+                            await StatsModel.updateOne(
+                                { id: interaction.member.id },
+                                { $inc: { diamondsFound: 1 } },
+                                { upsert: true }
+                            );
+                        }
                     }
                     data.buttonsClicked++;
                 }
