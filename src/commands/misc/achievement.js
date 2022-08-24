@@ -42,7 +42,7 @@ class Achievement extends Command {
         deferReply: true
     };
 
-    itemsPerPage = 10;
+    itemsPerPage = 7;
 
     achievements = {
         "hard_work": {
@@ -50,12 +50,18 @@ class Achievement extends Command {
             description: "Complete your work 50 times.",
             isValid: (memberData, statsData) => {
                 return statsData.workComplete >= 50;
+            },
+            progress: (memberData, statsData) => {
+                return `${statsData.workComplete || 0}/50`;
             }
         },
         "patron": {
             name: "A Real Patron",
             description: "Buy Coinz Premium.",
             isValid: (memberData, statsData) => {
+                return false;
+            },
+            progress: (memberData, statsData) => {
                 return false;
             }
         },
@@ -64,12 +70,18 @@ class Achievement extends Command {
             description: "Create a company and have 5 employees.",
             isValid: (memberData, statsData) => {
                 return false;
+            },
+            progress: (memberData, statsData) => {
+                return false;
             }
         },
         "bug_hunter": {
             name: "Bug Hunter",
             description: "Help find bugs in Coinz.",
             isValid: (memberData, statsData) => {
+                return false;
+            },
+            progress: (memberData, statsData) => {
                 return false;
             }
         },
@@ -78,6 +90,9 @@ class Achievement extends Command {
             description: "Buy all 15 plots for your farm.",
             isValid: (memberData, statsData) => {
                 return memberData.plots.length === 15;
+            },
+            progress: (memberData, statsData) => {
+                return `${memberData.plots.length || 0}/15`;
             }
         },
         "warren_buffet": {
@@ -87,6 +102,11 @@ class Achievement extends Command {
                 let totalInvestments = 0;
                 for (let i = 0; i < memberData.stocks.length; i++) totalInvestments += memberData.stocks[i].buyPrice;
                 return totalInvestments >= 75_000;
+            },
+            progress: (memberData, statsData) => {
+                let totalInvestments = 0;
+                for (let i = 0; i < memberData.stocks.length; i++) totalInvestments += memberData.stocks[i].buyPrice;
+                return `${totalInvestments || 0}/75,000`;
             }
         },
         "touch_grass": {
@@ -94,21 +114,30 @@ class Achievement extends Command {
             description: "Execute 500 commands or more.",
             isValid: (memberData, statsData) => {
                 return statsData.commandsExecuted >= 500;
+            },
+            progress: (memberData, statsData) => {
+                return `${statsData.commandsExecuted || 0}/500`;
             }
         },
-        "winner": {
-            name: "Look mom, I won something!",
-            description: "Get a Trophy.",
-            isValid: (memberData, statsData) => {
-                for (let i = 0; i < memberData.inventory.length; i++) if (memberData.inventory[i].itemId === "trophy") return true;
-                return false;
-            }
-        },
+        // "winner": {
+        //     name: "Look mom, I won something!",
+        //     description: "Get a Trophy.",
+        //     isValid: (memberData, statsData) => {
+        //         for (let i = 0; i < memberData.inventory.length; i++) if (memberData.inventory[i].itemId === "trophy") return true;
+        //         return false;
+        //     },
+        //     progress: (memberData, statsData) => {
+        //         return false;
+        //     }
+        // },
         "local_fish_dealer": {
             name: "Local Fish Dealer",
             description: "Catch 100 fish.",
             isValid: (memberData, statsData) => {
                 return statsData.catchedFish >= 100;
+            },
+            progress: (memberData, statsData) => {
+                return `${statsData.catchedFish || 0}/100`;
             }
         },
         "gold_digger": {
@@ -116,6 +145,9 @@ class Achievement extends Command {
             description: "Find 20 diamonds in total while using `/dig`.",
             isValid: (memberData, statsData) => {
                 return statsData.diamondsFound >= 20;
+            },
+            progress: (memberData, statsData) => {
+                return `${statsData.diamondsFound || 0}/20`;
             }
         },
         "keep_on_grinding": {
@@ -123,6 +155,9 @@ class Achievement extends Command {
             description: "Get a daily streak of 30.",
             isValid: (memberData, statsData) => {
                 return memberData.streak >= 30;
+            },
+            progress: (memberData, statsData) => {
+                return `${memberData.streak || 0}/30`;
             }
         },
         "feeling_lucky": {
@@ -130,12 +165,18 @@ class Achievement extends Command {
             description: "Spin the lucky wheel 50 times.",
             isValid: (memberData, statsData) => {
                 return memberData.votes - memberData.spins >= 50;
+            },
+            progress: (memberData, statsData) => {
+                return `${memberData.votes - memberData.spins || 0}/50`;
             }
         },
         "easy_blackjack": {
             name: "Easy Blackjack!",
             description: "Reach 21 in blackjack as soon as the dealer deals the cards.",
             isValid: (memberData, statsData) => {
+                return false;
+            },
+            progress: (memberData, statsData) => {
                 return false;
             }
         },
@@ -146,6 +187,11 @@ class Achievement extends Command {
                 let quantity = 0;
                 for (let i = 0; i < memberData.inventory.length; i++) quantity += memberData.inventory[i].quantity;
                 return quantity >= 1_000;
+            },
+            progress: (memberData, statsData) => {
+                let quantity = 0;
+                for (let i = 0; i < memberData.inventory.length; i++) quantity += memberData.inventory[i].quantity;
+                return `${quantity || 0}/1,000`;
             }
         }
     }
@@ -162,12 +208,16 @@ class Achievement extends Command {
     }
 
     async execList(interaction, data) {
-        const createList = (keys, items, currentPage) => {
+        const createList = (keys, items, currentPage, memberData, statsData) => {
             let str = "";
 
             for (let i = 0; i < keys.length; i++) {
                 if (i >= currentPage * this.itemsPerPage && i < currentPage * this.itemsPerPage + this.itemsPerPage) {
-                    str += `<:${keys[i]}:${idAchievements[keys[i]]}> **${items[keys[i]].name}**\n> ${items[keys[i]].description}\n\n`
+                    let progressStr = "";
+                    let progress = items[keys[i]].progress(memberData, statsData);
+
+                    if (progress !== false && !data.user.badges.includes(keys[i])) progressStr = ` (${progress})`;
+                    str += `<:${keys[i]}:${idAchievements[keys[i]]}> **${items[keys[i]].name}**${progressStr}\n> ${items[keys[i]].description}\n\n`
                 }
             }
 
@@ -188,7 +238,8 @@ class Achievement extends Command {
         const maxPages = Math.ceil(keys.length / this.itemsPerPage);
         let currentPage = 0;
 
-        let achievementStr = createList(keys, this.achievements, currentPage);
+        const stats = await bot.database.fetchStats(interaction.member.id);
+        let achievementStr = createList(keys, this.achievements, currentPage, data.user, stats);
         const interactionMessage = await interaction.editReply({ embeds: [createEmbed(achievementStr, currentPage, maxPages)], components: [bot.tools.pageButtons(currentPage, maxPages)], fetchReply: true });
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 10, idle: 15000, time: 60000 });
 
@@ -199,7 +250,7 @@ class Achievement extends Command {
             else if (interactionCollector.customId === 'toNextPage') currentPage++;
             else if (interactionCollector.customId === 'toPreviousPage') currentPage--;
 
-            achievementStr = createList(keys, this.achievements, currentPage);
+            achievementStr = createList(keys, this.achievements, currentPage, data.user, stats);
             await interaction.editReply({ embeds: [createEmbed(achievementStr, currentPage, maxPages)], components: [bot.tools.pageButtons(currentPage, maxPages)] });
         });
 
@@ -211,7 +262,7 @@ class Achievement extends Command {
     async execRefresh(interaction, data) {
         if (data.user.badges === undefined) data.user.badges = [];
         const keys = Object.keys(this.achievements);
-        const stats = bot.database.fetchStats(interaction.member.id);
+        const stats = await bot.database.fetchStats(interaction.member.id);
 
         let newBadgesStr = "";
         for (let i = 0; i < keys.length; i++) {
