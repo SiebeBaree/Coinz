@@ -14,7 +14,7 @@ class Portfolio extends Command {
         cooldown: 0,
         enabled: true,
         memberRequired: true,
-        deferReply: false
+        deferReply: true
     };
 
     constructor(...args) {
