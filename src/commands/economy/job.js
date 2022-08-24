@@ -79,9 +79,9 @@ class Job extends Command {
     }
 
     async execLeave(interaction, data) {
-        if (data.user.job.startsWith("business")) return await interaction.reply({ content: `You work at a company. Please leave or sell your company using \`/company info\``, ephemeral: true });
+        if (data.user.job.startsWith("business")) return await interaction.reply({ content: `You work at a company. Please leave or sell your company using </company info:993095062726647808>`, ephemeral: true });
         const job = this.getJob(data.user.job);
-        if (job === null) return await interaction.reply({ content: `You don't have a job. Please apply for a job with \`/${this.info.name} apply <job>\`.`, ephemeral: true });
+        if (job === null) return await interaction.reply({ content: `You don't have a job. Please apply for a job with </${this.info.name} apply:983096143284174858>.`, ephemeral: true });
 
         await interaction.deferReply();
         await MemberModel.updateOne({ id: interaction.member.id }, { $set: { job: "" } });
@@ -91,10 +91,10 @@ class Job extends Command {
     async execApply(interaction, data) {
         if (data.user.job.startsWith("business")) return await interaction.reply({ content: `You cannot apply for a normal job when you work at a company.`, ephemeral: true });
         const currentJob = this.getJob(data.user.job);
-        if (currentJob !== null) return await interaction.reply({ content: `You already have a job. Please leave your current job with \`/${this.info.name} leave\`.`, ephemeral: true });
+        if (currentJob !== null) return await interaction.reply({ content: `You already have a job. Please leave your current job with </${this.info.name} leave:983096143284174858>.`, ephemeral: true });
 
         const job = this.getJob(interaction.options.getString('job-name'));
-        if (job === null) return await interaction.reply({ content: `That is not a valid job. Please use \`/${this.info.name} list\` to view all jobs.`, ephemeral: true });
+        if (job === null) return await interaction.reply({ content: `That is not a valid job. Please use </${this.info.name} list:983096143284174858> to view all jobs.`, ephemeral: true });
 
         await interaction.deferReply();
         await MemberModel.updateOne({ id: interaction.member.id }, { $set: { job: job.name } });
@@ -117,8 +117,8 @@ class Job extends Command {
 
         let currentJob = ``;
         if (userData.job != "") currentJob = `:briefcase: **You are currently working as a ${userData.job}.**\n`;
-        if (userData.job.startsWith("business")) currentJob = `:briefcase: **You work at a company. Leave your company using \`/company info\`**\n`;
-        let descField = `${currentJob}:moneybag: **To apply for a job use** \`/${this.info.name} apply <job>\`**.**\n:o: **You can only apply for jobs with** :white_check_mark:\n:mans_shoe: **Leave a job by using** \`/${this.info.name} leave\`**.**\n\n`;
+        if (userData.job.startsWith("business")) currentJob = `:briefcase: **You work at a company. Leave your company using </company info:993095062726647808>**\n`;
+        let descField = `${currentJob}:moneybag: **To apply for a job use** </${this.info.name} apply:983096143284174858>**.**\n:o: **You can only apply for jobs with** :white_check_mark:\n:mans_shoe: **Leave a job by using** </${this.info.name} leave:983096143284174858>**.**\n\n`;
         for (let job in jobs) {
             descField += `:white_check_mark: **${jobs[job].name}** ― :coin: ${jobs[job].salary} / hour\n> Required hours per day: \`${jobs[job].minWorkPerDay}\`\n\n`;
         }

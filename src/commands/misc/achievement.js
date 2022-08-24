@@ -142,7 +142,7 @@ class Achievement extends Command {
         },
         "gold_digger": {
             name: "Gold Digger",
-            description: "Find 20 diamonds in total while using `/dig`.",
+            description: "Find 20 diamonds in total while using </dig:983096143179284516>.",
             isValid: (memberData, statsData) => {
                 return statsData.diamondsFound >= 20;
             },

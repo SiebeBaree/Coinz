@@ -90,7 +90,7 @@ class Shop extends Command {
 
         if (itemId) {
             const item = await bot.database.fetchItem(itemId.toLowerCase());
-            if (item == null) return await interaction.reply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.`, ephemeral: true });
+            if (item == null) return await interaction.reply({ content: `That item doesn't exist. Please use </shop list:983096143284174861> to view all items.`, ephemeral: true });
             await interaction.deferReply();
 
             let buyPrice = ':coin: ' + item.buyPrice;
@@ -150,7 +150,7 @@ class Shop extends Command {
         const amount = interaction.options.getInteger('amount') || 1;
 
         const item = await bot.database.fetchItem(itemId.toLowerCase());
-        if (item == null) return await interaction.reply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.`, ephemeral: true });
+        if (item == null) return await interaction.reply({ content: `That item doesn't exist. Please use </shop list:983096143284174861> to view all items.`, ephemeral: true });
         if (item.buyPrice == 0) return await interaction.reply({ content: `This item is not for sale.`, ephemeral: true });
 
         const totalPrice = item.buyPrice * amount;
@@ -167,7 +167,7 @@ class Shop extends Command {
         const amount = interaction.options.getInteger('amount') || 1;
 
         const item = await bot.database.fetchItem(itemId.toLowerCase());
-        if (item == null) return await interaction.reply({ content: `That item doesn't exist. Please use \`/shop\` to view all items.`, ephemeral: true });
+        if (item == null) return await interaction.reply({ content: `That item doesn't exist. Please use </shop list:983096143284174861> to view all items.`, ephemeral: true });
         if (item.sellPrice == 0) return await interaction.reply({ content: `You can't sell this item.`, ephemeral: true });
         await interaction.deferReply();
 

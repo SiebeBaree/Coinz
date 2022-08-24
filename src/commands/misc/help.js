@@ -18,7 +18,7 @@ class Help extends Command {
         cooldown: 0,
         enabled: true,
         memberRequired: false,
-        deferReply: true
+        deferReply: false
     };
 
     categories = [
@@ -111,7 +111,7 @@ class Help extends Command {
                 .setAuthor({ name: "Commands List", iconURL: `${bot.user.avatarURL() || bot.config.embed.defaultIcon}` })
                 .setColor(bot.config.embed.color)
                 .setFooter({ text: bot.config.embed.footer })
-                .setDescription(`:question: **Don't know where to begin? Use** \`/guide\`\n:gear: **Visit our** [**support server**](https://discord.gg/asnZQwc6kW)**!**`)
+                .setDescription(`:question: **Don't know where to begin? Use** </guide:1005435550884442195>\n:gear: **Visit our** [**support server**](https://discord.gg/asnZQwc6kW)**!**`)
 
             this.categories.forEach(categoryObj => {
                 embed.addFields([

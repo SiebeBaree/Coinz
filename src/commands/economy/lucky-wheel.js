@@ -67,7 +67,7 @@ class LuckyWheel extends Command {
         const embed = new EmbedBuilder()
             .setTitle(`Lucky Wheel Rewards`)
             .setColor(bot.config.embed.color)
-            .setDescription(`:gift: **To spin the wheel, please vote for Coinz using the** \`/vote\` **command.**\n:warning: **You get 1 free spin per vote!**\n:star: **You have ${spinsLeft}x ${spinsLeft === 1 ? "spin" : "spins"} left.**`)
+            .setDescription(`:gift: **To spin the wheel, please vote for Coinz using the** </vote:993095062726647810> **command.**\n:warning: **You get 1 free spin per vote!**\n:star: **You have ${spinsLeft}x ${spinsLeft === 1 ? "spin" : "spins"} left.**`)
             .setFooter({ text: bot.config.embed.footer })
             .addFields(
                 { name: `Rewards`, value: `${rewardsTxt}`, inline: false }
@@ -80,7 +80,7 @@ class LuckyWheel extends Command {
         const amount = interaction.options.getInteger('amount') || 1;
 
         if (data.user.spins === undefined || data.user.spins <= 0) {
-            return await interaction.reply({ content: `You don't have any spins left. If you want to spin the lucky wheel, consider voting (\`/vote\`). You get 1x free spin for each vote.`, ephemeral: true });
+            return await interaction.reply({ content: `You don't have any spins left. If you want to spin the lucky wheel, consider voting (</vote:993095062726647810>). You get 1x free spin for each vote.`, ephemeral: true });
         } else if (data.user.spins < amount) {
             return await interaction.reply({ content: `You only have ${data.user.spins} spins left.`, ephemeral: true });
         }

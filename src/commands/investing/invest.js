@@ -124,7 +124,7 @@ class Invest extends Command {
                 const embed = new EmbedBuilder()
                     .setAuthor({ name: `All Investments` })
                     .setColor(bot.config.embed.color)
-                    .setDescription(`**More Info:** \`/${this.info.name} info <ticker>\`\n**Example:** \`/${this.info.name} info AAPL\`\n\n${stockStr}\nLast Updated: <t:${stocks[0].lastUpdated}:R>`)
+                    .setDescription(`**More Info:** </${this.info.name} info:1005435550884442194>\n**Example:** \`/${this.info.name} info AAPL\`\n\n${stockStr}\nLast Updated: <t:${stocks[0].lastUpdated}:R>`)
                     .setFooter({ text: `Page ${currentPage + 1} of ${maxPages}.` })
                 return embed;
             }
@@ -155,7 +155,7 @@ class Invest extends Command {
             })
         } else {
             let stock = await bot.database.fetchStock(ticker.toUpperCase());
-            if (stock == null) return await interaction.editReply({ content: `Sorry we don't know any investment with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/${this.info.name} info\` to get all investments.` });
+            if (stock == null) return await interaction.editReply({ content: `Sorry we don't know any investment with ticker \`${ticker.toUpperCase()}\`.\nPlease use </${this.info.name} info:1005435550884442194> to get all investments.` });
 
             const isMarketOpen = () => {
                 try {
@@ -200,7 +200,7 @@ class Invest extends Command {
         if (price !== null && amount !== null) return await interaction.reply({ content: `You cannot buy an amount and give a price at the same time.`, ephemeral: true })
 
         let stock = await bot.database.fetchStock(ticker.toUpperCase());
-        if (stock == null) return await interaction.reply({ content: `Sorry we don't know any investment with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/${this.info.name} info\` to get all investments.`, ephemeral: true });
+        if (stock == null) return await interaction.reply({ content: `Sorry we don't know any investment with ticker \`${ticker.toUpperCase()}\`.\nPlease use </${this.info.name} info:1005435550884442194> to get all investments.`, ephemeral: true });
 
         if (amount !== null) {
             price = Math.round(stock.price * amount);
@@ -270,7 +270,7 @@ class Invest extends Command {
         const amount = interaction.options.getNumber('amount');
 
         let stock = await bot.database.fetchStock(ticker.toUpperCase());
-        if (stock == null) return await interaction.reply({ content: `Sorry we don't know any investment with ticker \`${ticker.toUpperCase()}\`.\nPlease use \`/${this.info.name} info\` to get all investments.`, ephemeral: true });
+        if (stock == null) return await interaction.reply({ content: `Sorry we don't know any investment with ticker \`${ticker.toUpperCase()}\`.\nPlease use </${this.info.name} info:1005435550884442194> to get all investments.`, ephemeral: true });
 
         let userHasStock = false;
         let stockData;

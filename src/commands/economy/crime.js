@@ -47,7 +47,7 @@ class Crime extends Command {
         const embed = new EmbedBuilder()
             .setTitle("Crime")
             .setColor(bot.config.embed.color)
-            .setDescription(`:detective: **You robbed a house and stole some items.**\n:moneybag: **You can sell the items for :coin: ${totalPrice}.**\n:gem: **Sell items using** \`/shop sell <item-id> [amount]\``)
+            .setDescription(`:detective: **You robbed a house and stole some items.**\n:moneybag: **You can sell the items for :coin: ${totalPrice}.**\n:gem: **Sell items using** </shop sell:983096143284174861>`)
             .addFields(
                 { name: 'Loot', value: `${lootText || "You almost got caught! But now you don't have any loot :("}`, inline: false }
             )

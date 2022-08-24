@@ -89,7 +89,7 @@ class Factory extends Command {
             const e = new EmbedBuilder()
                 .setTitle(`:factory: Factories of ${data.company.name}`)
                 .setColor(bot.config.embed.color)
-                .setDescription(`:gear: **Use** \`/factory set-production\` **to produce an item.**\n:hammer_pick: **All collected products are found in** \`/company inventory\`**.**${buyFactory}`)
+                .setDescription(`:gear: **Use** </${this.info.name} set-production:993095062726647809> **to produce an item.**\n:hammer_pick: **All collected products are found in** </company inventory:993095062726647808>**.**${buyFactory}`)
 
             if (factories.length == 0) {
                 e.addFields({ name: `Buy a Factory`, value: `Please press the button below to buy a factory.`, inline: false });
@@ -211,7 +211,7 @@ class Factory extends Command {
                 $push: { factories: factoryObj }
             });
 
-            await interaction.followUp({ content: `You successfully bought a new factory. Check your factory with \`/${this.info.name} view\`.`, ephemeral: true });
+            await interaction.followUp({ content: `You successfully bought a new factory. Check your factory with </${this.info.name} view:993095062726647809>.`, ephemeral: true });
         }
 
         data = await bot.tools.hasCompany(interaction.member.id, data);
@@ -251,7 +251,7 @@ class Factory extends Command {
     async execSetProduction(interaction, data) {
         data = await bot.tools.hasCompany(interaction.member.id, data);
 
-        if (!data.company) return await interaction.editReply({ content: `You don't have a company. Please create one using \`/company create <name>\`.` });
+        if (!data.company) return await interaction.editReply({ content: `You don't have a company. Please create one using </company create:993095062726647808>.` });
         if (data.employee.role !== "ceo" && data.employee.role !== "admin") return await interaction.editReply({ content: `You can't set the production of a factory.` });
 
         const factoryId = interaction.options.getString('factory-id');
@@ -291,7 +291,7 @@ class Factory extends Command {
         if (Math.max(...factories) > data.company.factories.length) return await interaction.editReply({ content: `You don't own a factory with id \`${Math.max(...factories)}\`.` });
 
         const product = bot.tools.getProduct(productId.toLowerCase());
-        if (product === undefined) return await interaction.editReply({ content: `\`${productId.toLowerCase()}\` is not a valid product. Use \`/${this.info.name} list-products\` to view all products.` });
+        if (product === undefined) return await interaction.editReply({ content: `\`${productId.toLowerCase()}\` is not a valid product. Use </${this.info.name} list-products:993095062726647809> to view all products.` });
 
         for (let i = 0; i < factories.length; i++) {
             await CompanyModel.updateOne({ id: data.company.id, 'factories.factoryId': factories[i] - 1 }, {

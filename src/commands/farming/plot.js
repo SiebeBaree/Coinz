@@ -96,7 +96,7 @@ class Plot extends Command {
         if (plots.length <= 0) return await interaction.reply({ content: `That are not valid plots.`, ephemeral: true });
         if (Math.max(...plots) > data.user.plots.length) return await interaction.reply({ content: `You don't own a plot with id \`${Math.max(...plots)}\`.`, ephemeral: true });
         const cropItem = await bot.database.fetchItem(cropType.toLowerCase());
-        if (cropItem == null) return await interaction.reply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use \`/shop list\` to view all crops.`, ephemeral: true });
+        if (cropItem == null) return await interaction.reply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use </shop list:983096143284174861> to view all crops.`, ephemeral: true });
         await interaction.deferReply();
 
         for (let i = 0; i < plots.length; i++) {
@@ -108,7 +108,7 @@ class Plot extends Command {
                 }
             });
         }
-        if (!await bot.tools.takeItem(interaction.member.id, cropItem.itemId, data.user.inventory, plots.length)) return await interaction.editReply({ content: `You don't have that crop in your inventory. Please buy a crop with \`/shop buy <crop-id>\`.` });
+        if (!await bot.tools.takeItem(interaction.member.id, cropItem.itemId, data.user.inventory, plots.length)) return await interaction.editReply({ content: `You don't have that crop in your inventory. Please buy a crop with </shop buy:983096143284174861>.` });
         await interaction.editReply({ content: `You successfully planted \`${cropItem.name}\` on plot ${plotId}` });
     }
 
@@ -130,7 +130,7 @@ class Plot extends Command {
         const embed = new EmbedBuilder()
             .setTitle(`${interaction.member.displayName || interaction.member.username}'s farm`)
             .setColor(bot.config.embed.color)
-            .setDescription(`:seedling: **Use** \`/${this.info.name} plant <plot-id> <crop>\` **to plant a crop.**\n:droplet: **${waterTxt}**\n:wilted_rose: **You can clear rotten crops by harvesting all plots.**\n:basket: **All harvested crops are found in your inventory** \`/inventory\`**.**${buyPlot}`)
+            .setDescription(`:seedling: **Use** </${this.info.name} plant:983096143284174865> **to plant a crop.**\n:droplet: **${waterTxt}**\n:wilted_rose: **You can clear rotten crops by harvesting all plots.**\n:basket: **All harvested crops are found in your inventory** </inventory:983096143179284519>**.**${buyPlot}`)
 
         if (userPlots.length == 0) {
             embed.addFields({ name: `Buy a Plot`, value: `Please press the button below to buy a plot.`, inline: false });
@@ -228,7 +228,7 @@ class Plot extends Command {
             $inc: { wallet: -newPlotPrice }
         });
 
-        await interaction.followUp({ content: `You successfully bought a new plot. Check your plot with \`/${this.info.name} list\`.`, ephemeral: true });
+        await interaction.followUp({ content: `You successfully bought a new plot. Check your plot with </${this.info.name} list:983096143284174865>.`, ephemeral: true });
     }
 
     async calcBtns(data) {

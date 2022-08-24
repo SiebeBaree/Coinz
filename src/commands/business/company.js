@@ -144,7 +144,7 @@ class Company extends Command {
         extraFields: [
             { name: "General Information", value: "Create a business and buy factories. You can produce items in those factories and sell them for a profit when the items are produced.", inline: false },
             { name: "Factories", value: "Factories are responsible to produce items. For more information use `/help factory`.", inline: false },
-            { name: "Inventory", value: "View your inventory and sell any items. All sold items will be paid into your companies bank account. To earn money from your company please use `/work`.", inline: false }
+            { name: "Inventory", value: "View your inventory and sell any items. All sold items will be paid into your companies bank account. To earn money from your company please use </work:983096143284174864>.", inline: false }
         ],
         cooldown: 0,
         enabled: true,
@@ -180,7 +180,7 @@ class Company extends Command {
     async execInfo(interaction, data) {
         data = await bot.tools.hasCompany(interaction.member.id, data);
         const company = data.company;
-        if (!company) return await interaction.editReply({ content: `You might want to create a company to use this command. Please create one using \`/${this.info.name} create <name>\`.` });
+        if (!company) return await interaction.editReply({ content: `You might want to create a company to use this command. Please create one using </${this.info.name} create:993095062726647808>.` });
 
         const embed = async function (company) {
             let em = new EmbedBuilder()
@@ -246,7 +246,7 @@ class Company extends Command {
 
     async execInventory(interaction, data) {
         data = await bot.tools.hasCompany(interaction.member.id, data);
-        if (!data.company) return await interaction.editReply({ content: `To view your companies inventory you may need a company? Am I right? Please create one using \`/${this.info.name} create <name>\`.` });
+        if (!data.company) return await interaction.editReply({ content: `To view your companies inventory you may need a company? Am I right? Please create one using </${this.info.name} create:993095062726647808>.` });
 
         const embed = async function (company) {
             let inventory = "";
@@ -310,12 +310,12 @@ class Company extends Command {
         data = await bot.tools.hasCompany(interaction.member.id, data);
         const company = data.company;
 
-        if (!company) return await interaction.editReply({ content: `You don't have a company. Please create one using \`/${this.info.name} create <name>\`.` });
+        if (!company) return await interaction.editReply({ content: `You don't have a company. Please create one using </${this.info.name} create:993095062726647808>.` });
         if (data.employee.role !== "ceo" && data.employee.role !== "admin") return await interaction.editReply({ content: `You don't have the power to hire new people.` });
 
         if (user.bot) return await interaction.editReply({ content: `Do you really want to invite a bot?! I don't think so. The bots don't want to work for your company...` });
         if (user.id === interaction.member.id) return await interaction.editReply({ content: `Why are you trying to invite yourself?!` });
-        if (company.employees.length >= 5) return await interaction.editReply({ content: `You are not Apple. Please don't invite the whole world...\nYou already have the maximum allowed staff for a company. Check your employees using \`/company info\`` });
+        if (company.employees.length >= 5) return await interaction.editReply({ content: `You are not Apple. Please don't invite the whole world...\nYou already have the maximum allowed staff for a company. Check your employees using </${this.info.name} info:993095062726647808>` });
         for (let i = 0; i < company.employees.length; i++) {
             if (company.employees[i].userId === user.id) {
                 return await interaction.editReply({ content: `You really want to invite this user? That's already an employee of your company...` });
@@ -401,7 +401,7 @@ class Company extends Command {
         data = await bot.tools.hasCompany(interaction.member.id, data);
         const company = data.company;
 
-        if (!company) return await interaction.editReply({ content: `You don't have a company. Please create one using \`/${this.info.name} create <name>\`.` });
+        if (!company) return await interaction.editReply({ content: `You don't have a company. Please create one using </${this.info.name} create:993095062726647808>.` });
         if (data.employee.role !== "ceo" && data.employee.role !== "admin") return await interaction.editReply({ content: `You don't have the power to fire employees.` });
         if (user.id === interaction.member.id) return await interaction.editReply({ content: `Why do you want to fire yourself?!` });
         if (user.id === company.id) return await interaction.editReply({ content: `You can't invite the CEO of this company...` });
@@ -435,7 +435,7 @@ class Company extends Command {
         data = await bot.tools.hasCompany(interaction.member.id, data);
         const company = data.company;
 
-        if (!company) return await interaction.editReply({ content: `You don't have a company. Please create one using \`/company create <name>\`.` });
+        if (!company) return await interaction.editReply({ content: `You don't have a company. Please create one using </${this.info.name} create:993095062726647808>.` });
         if (data.employee.role !== "ceo" && data.employee.role !== "admin") return await interaction.editReply({ content: `You don't have the power to set wages.` });
 
         let employeeExists = false;
@@ -463,7 +463,7 @@ class Company extends Command {
         data = await bot.tools.hasCompany(interaction.member.id, data);
         const company = data.company;
 
-        if (!company) return await interaction.editReply({ content: `You don't have a company. Please create one using \`/${this.info.name} create <name>\`.` });
+        if (!company) return await interaction.editReply({ content: `You don't have a company. Please create one using </${this.info.name} create:993095062726647808>.` });
         if (data.employee.role !== "ceo" && data.employee.role !== "admin") return await interaction.editReply({ content: `You don't have the power to set positions.` });
         if (user.id === company.id) return await interaction.editReply({ content: `You can't change the position of the CEO.` });
 
