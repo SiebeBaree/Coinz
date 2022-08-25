@@ -353,39 +353,6 @@ const commands = {
             }
         ]
     },
-    "formula1": {
-        "description": "Simulate a Formula 1 season and bet on the champion.",
-        "category": "games",
-        "cooldown": 0,
-        "options": [
-            {
-                "name": "race",
-                "options": [
-                    {
-                        "name": "race-winner",
-                        "required": false
-                    }
-                ]
-            },
-            {
-                "name": "standings",
-                "options": []
-            },
-            {
-                "name": "start-season",
-                "options": [
-                    {
-                        "name": "drivers-champion",
-                        "required": true
-                    },
-                    {
-                        "name": "constructors-champion",
-                        "required": true
-                    }
-                ]
-            }
-        ]
-    },
     "higherlower": {
         "description": "Is the next number higher, lower or the same as the current number.",
         "category": "games",
@@ -572,25 +539,6 @@ const commands = {
         "category": "misc",
         "cooldown": 0,
         "options": []
-    },
-    "premium": {
-        "description": "Enable or disable premium status.",
-        "category": "misc",
-        "cooldown": 0,
-        "options": [
-            {
-                "name": "info",
-                "options": []
-            },
-            {
-                "name": "enable",
-                "options": []
-            },
-            {
-                "name": "disable",
-                "options": []
-            }
-        ]
     },
     "reset": {
         "description": "Reset your account on EVERY server.",
