@@ -133,7 +133,7 @@ class Factory extends Command {
                         break;
                 }
 
-                e.addFields({ name: `Factory ${i + 1}`, value: `${visualRow}\n${status}`, inline: true });
+                e.addFields({ name: `Factory (ID: ${i + 1})`, value: `${visualRow}\n${status}`, inline: true });
 
                 if (statusChanged) {
                     await CompanyModel.updateOne({ id: data.company.id, 'factories.factoryId': factories[i].factoryId }, {
