@@ -96,7 +96,7 @@ class Plot extends Command {
         if (plots.length <= 0) return await interaction.reply({ content: `That are not valid plots.`, ephemeral: true });
         if (Math.max(...plots) > data.user.plots.length) return await interaction.reply({ content: `You don't own a plot with id \`${Math.max(...plots)}\`.`, ephemeral: true });
         const cropItem = await bot.database.fetchItem(cropType.toLowerCase());
-        if (cropItem == null) return await interaction.reply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use </shop list:983096143284174861> to view all crops.`, ephemeral: true });
+        if (cropItem == null || cropItem.category !== "crops") return await interaction.reply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use </shop list:983096143284174861> to view all crops.`, ephemeral: true });
         await interaction.deferReply();
 
         for (let i = 0; i < plots.length; i++) {
