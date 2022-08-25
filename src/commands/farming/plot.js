@@ -174,7 +174,7 @@ class Plot extends Command {
                     break;
             }
 
-            embed.addFields({ name: `Plot ${i + 1}`, value: `${visualRow}\n${cropStatus}`, inline: true });
+            embed.addFields({ name: `Plot (ID: ${i + 1})`, value: `${visualRow}\n${cropStatus}`, inline: true });
 
             if (plotstatusChanged) {
                 await MemberModel.updateOne({ id: interaction.member.id, 'plots.plotId': userPlots[i].plotId }, {
