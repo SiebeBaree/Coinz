@@ -37,8 +37,8 @@ class Vote extends Command {
             .setTitle(`Coinz Vote Links`)
             .setColor(bot.config.embed.color)
             .addFields(
-                { name: 'Rewards (For each vote)', value: `:coin: 50 - 200`, inline: false },
-                { name: 'Total Votes', value: `${votes > 0 ? `You have voted ${votes}x in total! Thank you!` : "You haven't voted yet. Please click on the links below to vote.\n\nWith voting you help Coinz without spending any money. Everyone that helps Coinz grow bigger gets rewarded :wink:"}`, inline: false }
+                { name: 'Rewards (For each vote)', value: `A free wheel spin. Use </lucky-wheel rewards:1005435550884442193> to see possible rewards.`, inline: false },
+                { name: 'Total Votes', value: `${votes > 0 ? `You have voted ${votes}x in total! Thank you!` : "You haven't voted yet. Please click on the links below to vote."}`, inline: false }
             )
             .setFooter({ text: bot.config.embed.footer })
 
