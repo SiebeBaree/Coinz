@@ -60,14 +60,14 @@ class Coinflip extends Command {
             .setAuthor({ name: `Coinflip`, iconURL: `${interaction.member.displayAvatarURL() || bot.config.embed.defaultIcon}` })
             .setColor(sideLanded === side ? Colors.Green : Colors.Red)
             .setFooter({ text: bot.config.embed.footer })
-            .setDescription(`:coin: **You chose:** ${side}\n:moneybag: **Your Bet:** :coin: ${bet}\n\n**The coin landed on:** ${sideLanded}\n${side === sideLanded ? "**You won:** :coin: " + parseInt(bet * 1.5) : "**You lost:** :coin: " + bet}`)
+            .setDescription(`:coin: **You chose:** ${side}\n:moneybag: **Your Bet:** :coin: ${bet}\n\n**The coin landed on:** ${sideLanded}\n${side === sideLanded ? "**Profit:** :coin: " + parseInt(bet / 2) : "**You lost:** :coin: " + bet}`)
             .setThumbnail(sideLanded === "HEAD" ? "https://cdn.coinzbot.xyz/games/coinflip/coin-head.png" : "https://cdn.coinzbot.xyz/games/coinflip/coin-tail.png")
         await interaction.editReply({ embeds: [newEmbed] });
 
         if (sideLanded === side) {
-            await bot.tools.addMoney(interaction.member.id, parseInt(bet * 0.5));
+            await bot.tools.addMoney(interaction.member.id, parseInt(bet / 2));
         } else {
-            await bot.tools.takeMoney(interaction.member.id, bet);
+            await bot.tools.takeMoney(interaction.member.id, bet, true);
         }
     }
 }
