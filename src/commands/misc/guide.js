@@ -46,7 +46,6 @@ class Info extends Command {
     }
 
     async run(interaction, data) {
-        await interaction.deferReply();
         let defaultLabel = "general";
         const interactionMessage = await interaction.editReply({ embeds: [this.getEmbed(defaultLabel)], components: [bot.tools.createSelectMenu(this.getSelectMenuOptions(), "guide_selectMenu", defaultLabel, false)], fetchReply: true });
         const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 10, idle: 40_000, time: 90_000 });
