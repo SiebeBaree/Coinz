@@ -50,13 +50,13 @@
         },
         {
             "name": "Doctor",
-            "salary": 135,
+            "salary": 115,
             "minWorkPerDay": 4,
             "minLvl": 8
         },
         {
             "name": "Politician",
-            "salary": 200,
+            "salary": 135,
             "minWorkPerDay": 3,
             "minLvl": 10
         }
