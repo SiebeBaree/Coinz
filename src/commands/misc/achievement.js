@@ -214,10 +214,16 @@ class Achievement extends Command {
             for (let i = 0; i < keys.length; i++) {
                 if (i >= currentPage * this.itemsPerPage && i < currentPage * this.itemsPerPage + this.itemsPerPage) {
                     let progressStr = "";
+                    let alreadyAchieved = "";
                     let progress = items[keys[i]].progress(memberData, statsData);
 
-                    if (progress !== false && !data.user.badges.includes(keys[i])) progressStr = ` (${progress})`;
-                    str += `<:${keys[i]}:${idAchievements[keys[i]]}> **${items[keys[i]].name}**${progressStr}\n> ${items[keys[i]].description}\n\n`
+                    if (!data.user.badges.includes(keys[i])) {
+                        if (progress !== false) progressStr = ` (${progress})`;
+                    } else {
+                        alreadyAchieved = "~~";
+                    }
+
+                    str += `<:${keys[i]}:${idAchievements[keys[i]]}> ${alreadyAchieved}**${items[keys[i]].name}**${alreadyAchieved}${progressStr}\n> ${items[keys[i]].description}\n\n`
                 }
             }
 
@@ -293,7 +299,7 @@ class Achievement extends Command {
         if (achievement === undefined) {
             const keys = Object.keys(this.achievements);
             for (let i = 0; i < keys.length; i++) {
-                if (this.achievements[keys[i]].name.toLowerCase() === achievementName) {
+                if (this.achievements[keys[i]].name.toLowerCase() === achievementName && data.user.badges.includes(keys[i])) {
                     achievement = keys[i];
                     break;
                 }
