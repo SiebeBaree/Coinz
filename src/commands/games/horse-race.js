@@ -20,7 +20,7 @@ class HorseRace extends Command {
                 description: 'The horse you want to bet on.',
                 required: true,
                 min_value: 1,
-                max_value: 5
+                max_value: 3
             }
         ],
         category: "games",
@@ -49,7 +49,7 @@ class HorseRace extends Command {
         data.bet = bet;
         data.userWon = false;
         data.stoppedGame = false;
-        data.horses = Array(5).fill(10);
+        data.horses = Array(3).fill(10);
         data.status = "Racing...";
         data.horseNr = horseNr;
 
@@ -57,7 +57,7 @@ class HorseRace extends Command {
             const embed = new EmbedBuilder()
                 .setTitle(`Horse Race`)
                 .setColor(data.color || bot.config.embed.color)
-                .setDescription(`:moneybag: **Bet:** :coin: ${data.bet}\n:1234: **Your Horse:** \`${data.horseNr}\`\n:hourglass: **Status:** ${data.status}\n\n**1.** ${"-".repeat(data.horses[0])}:horse_racing:\n**2.** ${"-".repeat(data.horses[1])}:horse_racing:\n**3.** ${"-".repeat(data.horses[2])}:horse_racing:\n**4.** ${"-".repeat(data.horses[3])}:horse_racing:\n**5.** ${"-".repeat(data.horses[4])}:horse_racing:`)
+                .setDescription(`:moneybag: **Bet:** :coin: ${data.bet}\n:1234: **Your Horse:** \`${data.horseNr}\`\n:hourglass: **Status:** ${data.status}\n\n**1.** ${"-".repeat(data.horses[0])}:horse_racing:\n**2.** ${"-".repeat(data.horses[1])}:horse_racing:\n**3.** ${"-".repeat(data.horses[2])}:horse_racing:`)
             return embed;
         }
 
@@ -105,7 +105,7 @@ class HorseRace extends Command {
         }
 
         const wait = (func, timeToDelay) => new Promise((resolve) => setTimeout(func, timeToDelay));
-        await wait(await updateStatus(interaction, data), 1500);
+        await wait(await updateStatus(interaction, data), 2000);
     }
 }
 
