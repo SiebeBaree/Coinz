@@ -72,6 +72,7 @@ class Dig extends Command {
                     if (data.lootBoard[row][column].icon === null) {
                         data.board[row][column].correctGuessed = data.lootBoard[row][column].correctGuessed = false;
                     } else {
+                        if (this.lootValues[data.lootBoard[row][column].icon] === undefined) bot.logger.error(`Error with /dig. icon: ${data.lootBoard[row][column].icon}`);
                         data.loot += this.lootValues[data.lootBoard[row][column].icon].value;
                         data.board[row][column].icon = data.lootBoard[row][column].icon;
                         data.board[row][column].correctGuessed = data.lootBoard[row][column].correctGuessed = true;
