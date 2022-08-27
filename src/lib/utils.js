@@ -222,6 +222,32 @@ const getRandomLoot = (lootTable, min, max = 0) => {
     return loot === [] ? [lootTable[0]] : loot;
 };
 
+const extractNumber = (number) => {
+    if (/^[0-9]+$/.test(number)) return parseInt(number);
+
+    multiplier = number.substr(-1).toLowerCase();
+    if (multiplier == "k") {
+        return parseInt(parseFloat(number) * 1000);
+    } else if (multiplier == "m") {
+        return parseInt(parseFloat(number) * 1000000);
+    }
+};
+
+const checkBet = (betStr, user, minBet = 50, maxBet = 5000) => {
+    let bet = 0;
+    if (["all", "max"].includes(betStr.toLowerCase())) {
+        if (user.wallet <= 0) return `You don't have any money in your wallet.`;
+        bet = user.wallet > maxBet ? maxBet : data.user.wallet;
+    } else {
+        bet = extractNumber(betStr);
+        if (bet < minBet) return `The minimum bet is :coin: ${minBet}.`;
+        if (bet > maxBet) return `You can only bet a maximum of :coin: ${maxBet}.`;
+        if (bet > user.wallet) return `You don't have :coin: ${bet} in your wallet.`;
+    }
+
+    return bet;
+}
+
 module.exports = {
     addMoney,
     takeMoney,
@@ -241,5 +267,7 @@ module.exports = {
     msToTime,
     calculateChange,
     roundNumber,
-    getRandomLoot
+    getRandomLoot,
+    extractNumber,
+    checkBet
 };
