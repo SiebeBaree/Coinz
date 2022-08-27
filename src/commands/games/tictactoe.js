@@ -55,11 +55,18 @@ class TicTacToe extends Command {
         await interaction.deferReply();
         const secondUserData = await bot.database.fetchMember(user.id);
         const betStr = interaction.options.getString('bet');
-        const bet = bot.tools.checkBet(betStr, data.user);
+        let bet = 50;
 
-        if (!Number.isInteger(bet)) {
-            await interaction.reply({ content: bet, ephemeral: true });
-            return await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
+        if (["all", "max"].includes(betStr.toLowerCase())) {
+            if (data.user.wallet <= 0) return await interaction.editReply({ content: `You don't have any money in your wallet.` });
+            bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
+        } else {
+            bet = bot.tools.checkBet(betStr, data.user);
+
+            if (!Number.isInteger(bet)) {
+                await interaction.editReply({ content: bet });
+                return await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
+            }
         }
 
         if (bet > secondUserData.wallet) {

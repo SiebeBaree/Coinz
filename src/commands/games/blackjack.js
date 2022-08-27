@@ -32,11 +32,18 @@ class Blackjack extends Command {
 
     async run(interaction, data) {
         const betStr = interaction.options.getString('bet');
-        const bet = bot.tools.checkBet(betStr, data.user);
+        let bet = 50;
 
-        if (!Number.isInteger(bet)) {
-            await interaction.reply({ content: bet, ephemeral: true });
-            return await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
+        if (["all", "max"].includes(betStr.toLowerCase())) {
+            if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
+            bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
+        } else {
+            bet = bot.tools.checkBet(betStr, data.user);
+
+            if (!Number.isInteger(bet)) {
+                await interaction.reply({ content: bet, ephemeral: true });
+                return await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
+            }
         }
         await interaction.deferReply();
         let disableDoubleDown = data.user.wallet < bet * 2;
@@ -211,8 +218,9 @@ class Blackjack extends Command {
             data.description = `You lost :coin: ${data.bet}`;
             data.color = Colors.Red;
         } else if (valuePlayer === valueDealer && data.gameFinished) {
-            data.description = `Tie! You lost :coin: ${data.bet}`;
+            data.description = `Push! You got your :coin: ${data.bet} back.`;
             data.color = Colors.Red;
+            data.tie = true;
         } else if (valuePlayer > valueDealer && data.gameFinished) {
             data.playerWon = true;
             data.description = `You won :coin: ${this.getPrice(data.bet)}`;
