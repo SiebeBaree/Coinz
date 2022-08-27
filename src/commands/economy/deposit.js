@@ -9,14 +9,15 @@ class Deposit extends Command {
         options: [
             {
                 name: 'amount',
-                type: ApplicationCommandOptionType.Integer,
+                type: ApplicationCommandOptionType.String,
                 description: 'Enter an amount that you want to deposit.',
-                required: true,
-                min_value: 1
+                required: true
             }
         ],
         category: "economy",
-        extraFields: [],
+        extraFields: [
+            { name: "Amount Formatting", value: "You can use formatting to make it easier to use big numbers.\n\n__For Example:__\n~~1000~~ **1K**\n~~1000000~~ **1M**\n~~1300~~ **1.3K**\nUse `all` or `max` to use the maximum money you have.", inline: false }
+        ],
         cooldown: 0,
         enabled: true,
         memberRequired: true,
@@ -28,8 +29,17 @@ class Deposit extends Command {
     }
 
     async run(interaction, data) {
-        let amount = interaction.options.getInteger('amount');
-        if (amount > data.user.wallet) return interaction.reply({ content: `You don't have that much in your wallet. You only have :coin: ${data.user.wallet}.`, ephemeral: true });
+        const amountStr = interaction.options.getString('amount');
+
+        let amount = 0;
+        if (["all", "max"].includes(amountStr.toLowerCase())) {
+            if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
+            amount = data.user.wallet;
+        } else {
+            amount = bot.tools.extractNumber(amountStr);
+            if (amount <= 0) return await interaction.reply({ content: `You need to deposit at least :coin: 1.`, ephemeral: true });
+            if (amount > data.user.wallet) return await interaction.reply({ content: `You don't have that much in your wallet. You only have :coin: ${data.user.wallet}.`, ephemeral: true });
+        }
         await interaction.deferReply();
 
         await MemberModel.updateOne({ id: interaction.member.id }, {

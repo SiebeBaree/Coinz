@@ -32,7 +32,9 @@ class Coinflip extends Command {
             }
         ],
         category: "games",
-        extraFields: [],
+        extraFields: [
+            { name: "Bet Formatting", value: "You can use formatting to make it easier to use big numbers.\n\n__For Example:__\n~~1000~~ **1K**\n~~1300~~ **1.3K**\nUse `all` or `max` to use a maximum of :coin: 5000.", inline: false }
+        ],
         cooldown: 300,
         enabled: true,
         memberRequired: true,
@@ -44,11 +46,12 @@ class Coinflip extends Command {
     }
 
     async run(interaction, data) {
-        const bet = interaction.options.getInteger('bet');
+        const betStr = interaction.options.getString('bet');
+        const bet = bot.tools.checkBet(betStr, data.user);
 
-        if (bet > data.user.wallet) {
-            await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You don't have :coin: ${bet} in your wallet.`, ephemeral: true });
+        if (!Number.isInteger(bet)) {
+            await interaction.reply({ content: bet, ephemeral: true });
+            return await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
         }
         await interaction.deferReply();
 

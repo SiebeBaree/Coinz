@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, ApplicationCommandOptionType } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ApplicationCommandOptionType } = require('discord.js');
 
 class TicTacToe extends Command {
     info = {
@@ -8,11 +8,11 @@ class TicTacToe extends Command {
         options: [
             {
                 name: 'bet',
-                type: ApplicationCommandOptionType.Integer,
+                type: ApplicationCommandOptionType.String,
                 description: 'The bet you want to place.',
                 required: true,
-                min_value: 50,
-                max_value: 5000
+                min_length: 2,
+                max_length: 4
             },
             {
                 name: 'user',
@@ -22,7 +22,9 @@ class TicTacToe extends Command {
             }
         ],
         category: "games",
-        extraFields: [],
+        extraFields: [
+            { name: "Bet Formatting", value: "You can use formatting to make it easier to use big numbers.\n\n__For Example:__\n~~1000~~ **1K**\n~~1300~~ **1.3K**\nUse `all` or `max` to use a maximum of :coin: 5000.", inline: false }
+        ],
         cooldown: 300,
         enabled: true,
         memberRequired: true,
@@ -38,7 +40,6 @@ class TicTacToe extends Command {
     }
 
     async run(interaction, data) {
-        const bet = interaction.options.getInteger('bet');
         const user = interaction.options.getUser('user');
 
         if (user.id === interaction.member.id) {
@@ -53,15 +54,17 @@ class TicTacToe extends Command {
 
         await interaction.deferReply();
         const secondUserData = await bot.database.fetchMember(user.id);
+        const betStr = interaction.options.getString('bet');
+        const bet = bot.tools.checkBet(betStr, data.user);
 
-        if (bet > data.user.wallet || bet > secondUserData.wallet) {
-            await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
+        if (!Number.isInteger(bet)) {
+            await interaction.reply({ content: bet, ephemeral: true });
+            return await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
+        }
 
-            if (bet > data.user.wallet) {
-                return await interaction.editReply({ content: `You don't have :coin: ${bet} in your wallet.` });
-            } else {
-                return await interaction.editReply({ content: `${user} doesn't have enough money in their wallet.` });
-            }
+        if (bet > secondUserData.wallet) {
+            await interaction.editReply({ content: `${user} doesn't have enough money in their wallet.` });
+            return await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
         }
 
         data.gameStarted = false;
