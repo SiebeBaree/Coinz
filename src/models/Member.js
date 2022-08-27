@@ -18,6 +18,12 @@ const Plot = Schema({
     crop: { type: String, default: "none" }
 });
 
+const Notification = Schema({
+    vote: { type: Boolean, default: true },
+    voteReminder: { type: Boolean, default: true },
+    steal: { type: Boolean, default: true }
+});
+
 const Member = Schema({
     id: { type: String, required: true, unique: true, index: true },
     votes: { type: Number, default: 0 },
@@ -34,7 +40,9 @@ const Member = Schema({
     plots: [{ type: Plot }],
     lastWater: { type: Number, default: parseInt(Date.now() / 1000) },
     displayedBadge: { type: String, default: "" },
-    badges: [{ type: String }]
+    badges: [{ type: String }],
+    lastAirdrop: { type: Number, default: 0 },
+    notifs: { type: Notification }
 });
 
 module.exports = model('Member', Member, 'members');
