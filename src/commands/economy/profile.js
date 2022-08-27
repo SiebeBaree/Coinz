@@ -29,7 +29,7 @@ class Profile extends Command {
 
     async run(interaction, data) {
         const member = interaction.options.getUser('user') || interaction.member;
-        if (member.bot) return interaction.reply({ content: 'That user is a bot. You can only check the profile of a real person.', ephemeral: true });
+        if (member.bot) return await interaction.reply({ content: 'That user is a bot. You can only check the profile of a real person.', ephemeral: true });
 
         await interaction.deferReply();
         const memberData = await bot.database.fetchMember(member.id);

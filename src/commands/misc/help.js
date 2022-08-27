@@ -65,7 +65,7 @@ class Help extends Command {
                 });
             } else {
                 const command = bot.commands.get(commandName.toLowerCase());
-                if (!command) return interaction.reply({ content: `Sorry, we couldn't find any category or command with the name \`${commandName}\`.`, ephemeral: true });
+                if (!command) return await interaction.reply({ content: `Sorry, we couldn't find any category or command with the name \`${commandName}\`.`, ephemeral: true });
                 await interaction.deferReply();
 
                 let options = command.info.options;
