@@ -24,7 +24,7 @@ class Info extends Command {
         "investing": [
             { name: "What is a stock or crypto?", value: `A stock or crypto is an investment that can give or lose you a lot of money. Please be careful about what you buy.\n\nThe difference between a stock and a crypto currency is that a stock is older and more stable than a crypto currency like Bitcoin for example. Crypto currency is a digital asset with no physical form. This is a very new investment and is very volatile.`, inline: false },
             { name: "Does this feature use real money?", value: `No, you can't spend real money on Coinz at the moment. We plan to release a Premium subscription in the near future. Join our [support server](https://discord.gg/asnZQwc6kW) to stay tuned.`, inline: false },
-            { name: "Are these real-time prices?", value: `Yes, we update the stocks twice each hour and we update the crypto prices every 5 minutes. Stocks are not updated when the market is not open. To check if the market is open please [check here](https://www.tradinghours.com/markets/nasdaq/hours).`, inline: false },
+            { name: "Are these real-time prices?", value: `Yes, we update the stocks twice each hour and we update the crypto prices every 3 minutes. Stocks are not updated when the market is not open. To check if the market is open please [check here](https://www.tradinghours.com/markets/nasdaq/hours).`, inline: false },
             { name: "Can you add X stock/crypto?", value: `To ask for a stock/crypto to be added, please join our [support server](https://discord.gg/asnZQwc6kW) and send a DM to our support bot. Please explain which stock/crypto you want us to add and why this is a good reason.`, inline: false }
         ],
         "farming": [
