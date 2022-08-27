@@ -6,6 +6,7 @@
     "embed": {
         "footer": "Coinz | coinzbot.xyz",
         "color": "#DBA514",
-        "defaultIcon": "https://cdn.discordapp.com/embed/avatars/0.png"
+        "defaultIcon": "https://cdn.discordapp.com/embed/avatars/0.png",
+        "noColor": "#303136"
     }
 }
