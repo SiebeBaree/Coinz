@@ -14,7 +14,9 @@
             "socks",
             "book",
             "rubber_duck",
-            "fidget_spinner"
+            "fidget_spinner",
+            "cupcake",
+            "alcohol"
         ]
     },
     "uncommon": {
@@ -23,7 +25,9 @@
             "shovel",
             "pocket_watch",
             "chair",
-            "computer_mouse"
+            "computer_mouse",
+            "wallet",
+            "bag"
         ]
     },
     "rare": {
@@ -34,7 +38,9 @@
             "tv",
             "hunting_rifle",
             "shovel",
-            "fishing_rod"
+            "fishing_rod",
+            "earbuds",
+            "axe"
         ]
     },
     "super_rare": {
@@ -42,7 +48,9 @@
         "loot": [
             "gold",
             "toilet_paper",
-            "ring"
+            "ring",
+            "laptop",
+            "smartphone"
         ]
     },
     "legendary": {
