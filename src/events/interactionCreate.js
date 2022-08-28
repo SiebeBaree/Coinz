@@ -16,6 +16,13 @@ module.exports = class extends Event {
         //If it isn't a command then return
         if (!cmd) return;
 
+        const ban = await this.database.fetchBan(interaction.guild.id, interaction.member.id);
+        if (ban.guild.isBanned) {
+            return await interaction.reply({ content: `This server is banned from using Coinz.\n**Reason:** ${ban.guild.reason}\n\nIf you are the owner of the server, please join our [**support server**](https://discord.gg/asnZQwc6kW) if you think this ban was a mistake.`, ephemeral: true });
+        } else if (ban.user.isBanned) {
+            return await interaction.reply({ content: `You are banned from using Coinz.\n**Reason:** ${ban.user.reason}\n\nPlease join our [**support server**](https://discord.gg/asnZQwc6kW) if you think this ban was a mistake.`, ephemeral: true });
+        }
+
         if (await cmd.cool(cmd.info.name, interaction.member, cmd.info.cooldown)) {
             return await interaction.reply({ content: `:x: You have to wait ${this.tools.msToTime(await this.cooldown.getCooldown(interaction.member.id, cmd.info.name) * 1000)} to use this command again.`, ephemeral: true });
         }
