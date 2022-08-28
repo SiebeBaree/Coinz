@@ -31,6 +31,22 @@ class Factory extends Command {
                         type: ApplicationCommandOptionType.String,
                         description: 'The product you want to produce.',
                         required: true
+                    },
+                    {
+                        name: 'force',
+                        type: ApplicationCommandOptionType.String,
+                        description: 'Do you want to override the production in a factory? Default = No',
+                        required: false,
+                        choices: [
+                            {
+                                name: "Yes",
+                                value: "yes"
+                            },
+                            {
+                                name: "No",
+                                value: "no"
+                            }
+                        ]
                     }
                 ]
             },
@@ -207,10 +223,7 @@ class Factory extends Command {
             };
 
             await bot.tools.takeMoney(interaction.member.id, newPrice, true);
-            await CompanyModel.updateOne({ id: data.company.id }, {
-                $push: { factories: factoryObj }
-            });
-
+            await CompanyModel.updateOne({ id: data.company.id }, { $push: { factories: factoryObj } });
             await interaction.followUp({ content: `You successfully bought a new factory. Check your factory with </${this.info.name} view:993095062726647809>.`, ephemeral: true });
         }
 
@@ -256,6 +269,7 @@ class Factory extends Command {
 
         const factoryId = interaction.options.getString('factory-id');
         const productId = interaction.options.getString('product-id');
+        const force = interaction.options.getString('force') || "no";
 
         const getFactories = (factoryId) => {
             let factories = [];
@@ -288,10 +302,19 @@ class Factory extends Command {
 
         const factories = getFactories(factoryId);
         if (factories.length <= 0) return await interaction.editReply({ content: `Those are not valid factories.` });
+        if (Math.min(...factories) <= 0) return await interaction.reply({ content: `Factory IDs start counting from 1. Please choose a number higher than 0.`, ephemeral: true });
         if (Math.max(...factories) > data.company.factories.length) return await interaction.editReply({ content: `You don't own a factory with id \`${Math.max(...factories)}\`.` });
 
         const product = bot.tools.getProduct(productId.toLowerCase());
         if (product === undefined) return await interaction.editReply({ content: `\`${productId.toLowerCase()}\` is not a valid product. Use </${this.info.name} list-products:993095062726647809> to view all products.` });
+
+        if (force !== "yes") {
+            for (let i = 0; i < factories.length; i++) {
+                if (data.company.factories[i].status !== "empty") {
+                    return await interaction.reply({ content: `You are already producing items in ${plots.length === 1 ? "that factory" : "those factories"}. If you want to override the production, please use \`/${this.info.name} set-production ${factoryId} Yes\``, ephemeral: true });
+                }
+            }
+        }
 
         for (let i = 0; i < factories.length; i++) {
             await CompanyModel.updateOne({ id: data.company.id, 'factories.factoryId': factories[i] - 1 }, {

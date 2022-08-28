@@ -29,6 +29,22 @@ class Plot extends Command {
                         type: ApplicationCommandOptionType.String,
                         description: 'What crop you want to plant. Use "/shop list" to check all available crops.',
                         required: true
+                    },
+                    {
+                        name: 'force',
+                        type: ApplicationCommandOptionType.String,
+                        description: 'Do you want to re-plant plots if there is something on the plots? Default = No',
+                        required: false,
+                        choices: [
+                            {
+                                name: "Yes",
+                                value: "yes"
+                            },
+                            {
+                                name: "No",
+                                value: "no"
+                            }
+                        ]
                     }
                 ]
             }
@@ -91,12 +107,23 @@ class Plot extends Command {
     async execPlant(interaction, data) {
         const plotId = interaction.options.getString('plot-id');
         const cropType = interaction.options.getString('crop');
+        const force = interaction.options.getString('force') || "no";
 
         const plots = this.getPlots(plotId);
         if (plots.length <= 0) return await interaction.reply({ content: `That are not valid plots.`, ephemeral: true });
+        if (Math.min(...plots) <= 0) return await interaction.reply({ content: `Plot IDs start counting from 1. Please choose a number higher than 0.`, ephemeral: true });
         if (Math.max(...plots) > data.user.plots.length) return await interaction.reply({ content: `You don't own a plot with id \`${Math.max(...plots)}\`.`, ephemeral: true });
         const cropItem = await bot.database.fetchItem(cropType.toLowerCase());
         if (cropItem == null || cropItem.category !== "crops") return await interaction.reply({ content: `\`${cropType.toLowerCase()}\` is not a valid crop. Use </shop list:983096143284174861> to view all crops.`, ephemeral: true });
+
+        if (force !== "yes") {
+            for (let i = 0; i < plots.length; i++) {
+                if (data.user.plots[i].status !== "empty") {
+                    return await interaction.reply({ content: `There are already crops planted on ${plots.length === 1 ? "that plot" : "those plots"}. If you want to force the plant, please use \`/${this.info.name} plant ${plotId} Yes\``, ephemeral: true });
+                }
+            }
+        }
+
         await interaction.deferReply();
 
         for (let i = 0; i < plots.length; i++) {
