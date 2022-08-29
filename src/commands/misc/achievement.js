@@ -95,7 +95,7 @@ class Achievement extends Command {
                 return `${memberData.plots.length || 0}/15`;
             }
         },
-        "warren_buffet": {
+        "warren_buffett": {
             name: "The New Warren Buffett",
             description: "Invest :coin: 75k or more.",
             isValid: (memberData, statsData) => {
