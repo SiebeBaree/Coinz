@@ -4,8 +4,9 @@ const StockModel = require("../models/Stock");
 const MemberModel = require("../models/Member");
 const CooldownModel = require("../models/Cooldown");
 const CompanyModel = require("../models/Company");
-const PremiumModel = require("../models/Premium");
 const StatsModel = require("../models/Stats");
+const GuildBanModel = require("../models/BannedGuild");
+const UserBanModel = require("../models/BannedUser");
 
 const fetchGuild = async function (guildId) {
     let obj = await GuildModel.findOne({ id: guildId });
@@ -64,19 +65,6 @@ const fetchCompany = async function (ownerId, name) {
     }
 }
 
-const fetchPremium = async function (id) {
-    let obj = await PremiumModel.findOne({ id: id });
-    if (obj) {
-        return obj;
-    } else {
-        return {
-            id: id,
-            maxServers: 0,
-            servers: []
-        };
-    }
-}
-
 const fetchStats = async function (id) {
     let obj = await StatsModel.findOne({ id: id });
     if (obj) {
@@ -88,6 +76,31 @@ const fetchStats = async function (id) {
     }
 }
 
+const fetchBan = async function (guildId, userId) {
+    let guildObj = await GuildBanModel.findOne({ id: guildId });
+    if (guildObj) {
+        return {
+            guild: {
+                isBanned: true,
+                reason: guildObj.reason || "No reason was given."
+            }
+        };
+    }
+
+    let userObj = await UserBanModel.findOne({ id: userId });
+    if (userObj) {
+        return {
+            guild: { isBanned: false },
+            user: {
+                isBanned: true,
+                reason: userObj.reason || "No reason was given."
+            }
+        };
+    }
+
+    return { guild: { isBanned: false }, user: { isBanned: false } };
+}
+
 module.exports = {
     fetchGuild,
     fetchMember,
@@ -95,6 +108,6 @@ module.exports = {
     fetchStock,
     fetchCooldown,
     fetchCompany,
-    fetchPremium,
-    fetchStats
+    fetchStats,
+    fetchBan
 };
