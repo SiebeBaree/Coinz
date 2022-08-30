@@ -39,8 +39,8 @@ class Info extends Command {
                     .setTimestamp()
                     .setDescription('**If you like this bot, maybe consider [donating](https://coinzbot.xyz/donate).**')
                     .addFields(
-                        { name: 'Info', value: `:man_technologist: **Developer:** \`Siebe#0001\`\n:globe_with_meridians: **Website: [coinzbot.xyz](${bot.config.website})**\n:beginner: **Official Server: [discord.gg/asnZQwc6kW](https://discord.gg/asnZQwc6kW)**\n:books: **Library:** \`discord.js${dependencies["discord.js"]}\`\n:star: **Version:** \`${version}\``, inline: true },
-                        { name: 'Statistics', value: `:video_game: **Commands:** \`${bot.commands.size}\`\n:spider_web: **Shard:** \`${interaction.guild.shardId + 1}/${bot.shard.count}\`\n:white_check_mark: **Uptime:** \`${bot.tools.msToTime(bot.uptime)}\`\n:film_frames: **Memory Usage:** \`${Math.round(usedMemory * 100) / 100} MB\`\n:bust_in_silhouette: **Users:** \`${totalMembers}\`\n:printer: **Servers:** \`${totalGuilds}\``, inline: true },
+                        { name: 'Info', value: `:man_technologist: **Owner:** \`Siebe#0001\`\n:globe_with_meridians: **Website: [coinzbot.xyz](${bot.config.website})**\n:beginner: **Official Server: [discord.gg/asnZQwc6kW](https://discord.gg/asnZQwc6kW)**\n:books: **Library:** \`discord.js${dependencies["discord.js"]}\`\n:star: **Version:** \`${version}\``, inline: true },
+                        { name: 'Statistics', value: `:video_game: **Commands:** \`${bot.commands.size}\`\n:spider_web: **Shard:** \`${interaction.guild.shardId + 1}/${bot.shard.count}\`\n:white_check_mark: **Uptime:** \`${bot.tools.msToTime(bot.uptime)}\`\n:bust_in_silhouette: **Users:** \`${totalMembers}\`\n:printer: **Servers:** \`${totalGuilds}\``, inline: true },
                         { name: 'Disclamer', value: `Icons from the shop are from [icons8](https://icons8.com).`, inline: false }
                     )
                 return interaction.editReply({ embeds: [newEmbed] });
