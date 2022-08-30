@@ -34,7 +34,7 @@ async function createItem(item) {
     // Connect to the database
     try {
         await mongoose.connect(process.env.DATABASE_URI, {
-            dbName: 'coinz_v2',
+            dbName: 'coinz_beta',
             keepAlive: true,
             keepAliveInitialDelay: 300000
         });
