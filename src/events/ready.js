@@ -1,7 +1,5 @@
 const Event = require('../structures/Event.js');
 const GuildModel = require('../models/Guild');
-const { connect } = require('mongoose');
-require('dotenv').config();
 
 module.exports = class extends Event {
     constructor(...args) {
@@ -9,9 +7,6 @@ module.exports = class extends Event {
     }
 
     async run() {
-        connect(process.env.DATABASE_URI, { dbName: 'coinz_beta' });
-        this.logger.ready('Connected to MongoDB');
-
         // Remove old guilds in database
         const allGuildsArr = await GuildModel.find({});
         for (let i = 0; i < allGuildsArr.length; i++) {
