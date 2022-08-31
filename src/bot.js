@@ -3,9 +3,21 @@ const { ActivityType, GatewayIntentBits } = require('discord.js');
 const { schedule } = require('node-cron');
 const axios = require('axios');
 const { AutoPoster } = require('topgg-autoposter');
+const { connect } = require('mongoose');
 
 const Bot = require('./structures/Bot.js');
-const bot = global.bot = new Bot({ intents: GatewayIntentBits.Guilds, presence: { activities: [{ name: "/help | coinzbot.xyz", type: ActivityType.Watching }], status: "online" } });
+const bot = global.bot = new Bot({ intents: GatewayIntentBits.Guilds, presence: { activities: [{ name: "Only for Beta Testers", type: ActivityType.Watching }], status: "online" } });
+
+connect(process.env.DATABASE_URI, {
+    dbName: 'coinz_beta',
+    useNewUrlParser: true,
+    maxPoolSize: 100,
+    minPoolSize: 5,
+    family: 4,
+    heartbeatFrequencyMS: 30000,
+    keepAlive: true,
+    keepAliveInitialDelay: 300000
+}).then(() => bot.logger.ready('Connected to MongoDB'));
 
 bot.login();
 AutoPoster(process.env.API_TOPGG, bot);
