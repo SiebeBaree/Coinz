@@ -49,7 +49,7 @@ class Work extends Command {
             data.salary = job.salary;
         }
 
-        const minigames = ["mgRememberWord", "mgMath", "mgOrder"];
+        const minigames = ["mgRememberWord"]//, "mgMath", "mgOrder"];
         await eval(`this.${minigames[bot.tools.randomNumber(0, minigames.length - 1)]}(interaction, data)`);
     }
 
@@ -141,7 +141,6 @@ class Work extends Command {
 
                     await interaction.editReply({ components: [this.setButtonsRow(buttons, true)] });
                     await interaction.followUp({ content: `That is not the correct answer. You did not earn anything this hour.` })
-                    if (data.hasBusiness) await CompanyModel.updateOne({ id: data.company.ownerId }, { $inc: { balance: -data.salary } });
                 } else {
                     data.currentButton++;
                     buttons[selectedPage].style = ButtonStyle.Success;
@@ -150,6 +149,7 @@ class Work extends Command {
                         data.gameInProgress = false;
                         await bot.tools.addMoney(interaction.member.id, data.salary);
                         await interaction.editReply({ components: [this.setButtonsRow(buttons, true)] });
+                        if (data.hasBusiness) await CompanyModel.updateOne({ id: data.company.id }, { $inc: { balance: -data.salary } });
                         return await interaction.followUp({ content: `GG! You ordered these buttons correctly and earned :coin: ${data.salary} this hour.` })
                     }
 
@@ -180,9 +180,9 @@ class Work extends Command {
                     buttons[selectedPage].style = ButtonStyle.Danger;
 
                     await interaction.followUp({ content: `That is not the correct answer. You did not earn anything this hour.` });
-                    if (data.hasBusiness) await CompanyModel.updateOne({ id: data.company.ownerId }, { $inc: { balance: -data.salary } });
                 } else {
                     await bot.tools.addMoney(interaction.member.id, data.salary);
+                    if (data.hasBusiness) await CompanyModel.updateOne({ id: data.company.id }, { $inc: { balance: -data.salary } });
                     await interaction.followUp({ content: winMsg });
 
                     await StatsModel.updateOne(
