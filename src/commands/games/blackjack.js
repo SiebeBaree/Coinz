@@ -217,7 +217,7 @@ class Blackjack extends Command {
             data.gameFinished = true;
             data.description = `You lost :coin: ${data.bet}`;
             data.color = Colors.Red;
-        } else if (valuePlayer === valueDealer && data.gameFinished) {
+        } else if (valuePlayer === valueDealer && data.gameFinished && valuePlayer <= 21) {
             data.description = `Push! You got your :coin: ${data.bet} back.`;
             data.color = Colors.Red;
             data.tie = true;
