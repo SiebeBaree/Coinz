@@ -34,7 +34,7 @@
     "fast-glob": "^3.2.11",
     "fs": "^0.0.1-security",
     "moment": "^2.29.4",
-    "moment-timezone": "^0.5.34",
+    "moment-timezone": "^0.5.37",
     "mongoose": "^6.5.1",
     "node-cron": "^3.0.2",
     "topgg-autoposter": "^2.0.1"
