@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ApplicationCommandOptionType } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ApplicationCommandOptionType, ComponentType } = require('discord.js');
 
 class TicTacToe extends Command {
     info = {
@@ -77,20 +77,20 @@ class TicTacToe extends Command {
         data.gameStarted = false;
         data.currentPlayer = user.id; // set to used.id to accept the confirm message
 
-        const interactionMessage = await interaction.editReply({ content: `<@${user.id}>\nDo you accept to play a game of Tic Tac Toe with <@${interaction.member.id}>?\nYou have 60 seconds to accept.\n*If you accept, you have to place a bet of :coin: ${bet}.*`, components: [this.getConfirmButtons(false)], fetchReply: true });
+        const interactionMessage = await interaction.editReply({ content: `<@${user.id}>\nDo you accept to play a game of Tic Tac Toe with <@${interaction.member.id}>?\n*If you accept, you have to place a bet of :coin: ${bet}.*`, components: [this.getConfirmButtons(false)], fetchReply: true });
 
-        // wait for player to accept
         const filter = async (i) => {
             if (i.member.id === data.currentPlayer) return true;
             await i.reply({ content: `It's not your turn or you are not a player in this game.`, ephemeral: true, target: i.member });
             return false;
         };
 
-        const confirmCollector = interactionMessage.createMessageComponentCollector({ filter, time: 90000 });
+        const collector = interactionMessage.createMessageComponentCollector({ filter, componentType: ComponentType.Button, time: 30_000 + 15000 * (this.boardSize * this.boardSize) });
 
-        confirmCollector.on('collect', async (interactionConfirmCollector) => {
-            await interactionConfirmCollector.deferUpdate();
-            if (interactionConfirmCollector.customId === 'ttt_accept') {
+        collector.on('collect', async (i) => {
+            await i.deferUpdate();
+
+            if (i.customId === "ttt_accept") {
                 // setup variable
                 data.hostWon = null;
                 data.gameFinished = false;
@@ -105,49 +105,44 @@ class TicTacToe extends Command {
                 data.currentPlayer = interaction.member.id;
 
                 await interaction.editReply({ content: "_ _", embeds: [this.createEmbed(data)], components: this.setButtons(data) });
-                const collector = interactionMessage.createMessageComponentCollector({ filter, max: this.boardSize * this.boardSize + 1, idle: 15000, time: 15000 * (this.boardSize * this.boardSize) });
+            } else if (i.customId === 'ttt_decline') {
+                return await interaction.editReply({ components: [this.getConfirmButtons(true)] });
+            } else if (i.customId.startsWith('ttt_board')) {
+                let boardId = i.customId.replace('ttt_board', '');
+                if (data.board[parseInt(boardId.charAt(0))][parseInt(boardId.charAt(1))] === null) {
+                    data.board[parseInt(boardId.charAt(0))][parseInt(boardId.charAt(1))] = data.currentPlayer === interaction.member.id ? this.symbolX : this.symbolO;
+                }
 
-                collector.on('collect', async (interactionCollector) => {
-                    if (interactionCollector.customId.startsWith('ttt_board')) {
-                        let boardId = interactionCollector.customId.replace('ttt_board', '');
-                        if (data.board[parseInt(boardId.charAt(0))][parseInt(boardId.charAt(1))] === null) {
-                            data.board[parseInt(boardId.charAt(0))][parseInt(boardId.charAt(1))] = data.currentPlayer === interaction.member.id ? this.symbolX : this.symbolO;
-                        }
+                data.currentPlayer = data.currentPlayer === interaction.member.id ? user.id : interaction.member.id;
 
-                        data.currentPlayer = data.currentPlayer === interaction.member.id ? user.id : interaction.member.id;
-                    }
-
-                    data = this.checkWinner(data);
-                    if (data.hostWon !== null) {
-                        if (data.hostWon === true) {
-                            data.desc = `<@${interaction.member.id}> won the Tic Tac Toe game!!!`;
-                            await bot.tools.addMoney(interaction.member.id, parseInt(data.bet * 2));
-                            await bot.tools.takeMoney(user.id, data.bet);
-                        } else {
-                            data.desc = `<@${user.id}> won the Tic Tac Toe game!!!`;
-                            await bot.tools.addMoney(user.id, parseInt(data.bet * 2));
-                            await bot.tools.takeMoney(interaction.member.id, data.bet);
-                        }
+                data = this.checkWinner(data);
+                if (data.hostWon !== null) {
+                    if (data.hostWon === true) {
+                        data.desc = `<@${interaction.member.id}> won the Tic Tac Toe game!!!`;
+                        await bot.tools.addMoney(interaction.member.id, parseInt(data.bet * 2));
+                        await bot.tools.takeMoney(user.id, data.bet);
                     } else {
-                        if (data.gameFinished) data.desc = "**The game ended in a Tie and nobody won.**";
+                        data.desc = `<@${user.id}> won the Tic Tac Toe game!!!`;
+                        await bot.tools.addMoney(user.id, parseInt(data.bet * 2));
+                        await bot.tools.takeMoney(interaction.member.id, data.bet);
                     }
+                } else {
+                    if (data.gameFinished) data.desc = "**The game ended in a Tie and nobody won.**";
+                }
 
-                    await interaction.editReply({ embeds: [this.createEmbed(data)], components: this.setButtons(data, data.hostWon !== null || data.gameFinished) });
-                    if (data.gameFinished) return;
-                });
-
-                collector.on('end', async (interactionCollector) => {
-                    if (data.hostWon === null) {
-                        data.desc = `<@${data.currentPlayer}> **has waited too long and lost the game.**`;
-                        await bot.tools.takeMoney(data.currentPlayer, data.bet);
-                        return await interaction.editReply({ embeds: [this.createEmbed(data)], components: this.setButtons(data, true) });
-                    }
-                });
-            } else if (interactionConfirmCollector.customId === 'ttt_decline') return await interaction.editReply({ components: [this.getConfirmButtons(true)] });
+                await interaction.editReply({ embeds: [this.createEmbed(data)], components: this.setButtons(data, data.hostWon !== null || data.gameFinished) });
+                if (data.gameFinished) return;
+            }
         });
 
-        confirmCollector.on('end', async (interactionConfirmCollector) => {
-            if (!data.gameStarted) return await interaction.editReply({ components: [this.getConfirmButtons(true)] });
+        collector.on('end', async (i) => {
+            if (!data.gameStarted) {
+                return await interaction.editReply({ components: [this.getConfirmButtons(true)] });
+            } else if (data.hostWon === null) {
+                data.desc = `<@${data.currentPlayer}> **has waited too long and lost the game.**`;
+                await bot.tools.takeMoney(data.currentPlayer, data.bet);
+                return await interaction.editReply({ embeds: [this.createEmbed(data)], components: this.setButtons(data, true) });
+            }
         });
     }
 
