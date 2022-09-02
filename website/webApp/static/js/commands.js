@@ -551,6 +551,80 @@ const commands = {
         "category": "misc",
         "cooldown": 0,
         "options": []
+    },
+    "achievement": {
+        "description": "Refresh or view your current achievements.",
+        "category": "misc",
+        "cooldown": 0,
+        "options": [
+            {
+                "name": "list",
+                "options": []
+            },
+            {
+                "name": "refresh",
+                "options": []
+            },
+            {
+                "name": "select",
+                "options": [
+                    {
+                        "name": "achievement",
+                        "required": true
+                    }
+                ]
+            }
+        ]
+    },
+    "notification": {
+        "description": "Enable or disable notifications in Coinz.",
+        "category": "misc",
+        "cooldown": 0,
+        "options": [
+            {
+                "name": "status",
+                "required": true
+            },
+            {
+                "name": "notification",
+                "required": true
+            }
+        ]
+    },
+    "airdrop": {
+        "description": "Enable/disable or setup the airdrops channel.",
+        "category": "misc",
+        "cooldown": 0,
+        "options": [
+            {
+                "name": "toggle",
+                "options": []
+            },
+            {
+                "name": "set-channel",
+                "options": [
+                    {
+                        "name": "channel",
+                        "required": true
+                    }
+                ]
+            }
+        ]
+    },
+    "connect4": {
+        "description": "Play a game of Connect4 with someone.",
+        "category": "games",
+        "cooldown": 0,
+        "options": [
+            {
+                "name": "bet",
+                "required": true
+            },
+            {
+                "name": "user",
+                "required": true
+            }
+        ]
     }
 };
 
