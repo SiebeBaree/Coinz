@@ -32,14 +32,6 @@ class Notification extends Command {
                     {
                         name: "Vote",
                         value: "vote"
-                    },
-                    {
-                        name: "Vote Reminders",
-                        value: "voteReminder"
-                    },
-                    {
-                        name: "Pickpocketing Alerts",
-                        value: "steal"
                     }
                 ]
             }
