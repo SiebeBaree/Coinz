@@ -8,7 +8,7 @@ class Coinflip extends Command {
         options: [
             {
                 name: 'bet',
-                type: ApplicationCommandOptionType.Integer,
+                type: ApplicationCommandOptionType.String,
                 description: 'The bet you want to place.',
                 required: true,
                 min_value: 50,
