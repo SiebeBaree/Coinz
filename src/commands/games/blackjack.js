@@ -1,6 +1,7 @@
 const Command = require('../../structures/Command.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, ApplicationCommandOptionType } = require('discord.js');
 const { deck, hiddenCard } = require('../../assets/deck.json');
+const MemberModel = require('../../models/Member.js');
 
 class Blackjack extends Command {
     info = {
