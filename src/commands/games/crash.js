@@ -56,7 +56,7 @@ class Crash extends Command {
             const embed = new EmbedBuilder()
                 .setTitle(`Crash`)
                 .setColor(color || bot.config.embed.color)
-                .setDescription("Every 2 seconds the multiplier goes up by 0.2x.\nEvery time this happens you have 25% chance to lose all money.\nTo claim the profits, press the sell button.")
+                .setDescription("Every 2 seconds the multiplier goes up by 0.2x.\nEvery time this happens you have 20% chance to lose all money.\nTo claim the profits, press the sell button.")
                 .addFields(
                     { name: 'Multiplier', value: `${Math.round(multiplier * 10) / 10}x`, inline: true },
                     { name: 'Profit', value: `:coin: ${profit}`, inline: true }
@@ -106,7 +106,7 @@ class Crash extends Command {
 
                 multiplier = Math.round((multiplier + 0.1) * 10) / 10;
                 await interaction.editReply({ embeds: [createEmbed(multiplier, Math.floor(profit * multiplier) - bet)] });
-                if (bot.tools.commandPassed(25)) {
+                if (bot.tools.commandPassed(20)) {
                     userWon = false;
                     stoppedGame = true;
                 }
