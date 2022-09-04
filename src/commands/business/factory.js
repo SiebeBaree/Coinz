@@ -2,7 +2,6 @@ const Command = require('../../structures/Command.js');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ApplicationCommandOptionType } = require('discord.js');
 const CompanyModel = require('../../models/Company');
 const items = require('../../assets/companyProducts.json').products;
-const positions = require('../../assets/companyPositions.json');
 
 class Factory extends Command {
     info = {
@@ -302,7 +301,7 @@ class Factory extends Command {
 
         const factories = getFactories(factoryId);
         if (factories.length <= 0) return await interaction.editReply({ content: `Those are not valid factories.` });
-        if (Math.min(...factories) <= 0) return await interaction.reply({ content: `Factory IDs start counting from 1. Please choose a number higher than 0.`, ephemeral: true });
+        if (Math.min(...factories) <= 0) return await interaction.editReply({ content: `Factory IDs start counting from 1. Please choose a number higher than 0.`, ephemeral: true });
         if (Math.max(...factories) > data.company.factories.length) return await interaction.editReply({ content: `You don't own a factory with id \`${Math.max(...factories)}\`.` });
 
         const product = bot.tools.getProduct(productId.toLowerCase());
@@ -311,7 +310,7 @@ class Factory extends Command {
         if (force !== "yes") {
             for (let i = 0; i < factories.length; i++) {
                 if (data.company.factories[i].status !== "empty") {
-                    return await interaction.reply({ content: `You are already producing items in ${plots.length === 1 ? "that factory" : "those factories"}. If you want to override the production, please use \`/${this.info.name} set-production ${factoryId} Yes\``, ephemeral: true });
+                    return await interaction.editReply({ content: `You are already producing items in ${factories.length === 1 ? "that factory" : "those factories"}. If you want to override the production, please use \`/${this.info.name} set-production ${factoryId} Yes\``, ephemeral: true });
                 }
             }
         }
