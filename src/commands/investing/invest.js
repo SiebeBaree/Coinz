@@ -287,12 +287,20 @@ class Invest extends Command {
         await interaction.deferReply();
         const price = Math.round(stock.price * amount);
 
-        await MemberModel.updateOne({ id: interaction.member.id, 'stocks.ticker': stock.ticker }, {
-            $inc: {
-                'stocks.$.quantity': -amount,
-                'stocks.$.buyPrice': -parseInt(amount / stockData.quantity * stockData.buyPrice)
-            }
-        });
+        if (stockdata !== undefined && stockData.quantity === amount) {
+            await MemberModel.updateOne({ id: interaction.member.id }, {
+                $pull: {
+                    stocks: { ticker: stock.ticker }
+                }
+            });
+        } else {
+            await MemberModel.updateOne({ id: interaction.member.id, 'stocks.ticker': stock.ticker }, {
+                $inc: {
+                    'stocks.$.quantity': -amount,
+                    'stocks.$.buyPrice': -parseInt(amount / stockData.quantity * stockData.buyPrice)
+                }
+            });
+        }
 
         await bot.tools.addMoney(interaction.member.id, price)
 
