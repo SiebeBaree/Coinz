@@ -309,7 +309,7 @@ class Factory extends Command {
 
         if (force !== "yes") {
             for (let i = 0; i < factories.length; i++) {
-                if (data.company.factories[i].status !== "empty") {
+                if (data.company.factories[i].status !== "standby") {
                     return await interaction.editReply({ content: `You are already producing items in ${factories.length === 1 ? "that factory" : "those factories"}. If you want to override the production, please use \`/${this.info.name} set-production ${factoryId} Yes\``, ephemeral: true });
                 }
             }
