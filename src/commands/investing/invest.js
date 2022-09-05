@@ -287,7 +287,7 @@ class Invest extends Command {
         await interaction.deferReply();
         const price = Math.round(stock.price * amount);
 
-        if (stockdata !== undefined && stockData.quantity === amount) {
+        if (stockData !== undefined && stockData.quantity === amount) {
             await MemberModel.updateOne({ id: interaction.member.id }, {
                 $pull: {
                     stocks: { ticker: stock.ticker }
