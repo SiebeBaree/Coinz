@@ -37,6 +37,7 @@ class Withdraw extends Command {
             amount = data.user.bank;
         } else {
             amount = bot.tools.extractNumber(amountStr);
+            if (amount === undefined) return await interaction.reply({ content: `That's not a valid amount. Please use a number or use formatting like 1k, 1m, 1.3k, ...`, ephemeral: true });
             if (amount <= 0) return await interaction.reply({ content: `You need to withdraw at least :coin: 1.`, ephemeral: true });
             if (amount > data.user.bank) return await interaction.reply({ content: `You don't have that much in your bank account. You only have :coin: ${data.user.bank}.`, ephemeral: true });
         }
