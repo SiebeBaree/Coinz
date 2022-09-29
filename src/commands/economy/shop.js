@@ -45,7 +45,7 @@ class Shop extends Command {
             {
                 name: 'sell',
                 type: ApplicationCommandOptionType.Subcommand,
-                description: 'Buy an item from the shop',
+                description: 'Sell an item from your inventory.',
                 options: [
                     {
                         name: 'item-id',
