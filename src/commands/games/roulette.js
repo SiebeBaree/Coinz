@@ -68,7 +68,7 @@ class Roulette extends Command {
         if (data.space === -1) return await interaction.editReply({ content: `That is not a valid space. Please check all spaces with \`/help ${this.info.name}\`.` });
 
         if (data.playerWon) {
-            await bot.tools.addMoney(interaction.member.id, parseInt(data.bet * data.multiplier));
+            await bot.tools.addMoney(interaction.member.id, parseInt(data.bet * (data.multiplier - 1)));
         } else {
             await bot.tools.takeMoney(interaction.member.id, data.bet);
         }
