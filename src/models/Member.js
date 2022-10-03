@@ -18,10 +18,9 @@ const Plot = Schema({
     crop: { type: String, default: "none" }
 });
 
-const Notification = Schema({
-    vote: { type: Boolean, default: true },
-    voteReminder: { type: Boolean, default: true },
-    steal: { type: Boolean, default: true }
+const Keys = Schema({
+    name: { type: String, default: true },
+    amount: { type: Number, default: true }
 });
 
 const Member = Schema({
@@ -30,6 +29,8 @@ const Member = Schema({
     spins: { type: Number, default: 0 },
     wallet: { type: Number, default: 0 },
     bank: { type: Number, default: 0 },
+    bankLimit: { type: Number, default: 7500 },
+    tickets: { type: Number, default: 0 },
     experience: { type: Number, default: 0 },
     job: { type: String, default: "" },
     streak: { type: Number, default: 0 },
@@ -42,7 +43,8 @@ const Member = Schema({
     displayedBadge: { type: String, default: "" },
     badges: [{ type: String }],
     lastAirdrop: { type: Number, default: 0 },
-    notifs: { type: Notification }
+    notifications: [{ type: String }],
+    keys: [{ type: Keys }]
 });
 
 module.exports = model('Member', Member, 'members');
