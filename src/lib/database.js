@@ -5,8 +5,6 @@ const MemberModel = require("../models/Member");
 const CooldownModel = require("../models/Cooldown");
 const CompanyModel = require("../models/Company");
 const StatsModel = require("../models/Stats");
-const GuildBanModel = require("../models/BannedGuild");
-const UserBanModel = require("../models/BannedUser");
 
 const fetchGuild = async function (guildId) {
     let obj = await GuildModel.findOne({ id: guildId });
@@ -76,31 +74,6 @@ const fetchStats = async function (id) {
     }
 }
 
-const fetchBan = async function (guildId, userId) {
-    let guildObj = await GuildBanModel.findOne({ id: guildId });
-    if (guildObj) {
-        return {
-            guild: {
-                isBanned: true,
-                reason: guildObj.reason || "No reason was given."
-            }
-        };
-    }
-
-    let userObj = await UserBanModel.findOne({ id: userId });
-    if (userObj) {
-        return {
-            guild: { isBanned: false },
-            user: {
-                isBanned: true,
-                reason: userObj.reason || "No reason was given."
-            }
-        };
-    }
-
-    return { guild: { isBanned: false }, user: { isBanned: false } };
-}
-
 module.exports = {
     fetchGuild,
     fetchMember,
@@ -108,6 +81,5 @@ module.exports = {
     fetchStock,
     fetchCooldown,
     fetchCompany,
-    fetchStats,
-    fetchBan
+    fetchStats
 };

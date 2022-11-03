@@ -31,7 +31,8 @@ module.exports = class extends Event {
             }
         });
 
-        await this.application?.commands.set(data);  // Used to set slash commands globally [Can take several hours to update.]
+        // await this.application?.commands.set(data);  // Used to set slash commands globally [Can take several hours to update.]
+        await this.guilds.cache.get(this.config.rootServerId)?.commands.set(data);
         this.logger.ready(`Shard ${this.shard.ids[0]} loaded.`);
     }
 };

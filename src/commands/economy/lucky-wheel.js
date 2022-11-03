@@ -9,9 +9,9 @@ class LuckyWheel extends Command {
         description: "Spin the lucky wheel and get awesome rewards",
         options: [
             {
-                name: 'rewards',
+                name: 'info',
                 type: ApplicationCommandOptionType.Subcommand,
-                description: 'Get a list with the possible loot of a spin.',
+                description: 'Get more info about the possible loot or spin prices.',
                 options: []
             },
             {
@@ -22,10 +22,25 @@ class LuckyWheel extends Command {
                     {
                         name: 'amount',
                         type: ApplicationCommandOptionType.Integer,
-                        description: 'How many spins you want to do in 1 command.',
+                        description: 'How many spins you want to do in 1 command. | default: 1.',
                         required: false,
                         min_value: 1,
-                        max_value: 15
+                        max_value: 25
+                    }
+                ]
+            },
+            {
+                name: 'buy',
+                type: ApplicationCommandOptionType.Subcommand,
+                description: 'Buy more spins for the lucky wheel.',
+                options: [
+                    {
+                        name: 'amount',
+                        type: ApplicationCommandOptionType.Integer,
+                        description: 'How many spins you want to buy. | default: 1.',
+                        required: false,
+                        min_value: 1,
+                        max_value: 25
                     }
                 ]
             }
