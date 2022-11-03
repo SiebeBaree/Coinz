@@ -29,7 +29,6 @@ class Store extends Collection {
 
         try {
             let flake = this.set(new (require(filePath))(this.client, file));
-            this.client.logger.load(`${this.name}${path.sep}${file} loaded`);
             return flake;
         } catch (e) {
             this.client.logger.error(`Failed to load ${this.name.slice(0, -1)} (${filePath})\n${e.stack || e}`);
