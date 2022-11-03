@@ -16,7 +16,6 @@ Coinz is an open source Discord.js Bot. Coinz has a boatload of commands and fea
 * Play more than 20 games inside discord.
 * Modern dashboard with audit logs.
 * Be a farmer and grow some crops.
-* Buy pets and level them up. (25+ unique pets)
 
 ## Suggestions, bugs, feature requests
 
@@ -33,37 +32,13 @@ If you really like this bot, consider donating to Coinz on Patreon.
 
 [![patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/coinz_bot)
 
-If you can't/don't want to donate, that's fine. You can also support Coinz by starring or forking this repository. To make this bot even better consider opening a pull request or issue with a new feature.
-
-## Self-Hosting
-We do not recommend self-hosting the bot and website, but it's always an option.
-
-### Self-host Discord bot
-To selfhost the bot yourself, you need to have:
-* Node - confirmed working on v16.14.0
-* npm - comes with Node, the version shouldn't really matter
-* A Discord bot token, and having the bot in your server
-* An mongodb.com-database set up, as well as a user to it (with write access)
-* A clone of the source code, this can be found [here](https://github.com/SiebeBaree/Coinz) and needs to be extracted to a folder.
-
-We will have to do this once:
-* Do `npm i` inside the folder, and wait for it to finish.
-* Create a file `.env` in the root of the folder.
-* Change `/src/assets/config.json` with your default values.
-
-**Example .env file:** *(Do not use `""` or `''`)*
-```
-DISCORD_TOKEN=YOUR_BOT_TOKEN_HERE
-DATABASE_URI=mongodb://127.0.0.1:27017/
-```
-
-After all this, start the bot with `npm run start`.
+If you can't/don't want to donate, that's fine. You can also support Coinz by starring this repository. To make this bot even better consider opening a pull request or issue with a new feature.
 
 > ### ⚠ Warning 
 > There is literally no warranty if you self-host Coinz, and we will not help you set it up either. If you wish to set the bot and/or website up yourself, we expect you have well enough knowledge in Node.js, Python, mongodb, ... .
 
 ## Disclamer
-You are not allowed to upload this bot to any service such as discordbotlist or top.gg, you are only allowed to host this bot for your community. You can use small parts of this code in your public bot.
+You are not allowed to upload this bot to any service such as discordbotlist or top.gg, you are only allowed to host this bot for your community. You can use small parts of this code in your public bot. If you want to use the code of this bot, DM Siebe#0001 on Discord.
 
 ## License
 We use the GNU GPLv3-license. If you plan to use any part of this source code in your own bot, we would be grateful if you would include some form of credit somewhere.
