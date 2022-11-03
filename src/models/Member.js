@@ -1,6 +1,6 @@
 const { Schema, model, Types } = require('mongoose');
 
-const Inventory = Schema({
+const Item = Schema({
     itemId: { type: String, required: true },
     quantity: { type: Number, default: 1 }
 });
@@ -18,11 +18,6 @@ const Plot = Schema({
     crop: { type: String, default: "none" }
 });
 
-const Keys = Schema({
-    name: { type: String, default: true },
-    amount: { type: Number, default: true }
-});
-
 const Member = Schema({
     id: { type: String, required: true, unique: true, index: true },
     votes: { type: Number, default: 0 },
@@ -36,7 +31,7 @@ const Member = Schema({
     streak: { type: Number, default: 0 },
     lastStreak: { type: Number, default: 0 },
     passiveMode: { type: Boolean, default: false },
-    inventory: [{ type: Inventory }],
+    inventory: [{ type: Item }],
     stocks: [{ type: Stock }],
     plots: [{ type: Plot }],
     lastWater: { type: Number, default: parseInt(Date.now() / 1000) },
@@ -44,7 +39,7 @@ const Member = Schema({
     badges: [{ type: String }],
     lastAirdrop: { type: Number, default: 0 },
     notifications: [{ type: String }],
-    keys: [{ type: Keys }]
+    lootboxes: [{ type: Item }]
 });
 
 module.exports = model('Member', Member, 'members');
