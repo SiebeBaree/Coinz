@@ -6,6 +6,6 @@ module.exports = class extends Event {
     }
 
     async run(id, replayedEvents) {
-        this.logger.ready(`Shard ${id + 1} disconnected. Tries: ${replayedEvents}x`);
+        if (replayedEvents > 1) this.logger.ready(`Shard ${id + 1} disconnected. Tries: ${replayedEvents}x`);
     }
 };
