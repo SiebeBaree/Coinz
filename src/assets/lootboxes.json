@@ -1,0 +1,22 @@
+{
+    "name": {
+        "emoteId": "987800268223709254",
+        "animated": false,
+        "description": "Hmm",
+        "price": 25,
+        "loot": [
+            {
+                "itemId": "potato",
+                "chance": 10
+            },
+            {
+                "itemId": "carrot",
+                "chance": 50
+            },
+            {
+                "itemId": "shovel",
+                "chance": 35
+            }
+        ]
+    }
+}
