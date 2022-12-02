@@ -1,8 +1,9 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ApplicationCommandOptionType } = require('discord.js');
-const MemberModel = require('../../models/Member');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ApplicationCommandOptionType } from 'discord.js'
+import { extractNumber } from '../../lib/helpers.js'
+import Member from '../../models/Member.js'
 
-class Deposit extends Command {
+export default class extends Command {
     info = {
         name: "deposit",
         description: "Deposit money from your wallet to your bank account.",
@@ -36,14 +37,16 @@ class Deposit extends Command {
             if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
             amount = data.user.wallet;
         } else {
-            amount = bot.tools.extractNumber(amountStr);
-            if (amount === undefined) return await interaction.reply({ content: `That's not a valid amount. Please use a number or use formatting like 1k, 1m, 1.3k, ...`, ephemeral: true });
+            amount = extractNumber(amountStr);
+            if (amount === undefined || isNaN(amount)) return await interaction.reply({ content: `That's not a valid amount. Please use a number or use formatting like 1k, 1m, 1.3k, ...`, ephemeral: true });
             if (amount <= 0) return await interaction.reply({ content: `You need to deposit at least :coin: 1.`, ephemeral: true });
             if (amount > data.user.wallet) return await interaction.reply({ content: `You don't have that much in your wallet. You only have :coin: ${data.user.wallet}.`, ephemeral: true });
         }
+
+        if (data.user.bank + amount > data.user.bankLimit) return await interaction.reply({ content: `You can't deposit that much. Your bank limit is :coin: ${data.user.bankLimit}.`, ephemeral: true });
         await interaction.deferReply();
 
-        await MemberModel.updateOne({ id: interaction.member.id }, {
+        await Member.updateOne({ id: interaction.member.id }, {
             $inc: {
                 wallet: -amount,
                 bank: amount
@@ -61,5 +64,3 @@ class Deposit extends Command {
         await interaction.editReply({ embeds: [embed] });
     }
 }
-
-module.exports = Deposit;
