@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { Webhook } = require("@top-gg/sdk");
 const express = require("express");
-const { processVote } = require("./vote.js");
+const { processVote } = require("../scripts/vote.js");
 
 const topggWebhook = new Webhook(process.env.TOPGG_VOTE_WEBHOOK);
 
