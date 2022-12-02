@@ -1,6 +1,7 @@
-const Command = require('../../structures/Command.js');
+import Command from '../../structures/Command.js'
+import { addMoney } from '../../lib/user.js'
 
-class Weekly extends Command {
+export default class extends Command {
     info = {
         name: "weekly",
         description: "Claim your weekly reward.",
@@ -10,7 +11,8 @@ class Weekly extends Command {
         cooldown: 604800,
         enabled: true,
         memberRequired: true,
-        deferReply: true
+        deferReply: true,
+        isPremium: true
     };
 
     constructor(...args) {
@@ -18,9 +20,7 @@ class Weekly extends Command {
     }
 
     async run(interaction, data) {
-        await bot.tools.addMoney(interaction.member.id, 100);
-        await interaction.editReply({ content: `You claimed your weekly reward and got :coin: 100.` });
+        await addMoney(interaction.member.id, 300);
+        await interaction.editReply({ content: `You claimed your weekly reward and got :coin: 300.` });
     }
 }
-
-module.exports = Weekly;

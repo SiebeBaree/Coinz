@@ -1,6 +1,7 @@
-const Command = require('../../structures/Command.js');
+import Command from '../../structures/Command.js'
+import { addMoney } from '../../lib/user.js'
 
-class Monthly extends Command {
+export default class extends Command {
     info = {
         name: "monthly",
         description: "Claim your monthly reward.",
@@ -10,7 +11,8 @@ class Monthly extends Command {
         cooldown: 2592000,
         enabled: true,
         memberRequired: true,
-        deferReply: true
+        deferReply: true,
+        isPremium: true
     };
 
     constructor(...args) {
@@ -18,9 +20,7 @@ class Monthly extends Command {
     }
 
     async run(interaction, data) {
-        await bot.tools.addMoney(interaction.member.id, 300);
-        await interaction.editReply({ content: `You claimed your monthly reward and got :coin: 300.` });
+        await addMoney(interaction.member.id, 1000);
+        await interaction.editReply({ content: `You claimed your monthly reward and got :coin: 1000.` });
     }
 }
-
-module.exports = Monthly;
