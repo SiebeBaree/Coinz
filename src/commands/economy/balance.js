@@ -1,7 +1,7 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ApplicationCommandOptionType } = require('discord.js');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ApplicationCommandOptionType } from 'discord.js'
 
-class Balance extends Command {
+export default class extends Command {
     info = {
         name: "balance",
         description: "Get your balance or the balance of another user.",
@@ -36,11 +36,10 @@ class Balance extends Command {
             .setColor(bot.config.embed.color)
             .addFields(
                 { name: 'Wallet', value: `:coin: ${memberData.wallet}`, inline: true },
-                { name: 'Bank', value: `:coin: ${memberData.bank}`, inline: true },
-                { name: 'Net Worth', value: `:coin: ${memberData.wallet + memberData.bank}`, inline: true }
+                { name: 'Bank', value: `:coin: ${memberData.bank}/${memberData.bankLimit || 1000}`, inline: true },
+                { name: 'Net Worth', value: `:coin: ${memberData.wallet + memberData.bank}`, inline: true },
+                { name: 'Tickets', value: `<:ticket:1032669959161122976> ${memberData.tickets || 0}`, inline: true },
             )
         await interaction.editReply({ embeds: [embed] });
     }
 }
-
-module.exports = Balance;
