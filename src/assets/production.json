@@ -1,0 +1,23 @@
+{
+    "soccer_ball": {},
+    "shirt": {
+        "cloth": 1
+    },
+    "earbuds": {
+        "plastic": 1
+    },
+    "processor": {
+        "silicon": 1
+    },
+    "graphics_card": {
+        "processor": 1,
+        "plastic": 1
+    },
+    "desktop": {
+        "processor": 1,
+        "graphics_card": 1
+    },
+    "server": {
+        "desktop": 2
+    }
+}
