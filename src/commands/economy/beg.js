@@ -1,13 +1,15 @@
-const Command = require('../../structures/Command.js');
+import Command from '../../structures/Command.js'
+import { commandPassed, randomNumber } from '../../lib/helpers.js'
+import { addMoney } from '../../lib/user.js'
 
-class Beg extends Command {
+export default class extends Command {
     info = {
         name: "beg",
         description: "If you really want money you can beg for it.",
         options: [],
         category: "economy",
         extraFields: [],
-        cooldown: 300,
+        cooldown: 900,
         enabled: true,
         memberRequired: true,
         deferReply: true
@@ -18,15 +20,13 @@ class Beg extends Command {
     }
 
     async run(interaction, data) {
-        const money = bot.tools.randomNumber(1, 75);
+        const money = randomNumber(20, 60);
 
-        if (bot.tools.commandPassed(50)) {
-            await bot.tools.addMoney(interaction.member.id, money);
+        if (commandPassed(70)) {
+            await addMoney(interaction.member.id, money);
             await interaction.editReply({ content: `You begged for money and got :coin: **${money}**.` });
         } else {
             await interaction.editReply({ content: `You begged for money but nobody wanted to give you money.` });
         }
     }
 }
-
-module.exports = Beg;

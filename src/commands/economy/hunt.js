@@ -1,8 +1,11 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const Command = require('../../structures/Command.js');
-const huntData = require('../../assets/lootTables/hunt.json');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
+import { checkItem, takeItem, addMoney, takeMoney } from '../../lib/user.js'
+import { randomNumber, getRandomLoot } from '../../lib/helpers.js'
+import { createMessageComponentCollector } from '../../lib/embed.js'
+import huntData from '../../assets/loot/hunt.json' assert { type: "json" }
 
-class Hunt extends Command {
+export default class extends Command {
     info = {
         name: "hunt",
         description: "Hunt for animals and get money selling their meat and skin.",
@@ -15,18 +18,12 @@ class Hunt extends Command {
         deferReply: false
     };
 
-    lootQuantity = {
-        "easy": [2, 5],
-        "medium": [2, 3],
-        "hard": [1, 2]
-    };
-
     constructor(...args) {
         super(...args);
     }
 
     async run(interaction, data) {
-        if (!await bot.tools.checkItem(data.user.inventory, "hunting_rifle")) {
+        if (!await checkItem(data.user.inventory, "hunting_rifle")) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
             return await interaction.reply({ content: "You need a hunting rifle to use this command. Use `/shop buy item-id:hunting_rifle` to buy a hunting rifle.", ephemeral: true });
         }
@@ -45,7 +42,7 @@ class Hunt extends Command {
             )
 
         const interactionMessage = await interaction.editReply({ embeds: [preEmbed], components: [this.getRow()], fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { time: 30000 });
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { time: 30000 });
 
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
@@ -54,23 +51,23 @@ class Hunt extends Command {
                 finishedCommand = true;
 
                 if (interactionCollector.customId.startsWith('hunt_')) {
-                    if (bot.tools.randomNumber(1, 100) <= 4) {
+                    if (randomNumber(1, 100) <= 4) {
                         await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-                        await bot.tools.takeItem(interaction.member.id, "hunting_rifle", data.user.inventory, 1);
+                        await takeItem(interaction.member.id, "hunting_rifle", data.user.inventory, 1);
                         return await interaction.editReply({ content: "Oh No! Your Hunting Rifle broke... You have to buy a new hunting rifle. Use `/shop buy item-id:hunting_rifle` to buy a hunting rifle.", embeds: [], components: [] });
                     }
 
                     const location = interactionCollector.customId.replace('hunt_', '');
                     const huntCategory = huntData[location];
 
-                    if (bot.tools.randomNumber(1, 100) <= huntCategory.risk) {
+                    if (randomNumber(1, 100) <= huntCategory.risk) {
                         let failReward = 0;
                         if (huntCategory.failReward[0] > 0) {
-                            failReward = bot.tools.randomNumber(...huntCategory.failReward);
-                            await bot.tools.takeMoney(interaction.member.id, failReward, true);
+                            failReward = randomNumber(...huntCategory.failReward);
+                            await takeMoney(interaction.member.id, failReward, true);
                         }
 
-                        if (location !== "easy") await bot.tools.takeItem(interaction.member.id, "hunting_rifle", data.user.inventory, 1);
+                        if (location !== "easy") await takeItem(interaction.member.id, "hunting_rifle", data.user.inventory, 1);
 
                         let embed = new EmbedBuilder()
                             .setAuthor({ name: `Hunt of ${interaction.member.displayName}`, iconURL: interaction.member.displayAvatarURL() })
@@ -80,7 +77,7 @@ class Hunt extends Command {
                     }
 
                     const lootTable = huntCategory.loot;
-                    const loot = bot.tools.getRandomLoot(lootTable, this.lootQuantity[location][0], this.lootQuantity[location][1]);
+                    const loot = getRandomLoot(lootTable, this.lootQuantity[location][0], this.lootQuantity[location][1]);
 
                     let mappedLoot = [];
                     for (let obj of loot) {
@@ -107,7 +104,7 @@ class Hunt extends Command {
                     if (lootText.length > 0 && totalPrice > 0) {
                         embed.addFields({ name: "Animals Hunted", value: lootText, inline: false });
                         embed.setDescription(huntCategory.successMessage.replace("%AMOUNT%", `${totalPrice}`));
-                        await bot.tools.addMoney(interaction.member.id, totalPrice);
+                        await addMoney(interaction.member.id, totalPrice);
                     }
 
                     await interaction.editReply({ embeds: [embed], components: [] });
@@ -144,5 +141,3 @@ class Hunt extends Command {
         return row;
     }
 }
-
-module.exports = Hunt;

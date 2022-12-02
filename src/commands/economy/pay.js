@@ -1,10 +1,11 @@
-const Command = require('../../structures/Command.js');
-const { ApplicationCommandOptionType } = require('discord.js');
+import Command from '../../structures/Command.js'
+import { ApplicationCommandOptionType } from 'discord.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
 
-class Pay extends Command {
+export default class extends Command {
     info = {
         name: "pay",
-        description: "Give your mone to another user.",
+        description: "Give your money to another user.",
         options: [
             {
                 name: 'user',
@@ -36,7 +37,7 @@ class Pay extends Command {
     async run(interaction, data) {
         const member = interaction.options.getUser('user');
         const amount = interaction.options.getInteger('amount');
-        if (member.bot) return await interaction.reply({ content: 'That user is a bot. You can only check the balance of a real person.', ephemeral: true });
+        if (member.bot) return await interaction.reply({ content: 'That user is a bot. You can only pay a real person.', ephemeral: true });
         if (member.id === interaction.member.id) return await interaction.reply({ content: 'You can\'t pay yourself.', ephemeral: true });
         await interaction.deferReply();
 
@@ -46,11 +47,9 @@ class Pay extends Command {
         if (data.user.wallet < amount) {
             return await interaction.editReply({ content: `You don't have :coin: ${amount} in your wallet.` });
         } else {
-            await bot.tools.addMoney(member.id, amount);
-            await bot.tools.takeMoney(interaction.member.id, amount, true);
+            await addMoney(member.id, amount);
+            await takeMoney(interaction.member.id, amount, true);
             return await interaction.editReply({ content: `You sent :coin: ${amount} to ${member.username}!` });
         }
     }
 }
-
-module.exports = Pay;
