@@ -1,11 +1,19 @@
 {
     "employee": {
-        "name": "Normal Employee",
+        "name": "Employee",
         "defaultWage": 15
     },
-    "admin": {
-        "name": "Chief Operations Officier",
-        "defaultWage": 100
+    "operations_officer": {
+        "name": "Operations Officer",
+        "defaultWage": 40
+    },
+    "manager": {
+        "name": "Manager",
+        "defaultWage": 90
+    },
+    "executive": {
+        "name": "Executive",
+        "defaultWage": 140
     },
     "ceo": {
         "name": "Chief Executive Officier",
