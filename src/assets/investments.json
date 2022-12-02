@@ -44,5 +44,34 @@
         360
     ],
     "openingTime": "9:30",
-    "closeTime": "16:00"
+    "closeTime": "16:00",
+    "crypto": [
+        "BTC",
+        "ETH",
+        "BNB",
+        "XRP",
+        "ADA",
+        "SOL",
+        "DOGE",
+        "DOT",
+        "SHIB",
+        "MATIC",
+        "AVAX",
+        "TRX",
+        "LTC",
+        "AXS",
+        "ENJ",
+        "BAT",
+        "ATOM",
+        "XLM",
+        "ALGO",
+        "APE",
+        "SAND",
+        "EGLD",
+        "ANKR",
+        "CHZ",
+        "MIOTA",
+        "MKR",
+        "LUNA"
+    ]
 }
