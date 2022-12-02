@@ -1,17 +1,10 @@
-const { schedule } = require("node-cron");
-const moment = require("moment");
-
-const {
-    getStockData,
-    getCryptoData,
-    isMarketOpen,
-    uploadCryptoData,
-    uploadStockData
-} = require("./helpers.js");
-const { processAirdrop } = require("./airdrop.js");
-const CooldownModel = require("../models/Cooldown.js");
-const GuildModel = require("../models/Guild.js");
-const fs = require("fs");
+import { schedule } from "node-cron";
+import { getStockData, getCryptoData, isMarketOpen, uploadCryptoData, uploadStockData } from "./investing.js"
+import { processAirdrop } from "./airdrop.js"
+import Cooldown from "../models/Cooldown.js"
+import Guild from "../models/Guild.js"
+import Premium from "../models/Premium.js"
+import { writeFile, readFileSync } from "fs"
 
 // Stock Cron
 schedule("*/40 * * * 1-5", async () => {
@@ -33,8 +26,8 @@ schedule("*/3 * * * *", async () => {
 
 // Removed Expired Cooldowns Cron
 schedule("*/30 * * * *", async function () {
-    const deleted = await CooldownModel.deleteMany({ expiresOn: { $lte: parseInt(Date.now() / 1000) } });
-    bot.logger.log(`[${moment().format("DD/MM/YYYY HH:mm")}] Removed ${deleted.deletedCount} expired cooldowns.`);
+    const deleted = await Cooldown.deleteMany({ expiresOn: { $lte: parseInt(Date.now() / 1000) } });
+    bot.logger.log(`Removed ${deleted.deletedCount} expired cooldowns.`);
 });
 
 // Airdrop Cron
@@ -42,7 +35,7 @@ schedule("*/20 * * * * *", async function () {
     try {
         if (!bot.isReady()) return;
 
-        const guilds = await GuildModel.find({
+        const guilds = await Guild.find({
             $and: [
                 { airdropStatus: true },
                 { airdropChannel: { $ne: "" } },
@@ -57,7 +50,7 @@ schedule("*/20 * * * * *", async function () {
 });
 
 // Update Stats Cron
-schedule("0 * * * * *", async function () {
+schedule("*/30 * * * *", async function () {
     try {
         if (!bot.isReady()) return;
 
@@ -68,13 +61,14 @@ schedule("0 * * * * *", async function () {
 
         Promise.all(promises)
             .then(results => {
-                let stats = require("../assets/stats.json");
+                let stats = JSON.parse(readFileSync('./src/assets/stats.json'));
+
                 const totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
                 const totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
 
                 stats.guilds = totalGuilds;
                 stats.members = totalMembers;
-                fs.writeFile("../assets/stats.json", JSON.stringify(file), function writeJSON(err) {
+                writeFile("./src/assets/stats.json", JSON.stringify(stats, null, 4), function writeJSON(err) {
                     if (err) return bot.logger.error(err);
                 });
             }).catch();
@@ -82,3 +76,52 @@ schedule("0 * * * * *", async function () {
         bot.logger.error(e);
     }
 });
+
+// Remove expired premium status from users and guilds
+schedule("30 5 * * *", async function () {
+    try {
+        const now = Math.floor(Date.now() / 1000);
+
+        const expiredUsers = await Premium.find({
+            $and: [
+                { premium: true },
+                { premiumExpiresAt: { $lte: now } }
+            ]
+        });
+
+        for (let i = 0; i < expiredUsers.length; i++) {
+            if (expiredUsers[i].guilds.length > 0) {
+                for (let j = 0; j < expiredUsers[i].guilds.length; j++) {
+                    await removePremiumFromGuild(expiredUsers[i].guilds[j]);
+                }
+            }
+        }
+
+        await Premium.deleteMany({ premiumExpiresAt: { $lte: now } });
+    } catch (e) {
+        bot.logger.error(e);
+    }
+});
+
+// Remove expired premium status from guilds
+schedule("0 6 * * *", async function () {
+    try {
+        const premiumGuilds = await Guild.find({ premium: true });
+
+        for (let i = 0; i < premiumGuilds.length; i++) {
+            const premiumUser = await Premium.findOne({ id: premiumGuilds[i].premiumUser });
+            if (!premiumUser || !premiumUser.premium) {
+                await removePremiumFromGuild(premiumGuilds[i].id);
+            }
+        }
+    } catch (e) {
+        bot.logger.error(e);
+    }
+});
+
+async function removePremiumFromGuild(guildId) {
+    await Guild.updateOne(
+        { id: guildId },
+        { premium: false, premiumUser: "" }
+    );
+}
