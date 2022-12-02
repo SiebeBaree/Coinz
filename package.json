@@ -3,10 +3,12 @@
   "version": "2.4.0",
   "description": "A economic discord bot with a lot of features",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "items": "node src/lib/addItems.js"
+    "commands": "node src/scripts/commands.js",
+    "add-items": "node src/scripts/items.js"
   },
   "repository": {
     "type": "git",
@@ -17,28 +19,30 @@
     "discord",
     "bot",
     "javascript",
-    "discord.js"
+    "discord.js",
+    "cron",
+    "crypto",
+    "stocks"
   ],
   "author": "Siebe Baree",
-  "license": "LICENSE",
+  "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/SiebeBaree/Coinz/issues"
   },
   "homepage": "https://github.com/SiebeBaree/Coinz#readme",
   "dependencies": {
     "@top-gg/sdk": "^3.1.3",
-    "axios": "^0.25.0",
+    "axios": "^1.2.0",
     "bitvavo": "^1.2.0",
-    "bufferutil": "^4.0.7",
-    "chalk": "^4.1.2",
-    "discord.js": "^14.6.0",
-    "dotenv": "^16.0.0",
+    "chalk": "^5.1.2",
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "fast-glob": "^3.2.12",
     "fs": "^0.0.1-security",
     "moment": "^2.29.4",
-    "moment-timezone": "^0.5.37",
-    "mongoose": "^6.7.1",
+    "moment-timezone": "^0.5.39",
+    "mongoose": "^6.7.5",
     "node-cron": "^3.0.2",
     "topgg-autoposter": "^2.0.1"
   },
