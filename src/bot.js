@@ -1,8 +1,8 @@
-require('dotenv').config();
-const { ActivityType, GatewayIntentBits, Partials } = require('discord.js');
-const { connect } = require("mongoose");
+import Bot from "./structures/Bot.js"
+import { ActivityType, GatewayIntentBits, Partials } from "discord.js"
+import mongoose from "mongoose"
+const { connect } = mongoose;
 
-const Bot = require('./structures/Bot.js');
 const bot = global.bot = new Bot({
     partials: [Partials.Channel],
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages],
@@ -14,14 +14,10 @@ const bot = global.bot = new Bot({
     }
 });
 
-bot.login();
-bot.rest.on('rateLimit', rateLimitData => {
-    bot.logger.warn(`RATELIMITED for ${parseInt(rateLimitData.timeout / 1000)} seconds | Limit: ${rateLimitData.limit} requests | Global? ${rateLimitData.global ? "yes" : "no"}`);
-});
-
 // Connect to MongoDB Database
+const DB_NAME = process.env.NODE_ENV === "production" ? "coinz" : "coinz_beta";
 connect(process.env.DATABASE_URI, {
-    dbName: 'coinz_beta',
+    dbName: DB_NAME,
     useNewUrlParser: true,
     maxPoolSize: 100,
     minPoolSize: 5,
@@ -31,17 +27,23 @@ connect(process.env.DATABASE_URI, {
     keepAliveInitialDelay: 300000
 }).then(() => bot.logger.ready('Connected to MongoDB'));
 
-// Post stats to Top.gg & Discord Bot List
-require("./scripts/autoPoster.js");
+bot.login();
+bot.rest.on('rateLimit', rateLimitData => {
+    bot.logger.warn(`RATELIMITED for ${Math.floor(rateLimitData.timeout / 1000)} seconds | Limit: ${rateLimitData.limit} requests | Global? ${rateLimitData.global ? "yes" : "no"}`);
+});
 
-// Create Webhook
-const app = require("./scripts/api.js");
+bot.on('ready', async () => {
+    if (process.env.NODE_ENV === "production") {
+        // Create Webhook
+        const { default: app } = await import("./lib/api.js");
 
-const port = process.env.PORT || 8700;
-app.listen(port, () => bot.logger.ready(`Vote Webhooks available on http://localhost:${port}`));
+        const port = process.env.PORT || 8700;
+        app.listen(port, () => bot.logger.ready(`Vote Webhooks available on port: ${port}`));
+    }
 
-// Load Crons
-require("./scripts/crons.js");
+    // Load Crons
+    await import("./lib/crons.js");
+});
 
 // Global Error Handler
 const ignoredErrors = ["DiscordAPIError[10008]: Unknown Message"];

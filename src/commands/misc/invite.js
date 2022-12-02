@@ -1,6 +1,6 @@
-const Command = require('../../structures/Command.js');
+import Command from '../../structures/Command.js'
 
-class Invite extends Command {
+export default class extends Command {
     info = {
         name: "invite",
         description: "Get a invite to our Official Support Discord Server",
@@ -18,8 +18,6 @@ class Invite extends Command {
     }
 
     async run(interaction, data) {
-        await interaction.editReply({ content: `:pushpin: **Invite Coinz yourself:** [**Click Here**](https://discord.com/oauth2/authorize?client_id=938771676433362955&permissions=313344&scope=bot%20applications.commands)\n:wave: **Join our Official Support Discord Server:** discord.gg/asnZQwc6kW` });
+        await interaction.editReply({ content: `:pushpin: **Invite Coinz yourself:** [**Click Here**](https://discord.com/oauth2/authorize?client_id=938771676433362955&permissions=313344&scope=bot%20applications.commands)\n:wave: **Join our Official Support Discord Server:** https://discord.gg/asnZQwc6kW` });
     }
 }
-
-module.exports = Invite;

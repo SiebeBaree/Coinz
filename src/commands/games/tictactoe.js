@@ -1,7 +1,16 @@
-const Command = require('../../structures/Command.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ApplicationCommandOptionType, ComponentType } = require('discord.js');
+import Command from '../../structures/Command.js'
+import {
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+    ActionRowBuilder,
+    ButtonStyle,
+    ButtonBuilder,
+    ComponentType
+} from 'discord.js'
+import { checkBet } from '../../lib/helpers.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
 
-class TicTacToe extends Command {
+export default class extends Command {
     info = {
         name: "tictactoe",
         description: "Connect 4 X's or O's in a row to win the game. Must be played with 2 users.",
@@ -12,7 +21,7 @@ class TicTacToe extends Command {
                 description: 'The bet you want to place.',
                 required: true,
                 min_length: 2,
-                max_length: 4
+                max_length: 6
             },
             {
                 name: 'user',
@@ -61,7 +70,7 @@ class TicTacToe extends Command {
             if (data.user.wallet <= 0) return await interaction.editReply({ content: `You don't have any money in your wallet.` });
             bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
         } else {
-            bet = bot.tools.checkBet(betStr, data.user);
+            bet = checkBet(betStr, data.user);
 
             if (!Number.isInteger(bet)) {
                 await interaction.editReply({ content: bet });
@@ -119,12 +128,12 @@ class TicTacToe extends Command {
                 if (data.hostWon !== null) {
                     if (data.hostWon === true) {
                         data.desc = `<@${interaction.member.id}> won the Tic Tac Toe game!!!`;
-                        await bot.tools.addMoney(interaction.member.id, parseInt(data.bet * 2));
-                        await bot.tools.takeMoney(user.id, data.bet);
+                        await addMoney(interaction.member.id, parseInt(data.bet * 2));
+                        await takeMoney(user.id, data.bet);
                     } else {
                         data.desc = `<@${user.id}> won the Tic Tac Toe game!!!`;
-                        await bot.tools.addMoney(user.id, parseInt(data.bet * 2));
-                        await bot.tools.takeMoney(interaction.member.id, data.bet);
+                        await addMoney(user.id, parseInt(data.bet * 2));
+                        await takeMoney(interaction.member.id, data.bet);
                     }
                 } else {
                     if (data.gameFinished) data.desc = "**The game ended in a Tie and nobody won.**";
@@ -140,7 +149,7 @@ class TicTacToe extends Command {
                 return await interaction.editReply({ components: [this.getConfirmButtons(true)] });
             } else if (data.hostWon === null) {
                 data.desc = `<@${data.currentPlayer}> **has waited too long and lost the game.**`;
-                await bot.tools.takeMoney(data.currentPlayer, data.bet);
+                await takeMoney(data.currentPlayer, data.bet);
                 return await interaction.editReply({ embeds: [this.createEmbed(data)], components: this.setButtons(data, true) });
             }
         });
@@ -263,5 +272,3 @@ class TicTacToe extends Command {
         return row;
     }
 }
-
-module.exports = TicTacToe;

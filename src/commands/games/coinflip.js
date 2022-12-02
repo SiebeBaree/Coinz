@@ -1,7 +1,9 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ApplicationCommandOptionType, Colors } = require('discord.js');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ApplicationCommandOptionType, Colors } from 'discord.js'
+import { checkBet, randomNumber as randInt } from '../../lib/helpers.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
 
-class Coinflip extends Command {
+export default class extends Command {
     info = {
         name: "coinflip",
         description: "Flip a coin and guess on what side it's going to land.",
@@ -11,8 +13,8 @@ class Coinflip extends Command {
                 type: ApplicationCommandOptionType.String,
                 description: 'The bet you want to place.',
                 required: true,
-                min_value: 50,
-                max_value: 5000
+                min_length: 2,
+                max_length: 6
             },
             {
                 name: 'coin-side',
@@ -53,7 +55,7 @@ class Coinflip extends Command {
             if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
             bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
         } else {
-            bet = bot.tools.checkBet(betStr, data.user);
+            bet = checkBet(betStr, data.user);
 
             if (!Number.isInteger(bet)) {
                 await interaction.reply({ content: bet, ephemeral: true });
@@ -63,23 +65,21 @@ class Coinflip extends Command {
         await interaction.deferReply();
 
         const side = interaction.options.getString('coin-side');
-        const randomNumber = bot.tools.randomNumber(0, 1);
+        const randomNumber = randInt(0, 1);
         const sideLanded = randomNumber === 0 ? "HEAD" : "TAILS";
 
         const newEmbed = new EmbedBuilder()
             .setAuthor({ name: `Coinflip`, iconURL: `${interaction.member.displayAvatarURL() || bot.config.embed.defaultIcon}` })
             .setColor(sideLanded === side ? Colors.Green : Colors.Red)
             .setFooter({ text: bot.config.embed.footer })
-            .setDescription(`:coin: **You chose:** ${side}\n:moneybag: **Your Bet:** :coin: ${bet}\n\n**The coin landed on:** ${sideLanded}\n${side === sideLanded ? "**Profit:** :coin: " + parseInt(bet / 2) : "**You lost:** :coin: " + bet}`)
+            .setDescription(`:coin: **You chose:** ${side}\n:moneybag: **Your Bet:** :coin: ${bet}\n\n**The coin landed on:** ${sideLanded}\n${side === sideLanded ? "**Profit:** :coin: " + Math.floor(bet / 3) : "**You lost:** :coin: " + bet}`)
             .setThumbnail(sideLanded === "HEAD" ? "https://cdn.coinzbot.xyz/games/coinflip/coin-head.png" : "https://cdn.coinzbot.xyz/games/coinflip/coin-tail.png")
         await interaction.editReply({ embeds: [newEmbed] });
 
         if (sideLanded === side) {
-            await bot.tools.addMoney(interaction.member.id, parseInt(bet / 2));
+            await addMoney(interaction.member.id, Math.floor(bet / 3));
         } else {
-            await bot.tools.takeMoney(interaction.member.id, bet, true);
+            await takeMoney(interaction.member.id, bet, true);
         }
     }
 }
-
-module.exports = Coinflip;

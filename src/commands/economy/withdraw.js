@@ -1,8 +1,9 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ApplicationCommandOptionType } = require('discord.js');
-const MemberModel = require('../../models/Member');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ApplicationCommandOptionType } from 'discord.js'
+import { extractNumber } from '../../lib/helpers.js'
+import Member from '../../models/Member.js'
 
-class Withdraw extends Command {
+export default class extends Command {
     info = {
         name: "withdraw",
         description: "Withdraw money from your bank to your wallet.",
@@ -36,14 +37,14 @@ class Withdraw extends Command {
             if (data.user.bank <= 0) return await interaction.reply({ content: `You don't have any money in your bank account.`, ephemeral: true });
             amount = data.user.bank;
         } else {
-            amount = bot.tools.extractNumber(amountStr);
-            if (amount === undefined) return await interaction.reply({ content: `That's not a valid amount. Please use a number or use formatting like 1k, 1m, 1.3k, ...`, ephemeral: true });
+            amount = extractNumber(amountStr);
+            if (amount === undefined || isNaN(amount)) return await interaction.reply({ content: `That's not a valid amount. Please use a number or use formatting like 1k, 1m, 1.3k, ...`, ephemeral: true });
             if (amount <= 0) return await interaction.reply({ content: `You need to withdraw at least :coin: 1.`, ephemeral: true });
             if (amount > data.user.bank) return await interaction.reply({ content: `You don't have that much in your bank account. You only have :coin: ${data.user.bank}.`, ephemeral: true });
         }
         await interaction.deferReply();
 
-        await MemberModel.updateOne({ id: interaction.member.id }, {
+        await Member.updateOne({ id: interaction.member.id }, {
             $inc: {
                 wallet: amount,
                 bank: -amount
@@ -61,5 +62,3 @@ class Withdraw extends Command {
         await interaction.editReply({ embeds: [embed] });
     }
 }
-
-module.exports = Withdraw;

@@ -1,7 +1,17 @@
-const Command = require('../../structures/Command.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ApplicationCommandOptionType, Colors } = require('discord.js');
+import Command from '../../structures/Command.js'
+import {
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+    Colors,
+    ActionRowBuilder,
+    ButtonStyle,
+    ButtonBuilder
+} from 'discord.js'
+import { checkBet, randomNumber } from '../../lib/helpers.js'
+import { createMessageComponentCollector } from '../../lib/embed.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
 
-class HigherLower extends Command {
+export default class extends Command {
     info = {
         name: "higherlower",
         description: "Is the next number higher, lower or the same as the current number.",
@@ -12,7 +22,7 @@ class HigherLower extends Command {
                 description: 'The bet you want to place.',
                 required: true,
                 min_length: 2,
-                max_length: 4
+                max_length: 6
             }
         ],
         category: "games",
@@ -37,7 +47,7 @@ class HigherLower extends Command {
             if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
             bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
         } else {
-            bet = bot.tools.checkBet(betStr, data.user);
+            bet = checkBet(betStr, data.user);
 
             if (!Number.isInteger(bet)) {
                 await interaction.reply({ content: bet, ephemeral: true });
@@ -54,7 +64,7 @@ class HigherLower extends Command {
         data.correct = 0;
 
         const interactionMessage = await interaction.editReply({ embeds: [this.createEmbed(data)], components: [this.setButtons(data.gameFinished)], fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { idle: 15000, time: 75000 })
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { idle: 15000, time: 75000 })
 
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
@@ -82,12 +92,12 @@ class HigherLower extends Command {
 
                 if (data.gameFinished) {
                     if (data.playerWon) {
-                        await bot.tools.addMoney(interaction.member.id, this.getPrice(data.bet, data.correct));
+                        await addMoney(interaction.member.id, this.getPrice(data.bet, data.correct));
                         data.color = Colors.Green;
 
                         await interaction.followUp({ content: `<@${interaction.member.id}>, You won :coin: ${this.getPrice(data.bet, data.correct)}!` })
                     } else {
-                        await bot.tools.takeMoney(interaction.member.id, data.bet);
+                        await takeMoney(interaction.member.id, data.bet);
                         data.color = Colors.Red;
                         data.bet = 0;
                         data.number = newNumber;
@@ -106,7 +116,7 @@ class HigherLower extends Command {
         collector.on('end', async (interactionCollector) => {
             if (!data.gameFinished) {
                 data.gameFinished = true;
-                await bot.tools.addMoney(interaction.member.id, this.getPrice(data.bet, data.correct));
+                await addMoney(interaction.member.id, this.getPrice(data.bet, data.correct));
                 await interaction.editReply({ embeds: [this.createEmbed(data)], components: [this.setButtons(true)] });
                 await interaction.followUp({ content: `<@${interaction.member.id}>, You won :coin: ${this.getPrice(data.bet, data.correct)}!` })
             }
@@ -155,12 +165,10 @@ class HigherLower extends Command {
     }
 
     getPrice(bet, correct) {
-        return parseInt(bet * (correct / 2));
+        return Math.floor(bet * (correct / 3));
     }
 
     getNumber() {
-        return bot.tools.randomNumber(1, 99);
+        return randomNumber(1, 99);
     }
 }
-
-module.exports = HigherLower;

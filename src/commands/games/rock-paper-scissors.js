@@ -1,7 +1,17 @@
-const Command = require('../../structures/Command.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ApplicationCommandOptionType, Colors } = require('discord.js');
+import Command from '../../structures/Command.js'
+import {
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+    Colors,
+    ActionRowBuilder,
+    ButtonStyle,
+    ButtonBuilder
+} from 'discord.js'
+import { checkBet, randomNumber } from '../../lib/helpers.js'
+import { createMessageComponentCollector } from '../../lib/embed.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
 
-class RockPaperScissors extends Command {
+export default class extends Command {
     info = {
         name: "rock-paper-scissors",
         description: "Play rock paper scissors againt the bot",
@@ -12,7 +22,7 @@ class RockPaperScissors extends Command {
                 description: 'The bet you want to place.',
                 required: true,
                 min_length: 2,
-                max_length: 4
+                max_length: 6
             }
         ],
         category: "games",
@@ -55,7 +65,7 @@ class RockPaperScissors extends Command {
             if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
             bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
         } else {
-            bet = bot.tools.checkBet(betStr, data.user);
+            bet = checkBet(betStr, data.user);
 
             if (!Number.isInteger(bet)) {
                 await interaction.reply({ content: bet, ephemeral: true });
@@ -73,7 +83,7 @@ class RockPaperScissors extends Command {
         data.botHand = null;
 
         const interactionMessage = await interaction.editReply({ embeds: [this.createEmbed(data)], components: [this.setButtons(false, true)], fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { idle: 15000, max: 30000 });
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { idle: 15000, max: 30000 });
 
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
@@ -100,9 +110,9 @@ class RockPaperScissors extends Command {
                 if (data.gameFinished) {
                     if (data.playerWon === 0) {
                         data.desc = "**You lost!** Better luck next time!";
-                        await bot.tools.takeMoney(interaction.member.id, data.bet);
+                        await takeMoney(interaction.member.id, data.bet);
                     } else {
-                        await bot.tools.addMoney(interaction.member.id, parseInt(data.bet * data.multiplier - data.bet));
+                        await addMoney(interaction.member.id, parseInt(data.bet * data.multiplier - data.bet));
                     }
                 }
 
@@ -115,9 +125,9 @@ class RockPaperScissors extends Command {
                 data.gameFinished = true;
 
                 if (data.playerWon === 0) {
-                    await bot.tools.takeMoney(interaction.member.id, data.bet);
+                    await takeMoney(interaction.member.id, data.bet);
                 } else {
-                    await bot.tools.addMoney(interaction.member.id, parseInt(data.bet * data.multiplier - data.bet));
+                    await addMoney(interaction.member.id, parseInt(data.bet * data.multiplier - data.bet));
                 }
 
                 await interaction.editReply({ embeds: [this.createEmbed(data)], components: [this.setButtons(true)] });
@@ -166,7 +176,7 @@ class RockPaperScissors extends Command {
     };
 
     getHand() {
-        return ["Rock", "Paper", "Scissors"][bot.tools.randomNumber(0, 2)];
+        return ["Rock", "Paper", "Scissors"][randomNumber(0, 2)];
     }
 
     playerWon(playerHand, botHand) {
@@ -174,5 +184,3 @@ class RockPaperScissors extends Command {
         return this.hand[playerHand].weakness === botHand ? 0 : 1;
     }
 }
-
-module.exports = RockPaperScissors;

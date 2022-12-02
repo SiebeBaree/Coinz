@@ -1,7 +1,7 @@
-const { Console } = require('console');
-const { inspect, types } = require('util');
-const chalk = require('chalk');
-const moment = require('moment');
+import { Console } from 'console';
+import { inspect, types } from 'util';
+import chalk from 'chalk';
+import moment from 'moment';
 const inspectOptions = {
     showHidden: true,
     compact: false,
@@ -9,7 +9,16 @@ const inspectOptions = {
     colors: true
 };
 
-class Logger extends Console {
+export default class Logger extends Console {
+    PAINTS = {
+        log: chalk.blue,
+        error: chalk.bgRed.bold,
+        warn: chalk.yellow,
+        event: chalk.cyan,
+        ready: chalk.green,
+        load: chalk.magenta
+    };
+
     static parse(data) {
         return data && types.isNativeError(data)
             ? data.message || data.stack || String(data)
@@ -31,10 +40,9 @@ class Logger extends Console {
         return moment().format(this.template);
     }
 
-    writeLog(data, type = 'log', consoleType) {
-        if (consoleType === undefined) consoleType = type;
+    writeLog(data, type = 'log', consoleType = 'log') {
         data = Logger.parse(data);
-        super[consoleType](`[${this.timestamp}] (` + Logger.PAINTS[type](`${type.toUpperCase()}`) + chalk.reset(`) ${data}`));
+        super[consoleType](`[${this.timestamp}] (` + this.PAINTS[type](`${type.toUpperCase()}`) + chalk.reset(`) ${data}`));
     }
 
     log(...data) {
@@ -73,14 +81,3 @@ class Logger extends Console {
         }
     }
 }
-
-Logger.PAINTS = {
-    log: chalk.blue,
-    error: chalk.bgRed.bold,
-    warn: chalk.yellow,
-    event: chalk.cyan,
-    ready: chalk.green,
-    load: chalk.magenta
-};
-
-module.exports = Logger;

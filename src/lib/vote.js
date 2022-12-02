@@ -1,8 +1,8 @@
-const { fetchMember } = require("../lib/database.js");
-const { EmbedBuilder } = require("discord.js");
-const MemberModel = require("../models/Member.js");
+import { fetchMember } from "../lib/database.js";
+import { EmbedBuilder } from "discord.js";
+import Member from "../models/Member.js";
 
-module.exports.processVote = async (memberId, website = "top.gg") => {
+export async function processVote(memberId, website = "top.gg") {
     try {
         if (!bot.isReady()) return;
 
@@ -44,7 +44,7 @@ module.exports.processVote = async (memberId, website = "top.gg") => {
             } catch { }
         }
 
-        await MemberModel.updateOne(
+        await Member.updateOne(
             { id: memberId },
             { $inc: { votes: 1, spins: 1 } },
             { upsert: true }
@@ -52,4 +52,6 @@ module.exports.processVote = async (memberId, website = "top.gg") => {
     } catch (e) {
         bot.logger.error(e);
     }
-};
+}
+
+export default processVote;

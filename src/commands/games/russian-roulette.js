@@ -1,7 +1,17 @@
-const Command = require('../../structures/Command.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ApplicationCommandOptionType, Colors } = require('discord.js');
+import Command from '../../structures/Command.js'
+import {
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+    Colors,
+    ActionRowBuilder,
+    ButtonStyle,
+    ButtonBuilder
+} from 'discord.js'
+import { checkBet, randomNumber, timeout } from '../../lib/helpers.js'
+import { createMessageComponentCollector } from '../../lib/embed.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
 
-class RussianRoulette extends Command {
+export default class extends Command {
     info = {
         name: "russian-roulette",
         description: "Be lucky and don't die with russian roulette.",
@@ -12,7 +22,7 @@ class RussianRoulette extends Command {
                 description: 'The bet you want to place.',
                 required: true,
                 min_length: 2,
-                max_length: 4
+                max_length: 6
             }
         ],
         category: "games",
@@ -37,7 +47,7 @@ class RussianRoulette extends Command {
             if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
             bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
         } else {
-            bet = bot.tools.checkBet(betStr, data.user);
+            bet = checkBet(betStr, data.user);
 
             if (!Number.isInteger(bet)) {
                 await interaction.reply({ content: bet, ephemeral: true });
@@ -51,17 +61,17 @@ class RussianRoulette extends Command {
         data.gameFinished = false;
         data.playerWon = null;
         data.gun = [false, false, false, false, false, true]; // if random generator fails always take last bullet
-        data.gun[bot.tools.randomNumber(0, data.gun.length - 1)] = true; // put a bullet in a slot
+        data.gun[randomNumber(0, data.gun.length - 1)] = true; // put a bullet in a slot
         data.slot = 0; // the current slot of the gun
         data.multiplier = 0;
 
         const interactionMessage = await interaction.editReply({ content: this.getContent(data), embeds: [this.createEmbed(data)], components: [this.setButtons(true)], fetchReply: true });
         data = this.calcBullets(data);
-        await bot.tools.timeout(2000);
+        await timeout(2000);
         await interaction.editReply({ content: this.getContent(data), embeds: [this.createEmbed(data)], components: [this.setButtons(data.gameFinished)] });
         if (data.gameFinished) return await this.endGame(interaction, data);
 
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 7, idle: 10000 });
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 7, idle: 10000 });
 
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
@@ -71,7 +81,7 @@ class RussianRoulette extends Command {
                     data.playerWon = null;
                     await interaction.editReply({ content: this.getContent(data), embeds: [this.createEmbed(data)], components: [this.setButtons(true)] });
                     data = this.calcBullets(data);
-                    await bot.tools.timeout(2000);
+                    await timeout(2000);
                     await interaction.editReply({ content: this.getContent(data), embeds: [this.createEmbed(data)], components: [this.setButtons(data.gameFinished)] });
                 } else if (interactionCollector.customId === 'rr_stop') {
                     data.gameFinished = true;
@@ -147,12 +157,10 @@ class RussianRoulette extends Command {
     async endGame(interaction, data) {
         if (data.gameFinished) {
             if (data.playerWon) {
-                await bot.tools.addMoney(interaction.member.id, parseInt(data.bet * data.multiplier));
+                await addMoney(interaction.member.id, parseInt(data.bet * data.multiplier));
             } else {
-                await bot.tools.takeMoney(interaction.member.id, data.bet);
+                await takeMoney(interaction.member.id, data.bet);
             }
         }
     }
 }
-
-module.exports = RussianRoulette;

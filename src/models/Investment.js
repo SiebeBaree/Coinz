@@ -1,4 +1,4 @@
-const { Schema, model, Types } = require('mongoose');
+import { Schema, model, Types } from 'mongoose';
 
 const Stock = Schema({
     ticker: { type: String, required: true, unique: true, index: true },
@@ -9,4 +9,4 @@ const Stock = Schema({
     lastUpdated: { type: Number, default: 0 }
 });
 
-module.exports = model('Stock', Stock, 'stocks');
+export default model('Stock', Stock, 'stocks');

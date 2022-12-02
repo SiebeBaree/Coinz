@@ -1,7 +1,17 @@
-const Command = require('../../structures/Command.js');
-const { Colors, ApplicationCommandOptionType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+import Command from '../../structures/Command.js'
+import {
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+    Colors,
+    ActionRowBuilder,
+    ButtonStyle,
+    ButtonBuilder
+} from 'discord.js'
+import { checkBet, commandPassed } from '../../lib/helpers.js'
+import { createMessageComponentCollector } from '../../lib/embed.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
 
-class Crash extends Command {
+export default class extends Command {
     info = {
         name: "crash",
         description: "Are you fast enough to sell before the market crashes?",
@@ -12,7 +22,7 @@ class Crash extends Command {
                 description: 'The bet you want to place.',
                 required: true,
                 min_length: 2,
-                max_length: 4
+                max_length: 6
             }
         ],
         category: "games",
@@ -37,7 +47,7 @@ class Crash extends Command {
             if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
             bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
         } else {
-            bet = bot.tools.checkBet(betStr, data.user);
+            bet = checkBet(betStr, data.user);
 
             if (!Number.isInteger(bet)) {
                 await interaction.reply({ content: bet, ephemeral: true });
@@ -76,7 +86,7 @@ class Crash extends Command {
         };
 
         const interactionMessage = await interaction.editReply({ embeds: [createEmbed(multiplier, (profit * 0.8) - bet)], components: [setButton()], fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { time: 20000 })
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { time: 20000 })
 
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
@@ -97,16 +107,16 @@ class Crash extends Command {
             return async function () {
                 // returning in this function also stops the command
                 if (userWon && stoppedGame) {
-                    await bot.tools.addMoney(interaction.member.id, Math.floor(profit * multiplier) - bet);
+                    await addMoney(interaction.member.id, Math.floor(profit * multiplier) - bet);
                     return await interaction.editReply({ embeds: [createEmbed(multiplier, Math.floor(profit * multiplier) - bet, Colors.Green)], components: [setButton(true)] });
                 } else if (!userWon && stoppedGame) {
-                    await bot.tools.takeMoney(interaction.member.id, bet);
+                    await takeMoney(interaction.member.id, bet);
                     return await interaction.editReply({ embeds: [createEmbed(multiplier, -bet, Colors.Red)], components: [setButton(true)] });
                 }
 
                 multiplier = Math.round((multiplier + 0.1) * 10) / 10;
                 await interaction.editReply({ embeds: [createEmbed(multiplier, Math.floor(profit * multiplier) - bet)] });
-                if (bot.tools.commandPassed(20)) {
+                if (commandPassed(20)) {
                     userWon = false;
                     stoppedGame = true;
                 }
@@ -119,5 +129,3 @@ class Crash extends Command {
         await wait(await updateStatus(interaction, multiplier, profit), 2000);
     }
 }
-
-module.exports = Crash;

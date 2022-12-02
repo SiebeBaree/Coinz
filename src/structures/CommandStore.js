@@ -1,7 +1,7 @@
-const Store = require('./Store.js');
-const path = require('path');
+import Store from './Store.js';
+import { join } from 'path';
 
-class CommandStore extends Store {
+export default class extends Store {
     constructor(client) {
         super(client, 'commands');
     }
@@ -20,7 +20,7 @@ class CommandStore extends Store {
     }
 
     delete(command) {
-        delete require.cache[path.join(this.dir, command.file)];
+        delete require.cache[join(this.dir, command.file)];
         super.delete(command.name);
     }
 
@@ -32,5 +32,3 @@ class CommandStore extends Store {
         super.clear();
     }
 }
-
-module.exports = CommandStore;

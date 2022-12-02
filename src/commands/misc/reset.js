@@ -1,9 +1,11 @@
-const Command = require('../../structures/Command.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors } = require('discord.js');
-const MemberModel = require("../../models/Member");
-const CompanyModel = require("../../models/Company");
+import Command from '../../structures/Command.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors } from 'discord.js';
+import MemberModel from "../../models/Member.js"
+import BusinessModel from "../../models/Business.js"
+import StatsModel from "../../models/Stats.js"
+import { createMessageComponentCollector } from '../../lib/embed.js'
 
-class Reset extends Command {
+export default class extends Command {
     info = {
         name: "reset",
         description: "Reset your account on EVERY server.",
@@ -39,7 +41,7 @@ class Reset extends Command {
         );
 
         const interactionMessage = await interaction.editReply({ embeds: [confirmEmbed], components: [confirmRow], fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 1, time: 15_000 })
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 1, time: 15_000 })
 
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
@@ -54,7 +56,8 @@ class Reset extends Command {
                 embed.setColor(Colors.Red);
                 embed.setDescription(`You successfully reset your account.`);
                 await MemberModel.deleteOne({ id: interaction.member.id });
-                await CompanyModel.deleteOne({ id: interaction.member.id });
+                await BusinessModel.deleteOne({ ownerId: interaction.member.id });
+                await StatsModel.deleteOne({ id: interaction.member.id });
             }
 
             await interaction.editReply({ embeds: [embed] });
@@ -65,5 +68,3 @@ class Reset extends Command {
         });
     }
 }
-
-module.exports = Reset;

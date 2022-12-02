@@ -1,16 +1,20 @@
-const { Client } = require('discord.js');
-const Logger = require('./Logger.js');
-const CommandStore = require('./CommandStore.js');
-const EventStore = require('./EventStore.js');
+import { Client } from 'discord.js'
 
-class Bot extends Client {
+import config from "../assets/config.json" assert { type: "json" }
+import * as database from "../lib/database.js"
+import * as cooldowns from "../lib/cooldowns.js"
+
+import CommandStore from "./CommandStore.js"
+import EventStore from "./EventStore.js"
+import Logger from './Logger.js'
+
+export default class extends Client {
     constructor(options = {}) {
         super(options);
 
-        this.config = require('../assets/config.json');
-        this.tools = require('../lib/utils');
-        this.database = require('../lib/database');
-        this.cooldown = require('../lib/cooldowns');
+        this.config = config;
+        this.database = database;
+        this.cooldown = cooldowns;
         this.logger = new Logger(this);
         this.commands = new CommandStore(this);
         this.events = new EventStore(this);
@@ -24,5 +28,3 @@ class Bot extends Client {
         ]);
     }
 }
-
-module.exports = Bot;

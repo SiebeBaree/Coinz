@@ -1,9 +1,13 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors } = require('discord.js');
-const lootTable = require('../../assets/lootTables/fish.json').loot;
-const StatsModel = require('../../models/Stats');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors } from 'discord.js'
+import { checkItem, takeItem, addMoney } from '../../lib/user.js'
+import { randomNumber, getRandomLoot, timeout } from '../../lib/helpers.js'
+import { createMessageComponentCollector } from '../../lib/embed.js'
+import Stats from '../../models/Stats.js'
+import lootJson from '../../assets/loot/fish.json' assert { type: "json" }
+const lootTable = lootJson.loot;
 
-class Fish extends Command {
+export default class extends Command {
     info = {
         name: "fish",
         description: "Try and catch some fish that you can sell for money.",
@@ -21,14 +25,14 @@ class Fish extends Command {
     }
 
     async run(interaction, data) {
-        if (!await bot.tools.checkItem(data.user.inventory, "fishing_rod")) {
+        if (!await checkItem(data.user.inventory, "fishing_rod")) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
             return await interaction.reply({ content: "You need a fishing rod to use this command. Use `/shop buy item-id:fishing_rod` to buy a fishing rod.", ephemeral: true });
         }
 
-        if (bot.tools.randomNumber(1, 100) <= 5) {
+        if (randomNumber(1, 100) <= 5) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            await bot.tools.takeItem(interaction.member.id, "fishing_rod", data.user.inventory, 1);
+            await takeItem(interaction.member.id, "fishing_rod", data.user.inventory, 1);
             return await interaction.reply({ content: "Oh No! Your Fishing Rod broke... You have to buy a new fishing rod. Use `/shop buy item-id:fishing_rod` to buy a fishing rod.", ephemeral: true });
         }
         await interaction.deferReply();
@@ -42,7 +46,7 @@ class Fish extends Command {
             .setDescription(`Press the button below to fish. **ONLY PRESS IT WHEN THE BUTTON IS GREEN!**`)
 
         const interactionMessage = await interaction.editReply({ embeds: [embed], components: [this.getRow(status)], fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { time: 15000 });
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { time: 15000 });
 
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
@@ -55,9 +59,9 @@ class Fish extends Command {
                         embed.setColor(Colors.Red);
                         embed.setDescription("You were too soon to catch some fish. Don't press the button until it's green!");
                     } else if (status === "ready") {
-                        const loot = bot.tools.getRandomLoot(lootTable, 1, 5);
+                        const loot = getRandomLoot(lootTable, 1, 5);
 
-                        await StatsModel.updateOne(
+                        await Stats.updateOne(
                             { id: interaction.member.id },
                             { $inc: { catchedFish: loot.length } },
                             { upsert: true }
@@ -85,7 +89,7 @@ class Fish extends Command {
                             embed.addFields({ name: "Loot", value: lootText, inline: false });
                             embed.setColor(Colors.Green);
                             embed.setDescription(`You caught some fish and sold it for :coin: ${totalPrice}.`);
-                            await bot.tools.addMoney(interaction.member.id, totalPrice);
+                            await addMoney(interaction.member.id, totalPrice);
                         }
                     } else {
                         embed.setColor(Colors.Red);
@@ -107,14 +111,14 @@ class Fish extends Command {
             }
         });
 
-        const seconds = bot.tools.randomNumber(5, 10);
-        for (let i = 0; i < seconds; i++) await bot.tools.timeout(1000);
+        const seconds = randomNumber(5, 10);
+        for (let i = 0; i < seconds; i++) await timeout(1000);
 
         if (!finishedCommand) {
             status = "ready";
             await interaction.editReply({ components: [this.getRow(status)] });
         } else {
-            await bot.tools.timeout(1500);
+            await timeout(1500);
             if (!finishedCommand) {
                 finishedCommand = true;
 
@@ -137,5 +141,3 @@ class Fish extends Command {
         return row;
     }
 }
-
-module.exports = Fish;

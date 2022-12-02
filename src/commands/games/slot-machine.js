@@ -1,7 +1,13 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, Colors, ApplicationCommandOptionType } = require('discord.js');
+import Command from '../../structures/Command.js'
+import {
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+    Colors
+} from 'discord.js'
+import { checkBet, randomNumber } from '../../lib/helpers.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
 
-class SlotMachine extends Command {
+export default class extends Command {
     info = {
         name: "slot-machine",
         description: "Try your luck on the slot machines.",
@@ -12,7 +18,7 @@ class SlotMachine extends Command {
                 description: 'The bet you want to place.',
                 required: true,
                 min_length: 2,
-                max_length: 4
+                max_length: 6
             }
         ],
         category: "games",
@@ -40,7 +46,7 @@ class SlotMachine extends Command {
             if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
             bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
         } else {
-            bet = bot.tools.checkBet(betStr, data.user);
+            bet = checkBet(betStr, data.user);
 
             if (!Number.isInteger(bet)) {
                 await interaction.reply({ content: bet, ephemeral: true });
@@ -92,7 +98,7 @@ class SlotMachine extends Command {
         var updateStatus = async function (interaction, data) {
             return async function () {
                 for (let i = 0; i < data.slot[0].length; i++) {
-                    data.slot[i][data.index] = data.keys[bot.tools.randomNumber(0, data.keys.length - 1)];
+                    data.slot[i][data.index] = data.keys[randomNumber(0, data.keys.length - 1)];
                 }
 
                 data.index++;
@@ -111,11 +117,11 @@ class SlotMachine extends Command {
                         let betMultiplier = data.emotes[referenceEmote];
                         data.status = `You won :coin: ${Math.round(data.bet * betMultiplier)}.`;
                         data.color = Colors.Green;
-                        await bot.tools.addMoney(interaction.member.id, Math.round(data.bet * betMultiplier));
+                        await addMoney(interaction.member.id, Math.round(data.bet * betMultiplier));
                     } else {
                         data.status = `You lost :coin: ${data.bet}.`;
                         data.color = Colors.Red;
-                        await bot.tools.takeMoney(interaction.member.id, data.bet);
+                        await takeMoney(interaction.member.id, data.bet);
                     }
                     return await interaction.editReply({ embeds: [createEmbed(data)] });
                 }
@@ -126,5 +132,3 @@ class SlotMachine extends Command {
         await wait(await updateStatus(interaction, data), 2000);
     }
 }
-
-module.exports = SlotMachine;

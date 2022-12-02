@@ -1,8 +1,8 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ApplicationCommandOptionType, Colors, PermissionsBitField, ChannelType } = require('discord.js');
-const MemberModel = require('../../models/Member');
+import Command from "../../structures/Command.js"
+import { EmbedBuilder, ApplicationCommandOptionType, Colors } from "discord.js"
+import MemberModel from "../../models/Member.js"
 
-class UserConfig extends Command {
+export default class extends Command {
     info = {
         name: "user-config",
         description: "Change your user settings in every server.",
@@ -67,7 +67,7 @@ class UserConfig extends Command {
 
     async run(interaction, data) {
         if (interaction.options.getSubcommand() === "set-notification") return await this.configNotifications(interaction, data);
-        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
+        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help command ${this.info.name}\`.`, ephemeral: true });
     }
 
     async configNotifications(interaction, data) {
@@ -101,5 +101,3 @@ class UserConfig extends Command {
         await interaction.editReply({ embeds: [embed] });
     }
 }
-
-module.exports = UserConfig;

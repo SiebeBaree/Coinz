@@ -1,9 +1,19 @@
-const Command = require('../../structures/Command.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, ApplicationCommandOptionType } = require('discord.js');
-const { deck, hiddenCard } = require('../../assets/deck.json');
-const MemberModel = require('../../models/Member.js');
+import Command from '../../structures/Command.js'
+import {
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+    Colors, ButtonBuilder,
+    ButtonStyle,
+    ActionRowBuilder
+} from 'discord.js'
+import MemberModel from '../../models/Member.js'
+import { checkBet, randomNumber } from '../../lib/helpers.js'
+import { createMessageComponentCollector } from '../../lib/embed.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
+import deckJson from '../../assets/deck.json' assert { type: "json" }
+const { deck, hiddenCard } = deckJson;
 
-class Blackjack extends Command {
+export default class extends Command {
     info = {
         name: "blackjack",
         description: "Play a game of blackjack.",
@@ -14,7 +24,7 @@ class Blackjack extends Command {
                 description: 'The bet you want to place.',
                 required: true,
                 min_length: 2,
-                max_length: 4
+                max_length: 5
             }
         ],
         category: "games",
@@ -39,7 +49,7 @@ class Blackjack extends Command {
             if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
             bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
         } else {
-            bet = bot.tools.checkBet(betStr, data.user);
+            bet = checkBet(betStr, data.user);
 
             if (!Number.isInteger(bet)) {
                 await interaction.reply({ content: bet, ephemeral: true });
@@ -57,10 +67,10 @@ class Blackjack extends Command {
         data.dealerHand = [];
 
         data = this.startGame(data);
-        if (data.playerWon === true) await MemberModel.updateOne({ id: interaction.member.id }, { $push: { badges: "easy_blackjack" } });
+        if (data.playerWon === true && !data.user.badges.includes(easy_blackjack)) await MemberModel.updateOne({ id: interaction.member.id }, { $push: { badges: "easy_blackjack" } });
 
         const interactionMessage = await interaction.editReply({ embeds: [this.createEmbed(data)], components: [this.setButtons(data.gameFinished, disableDoubleDown)], fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 6, idle: 15000 });
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 6, idle: 15000 });
 
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
@@ -83,9 +93,9 @@ class Blackjack extends Command {
 
                     if (data.tie === undefined) {
                         if (data.playerWon) {
-                            await bot.tools.addMoney(interaction.member.id, parseInt(this.getPrice(data.bet) - data.bet));
+                            await addMoney(interaction.member.id, parseInt(this.getPrice(data.bet) - data.bet));
                         } else {
-                            await bot.tools.takeMoney(interaction.member.id, data.bet);
+                            await takeMoney(interaction.member.id, data.bet);
                         }
                     }
                 }
@@ -98,7 +108,7 @@ class Blackjack extends Command {
                 data.gameFinished = true;
                 data.desc = `You lost :coin: ${data.bet}`;
                 data.color = Colors.Red;
-                await bot.tools.takeMoney(interaction.member.id, data.bet);
+                await takeMoney(interaction.member.id, data.bet);
                 await interaction.editReply({ embeds: [this.createEmbed(data)], components: [this.setButtons(true)] });
             }
         });
@@ -164,7 +174,7 @@ class Blackjack extends Command {
     }
 
     getRandomCard() {
-        return deck[bot.tools.randomNumber(0, deck.length - 1)];
+        return deck[randomNumber(0, deck.length - 1)];
     }
 
     getPrice(bet) {
@@ -271,5 +281,3 @@ class Blackjack extends Command {
         return data;
     }
 }
-
-module.exports = Blackjack;

@@ -1,16 +1,16 @@
-const path = require('path');
+import { parse } from 'path';
 
-class Command {
+export default class {
     constructor(client, file) {
         this.client = client;
         this.file = file;
-        this.name = path.parse(file).name;
+        this.name = parse(file).name;
         this.store = client.store;
     }
 
     async cool(command, member, cooldown) {
-        if (await bot.cooldown.isOnCooldown(member.id, command)) return true;
-        await bot.cooldown.setCooldown(member.id, command, cooldown);
+        if (await this.client.cooldown.isOnCooldown(member.id, command)) return true;
+        await this.client.cooldown.setCooldown(member.id, command, cooldown);
         return false;
     }
 
@@ -18,5 +18,3 @@ class Command {
         return this.store.load(this.file);
     }
 }
-
-module.exports = Command;

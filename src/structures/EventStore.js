@@ -1,6 +1,6 @@
-const Store = require('./Store.js');
+import Store from './Store.js';
 
-class EventStore extends Store {
+export default class extends Store {
     constructor(client) {
         super(client, 'events');
     }
@@ -23,5 +23,3 @@ class EventStore extends Store {
         }
     }
 }
-
-module.exports = EventStore;

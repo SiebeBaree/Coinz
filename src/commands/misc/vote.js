@@ -1,5 +1,5 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 
 const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
@@ -14,7 +14,7 @@ const row = new ActionRowBuilder().addComponents(
         .setURL("https://discordbotlist.com/bots/coinz/upvote")
 )
 
-class Vote extends Command {
+export default class extends Command {
     info = {
         name: "vote",
         description: "Get all the links to the voting sites for rewards.",
@@ -45,5 +45,3 @@ class Vote extends Command {
         await interaction.editReply({ embeds: [embed], components: [row] });
     }
 }
-
-module.exports = Vote;

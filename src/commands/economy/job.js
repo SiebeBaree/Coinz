@@ -1,12 +1,14 @@
-const Command = require('../../structures/Command.js');
-const { ApplicationCommandOptionType, EmbedBuilder } = require('discord.js');
-const workList = require('../../assets/jobList.json').jobs;
-const MemberModel = require('../../models/Member');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ApplicationCommandOptionType, ComponentType } from 'discord.js'
+import { pageButtons, createMessageComponentCollector } from '../../lib/embed.js'
+import Member from '../../models/Member.js'
+import jobList from "../../assets/jobs.json" assert { type: "json" };
 
+const workList = jobList.jobs;
 const itemsPerPage = 5;
 const maxPages = Math.ceil(workList.length / itemsPerPage);
 
-class Job extends Command {
+export default class extends Command {
     info = {
         name: "job",
         description: "Apply for a job or get a list with all jobs.",
@@ -31,7 +33,7 @@ class Job extends Command {
                     {
                         name: 'job-name',
                         type: ApplicationCommandOptionType.String,
-                        description: 'The plot ID of where you want to plant.',
+                        description: 'The name of the job you want to apply for.',
                         required: true,
                         min_length: 3,
                         max_length: 30
@@ -55,36 +57,35 @@ class Job extends Command {
         if (interaction.options.getSubcommand() === "list") return await this.execList(interaction, data);
         if (interaction.options.getSubcommand() === "leave") return await this.execLeave(interaction, data);
         if (interaction.options.getSubcommand() === "apply") return await this.execApply(interaction, data);
-        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
+        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help command ${this.info.name}\`.`, ephemeral: true });
     }
 
     async execList(interaction, data) {
         await interaction.deferReply();
         let currentPage = 0;
-        const interactionMessage = await interaction.editReply({ embeds: [this.getListEmbed(this.getJobs(currentPage), data.user, currentPage)], components: [bot.tools.pageButtons(currentPage, maxPages)], fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 15, idle: 15_000, time: 60_000 });
+        const interactionMessage = await interaction.editReply({ embeds: [this.getListEmbed(this.getJobs(currentPage), data.user, currentPage)], components: [pageButtons(currentPage, maxPages)], fetchReply: true });
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 15, idle: 15_000, time: 60_000, componentType: ComponentType.Button });
 
-        collector.on('collect', async (interactionCollector) => {
-            if (interactionCollector.customId === 'toLastPage') currentPage = maxPages - 1;
-            else if (interactionCollector.customId === 'toFirstPage') currentPage = 0;
-            else if (interactionCollector.customId === 'toNextPage') currentPage++;
-            else if (interactionCollector.customId === 'toPreviousPage') currentPage--;
-            await interactionCollector.deferUpdate();
-            await interaction.editReply({ embeds: [this.getListEmbed(this.getJobs(currentPage), data.user, currentPage)], components: [bot.tools.pageButtons(currentPage, maxPages)] });
-        })
+        collector.on('collect', async (i) => {
+            if (i.customId === 'toLastPage') currentPage = maxPages - 1;
+            else if (i.customId === 'toFirstPage') currentPage = 0;
+            else if (i.customId === 'toNextPage') currentPage++;
+            else if (i.customId === 'toPreviousPage') currentPage--;
+            await i.update({ embeds: [this.getListEmbed(this.getJobs(currentPage), data.user, currentPage)], components: [pageButtons(currentPage, maxPages)] });
+        });
 
-        collector.on('end', async (interactionCollector) => {
-            await interaction.editReply({ components: [bot.tools.pageButtons(currentPage, maxPages, true)] });
-        })
+        collector.on('end', async (i) => {
+            await interaction.editReply({ components: [pageButtons(currentPage, maxPages, true)] });
+        });
     }
 
     async execLeave(interaction, data) {
-        if (data.user.job.startsWith("business")) return await interaction.reply({ content: `You work at a company. Please leave or sell your company using </company info:993095062726647808>`, ephemeral: true });
+        if (data.user.job.startsWith("business")) return await interaction.reply({ content: `You work at a business. Please leave or sell your business using \`/business info\``, ephemeral: true });
         const job = this.getJob(data.user.job);
         if (job === null) return await interaction.reply({ content: `You don't have a job. Please apply for a job with </${this.info.name} apply:983096143284174858>.`, ephemeral: true });
 
         await interaction.deferReply();
-        await MemberModel.updateOne({ id: interaction.member.id }, { $set: { job: "" } });
+        await Member.updateOne({ id: interaction.member.id }, { $set: { job: "" } });
         await interaction.editReply({ content: `You successfully left your job (\`${job.name}\`).` });
     }
 
@@ -97,7 +98,7 @@ class Job extends Command {
         if (job === null) return await interaction.reply({ content: `That is not a valid job. Please use </${this.info.name} list:983096143284174858> to view all jobs.`, ephemeral: true });
 
         await interaction.deferReply();
-        await MemberModel.updateOne({ id: interaction.member.id }, { $set: { job: job.name } });
+        await Member.updateOne({ id: interaction.member.id }, { $set: { job: job.name } });
         await interaction.editReply({ content: `GG, you got the job (\`${job.name}\`).` });
     }
 
@@ -117,7 +118,7 @@ class Job extends Command {
 
         let currentJob = ``;
         if (userData.job != "") currentJob = `:briefcase: **You are currently working as a ${userData.job}.**\n`;
-        if (userData.job.startsWith("business")) currentJob = `:briefcase: **You work at a company. Leave your company using </company info:993095062726647808>**\n`;
+        if (userData.job.startsWith("business")) currentJob = `:briefcase: **You work at a company. Leave your company using \`/business info\`**\n`;
         let descField = `${currentJob}:moneybag: **To apply for a job use** </${this.info.name} apply:983096143284174858>**.**\n:o: **You can only apply for jobs with** :white_check_mark:\n:mans_shoe: **Leave a job by using** </${this.info.name} leave:983096143284174858>**.**\n\n`;
         for (let job in jobs) {
             descField += `:white_check_mark: **${jobs[job].name}** ― :coin: ${jobs[job].salary} / hour\n> Required hours per day: \`${jobs[job].minWorkPerDay}\`\n\n`;
@@ -136,5 +137,3 @@ class Job extends Command {
         return jobs;
     }
 }
-
-module.exports = Job;

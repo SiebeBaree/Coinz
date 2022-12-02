@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+import { Schema, model } from 'mongoose';
 
 const Cooldown = Schema({
     id: { type: String, required: true, index: true },
@@ -6,4 +6,4 @@ const Cooldown = Schema({
     expiresOn: { type: Number, default: new Date() }
 });
 
-module.exports = model('Cooldown', Cooldown, 'cooldowns');
+export default model('Cooldown', Cooldown, 'cooldowns');

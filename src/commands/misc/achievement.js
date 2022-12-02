@@ -1,9 +1,10 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ApplicationCommandOptionType } = require('discord.js');
-const idAchievements = require('../../assets/achievements.json');
-const MemberModel = require('../../models/Member');
+import Command from "../../structures/Command.js"
+import { EmbedBuilder, ApplicationCommandOptionType } from "discord.js"
+import idAchievements from "../../assets/achievements.json" assert { type: "json" }
+import MemberModel from "../../models/Member.js"
+import { pageButtons, createMessageComponentCollector } from "../../lib/embed.js"
 
-class Achievement extends Command {
+export default class extends Command {
     info = {
         name: "achievement",
         description: "Refresh or view your current achievements.",
@@ -55,14 +56,14 @@ class Achievement extends Command {
                 return `${statsData.workComplete || 0}/50`;
             }
         },
-        "patron": {
-            name: "A Real Patron",
+        "big_spender": {
+            name: "A True Coinz Supporter",
             description: "Buy Coinz Premium.",
             isValid: (memberData, statsData) => {
-                return false;
+                return memberData.premium === true;
             },
             progress: (memberData, statsData) => {
-                return false;
+                return `${memberData.premium === true ? "1" : "0"}/1`;
             }
         },
         "going_places": {
@@ -119,17 +120,6 @@ class Achievement extends Command {
                 return `${statsData.commandsExecuted || 0}/500`;
             }
         },
-        // "winner": {
-        //     name: "Look mom, I won something!",
-        //     description: "Get a Trophy.",
-        //     isValid: (memberData, statsData) => {
-        //         for (let i = 0; i < memberData.inventory.length; i++) if (memberData.inventory[i].itemId === "trophy") return true;
-        //         return false;
-        //     },
-        //     progress: (memberData, statsData) => {
-        //         return false;
-        //     }
-        // },
         "local_fish_dealer": {
             name: "Local Fish Dealer",
             description: "Catch 100 fish.",
@@ -204,7 +194,7 @@ class Achievement extends Command {
         if (interaction.options.getSubcommand() === "list") return await this.execList(interaction, data);
         if (interaction.options.getSubcommand() === "refresh") return await this.execRefresh(interaction, data);
         if (interaction.options.getSubcommand() === "select") return await this.execSelect(interaction, data);
-        return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.` });
+        return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help command ${this.info.name}\`.` });
     }
 
     async execList(interaction, data) {
@@ -246,8 +236,8 @@ class Achievement extends Command {
 
         const stats = await bot.database.fetchStats(interaction.member.id);
         let achievementStr = createList(keys, this.achievements, currentPage, data.user, stats);
-        const interactionMessage = await interaction.editReply({ embeds: [createEmbed(achievementStr, currentPage, maxPages)], components: [bot.tools.pageButtons(currentPage, maxPages)], fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 10, idle: 15000, time: 60000 });
+        const interactionMessage = await interaction.editReply({ embeds: [createEmbed(achievementStr, currentPage, maxPages)], components: [pageButtons(currentPage, maxPages)], fetchReply: true });
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 10, idle: 15000, time: 60000 });
 
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
@@ -257,11 +247,11 @@ class Achievement extends Command {
             else if (interactionCollector.customId === 'toPreviousPage') currentPage--;
 
             achievementStr = createList(keys, this.achievements, currentPage, data.user, stats);
-            await interaction.editReply({ embeds: [createEmbed(achievementStr, currentPage, maxPages)], components: [bot.tools.pageButtons(currentPage, maxPages)] });
+            await interaction.editReply({ embeds: [createEmbed(achievementStr, currentPage, maxPages)], components: [pageButtons(currentPage, maxPages)] });
         });
 
         collector.on('end', async (interactionCollector) => {
-            await interaction.editReply({ components: [bot.tools.pageButtons(currentPage, maxPages, true)] });
+            await interaction.editReply({ components: [pageButtons(currentPage, maxPages, true)] });
         });
     }
 
@@ -311,5 +301,3 @@ class Achievement extends Command {
         await interaction.editReply({ content: `You selected <:${achievement}:${idAchievements[achievement]}> as your badge on your profile.` });
     }
 }
-
-module.exports = Achievement;

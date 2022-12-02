@@ -1,8 +1,19 @@
-const Command = require('../../structures/Command.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, ApplicationCommandOptionType } = require('discord.js');
-const { deck } = require('../../assets/deck.json');
+import Command from '../../structures/Command.js'
+import {
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+    Colors,
+    ActionRowBuilder,
+    ButtonStyle,
+    ButtonBuilder
+} from 'discord.js'
+import { checkBet, randomNumber } from '../../lib/helpers.js'
+import { createMessageComponentCollector } from '../../lib/embed.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
+import deckJson from '../../assets/deck.json' assert { type: "json" }
+const { deck } = deckJson;
 
-class Poker extends Command {
+export default class extends Command {
     info = {
         name: "poker",
         description: "Play a game of video poker.",
@@ -13,7 +24,7 @@ class Poker extends Command {
                 description: 'The bet you want to place.',
                 required: true,
                 min_length: 2,
-                max_length: 4
+                max_length: 6
             }
         ],
         usage: "<bet>",
@@ -41,7 +52,7 @@ class Poker extends Command {
             if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
             bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
         } else {
-            bet = bot.tools.checkBet(betStr, data.user);
+            bet = checkBet(betStr, data.user);
 
             if (!Number.isInteger(bet)) {
                 await interaction.reply({ content: bet, ephemeral: true });
@@ -61,7 +72,7 @@ class Poker extends Command {
 
         data = this.startGame(data);
         const interactionMessage = await interaction.editReply({ embeds: [this.createEmbed(data)], components: this.setButtons(data.hand, data.gameFinished), fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { time: 60000 });
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { time: 60000 });
 
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
@@ -289,7 +300,7 @@ class Poker extends Command {
         for (let i = 0; i < 5; i++) {
             let card = data.deck[0];
             do {
-                card = data.deck[bot.tools.randomNumber(0, data.deck.length - 1)];
+                card = data.deck[randomNumber(0, data.deck.length - 1)];
             } while (data.pickedCards.includes(card));
             data.pickedCards.push(card);
             card.locked = false;
@@ -303,7 +314,7 @@ class Poker extends Command {
             if (!data.hand[i].locked) {
                 let card = data.deck[0];
                 do {
-                    card = data.deck[bot.tools.randomNumber(0, data.deck.length - 1)];
+                    card = data.deck[randomNumber(0, data.deck.length - 1)];
                 } while (data.pickedCards.includes(card));
                 data.pickedCards.push(card);
                 data.hand[i] = card;
@@ -326,14 +337,12 @@ class Poker extends Command {
         data = this.checkHand(data);
 
         if (data.playerWon) {
-            await bot.tools.addMoney(interaction.member.id, this.getPrice(data.bet, data.multiplier));
+            await addMoney(interaction.member.id, this.getPrice(data.bet, data.multiplier));
         } else {
-            await bot.tools.takeMoney(interaction.member.id, data.bet);
+            await takeMoney(interaction.member.id, data.bet);
         }
 
         await interaction.followUp({ content: data.playerWon ? `GG! You got a **${data.handName}** and won :coin: ${parseInt(data.bet * data.multiplier)}!` : `:sob: You got nothing and lost :coin: ${data.bet}.` });
         return data;
     }
 }
-
-module.exports = Poker;

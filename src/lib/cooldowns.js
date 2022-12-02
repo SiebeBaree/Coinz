@@ -1,15 +1,15 @@
-const CooldownModel = require('../models/Cooldown');
+import CooldownModel from '../models/Cooldown.js'
 
-const isOnCooldown = async (userId, cmdName) => {
+export const isOnCooldown = async (userId, cmdName) => {
     const cooldownData = await CooldownModel.findOne({ id: userId, command: cmdName });
     return !cooldownData ? false : cooldownData.expiresOn && (cooldownData.expiresOn > parseInt(Date.now() / 1000));
-};
+}
 
-const removeCooldown = async (userId, cmdName) => {
+export const removeCooldown = async (userId, cmdName) => {
     await CooldownModel.deleteOne({ id: userId, command: cmdName });
-};
+}
 
-const setCooldown = async (userId, cmdName, cooldown = 0) => {
+export const setCooldown = async (userId, cmdName, cooldown = 0) => {
     if (cooldown === 0) cooldown = bot.config.defaultTimeout;
 
     await CooldownModel.findOneAndUpdate(
@@ -17,14 +17,14 @@ const setCooldown = async (userId, cmdName, cooldown = 0) => {
         { $set: { expiresOn: parseInt(Date.now() / 1000) + cooldown } },
         { upsert: true }
     );
-};
+}
 
-const getCooldown = async (userId, cmdName) => {
+export const getCooldown = async (userId, cmdName) => {
     const cooldownData = await CooldownModel.findOne({ id: userId, command: cmdName });
     return !cooldownData ? 0 : cooldownData.expiresOn - parseInt(Date.now() / 1000);
-};
+}
 
-module.exports = {
+export default {
     isOnCooldown,
     removeCooldown,
     setCooldown,

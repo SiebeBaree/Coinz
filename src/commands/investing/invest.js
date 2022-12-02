@@ -1,9 +1,13 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ApplicationCommandOptionType, Colors, ComponentType } = require('discord.js');
-const StockModel = require('../../models/Stock');
-const MemberModel = require('../../models/Member');
-const moment = require('moment-timezone');
-const market = require('../../assets/stockData.json');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ApplicationCommandOptionType, Colors, ComponentType } from 'discord.js'
+import MemberModel from '../../models/Member.js'
+import StockModel from '../../models/Investment.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
+import { roundNumber } from '../../lib/helpers.js'
+import { calculateChange } from '../../lib/investing.js'
+import { investingSelectMenu, pageButtons, createMessageComponentCollector } from '../../lib/embed.js'
+import moment from 'moment-timezone'
+import market from '../../assets/investments.json' assert { type: "json" }
 
 const timezone = "America/New_York";
 const dateFormat = "DD/MM/YYYY";
@@ -14,7 +18,7 @@ const maxOwnedStock = 5000000;
 const maxPurchase = 100000;
 const itemsPerPage = 5;
 
-class Invest extends Command {
+export default class extends Command {
     info = {
         name: "invest",
         description: "Buy, sell or get info about an investment.",
@@ -99,7 +103,7 @@ class Invest extends Command {
         if (interaction.options.getSubcommand() === "info") return await this.execInfo(interaction, data);
         if (interaction.options.getSubcommand() === "buy") return await this.execBuy(interaction, data);
         if (interaction.options.getSubcommand() === "sell") return await this.execSell(interaction, data);
-        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
+        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help command ${this.info.name}\`.`, ephemeral: true });
     }
 
     async execInfo(interaction, data) {
@@ -116,7 +120,7 @@ class Invest extends Command {
                 let stockStr = "";
                 for (let i = 0; i < stocks.length; i++) {
                     if (i >= currentPage * itemsPerPage && i < currentPage * itemsPerPage + itemsPerPage) {
-                        const change = bot.tools.calculateChange(stocks[i].price, stocks[i].previousClose);
+                        const change = calculateChange(stocks[i].price, stocks[i].previousClose);
                         stockStr += `• **${stocks[i].fullName}** (${stocks[i].ticker})\n> :coin: ${stocks[i].price} (${change.icon} ${change.changePercentage}%)\n\n`
                     }
                 }
@@ -129,8 +133,8 @@ class Invest extends Command {
                 return embed;
             }
 
-            const interactionMessage = await interaction.editReply({ embeds: [createEmbed(stocks, currentPage, maxPages)], components: [bot.tools.investingSelectMenu(category), bot.tools.pageButtons(currentPage, maxPages)], fetchReply: true });
-            const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 20, idle: 15000, time: 60000 });
+            const interactionMessage = await interaction.editReply({ embeds: [createEmbed(stocks, currentPage, maxPages)], components: [investingSelectMenu(category), pageButtons(currentPage, maxPages)], fetchReply: true });
+            const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 20, idle: 15000, time: 60000 });
 
             collector.on('collect', async (interactionCollector) => {
                 await interactionCollector.deferUpdate();
@@ -147,11 +151,11 @@ class Invest extends Command {
                     currentPage = 0;
                 }
 
-                await interaction.editReply({ embeds: [createEmbed(stocks, currentPage, maxPages)], components: [bot.tools.investingSelectMenu(category), bot.tools.pageButtons(currentPage, maxPages)] });
+                await interaction.editReply({ embeds: [createEmbed(stocks, currentPage, maxPages)], components: [investingSelectMenu(category), pageButtons(currentPage, maxPages)] });
             })
 
             collector.on('end', async (interactionCollector) => {
-                await interaction.editReply({ components: [bot.tools.investingSelectMenu("", true), bot.tools.pageButtons(currentPage, maxPages, true)] });
+                await interaction.editReply({ components: [investingSelectMenu("", true), pageButtons(currentPage, maxPages, true)] });
             })
         } else {
             let stock = await bot.database.fetchStock(ticker.toUpperCase());
@@ -177,7 +181,7 @@ class Invest extends Command {
 
             let marketStr = "";
             if (stock.type === "Stock") marketStr = `\n:radio_button: **Market:** ${isMarketOpen() ? 'Open' : 'Closed'}`;
-            const change = bot.tools.calculateChange(stock.price, stock.previousClose);
+            const change = calculateChange(stock.price, stock.previousClose);
 
             const embed = new EmbedBuilder()
                 .setAuthor({ name: `${stock.type}: ${stock.fullName}` })
@@ -205,7 +209,7 @@ class Invest extends Command {
         if (amount !== null) {
             price = Math.round(stock.price * amount);
         } else {
-            amount = bot.tools.roundNumber(price / stock.price, 3);
+            amount = roundNumber(price / stock.price, 3);
         }
 
         if (price < 10) return await interaction.reply({ content: `You have to buy at least :coin: 10 at once.`, ephemeral: true });
@@ -252,7 +256,7 @@ class Invest extends Command {
                 }
             });
         }
-        await bot.tools.takeMoney(interaction.member.id, price)
+        await takeMoney(interaction.member.id, price)
 
         const embed = new EmbedBuilder()
             .setTitle(`You just bought ${amount}x ${stock.fullName}`)
@@ -302,7 +306,7 @@ class Invest extends Command {
             });
         }
 
-        await bot.tools.addMoney(interaction.member.id, price)
+        await addMoney(interaction.member.id, price)
 
         const embed = new EmbedBuilder()
             .setTitle(`You sold ${amount}x ${stock.fullName}`)
@@ -319,5 +323,3 @@ class Invest extends Command {
         return await StockModel.find({ type: category });
     }
 }
-
-module.exports = Invest;

@@ -1,9 +1,11 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ApplicationCommandOptionType, ComponentType } = require('discord.js');
-const ItemModel = require('../../models/Item');
-const MemberModel = require('../../models/Member');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ApplicationCommandOptionType, ComponentType } from 'discord.js'
+import { addItem, addMoney, takeMoney } from '../../lib/user.js'
+import { categoriesSelectMenu, createMessageComponentCollector, pageButtons } from '../../lib/embed.js'
+import MemberModel from '../../models/Member.js'
+import ItemModel from '../../models/Item.js'
 
-class Shop extends Command {
+export default class extends Command {
     info = {
         name: "shop",
         description: "View, buy or sell items with this command.",
@@ -72,7 +74,7 @@ class Shop extends Command {
         deferReply: false
     };
 
-    itemsPerPage = 5;
+    itemsPerPage = 7;
 
     constructor(...args) {
         super(...args);
@@ -82,7 +84,7 @@ class Shop extends Command {
         if (interaction.options.getSubcommand() === "list") return await this.execList(interaction, data);
         if (interaction.options.getSubcommand() === "buy") return await this.execBuy(interaction, data);
         if (interaction.options.getSubcommand() === "sell") return await this.execSell(interaction, data);
-        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
+        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help command ${this.info.name}\`.`, ephemeral: true });
     }
 
     async execList(interaction, data) {
@@ -118,8 +120,8 @@ class Shop extends Command {
             let currentPage = 0;
 
             let shopStr = this.createShop(shopItems, currentPage);
-            const interactionMessage = await interaction.editReply({ embeds: [this.createShopEmbed(shopStr, currentPage, maxPages)], components: [bot.tools.categoriesSelectMenu(category), bot.tools.pageButtons(currentPage, maxPages)], fetchReply: true });
-            const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 20, idle: 15000, time: 60000 });
+            const interactionMessage = await interaction.editReply({ embeds: [this.createShopEmbed(shopStr, currentPage, maxPages)], components: [categoriesSelectMenu(category), pageButtons(currentPage, maxPages)], fetchReply: true });
+            const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 20, idle: 15000, time: 60000 });
 
             collector.on('collect', async (interactionCollector) => {
                 if (interactionCollector.componentType === ComponentType.Button) {
@@ -136,11 +138,11 @@ class Shop extends Command {
 
                 shopStr = this.createShop(shopItems, currentPage);
                 await interactionCollector.deferUpdate();
-                await interaction.editReply({ embeds: [this.createShopEmbed(shopStr, currentPage, maxPages)], components: [bot.tools.categoriesSelectMenu(category), bot.tools.pageButtons(currentPage, maxPages)] });
+                await interaction.editReply({ embeds: [this.createShopEmbed(shopStr, currentPage, maxPages)], components: [categoriesSelectMenu(category), pageButtons(currentPage, maxPages)] });
             })
 
             collector.on('end', async (interactionCollector) => {
-                await interaction.editReply({ components: [bot.tools.categoriesSelectMenu("", true), bot.tools.pageButtons(currentPage, maxPages, true)] });
+                await interaction.editReply({ components: [categoriesSelectMenu("", true), pageButtons(currentPage, maxPages, true)] });
             })
         }
     }
@@ -156,8 +158,8 @@ class Shop extends Command {
         const totalPrice = item.buyPrice * amount;
         if (data.user.wallet < totalPrice) return await interaction.reply({ content: `You don't have enough money in your wallet. You need :coin: ${totalPrice}.`, ephemeral: true });
         await interaction.deferReply();
-        await bot.tools.addItem(interaction.member.id, item.itemId, amount, data.user.inventory);
-        await bot.tools.takeMoney(interaction.member.id, totalPrice);
+        await addItem(interaction.member.id, item.itemId, amount, data.user.inventory);
+        await takeMoney(interaction.member.id, totalPrice);
 
         await interaction.editReply({ content: `You successfully bought **${amount}x** \`${item.name}\` for :coin: ${totalPrice}.` });
     }
@@ -189,7 +191,7 @@ class Shop extends Command {
             await MemberModel.updateOne({ id: interaction.member.id, 'inventory.itemId': item.itemId }, { $inc: { 'inventory.$.quantity': -amount } });
         }
 
-        await bot.tools.addMoney(interaction.member.id, worth);
+        await addMoney(interaction.member.id, worth);
         await interaction.editReply({ content: `You sold **${amount}x** \`${item.name}\` for :coin: ${worth}.` });
     }
 
@@ -222,5 +224,3 @@ class Shop extends Command {
         return embed;
     }
 }
-
-module.exports = Shop;

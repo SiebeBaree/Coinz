@@ -1,6 +1,7 @@
-const Command = require('../../structures/Command.js');
+import Command from "../../structures/Command.js";
+import { msToTime } from "../../lib/helpers.js";
 
-class Ping extends Command {
+export default class extends Command {
     info = {
         name: "ping",
         description: "Get the time between the bot and discord in milliseconds.",
@@ -19,8 +20,6 @@ class Ping extends Command {
 
     async run(interaction, data) {
         const dateNow = Date.now();
-        await interaction.editReply({ content: `:ping_pong: **Ping:** ${bot.ws.ping} ms\n:speech_balloon: **Responds Time:** ${dateNow - interaction.createdTimestamp} ms\n:white_check_mark: **Uptime:** ${bot.tools.msToTime(bot.uptime)}` });
+        await interaction.editReply({ content: `:ping_pong: **Ping:** ${bot.ws.ping} ms\n:speech_balloon: **Responds Time:** ${dateNow - interaction.createdTimestamp} ms\n:white_check_mark: **Uptime:** ${msToTime(bot.uptime)}` });
     }
 }
-
-module.exports = Ping;

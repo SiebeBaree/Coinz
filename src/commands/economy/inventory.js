@@ -1,8 +1,9 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ApplicationCommandOptionType, ComponentType } = require('discord.js');
-const ItemModel = require('../../models/Item');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ApplicationCommandOptionType, ComponentType } from 'discord.js'
+import { createMessageComponentCollector, categoriesSelectMenu, pageButtons } from '../../lib/embed.js'
+import ItemModel from '../../models/Item.js'
 
-class Inventory extends Command {
+export default class extends Command {
     info = {
         name: "inventory",
         description: "View your or someone's inventory.",
@@ -42,8 +43,8 @@ class Inventory extends Command {
         let currentPage = 0;
 
         let invStr = this.createInventory(invItems, currentPage);
-        const interactionMessage = await interaction.editReply({ embeds: [this.createInvEmbed(member, invStr, currentPage, maxPages)], components: [bot.tools.categoriesSelectMenu(category), bot.tools.pageButtons(currentPage, maxPages)], fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 20, idle: 15000, time: 60000 });
+        const interactionMessage = await interaction.editReply({ embeds: [this.createInvEmbed(member, invStr, currentPage, maxPages)], components: [categoriesSelectMenu(category), pageButtons(currentPage, maxPages)], fetchReply: true });
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 20, idle: 15000, time: 60000 });
 
         collector.on('collect', async (interactionCollector) => {
             if (interactionCollector.componentType === ComponentType.Button) {
@@ -60,11 +61,11 @@ class Inventory extends Command {
 
             invStr = this.createInventory(invItems, currentPage);
             await interactionCollector.deferUpdate();
-            await interaction.editReply({ embeds: [this.createInvEmbed(member, invStr, currentPage, maxPages)], components: [bot.tools.categoriesSelectMenu(category), bot.tools.pageButtons(currentPage, maxPages)] });
+            await interaction.editReply({ embeds: [this.createInvEmbed(member, invStr, currentPage, maxPages)], components: [categoriesSelectMenu(category), pageButtons(currentPage, maxPages)] });
         });
 
         collector.on('end', async (interactionCollector) => {
-            await interaction.editReply({ components: [bot.tools.categoriesSelectMenu("", true), bot.tools.pageButtons(currentPage, maxPages, true)] });
+            await interaction.editReply({ components: [categoriesSelectMenu("", true), pageButtons(currentPage, maxPages, true)] });
         });
     }
 
@@ -102,5 +103,3 @@ class Inventory extends Command {
         return embed;
     }
 }
-
-module.exports = Inventory;

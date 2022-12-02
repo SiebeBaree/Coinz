@@ -1,10 +1,13 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ComponentType } = require('discord.js');
-const StockModel = require('../../models/Stock');
-const MemberModel = require('../../models/Member');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ComponentType } from 'discord.js'
+import MemberModel from '../../models/Member.js'
+import StockModel from '../../models/Investment.js'
+import { createMessageComponentCollector, investingSelectMenu, pageButtons } from '../../lib/embed.js'
+import { calculateChange } from '../../lib/investing.js'
+
 const itemsPerPage = 3;
 
-class Portfolio extends Command {
+export default class extends Command {
     info = {
         name: "portfolio",
         description: "Check all your progress in your portfolio.",
@@ -27,8 +30,8 @@ class Portfolio extends Command {
         let maxPages = this.calculateMaxPages(allStocks[category]);
         let currentPage = 0;
 
-        const interactionMessage = await interaction.editReply({ embeds: [this.createEmbed(interaction, category, allStocks, currentPage, maxPages)], components: [bot.tools.investingSelectMenu(category), bot.tools.pageButtons(currentPage, maxPages)], fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 25, idle: 15000, time: 90000 });
+        const interactionMessage = await interaction.editReply({ embeds: [this.createEmbed(interaction, category, allStocks, currentPage, maxPages)], components: [investingSelectMenu(category), pageButtons(currentPage, maxPages)], fetchReply: true });
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 25, idle: 15000, time: 90000 });
 
         collector.on('collect', async (interactionCollector) => {
             if (interactionCollector.componentType === ComponentType.Button) {
@@ -43,11 +46,11 @@ class Portfolio extends Command {
             }
 
             await interactionCollector.deferUpdate();
-            await interaction.editReply({ embeds: [this.createEmbed(interaction, category, allStocks, currentPage, maxPages)], components: [bot.tools.investingSelectMenu(category), bot.tools.pageButtons(currentPage, maxPages)] });
+            await interaction.editReply({ embeds: [this.createEmbed(interaction, category, allStocks, currentPage, maxPages)], components: [investingSelectMenu(category), pageButtons(currentPage, maxPages)] });
         })
 
         collector.on('end', async (interactionCollector) => {
-            await interaction.editReply({ components: [bot.tools.investingSelectMenu("", true), bot.tools.pageButtons(currentPage, maxPages, true)] });
+            await interaction.editReply({ components: [investingSelectMenu("", true), pageButtons(currentPage, maxPages, true)] });
         })
     }
 
@@ -84,7 +87,7 @@ class Portfolio extends Command {
         for (let i = 0; i < stocks[category].length; i++) {
             if (i >= currentPage * itemsPerPage && i < currentPage * itemsPerPage + itemsPerPage) {
                 const currentlyWorth = parseInt(stocks[category][i].price * stocks[category][i].quantity);
-                const change = bot.tools.calculateChange(stocks[category][i].buyPrice, currentlyWorth);
+                const change = calculateChange(stocks[category][i].buyPrice, currentlyWorth);
                 embed.addFields([
                     {
                         name: `${stocks[category][i].fullName} (${stocks[category][i].ticker})`,
@@ -102,5 +105,3 @@ class Portfolio extends Command {
         return stocks === undefined ? 1 : Math.ceil(stocks.length / itemsPerPage);
     }
 }
-
-module.exports = Portfolio;

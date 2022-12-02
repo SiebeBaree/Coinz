@@ -1,8 +1,9 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ApplicationCommandOptionType, Colors, PermissionsBitField, ChannelType } = require('discord.js');
-const GuildModel = require('../../models/Guild');
+import Command from "../../structures/Command.js"
+import { EmbedBuilder, ApplicationCommandOptionType, Colors, PermissionsBitField, ChannelType } from "discord.js"
+import GuildModel from "../../models/Guild.js"
+import { randomNumber } from "../../lib/helpers.js"
 
-class ServerConfig extends Command {
+export default class extends Command {
     info = {
         name: "server-config",
         description: "Setup the Coinz bot in this server.",
@@ -51,13 +52,13 @@ class ServerConfig extends Command {
             if (interaction.options.getSubcommand() === "toggle") return await this.configAirdropToggle(interaction, data);
             else if (interaction.options.getSubcommand() === "set-channel") return await this.configAirdropSetChannel(interaction, data);
         }
-        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
+        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help command ${this.info.name}\`.`, ephemeral: true });
     }
 
     async configAirdropToggle(interaction, data) {
         await interaction.deferReply({ ephemeral: true });
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels) && !interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-            return await interaction.reply({ content: `You need \`Manage Channels\` or \`Administrator\` permissions to use this command.` });
+            return await interaction.editReply({ content: `You need \`Manage Channels\` or \`Administrator\` permissions to use this command.` });
         }
 
         const guild = await bot.database.fetchGuild(interaction.guild.id);
@@ -79,13 +80,13 @@ class ServerConfig extends Command {
     async configAirdropSetChannel(interaction, data) {
         await interaction.deferReply({ ephemeral: true });
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels) && !interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-            return await interaction.reply({ content: `You need \`Manage Channels\` or \`Administrator\` permissions to use this command.` });
+            return await interaction.editReply({ content: `You need \`Manage Channels\` or \`Administrator\` permissions to use this command.` });
         }
 
         const channel = interaction.options.getChannel("channel");
-        if (channel.type !== ChannelType.GuildText) return await interaction.reply({ content: `That's not a text channel. Please only select text channels.` });
-        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return await interaction.reply({ content: `I don't have the \`Send Messages\` permission.` });
-        if (!interaction.guild.members.me.permissionsIn(channel).has(PermissionsBitField.Flags.SendMessages)) return await interaction.reply({ content: `I can't send any messages in <#${channel.id}>. Please enable the \`Send Messages\` permission in that channel.` });
+        if (channel.type !== ChannelType.GuildText) return await interaction.editReply({ content: `That's not a text channel. Please only select text channels.` });
+        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages)) return await interaction.editReply({ content: `I don't have the \`Send Messages\` permission.` });
+        if (!interaction.guild.members.me.permissionsIn(channel).has(PermissionsBitField.Flags.SendMessages)) return await interaction.editReply({ content: `I can't send any messages in <#${channel.id}>. Please enable the \`Send Messages\` permission in that channel.` });
 
         const startEmbed = new EmbedBuilder()
             .setTitle("Airdrops have been enabled in this channel")
@@ -96,7 +97,7 @@ class ServerConfig extends Command {
         try {
             await channel.send({ embeds: [startEmbed] });
         } catch {
-            return await interaction.reply({ content: `I can't send any messages in <#${channel.id}>. Please enable the \`Send Messages\` permission in that channel.` });
+            return await interaction.editReply({ content: `I can't send any messages in <#${channel.id}>. Please enable the \`Send Messages\` permission in that channel.` });
         }
 
         const embed = new EmbedBuilder()
@@ -104,7 +105,7 @@ class ServerConfig extends Command {
             .setColor(bot.config.embed.color)
             .setDescription(`You set the airdrop channel to <#${channel.id}>. You will now get random airdrops.\n\n**Drop rate:** Once every 1-2\n**Rate limits:** The same user can only collect 1 aidrop every 90 minutes.`)
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
 
         await GuildModel.updateOne(
             { id: interaction.guild.id },
@@ -112,12 +113,10 @@ class ServerConfig extends Command {
                 $set: {
                     airdropStatus: true,
                     airdropChannel: channel.id,
-                    airdropNext: parseInt(Date.now() / 1000) + bot.tools.randomNumber(3600, 7200)
+                    airdropNext: parseInt(Date.now() / 1000) + randomNumber(3600, 7200)
                 }
             },
             { upsert: true }
         );
     }
 }
-
-module.exports = ServerConfig;

@@ -1,5 +1,14 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ApplicationCommandOptionType, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+import Command from '../../structures/Command.js'
+import {
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ComponentType
+} from 'discord.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
+import { checkBet } from '../../lib/helpers.js'
 
 const BoardIcons = {
     Header1: "<:connect4_c1:1013729848709099622>",
@@ -23,7 +32,7 @@ const ResultType = {
 const WIDTH = 7;
 const HEIGHT = 6;
 
-class Connect4 extends Command {
+export default class extends Command {
     info = {
         name: "connect4",
         description: "Play a game of Connect4 with someone.",
@@ -34,7 +43,7 @@ class Connect4 extends Command {
                 description: 'The bet you want to place.',
                 required: true,
                 min_length: 2,
-                max_length: 4
+                max_length: 6
             },
             {
                 name: 'user',
@@ -79,7 +88,7 @@ class Connect4 extends Command {
             if (data.user.wallet <= 0) return await interaction.editReply({ content: `You don't have any money in your wallet.` });
             bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
         } else {
-            bet = bot.tools.checkBet(betStr, data.user);
+            bet = checkBet(betStr, data.user);
 
             if (!Number.isInteger(bet)) {
                 await interaction.editReply({ content: bet });
@@ -281,8 +290,8 @@ class Connect4 extends Command {
         await interaction.editReply({ embeds: [this.getEmbed(data)], components: this.getRows([], true) });
 
         if (result === ResultType.Winner) {
-            await bot.tools.addMoney(data.hostTurn ? data.player1.id : data.player2.id, data.bet);
-            await bot.tools.takeMoney(!data.hostTurn ? data.player1.id : data.player2.id, data.bet);
+            await addMoney(data.hostTurn ? data.player1.id : data.player2.id, data.bet);
+            await takeMoney(!data.hostTurn ? data.player1.id : data.player2.id, data.bet);
             await interaction.followUp({ content: `**${data.hostTurn ? data.player1.tag : data.player2.tag}** won this Connect4 game!` });
         } else if (result === ResultType.OutOfTime) {
             await interaction.followUp({ content: `**The game has ended!** You only had 3 minutes to play this game and the time is up!` });
@@ -293,5 +302,3 @@ class Connect4 extends Command {
         return data;
     }
 }
-
-module.exports = Connect4;

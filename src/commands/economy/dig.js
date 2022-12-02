@@ -1,8 +1,11 @@
-const Command = require('../../structures/Command.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
-const StatsModel = require('../../models/Stats');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
+import { checkItem, takeItem, addMoney } from '../../lib/user.js'
+import { randomNumber } from '../../lib/helpers.js'
+import { createMessageComponentCollector } from '../../lib/embed.js'
+import Stats from '../../models/Stats.js'
 
-class Dig extends Command {
+export default class extends Command {
     info = {
         name: "dig",
         description: "Dig up valuable items and sell them for money.",
@@ -38,14 +41,14 @@ class Dig extends Command {
     }
 
     async run(interaction, data) {
-        if (!await bot.tools.checkItem(data.user.inventory, "shovel")) {
+        if (!await checkItem(data.user.inventory, "shovel")) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
             return await interaction.reply({ content: "You need a shovel to use this command. Use `/shop buy item-id:shovel` to buy a shovel.", ephemeral: true });
         }
 
-        if (bot.tools.randomNumber(1, 100) <= 3) {
+        if (randomNumber(1, 100) <= 3) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            await bot.tools.takeItem(interaction.member.id, "shovel", data.user.inventory, 1);
+            await takeItem(interaction.member.id, "shovel", data.user.inventory, 1);
             return await interaction.reply({ content: "Oh No! Your shovel broke... You have to buy a new shovel. Use `/shop buy item-id:shovel` to buy a shovel.", ephemeral: true });
         }
 
@@ -59,7 +62,7 @@ class Dig extends Command {
         data.loot = 0;
 
         const interactionMessage = await interaction.editReply({ embeds: [this.createEmbed(data)], components: this.setButtons(data, data.gameFinished), fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: this.maxClicks + 1, idle: 15000, time: 45000 });
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { max: this.maxClicks + 1, idle: 15000, time: 45000 });
 
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
@@ -78,7 +81,7 @@ class Dig extends Command {
                         data.board[row][column].correctGuessed = data.lootBoard[row][column].correctGuessed = true;
 
                         if (data.lootBoard[row][column].icon === "💎") {
-                            await StatsModel.updateOne(
+                            await Stats.updateOne(
                                 { id: interaction.member.id },
                                 { $inc: { diamondsFound: 1 } },
                                 { upsert: true }
@@ -90,7 +93,7 @@ class Dig extends Command {
 
                 if (data.buttonsClicked >= this.maxClicks) data.gameFinished = true;
                 if (data.gameFinished) {
-                    await bot.tools.addMoney(interaction.member.id, data.loot);
+                    await addMoney(interaction.member.id, data.loot);
                     data.board = data.lootBoard;
                 }
 
@@ -100,7 +103,7 @@ class Dig extends Command {
 
         collector.on('end', async (interactionCollector) => {
             if (!data.gameFinished) {
-                await bot.tools.addMoney(interaction.member.id, data.loot);
+                await addMoney(interaction.member.id, data.loot);
                 return await interaction.editReply({ embeds: [this.createEmbed(data)], components: this.setButtons(data, true) });
             }
         });
@@ -165,8 +168,8 @@ class Dig extends Command {
                 let column;
 
                 do {
-                    row = bot.tools.randomNumber(0, this.boardSize - 1);
-                    column = bot.tools.randomNumber(0, this.boardSize - 1);
+                    row = randomNumber(0, this.boardSize - 1);
+                    column = randomNumber(0, this.boardSize - 1);
                 } while (lootBoard[row][column].icon !== null);
 
                 lootBoard[row][column].icon = keys[i];
@@ -176,5 +179,3 @@ class Dig extends Command {
         return lootBoard;
     }
 }
-
-module.exports = Dig;

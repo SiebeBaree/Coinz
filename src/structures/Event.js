@@ -1,10 +1,10 @@
-const path = require('path');
+import { parse } from 'path';
 
-class Event {
+export default class {
     constructor(client, file) {
         this.client = client;
         this.file = file;
-        this.name = path.parse(file).name;
+        this.name = parse(file).name;
         this.store = client.events;
     }
 
@@ -12,5 +12,3 @@ class Event {
         return this.store.load(this.file);
     }
 }
-
-module.exports = Event;

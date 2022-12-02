@@ -1,7 +1,13 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, Colors, ApplicationCommandOptionType } = require('discord.js');
+import Command from '../../structures/Command.js'
+import {
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+    Colors
+} from 'discord.js'
+import { checkBet, randomNumber, timeout } from '../../lib/helpers.js'
+import { addMoney, takeMoney } from '../../lib/user.js'
 
-class Roulette extends Command {
+export default class extends Command {
     info = {
         name: "roulette",
         description: "Play a game of roulette.",
@@ -12,7 +18,7 @@ class Roulette extends Command {
                 description: 'The bet you want to place.',
                 required: true,
                 min_length: 2,
-                max_length: 4
+                max_length: 6
             },
             {
                 name: 'space',
@@ -47,7 +53,7 @@ class Roulette extends Command {
             if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
             bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
         } else {
-            bet = bot.tools.checkBet(betStr, data.user);
+            bet = checkBet(betStr, data.user);
 
             if (!Number.isInteger(bet)) {
                 await interaction.reply({ content: bet, ephemeral: true });
@@ -61,16 +67,16 @@ class Roulette extends Command {
         data.bet = bet;
         data.userSpace = space.toLowerCase();
         data.playerWon = false;
-        data.ball = bot.tools.randomNumber(0, 36);
+        data.ball = randomNumber(0, 36);
         data.multiplier = 1;
         data = this.playerWon(data);
         data.color = this.redColors.includes(data.ball) ? "red" : "black";
-        if (data.space === -1) return await interaction.editReply({ content: `That is not a valid space. Please check all spaces with \`/help ${this.info.name}\`.` });
+        if (data.space === -1) return await interaction.editReply({ content: `That is not a valid space. Please check all spaces with \`/help command ${this.info.name}\`.` });
 
         if (data.playerWon) {
-            await bot.tools.addMoney(interaction.member.id, parseInt(data.bet * (data.multiplier - 1)));
+            await addMoney(interaction.member.id, parseInt(data.bet * (data.multiplier - 1)));
         } else {
-            await bot.tools.takeMoney(interaction.member.id, data.bet);
+            await takeMoney(interaction.member.id, data.bet);
         }
 
         const embed = new EmbedBuilder()
@@ -80,7 +86,7 @@ class Roulette extends Command {
             .setImage("https://media3.giphy.com/media/26uf2YTgF5upXUTm0/giphy.gif");
 
         await interaction.editReply({ embeds: [embed] });
-        await bot.tools.timeout(5000);
+        await timeout(5000);
         await interaction.editReply({ embeds: [this.createEmbed(data)] });
     }
 
@@ -165,5 +171,3 @@ class Roulette extends Command {
         return data;
     }
 }
-
-module.exports = Roulette;

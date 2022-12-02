@@ -1,14 +1,14 @@
-const { Collection } = require('discord.js');
-const path = require('path');
-const glob = require('fast-glob');
+import { Collection } from 'discord.js';
+import { join, sep } from 'path';
+import glob from 'fast-glob';
 
-class Store extends Collection {
+export default class extends Collection {
     constructor(client, name) {
         super();
 
         this.client = client;
         this.name = name;
-        this.dir = `${path.dirname(require.main.filename)}${path.sep}${name}`;
+        this.dir = `${process.cwd()}${sep}src${sep}${name}`;
     }
 
     set(flake) {
@@ -24,11 +24,12 @@ class Store extends Collection {
         return !this.has(name) ? false : super.delete(name);
     }
 
-    load(file) {
-        let filePath = path.join(this.dir, file);
+    async load(file) {
+        let filePath = join(this.dir, file);
 
         try {
-            let flake = this.set(new (require(filePath))(this.client, file));
+            const { default: command } = await import(filePath);
+            let flake = this.set(new command(this.client, file));
             return flake;
         } catch (e) {
             this.client.logger.error(`Failed to load ${this.name.slice(0, -1)} (${filePath})\n${e.stack || e}`);
@@ -47,5 +48,3 @@ class Store extends Collection {
         return Promise.all(files.map(file => this.load(file)));
     }
 }
-
-module.exports = Store;
