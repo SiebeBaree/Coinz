@@ -1,9 +1,10 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ApplicationCommandOptionType } = require('discord.js');
-const CooldownModel = require("../../models/Cooldown");
-const idAchievements = require('../../assets/achievements.json');
+import Command from '../../structures/Command.js'
+import { EmbedBuilder, ApplicationCommandOptionType, ComponentType, ActionRowBuilder, SelectMenuBuilder } from 'discord.js'
+import { createMessageComponentCollector } from '../../lib/embed.js'
+import Cooldown from '../../models/Cooldown.js'
+import idAchievements from '../../assets/achievements.json' assert { type: "json" }
 
-class Profile extends Command {
+export default class extends Command {
     info = {
         name: "profile",
         description: "Get your or another user's Coinz profile. You can see detailed information here.",
@@ -41,29 +42,6 @@ class Profile extends Command {
         if (memberData.job.startsWith("business")) job = "Working at a company";
         if (memberData.job === "business") job = "Company CEO";
 
-        let cooldownsAmount = 0;
-        let totalCooldowns = 0;
-        const cooldowns = await CooldownModel.find({ id: member.id });
-        let cooldownStr = "";
-
-        const now = parseInt(Date.now() / 1000);
-
-        for (let i = 0; i < cooldowns.length; i++) {
-            if (cooldowns[i].expiresOn > now) {
-                totalCooldowns++;
-                if (cooldownsAmount <= 10) {
-                    cooldownStr += `**${cooldowns[i].command}:** ${bot.tools.msToTime(cooldowns[i].expiresOn * 1000 - Date.now())}\n`;
-                    cooldownsAmount++;
-                }
-            }
-        }
-
-        if (totalCooldowns > 10) {
-            cooldownStr += `and \`${totalCooldowns - cooldownsAmount}\` more cooldowns...`;
-        } else if (cooldownStr === "") {
-            cooldownStr = "There are no cooldowns found for this user.";
-        }
-
         const displayedBadge = memberData.displayedBadge === undefined || memberData.displayedBadge === "" ? "" : ` <:${memberData.displayedBadge}:${idAchievements[memberData.displayedBadge]}>`;
 
         let badgesStr = "";
@@ -72,18 +50,72 @@ class Profile extends Command {
             badgesStr += `<:${badges[i]}:${idAchievements[badges[i]]}> `;
         }
 
+        const message = await interaction.editReply({ embeds: [this.createEmbed(member, memberData, stocks, inventory, job, displayedBadge, badgesStr)], components: [this.createSelectMenu("profile")], fetchReply: true });
+        const collector = createMessageComponentCollector(message, interaction, { max: 3, time: 45_000, componentType: ComponentType.StringSelect });
+
+        collector.on('collect', async (i) => {
+            await i.deferUpdate();
+            const selectedItem = i.values[0];
+
+            if (selectedItem === "profile") {
+                await interaction.editReply({ embeds: [this.createEmbed(member, memberData, stocks, inventory, job, displayedBadge, badgesStr)], components: [this.createSelectMenu(selectedItem)] });
+            } else if (selectedItem === "cooldowns") {
+                await interaction.editReply({ embeds: [await this.createCooldownsEmbed(member)], components: [this.createSelectMenu(selectedItem)] });
+            }
+        });
+
+        collector.on('end', async (i) => {
+            await interaction.editReply({ components: [this.createSelectMenu("profile", true)] });
+        });
+    }
+
+    createEmbed(member, memberData, stocks, inventory, job, displayedBadge, badgesStr) {
         const embed = new EmbedBuilder()
             .setTitle(`${member.displayName || member.username}'s profile${displayedBadge}`)
             .setColor(bot.config.embed.color)
             .setThumbnail(member.displayAvatarURL() || bot.config.embed.defaultIcon)
             .addFields(
-                { name: 'Balance', value: `:dollar: **Wallet:** :coin: ${memberData.wallet}\n:credit_card: **Bank:** :coin: ${memberData.bank}\n:moneybag: **Net Worth:** :coin: ${memberData.wallet + memberData.bank}\n:gem: **Inventory Worth:** \`${inventory.totalItems} items\` valued at :coin: ${inventory.value}`, inline: false },
-                { name: 'Investment Portfolio', value: `:dollar: **Worth:** :coin: ${stocks.currentWorth}\n:credit_card: **Amount of Stocks:** ${parseInt(stocks.totalStocks)} stocks\n:moneybag: **Invested:** :coin: ${stocks.initialWorth}`, inline: false },
-                { name: 'Misc', value: `:briefcase: **Current Job:** ${job}\n:sparkles: **Streak:** ${memberData.streak} days\n:no_entry: **Banned:** No`, inline: false },
-                { name: 'Badges (Achievements)', value: `${badgesStr === "" ? "None" : badgesStr}`, inline: false },
-                { name: 'Cooldowns', value: `${cooldownStr}`, inline: false }
+                { name: 'Balance', value: `:dollar: **Wallet:** :coin: ${memberData.wallet}\n:bank: **Bank:** :coin: ${memberData.bank}\n:moneybag: **Net Worth:** :coin: ${memberData.wallet + memberData.bank}\n:credit_card: **Tickets:** <:ticket:1032669959161122976> ${memberData.tickets || 0}\n:gem: **Inventory Worth:** \`${inventory.totalItems} items\` valued at :coin: ${inventory.value}`, inline: false },
+                { name: 'Investment Portfolio', value: `:dollar: **Worth:** :coin: ${stocks.currentWorth}\n:credit_card: **Amount:** ${parseInt(stocks.totalStocks)}\n:moneybag: **Invested:** :coin: ${stocks.initialWorth}`, inline: false },
+                { name: 'Misc', value: `:briefcase: **Current Job:** ${job}\n:sparkles: **Daily Streak:** ${memberData.streak} days`, inline: false },
+                { name: 'Badges (Achievements)', value: `${badgesStr === "" ? "None" : badgesStr}`, inline: false }
             )
-        await interaction.editReply({ embeds: [embed] });
+        return embed;
+    }
+
+    async createCooldownsEmbed(member) {
+        const embed = new EmbedBuilder()
+            .setTitle(`${member.displayName || member.username}'s cooldowns`)
+            .setColor(bot.config.embed.color)
+            .setDescription(await this.getCooldowns(member.id))
+        return embed;
+    }
+
+    createSelectMenu(selectedItem, disabled = false) {
+        const row = new ActionRowBuilder()
+            .addComponents(
+                new SelectMenuBuilder()
+                    .setCustomId('profile')
+                    .setPlaceholder('The interaction has ended')
+                    .addOptions([
+                        {
+                            label: 'Profile',
+                            value: 'profile',
+                            description: 'View the profile of the user.',
+                            emoji: '👤',
+                            default: selectedItem === "profile"
+                        },
+                        {
+                            label: 'Cooldowns',
+                            value: 'cooldowns',
+                            description: 'View the cooldowns of the user.',
+                            emoji: '⏱️',
+                            default: selectedItem === "cooldowns"
+                        }
+                    ])
+                    .setDisabled(disabled)
+            )
+        return row;
     }
 
     async calcInventory(inv = []) {
@@ -110,6 +142,26 @@ class Profile extends Command {
 
         return stocks;
     }
-}
 
-module.exports = Profile;
+    async getCooldowns(memberId) {
+        let cooldownsAmount = 0;
+        let totalCooldowns = 0;
+        let cooldownStr = "";
+
+        const cooldowns = await Cooldown.find({ id: memberId });
+        const now = parseInt(Date.now() / 1000);
+
+        for (let i = 0; i < cooldowns.length; i++) {
+            if (cooldowns[i].expiresOn > now) {
+                totalCooldowns++;
+                if (cooldownsAmount <= 25) {
+                    cooldownStr += `**${cooldowns[i].command}:** <t:${cooldowns[i].expiresOn}:R>\n`;
+                    cooldownsAmount++;
+                }
+            }
+        }
+
+        if (totalCooldowns > 25) cooldownStr += `and \`${totalCooldowns - cooldownsAmount}\` more cooldowns...`;
+        return cooldownStr || "There are no cooldowns found for this user.";
+    }
+}
