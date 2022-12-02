@@ -300,6 +300,7 @@ export default class extends Command {
                 }
             } else if (interactionCollector.customId === 'factory_buy') {
                 await buyFactory(company, interaction);
+                data.user.wallet -= calcFactoryPrice(company.company.factories.length)
                 company.company = await bot.database.fetchBusiness(company.company.ownerId);
             }
 
