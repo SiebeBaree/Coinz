@@ -1,14 +1,23 @@
-const Command = require('../../structures/Command.js');
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ApplicationCommandOptionType } = require('discord.js');
-const MemberModel = require('../../models/Member');
+import Command from '../../structures/Command.js'
+import {
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+    ActionRowBuilder,
+    ButtonStyle,
+    ButtonBuilder
+} from 'discord.js'
+import { createMessageComponentCollector } from '../../lib/embed.js'
+import { addItem, takeItem } from '../../lib/user.js'
+import { msToTime } from '../../lib/helpers.js'
+import MemberModel from '../../models/Member.js'
 
-class Plot extends Command {
+export default class extends Command {
     info = {
-        name: "plot",
-        description: "Plant or get a list of your plots.",
+        name: "farm",
+        description: "Manage your farm and plant crops.",
         options: [
             {
-                name: 'list',
+                name: 'plots',
                 type: ApplicationCommandOptionType.Subcommand,
                 description: 'Get a list with information about all your plots.',
                 options: []
@@ -62,15 +71,15 @@ class Plot extends Command {
     }
 
     async run(interaction, data) {
-        if (interaction.options.getSubcommand() === "list") return await this.execList(interaction, data);
+        if (interaction.options.getSubcommand() === "plots") return await this.execPlots(interaction, data);
         if (interaction.options.getSubcommand() === "plant") return await this.execPlant(interaction, data);
-        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help ${this.info.name}\`.`, ephemeral: true });
+        return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help command ${this.info.name}\`.`, ephemeral: true });
     }
 
-    async execList(interaction, data) {
+    async execPlots(interaction, data) {
         await interaction.deferReply();
         const interactionMessage = await interaction.editReply({ embeds: [await this.createEmbed(interaction, data)], components: [this.createRow(await this.calcBtns(data))], fetchReply: true });
-        const collector = bot.tools.createMessageComponentCollector(interactionMessage, interaction, { max: 15, idle: 15000, time: 60000 });
+        const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 15, idle: 15000, time: 60000 });
 
         collector.on('collect', async (interactionCollector) => {
             await interactionCollector.deferUpdate();
@@ -79,7 +88,7 @@ class Plot extends Command {
                     if (data.user.plots[i].status === "harvest" || data.user.plots[i].status === "rotten") {
                         if (data.user.plots[i].status === "harvest") {
                             data.user = await bot.database.fetchMember(interaction.member.id);
-                            await bot.tools.addItem(interaction.member.id, data.user.plots[i].crop, 6, data.user.inventory);
+                            await addItem(interaction.member.id, data.user.plots[i].crop, 6, data.user.inventory);
                         }
 
                         data.user.plots[i].status = "empty";
@@ -135,7 +144,7 @@ class Plot extends Command {
                 }
             });
         }
-        if (!await bot.tools.takeItem(interaction.member.id, cropItem.itemId, data.user.inventory, plots.length)) return await interaction.editReply({ content: `You don't have that crop in your inventory. Please buy a crop with </shop buy:983096143284174861>.` });
+        if (!await takeItem(interaction.member.id, cropItem.itemId, data.user.inventory, plots.length)) return await interaction.editReply({ content: `You don't have that crop in your inventory. Please buy a crop with </shop buy:983096143284174861>.` });
         await interaction.editReply({ content: `You successfully planted \`${cropItem.name}\` on plot ${plotId}` });
     }
 
@@ -151,8 +160,8 @@ class Plot extends Command {
         const userPlots = data.user.plots;
         let waterTxt = `You can water your plots.`;
         let buyPlot = ``;
-        if (data.user.lastWater + 14400 > parseInt(Date.now() / 1000)) waterTxt = `You can water your plots again in ${bot.tools.msToTime(((data.user.lastWater + 14400) * 1000) - Date.now())}.`;
-        if (data.user.plots.length < 15) buyPlot = `\n:moneybag: **To buy a new plot you will need :coin: ${this.calcPlotPrice(data.user.plots.length)} in your wallet.**`;
+        if (data.user.lastWater + 14400 > parseInt(Date.now() / 1000)) waterTxt = `You can water your plots again in ${msToTime(((data.user.lastWater + 14400) * 1000) - Date.now())}.`;
+        if (data.user.plots.length < 9 || data.user.plots.length < 15 && data.premium.premium) buyPlot = `\n:moneybag: **To buy a new plot you will need :coin: ${this.calcPlotPrice(data.user.plots.length)} in your wallet.**`;
 
         const embed = new EmbedBuilder()
             .setTitle(`${interaction.member.displayName || interaction.member.username}'s farm`)
@@ -184,7 +193,7 @@ class Plot extends Command {
                 case 'growing':
                     item = await bot.database.fetchItem(userPlots[i].crop);
                     visualRow = this.createVisualRow(':seedling:');
-                    cropStatus = `<:${item.itemId}:${item.emoteId}> in ${bot.tools.msToTime((userPlots[i].harvestOn * 1000) - Date.now())}`;
+                    cropStatus = `<:${item.itemId}:${item.emoteId}> in ${msToTime((userPlots[i].harvestOn * 1000) - Date.now())}`;
                     break;
                 case 'rotten':
                     visualRow = this.createVisualRow(':wilted_rose:');
@@ -265,7 +274,9 @@ class Plot extends Command {
             if (data.user.plots[i].status === "harvest" || data.user.plots[i].status === "rotten") btnsDisabled[0] = false;
             if (data.user.plots[i].status === "growing" && data.user.lastWater + 14400 < parseInt(Date.now() / 1000)) btnsDisabled[1] = false;
         }
-        if (data.user.plots.length >= 15 || data.user.wallet < this.calcPlotPrice(data.user.plots.length)) btnsDisabled[2] = true;
+        if (data.user.wallet < this.calcPlotPrice(data.user.plots.length)) btnsDisabled[2] = true;
+        else if (data.user.plots.length >= 9 && !data.premium.premium) btnsDisabled[2] = true;
+        else if (data.user.plots.length >= 15 && data.premium.premium) btnsDisabled[2] = true;
         return btnsDisabled;
     }
 
@@ -298,5 +309,3 @@ class Plot extends Command {
         return plots;
     }
 }
-
-module.exports = Plot;
