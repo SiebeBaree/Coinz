@@ -40,7 +40,7 @@ export default class extends Command {
         data.gameInProgress = true;
         if (data.user.job.startsWith("business")) {
             data.company = await getBusiness(data.user);
-            data.salary = data.company.employee.wage;
+            data.salary = data.company.isOwner ? 200 : data.company.employee.wage;
             data.hasBusiness = true;
 
             if (data.salary > data.company.company.balance) return await interaction.editReply({ content: `Your business hasn't enough money to pay you. Please produce items in the factories.` });
