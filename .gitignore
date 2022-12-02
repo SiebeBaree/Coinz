@@ -1,9 +1,5 @@
 # Project unique ignore
-website/__pycache__/
-__pycache__/
-src/assets/guildJoinLeave.json
-src/assets/commands.json
-venv/
+src/assets/stats.json
 
 # compiled output
 /dist
