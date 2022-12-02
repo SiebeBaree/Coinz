@@ -1,4 +1,4 @@
-const { Schema, model, Types } = require('mongoose');
+import { Schema, model, Types } from 'mongoose';
 
 const Item = Schema({
     itemId: { type: String, required: true },
@@ -29,7 +29,7 @@ const Member = Schema({
     experience: { type: Number, default: 0 },
     job: { type: String, default: "" },
     streak: { type: Number, default: 0 },
-    lastStreak: { type: Number, default: 0 },
+    lastStreak: { type: Date, default: new Date(0) },
     passiveMode: { type: Boolean, default: false },
     inventory: [{ type: Item }],
     stocks: [{ type: Stock }],
@@ -42,4 +42,4 @@ const Member = Schema({
     lootboxes: [{ type: Item }]
 });
 
-module.exports = model('Member', Member, 'members');
+export default model('Member', Member, 'members');
