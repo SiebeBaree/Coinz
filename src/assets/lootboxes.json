@@ -1,21 +1,153 @@
 {
-    "name": {
-        "emoteId": "987800268223709254",
+    "tools": {
+        "name": "Tools Loot Box",
+        "emoteId": "1047859537614475356",
         "animated": false,
-        "description": "Hmm",
-        "price": 25,
+        "price": 70,
         "loot": [
             {
-                "itemId": "potato",
-                "chance": 10
+                "itemId": "Coins",
+                "amount": 320,
+                "emoteId": "987800268223709254",
+                "emoteName": "coinz"
             },
             {
-                "itemId": "carrot",
-                "chance": 50
+                "itemId": "Tickets",
+                "amount": 20,
+                "emoteId": "1032669959161122976",
+                "emoteName": "ticket"
             },
             {
                 "itemId": "shovel",
-                "chance": 35
+                "amount": 2
+            },
+            {
+                "itemId": "fishing_rod",
+                "amount": 2
+            },
+            {
+                "itemId": "hunting_rifle",
+                "amount": 1
+            },
+            {
+                "itemId": "axe",
+                "amount": 3
+            },
+            {
+                "itemId": "bag",
+                "amount": 4
+            }
+        ]
+    },
+    "random": {
+        "name": "Random Loot Box",
+        "emoteId": "1047859536565915739",
+        "animated": false,
+        "price": 110,
+        "loot": [
+            {
+                "itemId": "Coins",
+                "amount": 600,
+                "emoteId": "987800268223709254",
+                "emoteName": "coinz"
+            },
+            {
+                "itemId": "Tickets",
+                "amount": 50,
+                "emoteId": "1032669959161122976",
+                "emoteName": "ticket"
+            },
+            {
+                "itemId": "shoe",
+                "amount": 10
+            },
+            {
+                "itemId": "playstation",
+                "amount": 1
+            },
+            {
+                "itemId": "book",
+                "amount": 35
+            },
+            {
+                "itemId": "tree",
+                "amount": 3
+            },
+            {
+                "itemId": "lamp",
+                "amount": 6
+            },
+            {
+                "itemId": "pocket_watch",
+                "amount": 5
+            },
+            {
+                "itemId": "tv",
+                "amount": 2
+            },
+            {
+                "itemId": "smartphone",
+                "amount": 1
+            },
+            {
+                "itemId": "crown",
+                "amount": 1
+            }
+        ]
+    },
+    "pirates": {
+        "name": "Pirates Loot Box",
+        "emoteId": "1047859535223717948",
+        "animated": false,
+        "price": 180,
+        "loot": [
+            {
+                "itemId": "Coins",
+                "amount": 750,
+                "emoteId": "987800268223709254",
+                "emoteName": "coinz"
+            },
+            {
+                "itemId": "Tickets",
+                "amount": 70,
+                "emoteId": "1032669959161122976",
+                "emoteName": "ticket"
+            },
+            {
+                "itemId": "gold",
+                "amount": 1
+            },
+            {
+                "itemId": "oil",
+                "amount": 1
+            },
+            {
+                "itemId": "christmas_tree",
+                "amount": 1
+            },
+            {
+                "itemId": "toilet_paper",
+                "amount": 1
+            },
+            {
+                "itemId": "ring",
+                "amount": 1
+            },
+            {
+                "itemId": "book",
+                "amount": 40
+            },
+            {
+                "itemId": "potato",
+                "amount": 30
+            },
+            {
+                "itemId": "playstation",
+                "amount": 1
+            },
+            {
+                "itemId": "trash",
+                "amount": 23
             }
         ]
     }
