@@ -434,6 +434,7 @@ export default class extends Command {
         if (company.company.employees.length >= 5) return await interaction.reply({ content: `You can't have more than 5 employees.`, ephemeral: true });
         if (company.company.employees.some(e => e.id === user.id)) return await interaction.reply({ content: `This member is already an employee.`, ephemeral: true });
 
+        await interaction.deferReply();
         const employee = await bot.database.fetchMember(user.id);
         if (employee.job.startsWith("business")) return await interaction.editReply({ content: `That user is already working for another company.` });
 
@@ -510,9 +511,10 @@ export default class extends Command {
         if (!company.isOwner && !allowedRoles.includes(company.employee.role)) return await interaction.reply({ content: `You don't have permission to use this command.`, ephemeral: true });
 
         const user = interaction.options.getUser('user');
-        if (user.id === interaction.member.id) return await interaction.editReply({ content: `Why do you want to fire yourself?!` });
-        if (user.id === company.company.ownerId) return await interaction.editReply({ content: `You can't fire the CEO of this business...` });
+        if (user.id === interaction.member.id) return await interaction.reply({ content: `Why do you want to fire yourself?!`, ephemeral: true });
+        if (user.id === company.company.ownerId) return await interaction.reply({ content: `You can't fire the CEO of this business...`, ephemeral: true });
 
+        await interaction.deferReply();
         let removedEmployee = false;
         for (let i = 0; i < company.company.employees.length; i++) {
             if (company.company.employees[i].userId === user.id) {
