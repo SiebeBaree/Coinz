@@ -40,7 +40,8 @@ export default class Logger extends Console {
         return moment().format(this.template);
     }
 
-    writeLog(data, type = 'log', consoleType = 'log') {
+    writeLog(data, type = 'log', consoleType) {
+        if (consoleType === undefined) consoleType = type;
         data = Logger.parse(data);
         super[consoleType](`[${this.timestamp}] (` + this.PAINTS[type](`${type.toUpperCase()}`) + chalk.reset(`) ${data}`));
     }
