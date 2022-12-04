@@ -18,6 +18,12 @@ export default class extends Command {
         deferReply: false
     };
 
+    lootQuantity = {
+        "easy": [2, 5],
+        "medium": [2, 3],
+        "hard": [1, 2]
+    };
+
     constructor(...args) {
         super(...args);
     }
