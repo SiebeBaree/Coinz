@@ -33,16 +33,19 @@ bot.rest.on('rateLimit', rateLimitData => {
 });
 
 bot.on('ready', async () => {
-    if (process.env.NODE_ENV === "production") {
-        // Create Webhook
-        const { default: app } = await import("./lib/api.js");
+    // Hotfix to run multiple shards
+    if (bot.shard.ids[0] === 0) {
+        if (process.env.NODE_ENV === "production") {
+            // Create Webhook
+            const { default: app } = await import("./lib/api.js");
 
-        const port = process.env.PORT || 8700;
-        app.listen(port, () => bot.logger.ready(`Vote Webhooks available on port: ${port}`));
+            const port = process.env.PORT || 8700;
+            app.listen(port, () => bot.logger.ready(`Vote Webhooks available on port: ${port}`));
+        }
+
+        // Load Crons
+        await import("./lib/crons.js");
     }
-
-    // Load Crons
-    await import("./lib/crons.js");
 });
 
 // Global Error Handler
