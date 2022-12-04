@@ -69,10 +69,31 @@ export default class extends Command {
                 ]
             },
             {
-                name: 'sell',
+                name: 'sell-business',
                 type: ApplicationCommandOptionType.Subcommand,
                 description: 'Sell your business and get the net worth of your business.',
                 options: []
+            },
+            {
+                name: 'sell',
+                type: ApplicationCommandOptionType.Subcommand,
+                description: 'Sell an item from the inventory of your business.',
+                options: [
+                    {
+                        name: 'item-id',
+                        type: ApplicationCommandOptionType.String,
+                        description: 'The item ID of the item you want to sell.',
+                        required: true
+                    },
+                    {
+                        name: 'amount',
+                        type: ApplicationCommandOptionType.Integer,
+                        description: 'The amount of items you want to sell.',
+                        required: false,
+                        min_value: 1,
+                        max_value: 100
+                    }
+                ]
             },
             {
                 name: 'supply',
@@ -217,6 +238,8 @@ export default class extends Command {
                 return await this.execInfo(company, interaction, data);
             case "create":
                 return await this.execCreate(company, interaction, data);
+            case "sell-business":
+                return await this.execSellBusiness(company, interaction, data);
             case "sell":
                 return await this.execSell(company, interaction, data);
             case "supply":
@@ -344,7 +367,7 @@ export default class extends Command {
         }
     }
 
-    async execSell(company, interaction, data) {
+    async execSellBusiness(company, interaction, data) {
         await interaction.deferReply({ ephemeral: true });
         if (company.company !== null) {
             if (company.isOwner) {
@@ -363,6 +386,47 @@ export default class extends Command {
         } else {
             return await interaction.editReply({ content: `You don't work at a business.`, ephemeral: true });
         }
+    }
+
+    async execSell(company, interaction, data) {
+        await interaction.deferReply({ ephemeral: true });
+        if (company.company === null) return await interaction.editReply({ content: `You don't own or work at a business. Create one using </business create:1048340073470513155>.` });
+
+        // check if user has permissions
+        const allowedRoles = ["executive", "manager"];
+        if (!company.isOwner && !allowedRoles.includes(company.employee.role)) return await interaction.editReply({ content: `You don't have permission to use this command.` });
+
+        const itemId = interaction.options.getString('item-id');
+        const amount = interaction.options.getInteger('amount') ?? 1;
+
+        const item = await bot.database.fetchItem(itemId);
+        if (item === null) return await interaction.editReply({ content: `The item with ID \`${itemId}\` doesn't exist.` });
+
+        const inventory = company.company.inventory;
+        const itemIndex = inventory.findIndex(i => i.itemId === itemId);
+        if (itemIndex === -1) return await interaction.editReply({ content: `You don't have any <:${item.itemId}:${item.emoteId}> ${item.name} in your inventory.` });
+
+        const itemAmount = inventory[itemIndex].amount;
+        if (amount > itemAmount) return await interaction.editReply({ content: `You don't have enough <:${item.itemId}:${item.emoteId}> ${item.name} in your inventory.` });
+
+        const price = item.sellPrice * amount;
+
+        if (amount >= itemAmount) {
+            await Business.updateOne(
+                { ownerId: interaction.member.id },
+                {
+                    $pull: { 'inventory': { itemId: item.itemId } },
+                    $inc: { balance: price }
+                },
+            );
+        } else {
+            await Business.updateOne(
+                { ownerId: interaction.member.id, 'inventory.itemId': item.itemId },
+                { $inc: { balance: price, 'inventory.$.amount': -amount } }
+            );
+        }
+
+        await interaction.editReply({ content: `You have successfully sold ${amount}x <:${item.itemId}:${item.emoteId}> ${item.name} for :coin: ${price}.` });
     }
 
     async execSupply(company, interaction, data) {
