@@ -135,7 +135,7 @@ export default class extends Command {
                         .setCustomId(`dig_board${i}${j}`)
                         .setEmoji(data.board[i][j].icon === null ? this.emptySpace : data.board[i][j].icon)
                         .setStyle(data.board[i][j].correctGuessed === true ? ButtonStyle.Success : ((data.board[i][j].correctGuessed === null) ? ButtonStyle.Secondary : ButtonStyle.Danger))
-                        .setDisabled(data.board[i][j].icon !== null || buttonsAreDisabled)
+                        .setDisabled(data.board[i][j].correctGuessed !== null || buttonsAreDisabled)
                 );
             }
             rows.push(row);
