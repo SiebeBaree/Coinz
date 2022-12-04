@@ -2,6 +2,7 @@ import axios from "axios"
 import moment from "moment-timezone"
 import Investment from "../models/Investment.js"
 import investments from "../assets/investments.json" assert { type: "json" }
+import { roundNumber } from "./helpers.js"
 
 import bitvavoApi from "bitvavo"
 const bitvavo = bitvavoApi().options({
