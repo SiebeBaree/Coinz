@@ -160,7 +160,7 @@ export default class extends Command {
             const e = new EmbedBuilder()
                 .setTitle(`:factory: Factories of ${company.company.name}`)
                 .setColor(bot.config.embed.color)
-                .setDescription(`:gear: **Use** </${this.info.name} set-production:993095062726647809> **to produce an item.**\n:hammer_pick: **All collected products are found in** \`/business inventory\`**.**${buyFactory}`)
+                .setDescription(`:gear: **Use** </${this.info.name} set-production:993095062726647809> **to produce an item.**\n:hammer_pick: **All collected products are found in** </business inventory:1048340073470513155>**.**${buyFactory}`)
 
             if (factories.length == 0) {
                 e.addFields({ name: `Buy a Factory`, value: `Please press the button below to buy a factory.`, inline: false });
@@ -278,7 +278,7 @@ export default class extends Command {
             await interaction.followUp({ content: `You successfully bought a new factory. Check your factory with </${this.info.name} view:993095062726647809>.`, ephemeral: true });
         }
 
-        if (company.company === null) return await interaction.editReply({ content: `You don't own or work at a business. Create one using \`/business create\`.` });
+        if (company.company === null) return await interaction.editReply({ content: `You don't own or work at a business. Create one using </business create:1048340073470513155>.` });
         const interactionMessage = await interaction.editReply({ embeds: [await embed(company)], components: [row(company, data)], fetchReply: true });
         const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 15, idle: 15000, time: 60000 });
 
@@ -314,7 +314,7 @@ export default class extends Command {
 
     async execSetProduction(company, interaction, data) {
         await interaction.deferReply({ ephemeral: true });
-        if (company.company === null) return await interaction.editReply({ content: `You don't own or work at a business. Create one using \`/business create\`.` });
+        if (company.company === null) return await interaction.editReply({ content: `You don't own or work at a business. Create one using </business create:1048340073470513155>.` });
 
         const factoryId = interaction.options.getString('factory-id');
         const productId = interaction.options.getString('product-id');

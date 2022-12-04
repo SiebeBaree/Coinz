@@ -307,7 +307,7 @@ export default class extends Command {
             return SelectMenu;
         }
 
-        if (company.company === null) return await interaction.reply({ content: `You don't own or work at a business. Create one using \`/business create\`.`, ephemeral: true });
+        if (company.company === null) return await interaction.reply({ content: `You don't own or work at a business. Create one using </business create:1048340073470513155>.`, ephemeral: true });
 
         await interaction.deferReply();
         let category = "overview";
@@ -366,7 +366,7 @@ export default class extends Command {
     }
 
     async execSupply(company, interaction, data) {
-        if (company.company === null) return await interaction.reply({ content: `You don't own or work at a business. Create one using \`/business create\`.`, ephemeral: true });
+        if (company.company === null) return await interaction.reply({ content: `You don't own or work at a business. Create one using </business create:1048340073470513155>.`, ephemeral: true });
 
         // check if user has permissions
         const allowedRoles = ["executive", "manager"];
@@ -423,7 +423,7 @@ export default class extends Command {
     }
 
     async execEmployeeAdd(company, interaction, data) {
-        if (company.company === null) return await interaction.reply({ content: `You don't own or work at a business. Create one using \`/business create\`.`, ephemeral: true });
+        if (company.company === null) return await interaction.reply({ content: `You don't own or work at a business. Create one using </business create:1048340073470513155>.`, ephemeral: true });
 
         // check if user has permissions
         const allowedRoles = ["executive", "manager"];
@@ -505,7 +505,7 @@ export default class extends Command {
     }
 
     async execEmployeeFire(company, interaction, data) {
-        if (company.company === null) return await interaction.reply({ content: `You don't own or work at a business. Create one using \`/business create\`.`, ephemeral: true });
+        if (company.company === null) return await interaction.reply({ content: `You don't own or work at a business. Create one using </business create:1048340073470513155>.`, ephemeral: true });
 
         // check if user has permissions
         const allowedRoles = ["executive", "manager"];
@@ -535,7 +535,7 @@ export default class extends Command {
     }
 
     async execEmployeeSetWage(company, interaction, data) {
-        if (company.company === null) return await interaction.reply({ content: `You don't own or work at a business. Create one using \`/business create\`.`, ephemeral: true });
+        if (company.company === null) return await interaction.reply({ content: `You don't own or work at a business. Create one using </business create:1048340073470513155>.`, ephemeral: true });
 
         // check if user has permissions
         const allowedRoles = ["executive", "manager"];
@@ -564,7 +564,7 @@ export default class extends Command {
     }
 
     async execEmployeeSetPosition(company, interaction, data) {
-        if (company.company === null) return await interaction.reply({ content: `You don't own or work at a business. Create one using \`/business create\`.`, ephemeral: true });
+        if (company.company === null) return await interaction.reply({ content: `You don't own or work at a business. Create one using </business create:1048340073470513155>.`, ephemeral: true });
 
         // check if user has permissions
         const allowedRoles = ["executive", "manager"];

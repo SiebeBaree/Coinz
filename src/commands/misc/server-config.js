@@ -62,7 +62,7 @@ export default class extends Command {
         }
 
         const guild = await bot.database.fetchGuild(interaction.guild.id);
-        if (guild.airdropChannel === "") return await interaction.editReply({ content: `You have to setup a channel first. Please use \`/airdrop set-channel <channel>\`` });
+        if (guild.airdropChannel === "") return await interaction.editReply({ content: `You have to setup a channel first. Please use </server-config airdrop set-channel:1048340073470513152>` });
         const newStatus = !guild.airdropStatus;
 
         await GuildModel.updateOne(
