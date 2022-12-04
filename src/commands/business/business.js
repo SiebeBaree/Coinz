@@ -34,7 +34,7 @@ const calcWorth = async (inventory, factories) => {
 
     for (let i = 0; i < inventory.length; i++) {
         const item = await bot.database.fetchItem(inventory[i].itemId);
-        worth += item.sellPrice * inventory[i].amount;
+        if (item) worth += item.sellPrice * inventory[i].amount;
     }
 
     for (let i = 0; i < factories.length; i++) {
@@ -376,13 +376,13 @@ export default class extends Command {
         const itemId = interaction.options.getString('item-id');
 
         if (!validItems.includes(itemId)) return await interaction.reply({ content: `The item ID you have entered is invalid. Please try </factory list-products:1040552927288377345>.`, ephemeral: true });
-        const product = bot.database.fetchItem(itemId);
+        const product = await bot.database.fetchItem(itemId);
 
         if (option === "steal") {
             if (company.company.balance < 25) return await interaction.reply({ content: `Your business needs at least :coin: 25 to steal supplies.`, ephemeral: true });
 
             await interaction.deferReply();
-            if (commandPassed(company.company.risk)) {
+            if (!commandPassed(company.company.risk)) {
                 const amount = randomNumber(1, 4);
                 const newRisk = company.company.risk + 10 > 80 ? 80 - company.company.risk : 10;
 
@@ -394,7 +394,7 @@ export default class extends Command {
                         { ownerId: company.company.ownerId },
                         {
                             $inc: { risk: newRisk },
-                            $push: { inventory: { id: itemId, amount: amount } }
+                            $push: { inventory: { itemId: itemId, amount: amount } }
                         });
                 }
 
@@ -407,14 +407,15 @@ export default class extends Command {
             }
         } else {
             if (!product) return await interaction.reply({ content: `The item with the ID \`${itemId}\` doesn't exist.` });
-            if (product.buyPrice > data.user.wallet) return await interaction.reply({ content: `You don't have enough money in your wallet.` });
+            if (product.buyPrice > company.company.balance) return await interaction.reply({ content: `You don't have enough money in your wallet.` });
+            await interaction.deferReply();
             const newRisk = company.company.risk - 15 >= 0 ? -15 : 0;
 
             if (checkItem(company.company.inventory, itemId)) {
-                await Business.updateOne({ ownerId: company.company.ownerId }, { $inc: { balance: -product.price, risk: newRisk } });
-                await Business.updateOne({ ownerId: company.company.ownerId, 'inventory.itemId': product.itemId }, { $inc: { 'inventory.$.amount': amount } });
+                await Business.updateOne({ ownerId: company.company.ownerId }, { $inc: { balance: -product.buyPrice, risk: newRisk } });
+                await Business.updateOne({ ownerId: company.company.ownerId, 'inventory.itemId': product.itemId }, { $inc: { 'inventory.$.amount': 1 } });
             } else {
-                await Business.updateOne({ ownerId: company.company.ownerId }, { $inc: { balance: -product.price, risk: newRisk }, $push: { inventory: { id: itemId, amount: 1 } } });
+                await Business.updateOne({ ownerId: company.company.ownerId }, { $inc: { balance: -product.buyPrice, risk: newRisk }, $push: { inventory: { itemId: itemId, amount: 1 } } });
             }
 
             return await interaction.editReply({ content: `You have successfully bought 1x <:${product.itemId}:${product.emoteId}>. The risk went down to ${company.company.risk + newRisk}%.` });
@@ -432,7 +433,7 @@ export default class extends Command {
         if (user.bot) return await interaction.reply({ content: `Do you really want to invite a bot?! I don't think so. The bots don't want to work for your company...`, ephemeral: true });
         if (user.id === interaction.member.id) return await interaction.reply({ content: `Why are you trying to invite yourself?!`, ephemeral: true });
         if (company.company.employees.length >= 5) return await interaction.reply({ content: `You can't have more than 5 employees.`, ephemeral: true });
-        if (company.company.employees.some(e => e.id === user.id)) return await interaction.reply({ content: `This member is already an employee.`, ephemeral: true });
+        if (company.company.employees.some(e => e.userId === user.id)) return await interaction.reply({ content: `This member is already an employee.`, ephemeral: true });
 
         await interaction.deferReply();
         const employee = await bot.database.fetchMember(user.id);
@@ -548,7 +549,7 @@ export default class extends Command {
         for (let i = 0; i < company.company.employees.length; i++) {
             if (company.company.employees[i].userId === user.id) {
                 employeeExists = true;
-                await Business.updateOne({ ownerId: company.company.id, 'employees.userId': user.id }, {
+                await Business.updateOne({ ownerId: company.company.ownerId, 'employees.userId': user.id }, {
                     $set: { "employees.$.wage": wage }
                 });
                 break;
@@ -578,7 +579,7 @@ export default class extends Command {
         for (let i = 0; i < company.company.employees.length; i++) {
             if (company.company.employees[i].userId === user.id) {
                 employeeExists = true;
-                await Business.updateOne({ ownerId: company.company.id, 'employees.userId': user.id }, {
+                await Business.updateOne({ ownerId: company.company.ownerId, 'employees.userId': user.id }, {
                     $set: { "employees.$.role": interaction.options.getString('position') }
                 });
                 break;
@@ -594,7 +595,7 @@ export default class extends Command {
     }
 
     async removeEmployee(company, employeeId) {
-        await Business.updateOne({ ownerId: company.id }, {
+        await Business.updateOne({ ownerId: company.ownerId }, {
             $pull: { employees: { userId: employeeId } }
         })
     }
