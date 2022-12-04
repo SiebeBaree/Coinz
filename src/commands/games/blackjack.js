@@ -67,7 +67,7 @@ export default class extends Command {
         data.dealerHand = [];
 
         data = this.startGame(data);
-        if (data.playerWon === true && !data.user.badges.includes(easy_blackjack)) await MemberModel.updateOne({ id: interaction.member.id }, { $push: { badges: "easy_blackjack" } });
+        if (data.playerWon === true && !data.user.badges.includes("easy_blackjack")) await MemberModel.updateOne({ id: interaction.member.id }, { $push: { badges: "easy_blackjack" } });
 
         const interactionMessage = await interaction.editReply({ embeds: [this.createEmbed(data)], components: [this.setButtons(data.gameFinished, disableDoubleDown)], fetchReply: true });
         const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 6, idle: 15000 });
