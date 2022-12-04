@@ -5,7 +5,8 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
-    ComponentType
+    ComponentType,
+    PermissionsBitField
 } from 'discord.js'
 import { addMoney, takeMoney } from '../../lib/user.js'
 import { checkBet } from '../../lib/helpers.js'
@@ -67,6 +68,10 @@ export default class extends Command {
     }
 
     async run(interaction, data) {
+        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.UseExternalEmojis) || !interaction.guild.members.me.permissionsIn(interaction.channel).has(PermissionsBitField.Flags.UseExternalEmojis)) {
+            return await interaction.reply({ content: `I don't have permission to use External Emojis... Please enable this permission to use this command.`, ephemeral: true });
+        }
+
         const secondPlayer = interaction.options.getUser('user');
 
         if (secondPlayer.id === interaction.member.id) {
