@@ -183,25 +183,30 @@ export default class extends Command {
                     }
                 }
 
-                switch (factories[i].status.toLowerCase()) {
-                    case 'producing':
-                        product = products[factories[i].production];
-                        visualRow = createVisualRow(':gear:');
-                        status = `<:${product.itemId}:${product.emoteId}> in ${msToTime(factories[i].produceOn.getTime() - Date.now())}`;
-                        break;
-                    case 'destroyed':
-                        visualRow = createVisualRow(':package:');
-                        status = "Products are destroyed";
-                        break;
-                    case 'ready':
-                        product = products[factories[i].production];
-                        visualRow = createVisualRow(`<:${product.itemId}:${product.emoteId}>`);
-                        status = `<:${product.itemId}:${product.emoteId}> ready to collect`;
-                        break;
-                    default:
-                        visualRow = createVisualRow(':black_large_square:');
-                        status = "Shutdown";
-                        break;
+                try {
+                    switch (factories[i].status.toLowerCase()) {
+                        case 'producing':
+                            product = products[factories[i].production];
+                            visualRow = createVisualRow(':gear:');
+                            status = `<:${product.itemId}:${product.emoteId}> in ${msToTime(factories[i].produceOn.getTime() - Date.now())}`;
+                            break;
+                        case 'destroyed':
+                            visualRow = createVisualRow(':package:');
+                            status = "Products are destroyed";
+                            break;
+                        case 'ready':
+                            product = products[factories[i].production];
+                            visualRow = createVisualRow(`<:${product.itemId}:${product.emoteId}>`);
+                            status = `<:${product.itemId}:${product.emoteId}> ready to collect`;
+                            break;
+                        default:
+                            visualRow = createVisualRow(':black_large_square:');
+                            status = "Shutdown";
+                            break;
+                    }
+                } catch {
+                    visualRow = createVisualRow(':black_large_square:');
+                    status = "Shutdown";
                 }
 
                 e.addFields({ name: `Factory (ID: ${i + 1})`, value: `${visualRow}\n${status}`, inline: true });
