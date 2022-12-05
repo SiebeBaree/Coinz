@@ -359,7 +359,7 @@ export default class extends Command {
 
         if (force !== "yes") {
             for (let i = 0; i < factories.length; i++) {
-                if (company.company.factories[i].status !== "standby") {
+                if (company.company.factories[factories[i] - 1].status !== "standby") {
                     return await interaction.editReply({ content: `You are already producing items in ${factories.length === 1 ? "that factory" : "those factories"}. If you want to override the production, please use \`/${this.info.name} set-production ${factoryId} Yes\`` });
                 }
             }
@@ -376,8 +376,9 @@ export default class extends Command {
         for (let i = 0; i < reqKeys.length; i++) {
             const item = checkItem(company.company.inventory, reqKeys[i], true);
 
-            if (item.amount < reqs[reqKeys[i]]) {
-                return await interaction.editReply({ content: `You don't have enough items to produce that product. You need \`${reqs[reqKeys[i]]}\` \`${requirements[reqKeys[i]].name}\` but you only have \`${item.amount}\`.` });
+            if (!item || item.amount < reqs[reqKeys[i]]) {
+                const reqAmount = item.amount ?? 0;
+                return await interaction.editReply({ content: `You don't have enough items to produce that product. You need ${reqs[reqKeys[i]]}x \`${requirements[reqKeys[i]].name}\` but you only have \`${reqAmount}\`.` });
             }
 
             if (item.amount - reqs[reqKeys[i]] > 0) {
