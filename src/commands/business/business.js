@@ -604,10 +604,10 @@ export default class extends Command {
         // check if user has permissions
         const allowedRoles = ["executive", "manager"];
         if (!company.isOwner && !allowedRoles.includes(company.employee.role)) return await interaction.reply({ content: `You don't have permission to use this command.`, ephemeral: true });
-        if (user.id === interaction.member.id) return await interaction.reply({ content: `You can't set your own wage...`, ephemeral: true });
 
         const user = interaction.options.getUser('user');
         const wage = interaction.options.getInteger('wage');
+        if (user.id === interaction.member.id) return await interaction.reply({ content: `You can't set your own wage...`, ephemeral: true });
         if (company.company.ownerId === user.id) return await interaction.reply({ content: `You can't set the CEO's wage...`, ephemeral: true });
 
         await interaction.deferReply();
