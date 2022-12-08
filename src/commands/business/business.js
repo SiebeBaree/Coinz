@@ -75,7 +75,7 @@ export default class extends Command {
                 options: []
             },
             {
-                name: 'sell',
+                name: 'sell-item',
                 type: ApplicationCommandOptionType.Subcommand,
                 description: 'Sell an item from the inventory of your business.',
                 options: [
@@ -240,8 +240,8 @@ export default class extends Command {
                 return await this.execCreate(company, interaction, data);
             case "sell-business":
                 return await this.execSellBusiness(company, interaction, data);
-            case "sell":
-                return await this.execSell(company, interaction, data);
+            case "sell-item":
+                return await this.execSellItem(company, interaction, data);
             case "supply":
                 return await this.execSupply(company, interaction, data);
             case "hire":
@@ -388,7 +388,7 @@ export default class extends Command {
         }
     }
 
-    async execSell(company, interaction, data) {
+    async execSellItem(company, interaction, data) {
         await interaction.deferReply({ ephemeral: true });
         if (company.company === null) return await interaction.editReply({ content: `You don't own or work at a business. Create one using </business create:1048340073470513155>.` });
 
