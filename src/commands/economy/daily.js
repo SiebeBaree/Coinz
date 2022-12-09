@@ -1,6 +1,19 @@
 import Command from '../../structures/Command.js'
-import { EmbedBuilder } from 'discord.js'
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import Member from '../../models/Member.js'
+
+const row = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+        .setLabel("Top.gg")
+        .setStyle(ButtonStyle.Link)
+        .setEmoji("<:topgg:990540015853506590>")
+        .setURL("https://top.gg/bot/938771676433362955/vote"),
+    new ButtonBuilder()
+        .setLabel("Discordbotlist.com")
+        .setStyle(ButtonStyle.Link)
+        .setEmoji("<:dbl:990540323967103036>")
+        .setURL("https://discordbotlist.com/bots/coinz/upvote")
+)
 
 export default class extends Command {
     info = {
@@ -46,8 +59,8 @@ export default class extends Command {
 
         const embed = new EmbedBuilder()
             .setColor(bot.config.embed.color)
-            .setDescription(`:moneybag: **You claimed your daily reward!**${alertMsg}\n\n**Daily Reward:** :coin: ${this.defaultReward}\n**Daily Streak:** :coin: ${streakReward - this.defaultReward} for a \`${data.user.streak} ${data.user.streak === 1 ? "day" : "days"}\` streak\n**Total:** :coin: ${streakReward}\n\n*Get better daily rewards with **Coinz Premium**. Go to the [**store**](https://coinzbot.xyz/store) to learn more.*\n*If you want more money consider voting. Use* </vote:993095062726647810> *for more information!*`)
-        await interaction.editReply({ embeds: [embed] });
+            .setDescription(`:moneybag: **You claimed your daily reward!**${alertMsg}\n\n**Daily Reward:** :coin: ${this.defaultReward}\n**Daily Streak:** :coin: ${streakReward - this.defaultReward} for a \`${data.user.streak} ${data.user.streak === 1 ? "day" : "days"}\` streak\n**Total:** :coin: ${streakReward}\n\n*Get better daily rewards with **Coinz Premium**. Go to the [**store**](https://coinzbot.xyz/store) to learn more.*\n*If you want more money consider voting. Use the buttons below to vote!*`)
+        await interaction.editReply({ embeds: [embed], components: [row] });
     }
 
     checkDailyStreak(previousStreak) {
