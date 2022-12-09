@@ -155,7 +155,20 @@ export default class extends Command {
                         data.gameInProgress = false;
                         await addMoney(interaction.member.id, data.salary);
                         await interaction.editReply({ components: [this.setButtonsRow(buttons, true)] });
-                        if (data.hasBusiness) await Business.updateOne({ ownerId: data.company.company.ownerId }, { $inc: { balance: -data.salary } });
+
+                        if (data.hasBusiness) {
+                            await Business.updateOne({ ownerId: data.company.company.ownerId }, { $inc: { balance: -data.salary } });
+                            await Business.updateOne(
+                                { ownerId: data.company.company.ownerId, "employees.userId": interaction.member.id },
+                                {
+                                    $inc: {
+                                        "employees.$.moneyCollected": data.salary,
+                                        "employees.$.timesWorked": 1
+                                    }
+                                }
+                            );
+                        }
+
                         await interaction.followUp({ content: `GG! You ordered these buttons correctly and earned :coin: ${data.salary} this hour.` });
 
                         await Stats.updateOne(
@@ -196,7 +209,20 @@ export default class extends Command {
                     await interaction.followUp({ content: `That is not the correct answer. You did not earn anything this hour.` });
                 } else {
                     await addMoney(interaction.member.id, data.salary);
-                    if (data.hasBusiness) await Business.updateOne({ ownerId: data.company.company.ownerId }, { $inc: { balance: -data.salary } });
+
+                    if (data.hasBusiness) {
+                        await Business.updateOne({ ownerId: data.company.company.ownerId }, { $inc: { balance: -data.salary } });
+                        await Business.updateOne(
+                            { ownerId: data.company.company.ownerId, "employees.userId": interaction.member.id },
+                            {
+                                $inc: {
+                                    "employees.$.moneyCollected": data.salary,
+                                    "employees.$.timesWorked": 1
+                                }
+                            }
+                        );
+                    }
+
                     await interaction.followUp({ content: winMsg });
 
                     await Stats.updateOne(
