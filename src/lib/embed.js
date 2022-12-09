@@ -1,4 +1,4 @@
-import { ActionRowBuilder, SelectMenuBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
 export const pageButtons = (currentPage, maxPages, disableAll = false) => {
     let disablePrevious = false;
@@ -41,7 +41,7 @@ export const createSelectMenu = (options, customId, defaultLabel, disabled = fal
 
     const SelectMenu = new ActionRowBuilder()
         .addComponents(
-            new SelectMenuBuilder()
+            new StringSelectMenuBuilder()
                 .setCustomId(customId)
                 .setPlaceholder('The interaction has ended')
                 .setDisabled(disabled)

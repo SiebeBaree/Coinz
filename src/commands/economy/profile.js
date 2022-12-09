@@ -1,5 +1,5 @@
 import Command from '../../structures/Command.js'
-import { EmbedBuilder, ApplicationCommandOptionType, ComponentType, ActionRowBuilder, SelectMenuBuilder } from 'discord.js'
+import { EmbedBuilder, ApplicationCommandOptionType, ComponentType, ActionRowBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { createMessageComponentCollector } from '../../lib/embed.js'
 import Cooldown from '../../models/Cooldown.js'
 import idAchievements from '../../assets/achievements.json' assert { type: "json" }
@@ -94,7 +94,7 @@ export default class extends Command {
     createSelectMenu(selectedItem, disabled = false) {
         const row = new ActionRowBuilder()
             .addComponents(
-                new SelectMenuBuilder()
+                new StringSelectMenuBuilder()
                     .setCustomId('profile')
                     .setPlaceholder('The interaction has ended')
                     .addOptions([
