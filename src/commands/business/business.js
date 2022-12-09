@@ -7,7 +7,7 @@ import {
     ButtonStyle,
     ButtonBuilder,
     ComponentType,
-    SelectMenuBuilder
+    StringSelectMenuBuilder
 } from 'discord.js'
 import Member from '../../models/Member.js'
 import Business from '../../models/Business.js'
@@ -122,6 +122,14 @@ export default class extends Command {
                         type: ApplicationCommandOptionType.String,
                         description: 'The item you want to buy or steal.',
                         required: true
+                    },
+                    {
+                        name: 'amount',
+                        type: ApplicationCommandOptionType.Integer,
+                        description: 'This only applies when you buy supplies.',
+                        required: false,
+                        min_value: 1,
+                        max_value: 25
                     }
                 ]
             },
@@ -267,12 +275,14 @@ export default class extends Command {
                 embed.setTitle(`Inventory of ${company.company.name}`);
                 embed.setDescription(`:credit_card: **Bank Balance:** :coin: ${company.company.balance}\n:moneybag: **Total Inventory Worth:** :coin: ${await calcWorth(company.company.inventory, 0)}`);
 
-                if (company.company.inventory.length > 0) {
-                    let items = company.company.inventory.map(i => `**${i.amount}x** ${i.itemId}`).join("\n");
-                    embed.addFields({ name: "Inventory", value: items });
-                } else {
-                    embed.addFields({ name: "Inventory", value: "Your business has no inventory..." });
+                let items = [];
+                for (let i = 0; i < company.company.inventory.length; i++) {
+                    const invItem = company.company.inventory[i];
+                    const item = await bot.database.fetchItem(invItem.itemId);
+                    items.push(`**${invItem.amount}x** <:${invItem.itemId}:${item.emoteId}> ${item.name}`);
                 }
+
+                embed.addFields({ name: "Inventory", value: items.length > 0 ? items.join("\n") : "Your business has no inventory..." });
 
             } else if (page === "employees") {
                 let employees = "";
@@ -320,7 +330,7 @@ export default class extends Command {
 
             const SelectMenu = new ActionRowBuilder()
                 .addComponents(
-                    new SelectMenuBuilder()
+                    new StringSelectMenuBuilder()
                         .setCustomId("business_info")
                         .setPlaceholder('The interaction has ended')
                         .setDisabled(disabled)
@@ -470,19 +480,22 @@ export default class extends Command {
                 return await interaction.editReply({ content: `You got caught stealing... You paid a :coin: ${amount} fine. The risk went down to ${company.company.risk + newRisk}%.` });
             }
         } else {
+            const amount = interaction.options.getInteger('amount') ?? 1;
+            const totalPrice = Math.floor(product.buyPrice * amount);
+
             if (!product) return await interaction.reply({ content: `The item with the ID \`${itemId}\` doesn't exist.` });
-            if (product.buyPrice > company.company.balance) return await interaction.reply({ content: `You don't have enough money in your wallet.` });
+            if (totalPrice > company.company.balance) return await interaction.reply({ content: `You don't have enough money in your wallet.` });
             await interaction.deferReply();
             const newRisk = company.company.risk - 15 >= 0 ? -15 : 0;
 
             if (checkItem(company.company.inventory, itemId)) {
-                await Business.updateOne({ ownerId: company.company.ownerId }, { $inc: { balance: -product.buyPrice, risk: newRisk } });
-                await Business.updateOne({ ownerId: company.company.ownerId, 'inventory.itemId': product.itemId }, { $inc: { 'inventory.$.amount': 1 } });
+                await Business.updateOne({ ownerId: company.company.ownerId }, { $inc: { balance: -totalPrice, risk: newRisk } });
+                await Business.updateOne({ ownerId: company.company.ownerId, 'inventory.itemId': product.itemId }, { $inc: { 'inventory.$.amount': amount } });
             } else {
-                await Business.updateOne({ ownerId: company.company.ownerId }, { $inc: { balance: -product.buyPrice, risk: newRisk }, $push: { inventory: { itemId: itemId, amount: 1 } } });
+                await Business.updateOne({ ownerId: company.company.ownerId }, { $inc: { balance: -totalPrice, risk: newRisk }, $push: { inventory: { itemId: itemId, amount: amount } } });
             }
 
-            return await interaction.editReply({ content: `You have successfully bought 1x <:${product.itemId}:${product.emoteId}>. The risk went down to ${company.company.risk + newRisk}%.` });
+            return await interaction.editReply({ content: `You have successfully bought ${amount}x <:${product.itemId}:${product.emoteId}> for :coin: ${totalPrice}. The risk went down to ${company.company.risk + newRisk}%.` });
         }
     }
 
