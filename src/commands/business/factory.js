@@ -160,7 +160,7 @@ export default class extends Command {
             const e = new EmbedBuilder()
                 .setTitle(`:factory: Factories of ${company.company.name}`)
                 .setColor(bot.config.embed.color)
-                .setDescription(`:gear: **Use** </${this.info.name} set-production:993095062726647809> **to produce an item.**\n:hammer_pick: **All collected products are found in** </business inventory:1048340073470513155>**.**${buyFactory}`)
+                .setDescription(`:gear: **Use** </${this.info.name} set-production:993095062726647809> **to produce an item.**\n:hammer_pick: **All collected products are found in** </business info:1048340073470513155>**.**${buyFactory}`)
 
             if (factories.length == 0) {
                 e.addFields({ name: `Buy a Factory`, value: `Please press the button below to buy a factory.`, inline: false });
