@@ -28,7 +28,7 @@ export default class extends Event {
         }
 
         const cooldown = cmd.info.cooldown;
-        if (await cmd.cool(cmd.info.name, interaction.member, cooldown === 0 && premium.premium ? 1 : cooldown)) {
+        if (process.env.NODE_ENV === "production" && await cmd.cool(cmd.info.name, interaction.member, cooldown === 0 && premium.premium ? 1 : cooldown)) {
             return await interaction.reply({ content: `:x: You have to wait ${msToTime(await this.cooldown.getCooldown(interaction.member.id, cmd.info.name) * 1000)} to use this command again.`, ephemeral: true });
         }
 
