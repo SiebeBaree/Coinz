@@ -1,5 +1,6 @@
 import Command from '../../structures/Command.js'
-import { EmbedBuilder, ApplicationCommandOptionType } from "discord.js"
+import { EmbedBuilder, ApplicationCommandOptionType, StringSelectMenuBuilder, ActionRowBuilder, ComponentType } from "discord.js"
+import { createMessageComponentCollector } from '../../lib/embed.js'
 import { msToTime } from '../../lib/helpers.js'
 import { readFileSync } from 'fs';
 
@@ -25,40 +26,7 @@ export default class extends Command {
                 name: 'categories',
                 type: ApplicationCommandOptionType.Subcommand,
                 description: 'Get all possible commands in a specific category.',
-                options: [
-                    {
-                        name: 'category',
-                        type: ApplicationCommandOptionType.String,
-                        description: 'The category you want to get all commands from.',
-                        required: false,
-                        choices: [
-                            {
-                                name: 'Miscellaneous',
-                                value: 'misc'
-                            },
-                            {
-                                name: 'Economy',
-                                value: 'economy'
-                            },
-                            {
-                                name: 'Games',
-                                value: 'games'
-                            },
-                            {
-                                name: 'Business',
-                                value: 'business'
-                            },
-                            {
-                                name: 'Crop Farming',
-                                value: 'farming'
-                            },
-                            {
-                                name: 'Investing',
-                                value: 'investing'
-                            }
-                        ]
-                    }
-                ]
+                options: []
             },
             {
                 name: 'guide',
@@ -128,7 +96,7 @@ export default class extends Command {
         { name: "Economy", category: "economy", icon: ":coin: " },
         { name: "Games", category: "games", icon: ":video_game: " },
         { name: "Business", category: "business", icon: ":office: " },
-        { name: "Crop Farming", category: "farming", icon: ":carrot: " },
+        { name: "Crop Farming", category: "farming", icon: ":seedling: " },
         { name: "Investing", category: "investing", icon: ":chart_with_upwards_trend: " },
     ];
 
@@ -174,47 +142,69 @@ export default class extends Command {
     }
 
     async execCategories(interaction, data) {
-        await interaction.deferReply();
-        const argument = interaction.options.getString('category')?.toLowerCase();
+        let options = [
+            { label: 'Miscellaneous', value: 'misc', emoji: '🔧' },
+            { label: 'Economy', value: 'economy', emoji: '🪙' },
+            { label: 'Games', value: 'games', emoji: '🎮' },
+            { label: 'Business', value: 'business', emoji: '🏢' },
+            { label: 'Crop Farming', value: 'farming', emoji: '🌱' },
+            { label: 'Investing', value: 'investing', emoji: '📈' }
+        ]
 
-        if (argument != null) {
-            let embed = new EmbedBuilder()
+        // Populate the map with the key-value pairs from the array
+        const map = new Map();
+        options.forEach(obj => { map.set(obj.value, `${obj.emoji} ${obj.label}`); });
+
+        const getSelectMenu = (defaultLabel, disabled = false) => {
+            for (let i = 0; i < options.length; i++) {
+                options[i].default = options[i].value === defaultLabel;
+            }
+
+            return new ActionRowBuilder()
+                .addComponents(
+                    new StringSelectMenuBuilder()
+                        .setCustomId("help-categories")
+                        .setPlaceholder('The interaction has ended')
+                        .setDisabled(disabled)
+                        .addOptions(options),
+                );
+        }
+
+        const getEmbed = (category) => {
+            const embed = new EmbedBuilder()
                 .setColor(bot.config.embed.color)
                 .setFooter({ text: bot.config.embed.footer })
+                .setAuthor({ name: `Commands for ${map.get(category, "🔧 Miscellaneous")}`, iconURL: `${bot.user.avatarURL() || bot.config.embed.defaultIcon}` })
+                .setDescription(`:question: **Don't know where to begin? Use** </help guide:983096143439335467>\n:gear: **Visit our** [**support server**](https://discord.gg/asnZQwc6kW)**!**\n:bulb: **More info about a command: ** \`/help command [command]\``)
 
             this.categories.forEach(categoryObj => {
-                if (categoryObj.category == argument) {
-                    embed.setTitle(`Help Category: ${categoryObj.icon || ""}${categoryObj.name}`);
-
+                if (categoryObj.category == category) {
                     let allCommands = [];
                     for (const num of bot.commands) {
                         if ((num[1].info.category).toLowerCase() == categoryObj.category && num[1].info.enabled) allCommands.push(`\`${num[1].info.name}\``);
                     }
 
-                    if (allCommands.length) {
-                        embed.setDescription(`To get more info about a command use \`/help command [command]\`\n\n**All Commands:**\n${allCommands.join(", ")}`);
-                    } else {
-                        embed.setDescription("No commmands found in this category.");
-                    }
+                    embed.addFields([{ name: "Commands", value: allCommands.length ? allCommands.join(", ") : "No commmands found in this category.", inline: false }]);
                 }
             });
 
-            return await interaction.editReply({ embeds: [embed] });
-        } else {
-            let embed = new EmbedBuilder()
-                .setAuthor({ name: "Commands List", iconURL: `${bot.user.avatarURL() || bot.config.embed.defaultIcon}` })
-                .setColor(bot.config.embed.color)
-                .setFooter({ text: bot.config.embed.footer })
-                .setDescription(`:question: **Don't know where to begin? Use** </guide:1005435550884442195>\n:gear: **Visit our** [**support server**](https://discord.gg/asnZQwc6kW)**!**`)
-
-            this.categories.forEach(categoryObj => {
-                embed.addFields([
-                    { name: `${categoryObj.icon || ""}${categoryObj.name}`, value: `\`/help ${categoryObj.category}\``, inline: true }
-                ]);
-            });
-
-            return await interaction.editReply({ embeds: [embed] });
+            return embed;
         }
+
+        let category = "misc";
+        const message = await interaction.reply({ embeds: [getEmbed(category)], components: [getSelectMenu(category)], fetchReply: true });
+        const collector = createMessageComponentCollector(message, interaction, { time: 60000, componentType: ComponentType.StringSelect });
+
+        collector.on("collect", async (interaction) => {
+            if (interaction.customId === "help-categories") {
+                category = interaction.values[0];
+                await interaction.update({ embeds: [getEmbed(category)], components: [getSelectMenu(category)] });
+            }
+        });
+
+        collector.on("end", async (collected) => {
+            await interaction.editReply({ components: [getSelectMenu(category, true)] });
+        });
     }
 
     async execCommands(interaction, data) {
@@ -258,8 +248,9 @@ export default class extends Command {
             .setAuthor({ name: `Help: ${command.info.name}`, iconURL: `${bot.user.avatarURL() || bot.config.embed.defaultIcon}` })
             .setColor(bot.config.embed.color)
             .setFooter({ text: bot.config.embed.footer })
-            .setDescription(command.info.description || "No Description.")
+            .setDescription(":question: **Don't know where to begin? Use** </help guide:983096143439335467>\n:gear: **Visit our** [**support server**](https://discord.gg/asnZQwc6kW)**!**")
             .addFields(
+                { name: 'Description', value: command.info.description || "No Description.", inline: false },
                 { name: 'Command Usage', value: `${usage === "`" ? `\`/${command.info.name}\`` : usage}`, inline: false },
                 { name: 'Cooldown', value: `${command.info.cooldown > 0 ? msToTime(command.info.cooldown * 1000) : `${bot.config.defaultTimeout}s`}`, inline: false }
             )
