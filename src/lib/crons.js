@@ -8,10 +8,12 @@ import { writeFile, readFileSync } from "fs"
 
 // Stock Cron
 schedule("*/40 * * * 1-5", async () => {
-    if (!isMarketOpen()) return;
-    const data = await getStockData();
-    if (data === null) return bot.logger.warn("Stocks Cron went wrong... No data found.");
-    await uploadStockData(data);
+    if (process.env.NODE_ENV === "production") {
+        if (!isMarketOpen()) return;
+        const data = await getStockData();
+        if (data === null) return bot.logger.warn("Stocks Cron went wrong... No data found.");
+        await uploadStockData(data);
+    }
 }, {
     scheduled: true,
     timezone: "America/New_York"
@@ -19,9 +21,11 @@ schedule("*/40 * * * 1-5", async () => {
 
 // Crypto Cron
 schedule("*/3 * * * *", async () => {
-    const data = await getCryptoData();
-    if (data === null) return bot.logger.warn("Crypto Cron went wrong... No data found.");
-    await uploadCryptoData(data);
+    if (process.env.NODE_ENV === "production") {
+        const data = await getCryptoData();
+        if (data === null) return bot.logger.warn("Crypto Cron went wrong... No data found.");
+        await uploadCryptoData(data);
+    }
 });
 
 // Removed Expired Cooldowns Cron
