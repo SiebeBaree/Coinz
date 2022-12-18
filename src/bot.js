@@ -3,12 +3,13 @@ import { ActivityType, GatewayIntentBits, Partials } from "discord.js"
 import mongoose from "mongoose"
 const { connect } = mongoose;
 
+const ACTIVITY_NAME = process.env.NODE_ENV === "production" ? "/help | coinzbot.xyz" : "Only for Beta Testers";
 const bot = global.bot = new Bot({
     partials: [Partials.Channel],
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages],
     presence: {
         activities: [{
-            name: "Only for Beta Testers",
+            name: ACTIVITY_NAME,
             type: ActivityType.Watching
         }], status: "online"
     }
@@ -34,7 +35,7 @@ bot.rest.on('rateLimit', rateLimitData => {
 
 bot.on('ready', async () => {
     // Hotfix to run multiple shards
-    if (bot.shard.ids[0] === 0) {
+    if (bot.shard.count - 1 === bot.shard.ids[0]) {
         if (process.env.NODE_ENV === "production") {
             // Create Webhook
             const { default: app } = await import("./lib/api.js");
