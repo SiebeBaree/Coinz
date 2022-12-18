@@ -261,7 +261,7 @@ export default class extends Command {
             case "set-position":
                 return await this.execEmployeeSetPosition(company, interaction, data);
             default:
-                return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help command ${this.info.name}\`.` });
+                return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help command ${this.info.name}\`.` });
         }
     }
 
@@ -454,8 +454,13 @@ export default class extends Command {
 
         if (option === "steal") {
             if (company.company.balance < 25) return await interaction.reply({ content: `Your business needs at least :coin: 25 to steal supplies.`, ephemeral: true });
-
             await interaction.deferReply();
+
+            if (await bot.cooldown.isOnCooldown(company.company.ownerId, "business-steal")) {
+                return await interaction.editReply({ content: `:x: Your company has to wait ${msToTime(await bot.cooldown.getCooldown(company.company.ownerId, cmd.info.name) * 1000)} to steal supplies again.` });
+            }
+            await bot.cooldown.setCooldown(company.company.ownerId, "business-steal", 86400 * 2);
+
             if (!commandPassed(company.company.risk)) {
                 const amount = randomNumber(1, 4);
                 const newRisk = company.company.risk + 10 > 80 ? 80 - company.company.risk : 10;
