@@ -252,7 +252,13 @@ export default class extends Command {
             .addFields(
                 { name: 'Description', value: command.info.description || "No Description.", inline: false },
                 { name: 'Command Usage', value: `${usage === "`" ? `\`/${command.info.name}\`` : usage}`, inline: false },
-                { name: 'Cooldown', value: `${command.info.cooldown > 0 ? msToTime(command.info.cooldown * 1000) : `${bot.config.defaultTimeout}s`}`, inline: false }
+                {
+                    name: 'Cooldown',
+                    value: command.info.cooldown > 0 ?
+                        msToTime(command.info.cooldown * 1000) :
+                        `**Default:** \`${bot.config.defaultTimeout}s\`\n**Premium:** \`1s\``,
+                    inline: false
+                }
             )
 
         if (command.info.extraFields !== undefined && command.info.extraFields.length > 0) {
