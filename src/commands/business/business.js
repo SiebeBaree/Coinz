@@ -12,7 +12,7 @@ import {
 import Member from '../../models/Member.js'
 import Business from '../../models/Business.js'
 import { checkItem, getBusiness } from '../../lib/user.js'
-import { commandPassed, randomNumber } from '../../lib/helpers.js'
+import { commandPassed, randomNumber, msToTime } from '../../lib/helpers.js'
 import { createMessageComponentCollector } from '../../lib/embed.js'
 import positions from '../../assets/positions.json' assert { type: "json" }
 
@@ -399,6 +399,11 @@ export default class extends Command {
             if (name.length > 32) return await interaction.editReply({ content: `You can only use a maximum of 32 characters for your business name.` });
             if (!/^[A-Za-z][a-zA-Z0-9 _-]*$/.test(name)) return await interaction.editReply({ content: `Your business name can only use \`A-Z, a-z, 0-9, whitespaces, -, _\` and you have to start with a letter.` });
 
+            if (await bot.cooldown.isOnCooldown(company.company.ownerId, "business-rename")) {
+                return await interaction.editReply({ content: `:x: You have to wait ${msToTime(await bot.cooldown.getCooldown(company.company.ownerId, "business-rename") * 1000)} to rename your company again.` });
+            }
+            await bot.cooldown.setCooldown(company.company.ownerId, "business-rename", 86400 * 5);
+
             await Business.updateOne(
                 { id: company.company.ownerId },
                 { $set: { name: name } }
@@ -490,7 +495,7 @@ export default class extends Command {
             await interaction.deferReply();
 
             if (await bot.cooldown.isOnCooldown(company.company.ownerId, "business-steal")) {
-                return await interaction.editReply({ content: `:x: Your company has to wait ${msToTime(await bot.cooldown.getCooldown(company.company.ownerId, cmd.info.name) * 1000)} to steal supplies again.` });
+                return await interaction.editReply({ content: `:x: Your company has to wait ${msToTime(await bot.cooldown.getCooldown(company.company.ownerId, "business-steal") * 1000)} to steal supplies again.` });
             }
             await bot.cooldown.setCooldown(company.company.ownerId, "business-steal", 86400 * 2);
 
