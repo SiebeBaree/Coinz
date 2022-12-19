@@ -40,6 +40,7 @@ export default class extends Command {
         await interaction.deferReply();
         let memberData = await bot.database.fetchMember(member.id);
 
+        if (member.id !== interaction.user.id) return await interaction.editReply({ embeds: [this.getEmbed(member, memberData, "none")] });
         let priceToIncrease = this.calculateBankLimitPrice(memberData.bankLimit || 7500);
         let hasEnoughMoney = memberData.wallet >= priceToIncrease;
 
@@ -88,15 +89,15 @@ export default class extends Command {
         const embed = new EmbedBuilder()
             .setAuthor({ name: `${member.displayName || member.username}'s balance`, iconURL: `${member.displayAvatarURL() || bot.config.embed.defaultIcon}` })
             .setColor(bot.config.embed.color)
-            .setDescription(hasEnoughMoney ?
+            .addFields({ name: 'Balance', value: `:dollar: **Wallet:** :coin: ${memberData.wallet}\n:bank: **Bank:** :coin: ${memberData.bank} / ${memberData.bankLimit || 7500}\n:moneybag: **Net Worth:** :coin: ${memberData.wallet + memberData.bank}\n<:ticket:1032669959161122976> **Tickets:** <:ticket:1032669959161122976> ${memberData.tickets || 0}`, inline: true })
+
+        if (priceToIncrease !== "none") {
+            embed.setDescription(hasEnoughMoney ?
                 `:white_check_mark: **You can increase your bank limit to \`${memberData.bankLimit * 2}\` for :coin: ${priceToIncrease}**.` :
-                `:x: **You need :coin: ${priceToIncrease > memberData.wallet ? priceToIncrease - memberData.wallet : 1} to increase your bank limit to \`${memberData.bankLimit * 2}\`.**`)
-            .addFields(
-                { name: ':dollar: Wallet', value: `:coin: ${memberData.wallet}`, inline: true },
-                { name: ':bank: Bank', value: `:coin: ${memberData.bank}/${memberData.bankLimit || 7500}`, inline: true },
-                { name: ':moneybag: Net Worth', value: `:coin: ${memberData.wallet + memberData.bank}`, inline: true },
-                { name: '<:ticket:1032669959161122976> Tickets', value: `<:ticket:1032669959161122976> ${memberData.tickets || 0}`, inline: true },
+                `:x: **You need :coin: ${priceToIncrease > memberData.wallet ? priceToIncrease - memberData.wallet : 1} to increase your bank limit to \`${memberData.bankLimit * 2}\`.**`
             )
+        }
+
         return embed;
     }
 
