@@ -37,15 +37,20 @@ export default class extends Command {
     async run(interaction, data) {
         const member = interaction.options.getUser('user');
         const amount = interaction.options.getInteger('amount');
-        if (member.bot) return await interaction.reply({ content: 'That user is a bot. You can only pay a real person.', ephemeral: true });
-        if (member.id === interaction.member.id) return await interaction.reply({ content: 'You can\'t pay yourself.', ephemeral: true });
+
+        if (member.bot || member.id === interaction.member.id) {
+            await bot.cooldown.removeCooldown(interaction.user.id, this.info.name);
+            return await interaction.reply({ content: ':x: You cannot pay bots or yourself.', ephemeral: true });
+        }
+
         await interaction.deferReply();
 
         // To create a document
         await bot.database.fetchMember(member.id);
 
         if (data.user.wallet < amount) {
-            return await interaction.editReply({ content: `You don't have :coin: ${amount} in your wallet.` });
+            await bot.cooldown.removeCooldown(interaction.user.id, this.info.name);
+            return await interaction.editReply({ content: `:x: You don't have :coin: ${amount} in your wallet.` });
         } else {
             await addMoney(member.id, amount);
             await takeMoney(interaction.member.id, amount, true);
