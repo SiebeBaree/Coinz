@@ -69,6 +69,19 @@ export default class extends Command {
                 ]
             },
             {
+                name: 'rename',
+                type: ApplicationCommandOptionType.Subcommand,
+                description: 'Change the name of your business.',
+                options: [
+                    {
+                        name: 'name',
+                        type: ApplicationCommandOptionType.String,
+                        description: 'The new name of your business.',
+                        required: true
+                    }
+                ]
+            },
+            {
                 name: 'sell-business',
                 type: ApplicationCommandOptionType.Subcommand,
                 description: 'Sell your business and get the net worth of your business.',
@@ -246,6 +259,8 @@ export default class extends Command {
                 return await this.execInfo(company, interaction, data);
             case "create":
                 return await this.execCreate(company, interaction, data);
+            case "rename":
+                return await this.execRename(company, interaction, data);
             case "sell-business":
                 return await this.execSellBusiness(company, interaction, data);
             case "sell-item":
@@ -361,9 +376,9 @@ export default class extends Command {
         await interaction.deferReply({ ephemeral: true });
         if (company.company === null && data.user.job === "") {
             const name = interaction.options.getString('name').trim();
-            if (name.length > 32) return await interaction.editReply({ content: `You can only use a maximum of 32 characters for your business name.`, ephemeral: true });
-            if (!/^[A-Za-z][a-zA-Z0-9 _-]*$/.test(name)) return await interaction.editReply({ content: `Your business name can only use \`A-Z, a-z, 0-9, whitespaces, -, _\` and you have to start with a letter.`, ephemeral: true });
-            if (data.user.wallet < 2000) return await interaction.editReply({ content: `You need :coin: 2000 in your wallet to create a business.`, ephemeral: true });
+            if (name.length > 32) return await interaction.editReply({ content: `You can only use a maximum of 32 characters for your business name.`, });
+            if (!/^[A-Za-z][a-zA-Z0-9 _-]*$/.test(name)) return await interaction.editReply({ content: `Your business name can only use \`A-Z, a-z, 0-9, whitespaces, -, _\` and you have to start with a letter.` });
+            if (data.user.wallet < 2000) return await interaction.editReply({ content: `You need :coin: 2000 in your wallet to create a business.` });
 
             await bot.database.fetchBusiness(interaction.member.id, name);
             await Member.updateOne(
@@ -371,9 +386,27 @@ export default class extends Command {
                 { $set: { job: "business" }, $inc: { wallet: -2000 } }
             );
 
-            return await interaction.editReply({ content: `You have successfully created a business named \`${name}\` for :coin: 2000.`, ephemeral: true });
+            return await interaction.editReply({ content: `You have successfully created a business named \`${name}\` for :coin: 2000.` });
         } else {
-            return await interaction.editReply({ content: `You already own or work at a business or have a job.\nQuit your job using </job leave:983096143284174858>, sell your business using </business sell:0>.`, ephemeral: true });
+            return await interaction.editReply({ content: `You already own or work at a business or have a job.\nQuit your job using </job leave:983096143284174858>, sell your business using </business sell:0>.` });
+        }
+    }
+
+    async execRename(company, interaction, data) {
+        await interaction.deferReply({ ephemeral: true });
+        if (company.company !== null && company.isOwner) {
+            const name = interaction.options.getString('name').trim();
+            if (name.length > 32) return await interaction.editReply({ content: `You can only use a maximum of 32 characters for your business name.` });
+            if (!/^[A-Za-z][a-zA-Z0-9 _-]*$/.test(name)) return await interaction.editReply({ content: `Your business name can only use \`A-Z, a-z, 0-9, whitespaces, -, _\` and you have to start with a letter.` });
+
+            await Business.updateOne(
+                { id: company.company.ownerId },
+                { $set: { name: name } }
+            );
+
+            return await interaction.editReply({ content: `You have successfully renamed your business to \`${name}\`.` });
+        } else {
+            return await interaction.editReply({ content: `You need to own a business to change the name.` });
         }
     }
 
