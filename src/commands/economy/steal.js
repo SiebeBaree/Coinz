@@ -5,7 +5,7 @@ import {
     Colors
 } from 'discord.js'
 import Member from '../../models/Member.js'
-import { addMoney, takeMoney } from '../../lib/user.js'
+import { addMoney, getLevel, takeMoney } from '../../lib/user.js'
 
 export default class extends Command {
     info = {
@@ -48,6 +48,11 @@ export default class extends Command {
         if (data.user.wallet <= 0) {
             await bot.cooldown.removeCooldown(interaction.user.id, this.info.name);
             return await interaction.reply({ content: 'You need at least :coin: 0 in your wallet in order to steal from other people.', ephemeral: true });
+        }
+
+        if (getLevel(data.user.expirence) < 10) {
+            await bot.cooldown.removeCooldown(interaction.user.id, this.info.name);
+            return await interaction.reply({ content: 'You need to be at least level 10 in order to steal from other people.', ephemeral: true });
         }
 
         await interaction.deferReply();

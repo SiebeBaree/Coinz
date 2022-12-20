@@ -11,7 +11,7 @@ import {
 } from 'discord.js'
 import Member from '../../models/Member.js'
 import Business from '../../models/Business.js'
-import { checkItem, getBusiness } from '../../lib/user.js'
+import { checkItem, getBusiness, getLevel } from '../../lib/user.js'
 import { commandPassed, randomNumber, msToTime } from '../../lib/helpers.js'
 import { createMessageComponentCollector } from '../../lib/embed.js'
 import positions from '../../assets/positions.json' assert { type: "json" }
@@ -374,6 +374,8 @@ export default class extends Command {
 
     async execCreate(company, interaction, data) {
         await interaction.deferReply({ ephemeral: true });
+        if (getLevel(data.user.experience) < 15) return await interaction.editReply({ content: `You need to be at least level 15 to start your own business.` });
+
         if (company.company === null && data.user.job === "") {
             const name = interaction.options.getString('name').trim();
             if (name.length > 32) return await interaction.editReply({ content: `You can only use a maximum of 32 characters for your business name.`, });
@@ -548,6 +550,8 @@ export default class extends Command {
         // check if user has permissions
         const allowedRoles = ["executive", "manager"];
         if (!company.isOwner && !allowedRoles.includes(company.employee.role)) return await interaction.reply({ content: `You don't have permission to use this command.`, ephemeral: true });
+
+        if (getLevel(data.user.experience) < 20) return await interaction.editReply({ content: `You need to be at least level 20 to hire employees.` });
 
         const user = interaction.options.getUser('user');
         if (user.bot) return await interaction.reply({ content: `Do you really want to invite a bot?! I don't think so. The bots don't want to work for your company...`, ephemeral: true });
