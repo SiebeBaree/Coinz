@@ -101,7 +101,18 @@ export const getLevel = (experience) => {
 }
 
 export const getExperience = () => {
-    return Math.floor(Math.random() * 8) + 1;
+    return Math.floor(Math.random() * 4) + 1;
+}
+
+export const addRandomExperience = async (userId, exp = -1) => {
+    const experience = exp < 0 ? getExperience() : exp;
+    await MemberModel.updateOne(
+        { id: userId },
+        { $inc: { experience: experience } },
+        { upsert: true }
+    );
+
+    return experience;
 }
 
 export default {
@@ -113,4 +124,5 @@ export default {
     getBusiness,
     getLevel,
     getExperience,
+    addRandomExperience
 }
