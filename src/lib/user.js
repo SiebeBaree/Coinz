@@ -96,11 +96,21 @@ export const getBusiness = async (userData) => {
     return returnData;
 }
 
+export const getLevel = (experience) => {
+    return Math.floor(experience / 100);
+}
+
+export const getExperience = () => {
+    return Math.floor(Math.random() * 8) + 1;
+}
+
 export default {
     addMoney,
     takeMoney,
     addItem,
     takeItem,
     checkItem,
-    getBusiness
+    getBusiness,
+    getLevel,
+    getExperience,
 }
