@@ -3,6 +3,7 @@ import { EmbedBuilder, ApplicationCommandOptionType, ComponentType, ActionRowBui
 import { createMessageComponentCollector } from '../../lib/embed.js'
 import Cooldown from '../../models/Cooldown.js'
 import idAchievements from '../../assets/achievements.json' assert { type: "json" }
+import { getLevel } from '../../lib/user.js'
 
 export default class extends Command {
     info = {
@@ -70,11 +71,25 @@ export default class extends Command {
     }
 
     createEmbed(member, memberData, stocks, inventory, job, displayedBadge, badgesStr) {
+        const createProgressBar = (current) => {
+            const progress = current % 10;
+            let bar = [];
+
+            bar.push(progress === 0 ? "<:bar_start0:1054825378688020601>" : "<:bar_start1:1054825380055371866>");
+            for (let i = 1; i <= 8; i++) {
+                bar.push(progress < i ? "<:bar_mid0:1054825371146657903>" : "<:bar_mid1:1054825377157087254>");
+            }
+            bar.push(progress < 10 ? "<:bar_end0:1054825373801644093>" : "<:bar_end1:1054825376087547995>");
+
+            return bar.join("");
+        }
+
         const embed = new EmbedBuilder()
             .setTitle(`${member.displayName || member.username}'s profile${displayedBadge}`)
             .setColor(bot.config.embed.color)
             .setThumbnail(member.displayAvatarURL() || bot.config.embed.defaultIcon)
             .addFields(
+                { name: 'Experience', value: `:beginner: **Level:** \`${getLevel(memberData.experience)}\`\n:game_die: **Next Level:** \`${memberData.experience % 100}%\`\n${createProgressBar(memberData.experience % 100)}`, inline: false },
                 { name: 'Balance', value: `:dollar: **Wallet:** :coin: ${memberData.wallet}\n:bank: **Bank:** :coin: ${memberData.bank}\n:moneybag: **Net Worth:** :coin: ${memberData.wallet + memberData.bank}\n:credit_card: **Tickets:** <:ticket:1032669959161122976> ${memberData.tickets || 0}\n:gem: **Inventory Worth:** \`${inventory.totalItems} items\` valued at :coin: ${inventory.value}`, inline: false },
                 { name: 'Investment Portfolio', value: `:dollar: **Worth:** :coin: ${stocks.currentWorth}\n:credit_card: **Amount:** ${parseInt(stocks.totalStocks)}\n:moneybag: **Invested:** :coin: ${stocks.initialWorth}`, inline: false },
                 { name: 'Misc', value: `:briefcase: **Current Job:** ${job}\n:sparkles: **Daily Streak:** ${memberData.streak - 1 > 0 ? memberData.streak - 1 : 0} days`, inline: false },
