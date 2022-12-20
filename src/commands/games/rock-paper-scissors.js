@@ -9,7 +9,7 @@ import {
 } from 'discord.js'
 import { checkBet, randomNumber } from '../../lib/helpers.js'
 import { createMessageComponentCollector } from '../../lib/embed.js'
-import { addMoney, takeMoney } from '../../lib/user.js'
+import { addMoney, addRandomExperience, takeMoney } from '../../lib/user.js'
 
 export default class extends Command {
     info = {
@@ -112,6 +112,7 @@ export default class extends Command {
                         data.desc = "**You lost!** Better luck next time!";
                         await takeMoney(interaction.member.id, data.bet);
                     } else {
+                        await addRandomExperience(interaction.member.id);
                         await addMoney(interaction.member.id, parseInt(data.bet * data.multiplier - data.bet));
                     }
                 }

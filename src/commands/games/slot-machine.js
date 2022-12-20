@@ -5,7 +5,7 @@ import {
     Colors
 } from 'discord.js'
 import { checkBet, randomNumber } from '../../lib/helpers.js'
-import { addMoney, takeMoney } from '../../lib/user.js'
+import { addMoney, addRandomExperience, takeMoney } from '../../lib/user.js'
 
 export default class extends Command {
     info = {
@@ -117,6 +117,7 @@ export default class extends Command {
                         let betMultiplier = data.emotes[referenceEmote];
                         data.status = `You won :coin: ${Math.round(data.bet * betMultiplier)}.`;
                         data.color = Colors.Green;
+                        await addRandomExperience(interaction.member.id);
                         await addMoney(interaction.member.id, Math.round(data.bet * betMultiplier));
                     } else {
                         data.status = `You lost :coin: ${data.bet}.`;

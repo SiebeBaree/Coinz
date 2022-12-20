@@ -9,7 +9,7 @@ import {
 import MemberModel from '../../models/Member.js'
 import { checkBet, randomNumber } from '../../lib/helpers.js'
 import { createMessageComponentCollector } from '../../lib/embed.js'
-import { addMoney, takeMoney } from '../../lib/user.js'
+import { addMoney, addRandomExperience, takeMoney } from '../../lib/user.js'
 import deckJson from '../../assets/deck.json' assert { type: "json" }
 const { deck, hiddenCard } = deckJson;
 
@@ -93,6 +93,7 @@ export default class extends Command {
 
                     if (data.tie === undefined) {
                         if (data.playerWon) {
+                            await addRandomExperience(interaction.member.id);
                             await addMoney(interaction.member.id, parseInt(this.getPrice(data.bet) - data.bet));
                         } else {
                             await takeMoney(interaction.member.id, data.bet);

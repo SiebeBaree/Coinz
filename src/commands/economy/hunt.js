@@ -1,6 +1,6 @@
 import Command from '../../structures/Command.js'
 import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
-import { checkItem, takeItem, addMoney, takeMoney } from '../../lib/user.js'
+import { checkItem, takeItem, addMoney, takeMoney, addRandomExperience } from '../../lib/user.js'
 import { randomNumber, getRandomLoot } from '../../lib/helpers.js'
 import { createMessageComponentCollector } from '../../lib/embed.js'
 import huntData from '../../assets/loot/hunt.json' assert { type: "json" }
@@ -108,6 +108,7 @@ export default class extends Command {
                     }
 
                     if (lootText.length > 0 && totalPrice > 0) {
+                        await addRandomExperience(interaction.member.id);
                         embed.addFields({ name: "Animals Hunted", value: lootText, inline: false });
                         embed.setDescription(huntCategory.successMessage.replace("%AMOUNT%", `${totalPrice}`));
                         await addMoney(interaction.member.id, totalPrice);

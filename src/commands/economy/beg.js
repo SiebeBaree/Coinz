@@ -1,6 +1,6 @@
 import Command from '../../structures/Command.js'
 import { commandPassed, randomNumber } from '../../lib/helpers.js'
-import { addMoney } from '../../lib/user.js'
+import { addMoney, addRandomExperience } from '../../lib/user.js'
 
 export default class extends Command {
     info = {
@@ -24,7 +24,8 @@ export default class extends Command {
 
         if (commandPassed(70)) {
             await addMoney(interaction.member.id, money);
-            await interaction.editReply({ content: `You begged for money and got :coin: **${money}**.` });
+            const experience = await addRandomExperience(interaction.member.id);
+            await interaction.editReply({ content: `You begged for money and got :coin: **${money}**. You also gained **${experience} XP**.` });
         } else {
             await interaction.editReply({ content: `You begged for money but nobody wanted to give you money.` });
         }

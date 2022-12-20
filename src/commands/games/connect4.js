@@ -8,7 +8,7 @@ import {
     ComponentType,
     PermissionsBitField
 } from 'discord.js'
-import { addMoney, takeMoney } from '../../lib/user.js'
+import { addMoney, addRandomExperience, takeMoney } from '../../lib/user.js'
 import { checkBet } from '../../lib/helpers.js'
 
 const BoardIcons = {
@@ -297,6 +297,7 @@ export default class extends Command {
         if (result === ResultType.Winner) {
             await addMoney(data.hostTurn ? data.player1.id : data.player2.id, data.bet);
             await takeMoney(!data.hostTurn ? data.player1.id : data.player2.id, data.bet);
+            await addRandomExperience(data.hostTurn ? data.player1.id : data.player2.id);
             await interaction.followUp({ content: `**${data.hostTurn ? data.player1.tag : data.player2.tag}** won this Connect4 game!` });
         } else if (result === ResultType.OutOfTime) {
             await interaction.followUp({ content: `**The game has ended!** You only had 3 minutes to play this game and the time is up!` });

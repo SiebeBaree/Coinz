@@ -9,7 +9,7 @@ import {
 } from 'discord.js'
 import { checkBet, commandPassed } from '../../lib/helpers.js'
 import { createMessageComponentCollector } from '../../lib/embed.js'
-import { addMoney, takeMoney } from '../../lib/user.js'
+import { addMoney, addRandomExperience, takeMoney } from '../../lib/user.js'
 
 export default class extends Command {
     info = {
@@ -107,6 +107,7 @@ export default class extends Command {
             return async function () {
                 // returning in this function also stops the command
                 if (userWon && stoppedGame) {
+                    await addRandomExperience(interaction.member.id);
                     await addMoney(interaction.member.id, Math.floor(profit * multiplier) - bet);
                     return await interaction.editReply({ embeds: [createEmbed(multiplier, Math.floor(profit * multiplier) - bet, Colors.Green)], components: [setButton(true)] });
                 } else if (!userWon && stoppedGame) {

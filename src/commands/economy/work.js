@@ -1,6 +1,6 @@
 import Command from '../../structures/Command.js'
 import { ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } from 'discord.js'
-import { getBusiness, addMoney } from '../../lib/user.js'
+import { getBusiness, addMoney, addRandomExperience } from '../../lib/user.js'
 import { randomNumber, timeout } from '../../lib/helpers.js'
 import { createMessageComponentCollector } from '../../lib/embed.js'
 import Member from '../../models/Member.js'
@@ -169,7 +169,8 @@ export default class extends Command {
                             );
                         }
 
-                        await interaction.followUp({ content: `GG! You ordered these buttons correctly and earned :coin: ${data.salary} this hour.` });
+                        const exp = await addRandomExperience(interaction.member.id);
+                        await interaction.followUp({ content: `GG! You ordered these buttons correctly and earned :coin: ${data.salary} this hour and gained ${exp} experience.` });
 
                         await Stats.updateOne(
                             { id: interaction.member.id },
@@ -223,7 +224,8 @@ export default class extends Command {
                         );
                     }
 
-                    await interaction.followUp({ content: winMsg });
+                    const exp = await addRandomExperience(interaction.member.id);
+                    await interaction.followUp({ content: winMsg + ` and gained ${exp} experience.` });
 
                     await Stats.updateOne(
                         { id: interaction.member.id },

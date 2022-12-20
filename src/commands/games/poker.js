@@ -9,7 +9,7 @@ import {
 } from 'discord.js'
 import { checkBet, randomNumber } from '../../lib/helpers.js'
 import { createMessageComponentCollector } from '../../lib/embed.js'
-import { addMoney, takeMoney } from '../../lib/user.js'
+import { addMoney, addRandomExperience, takeMoney } from '../../lib/user.js'
 import deckJson from '../../assets/deck.json' assert { type: "json" }
 const { deck } = deckJson;
 
@@ -337,6 +337,7 @@ export default class extends Command {
         data = this.checkHand(data);
 
         if (data.playerWon) {
+            await addRandomExperience(interaction.member.id);
             await addMoney(interaction.member.id, this.getPrice(data.bet, data.multiplier));
         } else {
             await takeMoney(interaction.member.id, data.bet);

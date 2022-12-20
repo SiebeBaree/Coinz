@@ -5,7 +5,7 @@ import {
     Colors
 } from 'discord.js'
 import { checkBet, randomNumber } from '../../lib/helpers.js'
-import { addMoney, takeMoney } from '../../lib/user.js'
+import { addMoney, addRandomExperience, takeMoney } from '../../lib/user.js'
 
 export default class extends Command {
     info = {
@@ -109,6 +109,7 @@ export default class extends Command {
 
                 // returning in this function also stops the command
                 if (data.userWon && data.stoppedGame) {
+                    await addRandomExperience(interaction.member.id);
                     await addMoney(interaction.member.id, parseInt(data.bet * 3));
                     data.color = Colors.Green;
                     data.status = `Your horse won!\n:money_with_wings: **Profit:** :coin: ${parseInt(data.bet * 3)}`;

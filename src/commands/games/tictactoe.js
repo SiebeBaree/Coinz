@@ -8,7 +8,7 @@ import {
     ComponentType
 } from 'discord.js'
 import { checkBet } from '../../lib/helpers.js'
-import { addMoney, takeMoney } from '../../lib/user.js'
+import { addMoney, addRandomExperience, takeMoney } from '../../lib/user.js'
 
 export default class extends Command {
     info = {
@@ -130,10 +130,12 @@ export default class extends Command {
                         data.desc = `<@${interaction.member.id}> won the Tic Tac Toe game!!!`;
                         await addMoney(interaction.member.id, parseInt(data.bet * 2));
                         await takeMoney(user.id, data.bet);
+                        await addRandomExperience(interaction.member.id);
                     } else {
                         data.desc = `<@${user.id}> won the Tic Tac Toe game!!!`;
                         await addMoney(user.id, parseInt(data.bet * 2));
                         await takeMoney(interaction.member.id, data.bet);
+                        await addRandomExperience(user.id);
                     }
                 } else {
                     if (data.gameFinished) data.desc = "**The game ended in a Tie and nobody won.**";

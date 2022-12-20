@@ -1,6 +1,6 @@
 import Command from '../../structures/Command.js'
 import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors } from 'discord.js'
-import { checkItem, takeItem, addMoney } from '../../lib/user.js'
+import { checkItem, takeItem, addMoney, addRandomExperience } from '../../lib/user.js'
 import { randomNumber, getRandomLoot, timeout } from '../../lib/helpers.js'
 import { createMessageComponentCollector } from '../../lib/embed.js'
 import Stats from '../../models/Stats.js'
@@ -86,9 +86,10 @@ export default class extends Command {
                         }
 
                         if (lootText.length > 0 && totalPrice > 0) {
+                            const exp = await addRandomExperience(interaction.member.id);
                             embed.addFields({ name: "Loot", value: lootText, inline: false });
                             embed.setColor(Colors.Green);
-                            embed.setDescription(`You caught some fish and sold it for :coin: ${totalPrice}.`);
+                            embed.setDescription(`You caught some fish and sold it for :coin: ${totalPrice} and gained ${exp} experience!`);
                             await addMoney(interaction.member.id, totalPrice);
                         }
                     } else {

@@ -1,6 +1,7 @@
 import Command from '../../structures/Command.js'
 import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import Member from '../../models/Member.js'
+import { addRandomExperience } from '../../lib/user.js';
 
 const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
@@ -47,6 +48,8 @@ export default class extends Command {
         if (!this.checkDailyStreak(data.user.lastStreak)) {
             alertMsg = "\n\n**You have lost your streak.**";
             data.user.streak = 0;
+        } else {
+            addRandomExperience(interaction.member.id, data.user.streak > 50 ? 50 : data.user.streak);
         }
 
         const premiumUser = await bot.database.fetchPremium(interaction.user.id, false);
@@ -59,7 +62,7 @@ export default class extends Command {
 
         const embed = new EmbedBuilder()
             .setColor(bot.config.embed.color)
-            .setDescription(`:moneybag: **You claimed your daily reward!**${alertMsg}\n\n**Daily Reward:** :coin: ${this.defaultReward}\n**Daily Streak:** :coin: ${streakReward - this.defaultReward} for a \`${data.user.streak} ${data.user.streak === 1 ? "day" : "days"}\` streak\n**Total:** :coin: ${streakReward}\n\n*Get better daily rewards with **Coinz Premium**. Go to the [**store**](https://coinzbot.xyz/store) to learn more.*\n*If you want more money consider voting. Use the buttons below to vote!*`)
+            .setDescription(`:moneybag: **You claimed your daily reward!**${alertMsg}\n\n**Daily Reward:** :coin: ${this.defaultReward}\n**Daily Streak:** :coin: ${streakReward - this.defaultReward} for a \`${data.user.streak} ${data.user.streak === 1 ? "day" : "days"}\` streak\n**Total:** :coin: ${streakReward}\n**Gained XP:** \`${data.user.streak > 50 ? 50 : data.user.streak} XP\`\n\n*Get better daily rewards with **Coinz Premium**. Go to the [**store**](https://coinzbot.xyz/store) to learn more.*\n*If you want more money consider voting. Use the buttons below to vote!*`)
         await interaction.editReply({ embeds: [embed], components: [row] });
     }
 

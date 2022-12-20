@@ -5,7 +5,7 @@ import {
     Colors
 } from 'discord.js'
 import { checkBet, randomNumber, timeout } from '../../lib/helpers.js'
-import { addMoney, takeMoney } from '../../lib/user.js'
+import { addMoney, addRandomExperience, takeMoney } from '../../lib/user.js'
 
 export default class extends Command {
     info = {
@@ -74,6 +74,7 @@ export default class extends Command {
         if (data.space === -1) return await interaction.editReply({ content: `That is not a valid space. Please check all spaces with \`/help command ${this.info.name}\`.` });
 
         if (data.playerWon) {
+            await addRandomExperience(interaction.member.id);
             await addMoney(interaction.member.id, parseInt(data.bet * (data.multiplier - 1)));
         } else {
             await takeMoney(interaction.member.id, data.bet);

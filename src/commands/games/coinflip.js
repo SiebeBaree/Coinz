@@ -1,7 +1,7 @@
 import Command from '../../structures/Command.js'
 import { EmbedBuilder, ApplicationCommandOptionType, Colors } from 'discord.js'
 import { checkBet, randomNumber as randInt } from '../../lib/helpers.js'
-import { addMoney, takeMoney } from '../../lib/user.js'
+import { addMoney, addRandomExperience, takeMoney } from '../../lib/user.js'
 
 export default class extends Command {
     info = {
@@ -77,6 +77,7 @@ export default class extends Command {
         await interaction.editReply({ embeds: [newEmbed] });
 
         if (sideLanded === side) {
+            await addRandomExperience(interaction.member.id);
             await addMoney(interaction.member.id, Math.floor(bet / 3));
         } else {
             await takeMoney(interaction.member.id, bet, true);
