@@ -81,11 +81,11 @@ export default class extends Command {
     }
 
     async execLeave(interaction, data) {
-        if (data.user.job === "business") return await interaction.reply({ content: `You own a business. Please sell your business using \`/business sell\``, ephemeral: true });
+        await interaction.deferReply({ ephemeral: true });
+        if (data.user.job === "business") return await interaction.editReply({ content: `You own a business. Please sell your business using \`/business sell\`` });
         const job = this.getJob(data.user.job);
-        if (job === null && !data.user.job.startsWith("business-")) return await interaction.reply({ content: `You don't have a job. Please apply for a job with </${this.info.name} apply:983096143284174858>.`, ephemeral: true });
+        if (job === null && !data.user.job.startsWith("business-")) return await interaction.editReply({ content: `You don't have a job. Please apply for a job with </${this.info.name} apply:983096143284174858>.` });
 
-        await interaction.deferReply();
         await Member.updateOne({ id: interaction.member.id }, { $set: { job: "" } });
         await interaction.editReply({ content: `You successfully left your job (\`${job === null ? "" : `${job.name}`}\`).` });
     }
