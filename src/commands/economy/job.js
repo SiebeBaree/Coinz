@@ -87,7 +87,7 @@ export default class extends Command {
 
         await interaction.deferReply();
         await Member.updateOne({ id: interaction.member.id }, { $set: { job: "" } });
-        await interaction.editReply({ content: `You successfully left your job(\`${job === null ? "" : ` ${job.name}`}\`).` });
+        await interaction.editReply({ content: `You successfully left your job (\`${job === null ? "" : `${job.name}`}\`).` });
     }
 
     async execApply(interaction, data) {
