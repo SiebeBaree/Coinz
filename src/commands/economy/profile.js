@@ -72,11 +72,11 @@ export default class extends Command {
 
     createEmbed(member, memberData, stocks, inventory, job, displayedBadge, badgesStr) {
         const createProgressBar = (current) => {
-            const progress = current % 10;
+            const progress = Math.round(current / 10);
             let bar = [];
 
             bar.push(progress === 0 ? "<:bar_start0:1054825378688020601>" : "<:bar_start1:1054825380055371866>");
-            for (let i = 1; i <= 8; i++) {
+            for (let i = 2; i <= 9; i++) {
                 bar.push(progress < i ? "<:bar_mid0:1054825371146657903>" : "<:bar_mid1:1054825377157087254>");
             }
             bar.push(progress < 10 ? "<:bar_end0:1054825373801644093>" : "<:bar_end1:1054825376087547995>");
