@@ -1,4 +1,5 @@
 import { Schema, model, Types } from 'mongoose';
+import config from '../assets/config.json' assert { type: "json" };
 
 const Item = Schema({
     itemId: { type: String, required: true },
@@ -39,7 +40,8 @@ const Member = Schema({
     badges: [{ type: String }],
     lastAirdrop: { type: Number, default: 0 },
     notifications: [{ type: String }],
-    lootboxes: [{ type: Item }]
+    lootboxes: [{ type: Item }],
+    profileColor: { type: String, default: config.embed.color },
 });
 
 export default model('Member', Member, 'members');
