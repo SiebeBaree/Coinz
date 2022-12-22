@@ -4,6 +4,7 @@ import { pageButtons, createMessageComponentCollector } from '../../lib/embed.js
 import { getLevel } from '../../lib/user.js'
 import Member from '../../models/Member.js'
 import jobList from "../../assets/jobs.json" assert { type: "json" };
+import Business from '../../models/Business.js'
 
 const workList = jobList.jobs;
 const itemsPerPage = 5;
@@ -87,12 +88,23 @@ export default class extends Command {
         if (job === null && !data.user.job.startsWith("business-")) return await interaction.editReply({ content: `You don't have a job. Please apply for a job with </${this.info.name} apply:983096143284174858>.` });
 
         await Member.updateOne({ id: interaction.member.id }, { $set: { job: "" } });
-        await interaction.editReply({ content: `You successfully left your job (\`${job === null ? "" : `${job.name}`}\`).` });
+        if (data.user.job.startsWith("business-")) {
+            const ownerId = data.user.job.split("-")[1];
+            const business = await Business.findOne({ ownerId: ownerId });
+
+            if (business !== null) {
+                await Business.updateOne({ ownerId: ownerId }, { $set: { employees: business.employees.filter((e) => e !== interaction.member.id) } });
+            }
+
+            await interaction.editReply({ content: `You successfully left your job at a business` });
+        } else {
+            await interaction.editReply({ content: `You successfully left your job (\`${job === null ? "" : `${job.name}`}\`).` });
+        }
     }
 
     async execApply(interaction, data) {
         await interaction.deferReply({ ephemeral: true });
-        if (data.user.job.startsWith("business")) return await interaction.editReply({ content: `You cannot apply for a normal job when you work at a company.` });
+        if (data.user.job.startsWith("business")) return await interaction.editReply({ content: `You cannot apply for a normal job when you work at a business.` });
         const currentJob = this.getJob(data.user.job);
         if (currentJob !== null) return await interaction.editReply({ content: `You already have a job. Please leave your current job with </${this.info.name} leave:983096143284174858>.` });
 
