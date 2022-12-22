@@ -22,9 +22,9 @@ export default class extends Event {
         if (!cmd) return;
 
         const premium = await this.database.fetchPremium(interaction.member.id, false);
-        if (cmd.info.isPremium === true) {
+        if (cmd.info.isPremium === true && !premium.premium) {
             embed.setAuthor({ name: "Coinz Premium Required", iconURL: `${interaction.member.displayAvatarURL() || bot.config.embed.defaultIcon}` });
-            if (!premium.premium) return await interaction.reply({ embeds: [embed] });
+            return await interaction.reply({ embeds: [embed] });
         }
 
         const cooldown = cmd.info.cooldown;
