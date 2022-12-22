@@ -56,13 +56,17 @@ export default class extends Command {
         const streakReward = this.calculateReward(data.user.streak, premiumUser.premium);
 
         await Member.updateOne({ id: interaction.member.id }, {
-            $inc: { wallet: streakReward },
+            $inc: { wallet: streakReward, spins: premiumUser.premium ? 1 : 0 },
             $set: { lastStreak: new Date(), streak: data.user.streak + 1 }
         });
 
+        const premiumText = premiumUser.premium ?
+            "*Because you are a **Coinz Premium** user you get a* </lucky-wheel spin:1005435550884442193> *for free.*" :
+            "*Get better daily rewards with **Coinz Premium**. Go to the [**store**](https://coinzbot.xyz/store) to learn more.*";
+
         const embed = new EmbedBuilder()
             .setColor(bot.config.embed.color)
-            .setDescription(`:moneybag: **You claimed your daily reward!**${alertMsg}\n\n**Daily Reward:** :coin: ${this.defaultReward}\n**Daily Streak:** :coin: ${streakReward - this.defaultReward} for a \`${data.user.streak} ${data.user.streak === 1 ? "day" : "days"}\` streak\n**Total:** :coin: ${streakReward}\n**Gained XP:** \`${data.user.streak > 50 ? 50 : data.user.streak} XP\`\n\n*Get better daily rewards with **Coinz Premium**. Go to the [**store**](https://coinzbot.xyz/store) to learn more.*\n*If you want more money consider voting. Use the buttons below to vote!*`)
+            .setDescription(`:moneybag: **You claimed your daily reward!**${alertMsg}\n\n**Daily Reward:** :coin: ${this.defaultReward}\n**Daily Streak:** :coin: ${streakReward - this.defaultReward} for a \`${data.user.streak} ${data.user.streak === 1 ? "day" : "days"}\` streak\n**Total:** :coin: ${streakReward}\n**Gained XP:** \`${data.user.streak > 50 ? 50 : data.user.streak} XP\`\n\n${premiumText}\n*If you want more money consider voting. Use the buttons below to vote!*`)
         await interaction.editReply({ embeds: [embed], components: [row] });
     }
 
