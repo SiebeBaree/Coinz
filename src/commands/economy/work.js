@@ -89,7 +89,7 @@ export default class extends Command {
 
         const interactionMessage = await interaction.editReply({ content: `What is the result of \`${mathStr}\`?`, components: [this.setButtonsRow(buttons)], fetchReply: true });
         const collector = createMessageComponentCollector(interactionMessage, interaction, { time: 10000, componentType: ComponentType.Button });
-        await this.collectorOnCollect(collector, interaction, data, buttons, `GG! You are very good at math. You earned :coin: ${data.salary} this hour.`, `You were too slow to pick the correct answer. You didn't earn anything.`);
+        await this.collectorOnCollect(collector, interaction, data, buttons, `GG! You are very good at math. You earned :coin: ${data.salary} this hour`, `You were too slow to pick the correct answer. You didn't earn anything.`);
     }
 
     async mgRememberWord(interaction, data) {
@@ -111,7 +111,7 @@ export default class extends Command {
         await timeout(3000);
         const interactionMessage = await interaction.editReply({ content: `What was the word?`, components: [this.setButtonsRow(buttons)], fetchReply: true });
         const collector = createMessageComponentCollector(interactionMessage, interaction, { time: 10000, componentType: ComponentType.Button });
-        await this.collectorOnCollect(collector, interaction, data, buttons, `GG! You are very good at remembering words. You earned :coin: ${data.salary} this hour.`, `You were too slow to pick the correct answer. You didn't earn anything.`);
+        await this.collectorOnCollect(collector, interaction, data, buttons, `GG! You are very good at remembering words. You earned :coin: ${data.salary} this hour`, `You were too slow to pick the correct answer. You didn't earn anything.`);
     }
 
     async mgOrder(interaction, data) {
