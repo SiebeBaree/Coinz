@@ -49,7 +49,9 @@ export const extractNumber = (number) => {
     }
 }
 
-export const checkBet = (betStr, user, minBet = 50, maxBet = 5000) => {
+export const checkBet = (betStr, user, premiumStatus = false, minBet = 50, maxBet = -1) => {
+    maxBet = maxBet === -1 ? (premiumStatus ? 10000 : 5000) : maxBet;
+
     let bet = 0;
     if (["all", "max"].includes(betStr.toLowerCase())) {
         if (user.wallet <= 0) return `You don't have any money in your wallet.`;
