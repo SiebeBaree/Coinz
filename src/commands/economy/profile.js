@@ -35,6 +35,8 @@ export default class extends Command {
 
         await interaction.deferReply();
         const memberData = await bot.database.fetchMember(member.id);
+        const premiumData = await bot.database.fetchPremium(member.id, false);
+        memberData.profileColor = premiumData.premium === true ? memberData.profileColor : bot.config.embed.color;
 
         const inventory = await this.calcInventory(memberData.inventory);
         const stocks = await this.calcInvestments(memberData.stocks);
@@ -61,7 +63,7 @@ export default class extends Command {
             if (selectedItem === "profile") {
                 await interaction.editReply({ embeds: [this.createEmbed(member, memberData, stocks, inventory, job, displayedBadge, badgesStr)], components: [this.createSelectMenu(selectedItem)] });
             } else if (selectedItem === "cooldowns") {
-                await interaction.editReply({ embeds: [await this.createCooldownsEmbed(member)], components: [this.createSelectMenu(selectedItem)] });
+                await interaction.editReply({ embeds: [await this.createCooldownsEmbed(member, memberData.profileColor)], components: [this.createSelectMenu(selectedItem)] });
             }
         });
 
@@ -86,7 +88,7 @@ export default class extends Command {
 
         const embed = new EmbedBuilder()
             .setTitle(`${member.displayName || member.username}'s profile${displayedBadge}`)
-            .setColor(bot.config.embed.color)
+            .setColor(memberData.profileColor || bot.config.embed.color)
             .setThumbnail(member.displayAvatarURL() || bot.config.embed.defaultIcon)
             .addFields(
                 { name: 'Experience', value: `:beginner: **Level:** \`${getLevel(memberData.experience)}\`\n:game_die: **Next Level:** \`${memberData.experience % 100}%\`\n${createProgressBar(memberData.experience % 100)}`, inline: false },
@@ -98,10 +100,10 @@ export default class extends Command {
         return embed;
     }
 
-    async createCooldownsEmbed(member) {
+    async createCooldownsEmbed(member, profileColor) {
         const embed = new EmbedBuilder()
             .setTitle(`${member.displayName || member.username}'s cooldowns`)
-            .setColor(bot.config.embed.color)
+            .setColor(profileColor || bot.config.embed.color)
             .setDescription(await this.getCooldowns(member.id))
         return embed;
     }
