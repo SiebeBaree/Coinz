@@ -50,9 +50,14 @@ export default class extends Command {
 
         if (["all", "max"].includes(betStr.toLowerCase())) {
             if (data.user.wallet <= 0) return await interaction.reply({ content: `You don't have any money in your wallet.`, ephemeral: true });
-            bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
+
+            if (data.premium.premium) {
+                bet = data.user.wallet > 10000 ? 10000 : data.user.wallet;
+            } else {
+                bet = data.user.wallet > 5000 ? 5000 : data.user.wallet;
+            }
         } else {
-            bet = checkBet(betStr, data.user);
+            bet = checkBet(betStr, data.user, data.premium.premium);
 
             if (!Number.isInteger(bet)) {
                 await interaction.reply({ content: bet, ephemeral: true });
