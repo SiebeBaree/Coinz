@@ -43,6 +43,7 @@ export default class extends Command {
         if (member.id !== interaction.user.id) return await interaction.editReply({ embeds: [this.getEmbed(member, memberData, "none")] });
         let priceToIncrease = this.calculateBankLimitPrice(memberData.bankLimit || 7500);
         let hasEnoughMoney = memberData.wallet >= priceToIncrease;
+        let interactionFinished = false;
 
         const message = await interaction.editReply({
             embeds: [this.getEmbed(member, memberData, priceToIncrease, hasEnoughMoney)],
@@ -54,7 +55,7 @@ export default class extends Command {
         const collector = message.createMessageComponentCollector({ filter, max: 10, idle: 20_000, componentType: ComponentType.Button });
 
         collector.on('collect', async (i) => {
-            if (i.customId === 'balance_add-limit') {
+            if (i.customId === 'balance_add-limit' && !interactionFinished) {
                 memberData = await bot.database.fetchMember(member.id);
 
                 priceToIncrease = this.calculateBankLimitPrice(memberData.bankLimit || 7500);
@@ -69,6 +70,8 @@ export default class extends Command {
 
                 priceToIncrease = this.calculateBankLimitPrice(memberData.bankLimit || 7500);
                 hasEnoughMoney = memberData.wallet >= priceToIncrease;
+
+                if (!hasEnoughMoney) interactionFinished = true;
                 await i.update({
                     embeds: [this.getEmbed(member, memberData, priceToIncrease, hasEnoughMoney)],
                     components: [this.getButton(hasEnoughMoney)],
@@ -77,6 +80,7 @@ export default class extends Command {
         });
 
         collector.on('end', async (collected) => {
+            interactionFinished = true;
             await interaction.editReply({ components: [this.getButton(hasEnoughMoney, true)] });
         });
     }
