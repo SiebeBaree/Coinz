@@ -235,7 +235,9 @@ export default class extends Command {
         let currentPage = 0;
 
         const stats = await bot.database.fetchStats(interaction.member.id);
+        data.user.isPremium = data.premium.isPremium;
         let achievementStr = createList(keys, this.achievements, currentPage, data.user, stats);
+
         const interactionMessage = await interaction.editReply({ embeds: [createEmbed(achievementStr, currentPage, maxPages)], components: [pageButtons(currentPage, maxPages)], fetchReply: true });
         const collector = createMessageComponentCollector(interactionMessage, interaction, { max: 10, idle: 15000, time: 60000 });
 
@@ -259,6 +261,7 @@ export default class extends Command {
         if (data.user.badges === undefined) data.user.badges = [];
         const keys = Object.keys(this.achievements);
         const stats = await bot.database.fetchStats(interaction.member.id);
+        data.user.isPremium = data.premium.isPremium;
 
         let newBadgesStr = "";
         for (let i = 0; i < keys.length; i++) {
