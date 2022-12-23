@@ -53,7 +53,7 @@ export default class extends Command {
             badgesStr += `<:${badges[i]}:${idAchievements[badges[i]]}> `;
         }
 
-        const message = await interaction.editReply({ embeds: [this.createEmbed(member, memberData, stocks, inventory, job, displayedBadge, badgesStr)], components: [this.createSelectMenu("profile")], fetchReply: true });
+        const message = await interaction.editReply({ embeds: [this.createEmbed(member, memberData, data.premium, stocks, inventory, job, displayedBadge, badgesStr)], components: [this.createSelectMenu("profile")], fetchReply: true });
         const collector = createMessageComponentCollector(message, interaction, { max: 3, time: 45_000, componentType: ComponentType.StringSelect });
 
         collector.on('collect', async (i) => {
@@ -61,7 +61,7 @@ export default class extends Command {
             const selectedItem = i.values[0];
 
             if (selectedItem === "profile") {
-                await interaction.editReply({ embeds: [this.createEmbed(member, memberData, stocks, inventory, job, displayedBadge, badgesStr)], components: [this.createSelectMenu(selectedItem)] });
+                await interaction.editReply({ embeds: [this.createEmbed(member, memberData, data.premium, stocks, inventory, job, displayedBadge, badgesStr)], components: [this.createSelectMenu(selectedItem)] });
             } else if (selectedItem === "cooldowns") {
                 await interaction.editReply({ embeds: [await this.createCooldownsEmbed(member, memberData.profileColor)], components: [this.createSelectMenu(selectedItem)] });
             }
@@ -72,7 +72,7 @@ export default class extends Command {
         });
     }
 
-    createEmbed(member, memberData, stocks, inventory, job, displayedBadge, badgesStr) {
+    createEmbed(member, memberData, premiumData, stocks, inventory, job, displayedBadge, badgesStr) {
         const createProgressBar = (current) => {
             const progress = Math.round(current / 10);
             let bar = [];
@@ -86,12 +86,14 @@ export default class extends Command {
             return bar.join("");
         }
 
+        const expireTimestamp = premiumData.premiumExpiresAt > Math.floor(Date.now() / 1000) ? premiumData.premiumExpiresAt : 0;
         const embed = new EmbedBuilder()
             .setTitle(`${member.displayName || member.username}'s profile${displayedBadge}`)
             .setColor(memberData.profileColor || bot.config.embed.color)
             .setThumbnail(member.displayAvatarURL() || bot.config.embed.defaultIcon)
             .addFields(
                 { name: 'Experience', value: `:beginner: **Level:** \`${getLevel(memberData.experience)}\`\n:game_die: **Next Level:** \`${memberData.experience % 100}%\`\n${createProgressBar(memberData.experience % 100)}`, inline: false },
+                { name: 'Premium Status', value: premiumData.isPremium === true && expireTimestamp > 0 ? `:star: **Premium:** :white_check_mark:\n:hourglass: **Premium Expires:** <t:${expireTimestamp}:D>\n` : ":star: **Premium:** :x:", inline: false },
                 { name: 'Balance', value: `:dollar: **Wallet:** :coin: ${memberData.wallet}\n:bank: **Bank:** :coin: ${memberData.bank}\n:moneybag: **Net Worth:** :coin: ${memberData.wallet + memberData.bank}\n:credit_card: **Tickets:** <:ticket:1032669959161122976> ${memberData.tickets || 0}\n:gem: **Inventory Worth:** \`${inventory.totalItems} items\` valued at :coin: ${inventory.value}`, inline: false },
                 { name: 'Investment Portfolio', value: `:dollar: **Worth:** :coin: ${stocks.currentWorth}\n:credit_card: **Amount:** ${parseInt(stocks.totalStocks)}\n:moneybag: **Invested:** :coin: ${stocks.initialWorth}`, inline: false },
                 { name: 'Misc', value: `:briefcase: **Current Job:** ${job}\n:sparkles: **Daily Streak:** ${memberData.streak - 1 > 0 ? memberData.streak - 1 : 0} days`, inline: false },
