@@ -10,7 +10,7 @@ export default class extends Command {
             {
                 name: 'set-notification',
                 type: ApplicationCommandOptionType.Subcommand,
-                description: 'Change the status of a user setting.',
+                description: 'Set the status of a notification.',
                 options: [
                     {
                         name: 'notification',
@@ -51,6 +51,62 @@ export default class extends Command {
                         ]
                     }
                 ]
+            },
+            {
+                name: 'profile-color',
+                type: ApplicationCommandOptionType.Subcommand,
+                description: 'Change your profile color. (Only for premium users)',
+                options: [
+                    {
+                        name: 'color',
+                        type: ApplicationCommandOptionType.String,
+                        description: 'The color you want to change to.',
+                        required: true,
+                        choices: [
+                            {
+                                name: "Default",
+                                value: bot.config.embed.color,
+                                focused: true
+                            },
+                            {
+                                name: "White",
+                                value: "#FFFFFD"
+                            },
+                            {
+                                name: "Black",
+                                value: "#000001"
+                            },
+                            {
+                                name: "Red",
+                                value: "#CF0A0A"
+                            },
+                            {
+                                name: "Blue",
+                                value: "#009EFF"
+                            },
+                            {
+                                name: "Pink",
+                                value: "#F56EB3"
+                            },
+                            {
+                                name: "Purple",
+                                value: "#4B56D2"
+                            },
+                            {
+                                name: "Green",
+                                value: "#A4BE7B"
+                            },
+                            {
+                                name: "Dark Grey",
+                                value: "#2F3136"
+                            },
+                            {
+                                name: "Light Grey",
+                                value: "#36393F"
+                            }
+                        ]
+                    }
+                ]
             }
         ],
         category: "misc",
@@ -67,6 +123,7 @@ export default class extends Command {
 
     async run(interaction, data) {
         if (interaction.options.getSubcommand() === "set-notification") return await this.configNotifications(interaction, data);
+        if (interaction.options.getSubcommand() === "profile-color") return await this.configProfileColor(interaction, data);
         return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help command ${this.info.name}\`.`, ephemeral: true });
     }
 
@@ -98,6 +155,25 @@ export default class extends Command {
             .setTitle(`Changed status of a notification.`)
             .setColor(value === "true" ? Colors.Green : Colors.Red)
             .setDescription(`Changed the status of the \`${notificationNames[notification]}\` notification to \`${value === "true" ? "enabled" : "disabled"}\`.`)
+        await interaction.editReply({ embeds: [embed] });
+    }
+
+    async configProfileColor(interaction, data) {
+        if (!data.premium.isPremium) return await interaction.reply({ content: `You need to be a premium user to change your profile color. For more info use \`/premium\`.`, ephemeral: true });
+
+        await interaction.deferReply();
+        const color = interaction.options.getString('color') ?? bot.config.embed.color;
+
+        await MemberModel.updateOne(
+            { id: interaction.member.id },
+            { $set: { profileColor: color } },
+            { upsert: true }
+        );
+
+        const embed = new EmbedBuilder()
+            .setTitle(`Changed your profile color.`)
+            .setColor(color)
+            .setDescription(`Changed your profile color to \`${color}\`.`)
         await interaction.editReply({ embeds: [embed] });
     }
 }
