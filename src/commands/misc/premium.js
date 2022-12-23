@@ -15,20 +15,7 @@ export default class extends Command {
     info = {
         name: "premium",
         description: "Get more information and toggle premium features.",
-        options: [
-            {
-                name: 'status',
-                type: ApplicationCommandOptionType.Subcommand,
-                description: 'Get your current premium status and the status of this server.',
-                options: []
-            },
-            {
-                name: 'buy',
-                type: ApplicationCommandOptionType.Subcommand,
-                description: 'Buy Coinz Premium using tickets.',
-                options: []
-            }
-        ],
+        options: [],
         category: "misc",
         extraFields: [],
         cooldown: 0,
@@ -42,35 +29,11 @@ export default class extends Command {
     }
 
     async run(interaction, data) {
-        if (interaction.options.getSubcommand() === "status") return await this.execStatus(interaction, data);
-        if (interaction.options.getSubcommand() === "buy") return await this.execBuy(interaction, data);
-        return await interaction.editReply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help command ${this.info.name}\`.` });
-    }
-
-    async execStatus(interaction, data) {
-        const expireTimestamp = data.premium.premiumExpiresAt > Math.floor(Date.now() / 1000) ? data.premium.premiumExpiresAt : 0;
-
-        const embed = new EmbedBuilder()
-            .setAuthor({ name: `${interaction.member.displayName || interaction.member.username}'s balance`, iconURL: `${interaction.member.displayAvatarURL() || bot.config.embed.defaultIcon}` })
-            .setColor(bot.config.embed.color)
-            .setFooter({ text: bot.config.embed.footer })
-            .setDescription("**Get [Coinz Premium](https://coinzbot.xyz/store) to unlock all features of Coinz!**")
-            .addFields(
-                {
-                    name: "Your Premium Status",
-                    value: data.premium.isPremium === true && expireTimestamp > 0 ? `Premium: :white_check_mark:\nPremium Expires: <t:${expireTimestamp}:D>\n` : "Premium: :x:",
-                    inline: false
-                }
-            )
-        await interaction.editReply({ embeds: [embed] });
-    }
-
-    async execBuy(interaction, data) {
         const createRow = (tickets, disableAll = false) => {
             const row = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId("premium_supporter")
-                    .setStyle(ButtonStyle.Success)
+                    .setStyle(tickets < 200 ? ButtonStyle.Danger : ButtonStyle.Success)
                     .setLabel("Buy Supporter Tier (1 month)")
                     .setDisabled(tickets < 200 || disableAll)
             );
@@ -106,8 +69,8 @@ export default class extends Command {
         }
 
         let interactionFinished = false;
-        const message = await interaction.editReply({ embeds: [createEmbed(data.user.tickets)], components: createRow(data.user.tickets), fetchReply: true });
-        const collector = createMessageComponentCollector(message, interaction, { max: 10, time: 60_000, componentType: ComponentType.Button });
+        const message = await interaction.editReply({ embeds: [createEmbed(data.user.tickets, data.premium)], components: createRow(data.user.tickets), fetchReply: true });
+        const collector = createMessageComponentCollector(message, interaction, { max: 12, time: 60_000, componentType: ComponentType.Button });
 
         collector.on("collect", async (i) => {
             if (!interactionFinished) {
@@ -115,7 +78,7 @@ export default class extends Command {
                 if (i.customId === "premium_supporter") {
                     let ticketCost = 200;
 
-                    interactionFinished = data.user.tickets - ticketCost < ticketCost;
+                    if (!interactionFinished) interactionFinished = data.user.tickets - ticketCost < ticketCost;
                     if (data.user.tickets < ticketCost) {
                         return await i.reply({ content: "You don't have enough tickets to buy this tier.", ephemeral: true });
                     }
@@ -124,6 +87,8 @@ export default class extends Command {
                     await Member.updateOne({ id: interaction.member.id }, { $inc: { tickets: -ticketCost } }, { upsert: true });
 
                     if (data.premium.isPremium === true && data.premium.premiumExpiresAt > Math.floor(Date.now() / 1000)) {
+                        data.premium.premiumExpiresAt += 86400 * 30;
+
                         await PremiumModel.updateOne(
                             { id: interaction.member.id },
                             { $inc: { premiumExpiresAt: 86400 * 30 } },
@@ -135,19 +100,19 @@ export default class extends Command {
 
                         await PremiumModel.updateOne(
                             { id: interaction.member.id },
-                            { $set: { isPremium: true, premiumExpiresAt: Math.floor(Date.now() / 1000) + (86400 * 30) } },
+                            { $set: { isPremium: true, premiumExpiresAt: data.premium.premiumExpiresAt } },
                             { upsert: true }
                         );
                     }
 
-                    await interaction.editReply({ embeds: [createEmbed(data.user.tickets)], components: createRow(data.user.tickets, interactionFinished) });
+                    await interaction.editReply({ embeds: [createEmbed(data.user.tickets, data.premium)], components: createRow(data.user.tickets, interactionFinished) });
                 }
             }
         });
 
-        collector.on("end", async (i) => {
+        collector.on("end", async (collected) => {
             interactionFinished = true;
-            await interaction.editReply({ components: createRow(0, true) });
+            await interaction.editReply({ components: createRow(0, interactionFinished) });
         });
     }
 }
