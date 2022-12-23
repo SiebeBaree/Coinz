@@ -53,7 +53,7 @@ export default class extends Command {
             badgesStr += `<:${badges[i]}:${idAchievements[badges[i]]}> `;
         }
 
-        const message = await interaction.editReply({ embeds: [this.createEmbed(member, memberData, data.premium, stocks, inventory, job, displayedBadge, badgesStr)], components: [this.createSelectMenu("profile")], fetchReply: true });
+        const message = await interaction.editReply({ embeds: [this.createEmbed(member, memberData, premiumData, stocks, inventory, job, displayedBadge, badgesStr)], components: [this.createSelectMenu("profile")], fetchReply: true });
         const collector = createMessageComponentCollector(message, interaction, { max: 3, time: 45_000, componentType: ComponentType.StringSelect });
 
         collector.on('collect', async (i) => {
@@ -61,7 +61,7 @@ export default class extends Command {
             const selectedItem = i.values[0];
 
             if (selectedItem === "profile") {
-                await interaction.editReply({ embeds: [this.createEmbed(member, memberData, data.premium, stocks, inventory, job, displayedBadge, badgesStr)], components: [this.createSelectMenu(selectedItem)] });
+                await interaction.editReply({ embeds: [this.createEmbed(member, memberData, premiumData, stocks, inventory, job, displayedBadge, badgesStr)], components: [this.createSelectMenu(selectedItem)] });
             } else if (selectedItem === "cooldowns") {
                 await interaction.editReply({ embeds: [await this.createCooldownsEmbed(member, memberData.profileColor)], components: [this.createSelectMenu(selectedItem)] });
             }
