@@ -1,10 +1,8 @@
 import { fetchMember } from './database.js'
 import MemberModel from '../models/Member.js'
-import { createLog } from './database.js'
 import Business from '../models/Business.js'
 
 export const addMoney = async (userId, amount) => {
-    if (Math.abs(amount) > 1000) await createLog(`${amount >= 0 ? "Adding" : "Removing"} ${amount} to ${userId}`, 'addMoney', userId);
     await MemberModel.updateOne({ id: userId }, { $inc: { wallet: amount } });
 }
 

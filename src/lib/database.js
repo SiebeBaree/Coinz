@@ -6,7 +6,6 @@ import CooldownModel from "../models/Cooldown.js"
 import BusinessModel from "../models/Business.js"
 import StatsModel from "../models/Stats.js"
 import PremiumModel from "../models/Premium.js"
-import Log from "../models/Log.js"
 
 export const fetchGuild = async function (guildId) {
     let obj = await GuildModel.findOne({ id: guildId });
@@ -85,17 +84,6 @@ export const fetchPremium = async function (id, createIfNotExists = true) {
     }
 }
 
-export const createLog = async (message, type, userId = "", level = 'info') => {
-    const obj = new Log({
-        level: level,
-        type: type,
-        message: message,
-        userId: userId
-    });
-    await obj.save().catch(err => bot.logger.error(err));
-    return obj;
-}
-
 export default {
     fetchGuild,
     fetchMember,
@@ -103,6 +91,5 @@ export default {
     fetchStock,
     fetchCooldown,
     fetchBusiness,
-    fetchStats,
-    createLog
+    fetchStats
 }
