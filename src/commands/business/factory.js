@@ -321,6 +321,10 @@ export default class extends Command {
         await interaction.deferReply({ ephemeral: true });
         if (company.company === null) return await interaction.editReply({ content: `You don't own or work at a business. Create one using </business create:1048340073470513155>.` });
 
+        // check if user has permissions
+        const allowedRoles = ["executive", "manager", "operations_officer"];
+        if (!company.isOwner && !allowedRoles.includes(company.employee.role)) return await interaction.editReply({ content: `You don't have permission to use this command.` });
+
         const factoryId = interaction.options.getString('factory-id');
         const productId = interaction.options.getString('product-id');
         const force = interaction.options.getString('force') || "no";
