@@ -101,8 +101,8 @@ export default class extends Command {
                                 value: "#2F3136"
                             },
                             {
-                                name: "Light Grey",
-                                value: "#36393F"
+                                name: "Orange",
+                                value: "#FFA500"
                             }
                         ]
                     }
