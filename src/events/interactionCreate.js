@@ -22,13 +22,13 @@ export default class extends Event {
         if (!cmd) return;
 
         const premium = await this.database.fetchPremium(interaction.member.id, false);
-        if (cmd.info.isPremium === true && !premium.premium) {
+        if (cmd.info.isPremium === true && !premium.isPremium) {
             embed.setAuthor({ name: "Coinz Premium Required", iconURL: `${interaction.member.displayAvatarURL() || bot.config.embed.defaultIcon}` });
             return await interaction.reply({ embeds: [embed] });
         }
 
         const cooldown = cmd.info.cooldown;
-        if (process.env.NODE_ENV === "production" && await cmd.cool(cmd.info.name, interaction.member, cooldown === 0 && premium.premium ? 1 : cooldown)) {
+        if (process.env.NODE_ENV === "production" && await cmd.cool(cmd.info.name, interaction.member, cooldown === 0 && premium.isPremium ? 1 : cooldown)) {
             return await interaction.reply({ content: `:x: You have to wait ${msToTime(await this.cooldown.getCooldown(interaction.member.id, cmd.info.name) * 1000)} to use this command again.`, ephemeral: true });
         }
 

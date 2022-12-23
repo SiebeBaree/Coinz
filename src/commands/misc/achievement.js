@@ -60,10 +60,10 @@ export default class extends Command {
             name: "A True Coinz Supporter",
             description: "Buy Coinz Premium.",
             isValid: (memberData, statsData) => {
-                return memberData.premium === true;
+                return memberData.isPremium === true;
             },
             progress: (memberData, statsData) => {
-                return `${memberData.premium === true ? "1" : "0"}/1`;
+                return `${memberData.isPremium === true ? "1" : "0"}/1`;
             }
         },
         "going_places": {

@@ -161,7 +161,7 @@ export default class extends Command {
         let waterTxt = `You can water your plots.`;
         let buyPlot = ``;
         if (data.user.lastWater + 14400 > parseInt(Date.now() / 1000)) waterTxt = `You can water your plots again in ${msToTime(((data.user.lastWater + 14400) * 1000) - Date.now())}.`;
-        if (data.user.plots.length < 9 || data.user.plots.length < 15 && data.premium.premium) buyPlot = `\n:moneybag: **To buy a new plot you will need :coin: ${this.calcPlotPrice(data.user.plots.length)} in your wallet.**`;
+        if (data.user.plots.length < 9 || data.user.plots.length < 15 && data.premium.isPremium) buyPlot = `\n:moneybag: **To buy a new plot you will need :coin: ${this.calcPlotPrice(data.user.plots.length)} in your wallet.**`;
 
         const embed = new EmbedBuilder()
             .setTitle(`${interaction.member.displayName || interaction.member.username}'s farm`)
@@ -275,8 +275,8 @@ export default class extends Command {
             if (data.user.plots[i].status === "growing" && data.user.lastWater + 14400 < parseInt(Date.now() / 1000)) btnsDisabled[1] = false;
         }
         if (data.user.wallet < this.calcPlotPrice(data.user.plots.length)) btnsDisabled[2] = true;
-        else if (data.user.plots.length >= 9 && !data.premium.premium) btnsDisabled[2] = true;
-        else if (data.user.plots.length >= 15 && data.premium.premium) btnsDisabled[2] = true;
+        else if (data.user.plots.length >= 9 && !data.premium.isPremium) btnsDisabled[2] = true;
+        else if (data.user.plots.length >= 15 && data.premium.isPremium) btnsDisabled[2] = true;
         return btnsDisabled;
     }
 

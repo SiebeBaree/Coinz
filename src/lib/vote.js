@@ -27,7 +27,7 @@ export async function processVote(memberId, website = "top.gg") {
         let extraSpins = 1;
         let extraText = "";
 
-        if (premium.premium) {
+        if (premium.isPremium) {
             extraSpins = 2;
             extraText = `\nYou have received **2x** spins for being a premium member!`;
         } else {

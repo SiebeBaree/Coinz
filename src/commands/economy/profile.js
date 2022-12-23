@@ -36,7 +36,7 @@ export default class extends Command {
         await interaction.deferReply();
         const memberData = await bot.database.fetchMember(member.id);
         const premiumData = await bot.database.fetchPremium(member.id, false);
-        memberData.profileColor = premiumData.premium === true ? memberData.profileColor : bot.config.embed.color;
+        memberData.profileColor = premiumData.isPremium === true ? memberData.profileColor : bot.config.embed.color;
 
         const inventory = await this.calcInventory(memberData.inventory);
         const stocks = await this.calcInvestments(memberData.stocks);

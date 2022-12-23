@@ -53,14 +53,14 @@ export default class extends Command {
         }
 
         const premiumUser = await bot.database.fetchPremium(interaction.user.id, false);
-        const streakReward = this.calculateReward(data.user.streak, premiumUser.premium);
+        const streakReward = this.calculateReward(data.user.streak, premiumUser.isPremium);
 
         await Member.updateOne({ id: interaction.member.id }, {
-            $inc: { wallet: streakReward, spins: premiumUser.premium ? 1 : 0 },
+            $inc: { wallet: streakReward, spins: premiumUser.isPremium ? 1 : 0 },
             $set: { lastStreak: new Date(), streak: data.user.streak + 1 }
         });
 
-        const premiumText = premiumUser.premium ?
+        const premiumText = premiumUser.isPremium ?
             "*Because you are a **Coinz Premium** user you get a* </lucky-wheel spin:1005435550884442193> *for free.*" :
             "*Get better daily rewards with **Coinz Premium**. Go to the [**store**](https://coinzbot.xyz/store) to learn more.*";
 
