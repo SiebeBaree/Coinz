@@ -70,7 +70,7 @@ export default class extends Command {
                             },
                             {
                                 name: "White",
-                                value: "#FFFFFD"
+                                value: "#F2F3F5"
                             },
                             {
                                 name: "Black",
@@ -90,19 +90,19 @@ export default class extends Command {
                             },
                             {
                                 name: "Purple",
-                                value: "#4B56D2"
+                                value: "#A555EC"
                             },
                             {
                                 name: "Green",
-                                value: "#A4BE7B"
+                                value: "#00A758"
                             },
                             {
                                 name: "Dark Grey",
                                 value: "#2F3136"
                             },
                             {
-                                name: "Orange",
-                                value: "#FFA500"
+                                name: "Teal",
+                                value: "#00B9A8"
                             }
                         ]
                     }
@@ -171,9 +171,8 @@ export default class extends Command {
         );
 
         const embed = new EmbedBuilder()
-            .setTitle(`Changed your profile color.`)
+            .setTitle(`Changed your profile color to \`${color}\`.`)
             .setColor(color)
-            .setDescription(`Changed your profile color to \`${color}\`.`)
         await interaction.editReply({ embeds: [embed] });
     }
 }
