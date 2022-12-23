@@ -6,6 +6,7 @@ import CooldownModel from "../models/Cooldown.js"
 import BusinessModel from "../models/Business.js"
 import StatsModel from "../models/Stats.js"
 import PremiumModel from "../models/Premium.js"
+import SettingModel from "../models/Setting.js"
 
 export const fetchGuild = async function (guildId) {
     let obj = await GuildModel.findOne({ id: guildId });
@@ -84,6 +85,11 @@ export const fetchPremium = async function (id, createIfNotExists = true) {
     }
 }
 
+export const getSetting = async function (id) {
+    let obj = await SettingModel.findOne({ id: id });
+    return obj ? obj : new SettingModel({ id: id });
+}
+
 export default {
     fetchGuild,
     fetchMember,
@@ -91,5 +97,7 @@ export default {
     fetchStock,
     fetchCooldown,
     fetchBusiness,
-    fetchStats
+    fetchStats,
+    fetchPremium,
+    getSetting
 }
