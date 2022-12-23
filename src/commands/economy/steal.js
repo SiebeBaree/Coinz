@@ -50,7 +50,7 @@ export default class extends Command {
             return await interaction.reply({ content: 'You need at least :coin: 0 in your wallet in order to steal from other people.', ephemeral: true });
         }
 
-        if (getLevel(data.user.expirence) < 10) {
+        if (getLevel(data.user.experience) < 10) {
             await bot.cooldown.removeCooldown(interaction.user.id, this.info.name);
             return await interaction.reply({ content: 'You need to be at least level 10 in order to steal from other people.', ephemeral: true });
         }
