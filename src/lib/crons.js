@@ -88,44 +88,13 @@ schedule("30 5 * * *", async function () {
 
         const expiredUsers = await Premium.find({
             $and: [
-                { premium: true },
+                { isPremium: true },
                 { premiumExpiresAt: { $lte: now } }
             ]
         });
-
-        for (let i = 0; i < expiredUsers.length; i++) {
-            if (expiredUsers[i].guilds.length > 0) {
-                for (let j = 0; j < expiredUsers[i].guilds.length; j++) {
-                    await removePremiumFromGuild(expiredUsers[i].guilds[j]);
-                }
-            }
-        }
 
         await Premium.deleteMany({ premiumExpiresAt: { $lte: now } });
     } catch (e) {
         bot.logger.error(e);
     }
 });
-
-// Remove expired premium status from guilds
-schedule("0 6 * * *", async function () {
-    try {
-        const premiumGuilds = await Guild.find({ premium: true });
-
-        for (let i = 0; i < premiumGuilds.length; i++) {
-            const premiumUser = await Premium.findOne({ id: premiumGuilds[i].premiumUser });
-            if (!premiumUser || !premiumUser.premium) {
-                await removePremiumFromGuild(premiumGuilds[i].id);
-            }
-        }
-    } catch (e) {
-        bot.logger.error(e);
-    }
-});
-
-async function removePremiumFromGuild(guildId) {
-    await Guild.updateOne(
-        { id: guildId },
-        { premium: false, premiumUser: "" }
-    );
-}
