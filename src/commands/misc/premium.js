@@ -79,7 +79,12 @@ export default class extends Command {
                     let ticketCost = 200;
 
                     if (!interactionFinished) interactionFinished = data.user.tickets - ticketCost < ticketCost;
+
+                    data.user = await bot.database.fetchMember(interaction.member.id);
+                    data.premium = await bot.database.fetchPremium(interaction.member.id, false);
+
                     if (data.user.tickets < ticketCost) {
+                        await interaction.editReply({ components: createRow(0, interactionFinished) });
                         return await i.reply({ content: "You don't have enough tickets to buy this tier.", ephemeral: true });
                     }
 
