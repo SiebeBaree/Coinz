@@ -2,11 +2,11 @@
   "name": "coinz",
   "version": "2.4.1",
   "description": "A economic discord bot with a lot of features",
-  "main": "src/index.js",
+  "main": "src/cluster.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
+    "dev": "nodemon src/cluster.js",
+    "start": "node src/cluster.js",
     "commands": "node src/scripts/commands.js",
     "add-items": "node src/scripts/items.js"
   },
@@ -35,6 +35,7 @@
     "axios": "^1.2.0",
     "bitvavo": "^1.2.0",
     "chalk": "^5.1.2",
+    "discord-hybrid-sharding": "^1.7.5",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
