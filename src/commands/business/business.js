@@ -382,6 +382,11 @@ export default class extends Command {
             if (!/^[A-Za-z][a-zA-Z0-9 _-]*$/.test(name)) return await interaction.editReply({ content: `Your business name can only use \`A-Z, a-z, 0-9, whitespaces, -, _\` and you have to start with a letter.` });
             if (data.user.wallet < 2000) return await interaction.editReply({ content: `You need :coin: 2000 in your wallet to create a business.` });
 
+            if (await bot.cooldown.isOnCooldown(interaction.member.id, "business-create")) {
+                return await interaction.editReply({ content: `:x: You have to wait ${msToTime(await bot.cooldown.getCooldown(interaction.member.id, "business-create") * 1000)} to create another business.` });
+            }
+            await bot.cooldown.setCooldown(interaction.member.id, "business-create", 86400 * 7);
+
             await bot.database.fetchBusiness(interaction.member.id, name);
             await Member.updateOne(
                 { id: interaction.member.id },
