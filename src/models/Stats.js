@@ -5,7 +5,6 @@ const Stats = Schema({
     workComplete: { type: Number, default: 0 },
     commandsExecuted: { type: Number, default: 0 },
     catchedFish: { type: Number, default: 0 },
-    diamondsFound: { type: Number, default: 0 },
     luckyWheelSpins: { type: Number, default: 0 }
 });
 
