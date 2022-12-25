@@ -1,4 +1,5 @@
 import { Client } from 'discord.js'
+import Cluster from "discord-hybrid-sharding"
 
 import config from "../assets/config.json" assert { type: "json" }
 import * as database from "../lib/database.js"
@@ -17,6 +18,7 @@ export default class extends Client {
         this.database = database;
         this.cooldown = cooldowns;
         this.lang = lang;
+        this.cluster = new Cluster.Client(this);
         this.logger = new Logger(this);
         this.commands = new CommandStore(this);
         this.events = new EventStore(this);

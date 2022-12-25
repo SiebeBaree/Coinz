@@ -1,5 +1,7 @@
 import Bot from "./structures/Bot.js"
 import { ActivityType, GatewayIntentBits, Partials } from "discord.js"
+import Cluster from "discord-hybrid-sharding"
+import { AutoPoster } from "topgg-autoposter";
 import mongoose from "mongoose"
 const { connect } = mongoose;
 
@@ -12,7 +14,9 @@ const bot = global.bot = new Bot({
             name: ACTIVITY_NAME,
             type: ActivityType.Watching
         }], status: "online"
-    }
+    },
+    shards: Cluster.data.SHARD_LIST,
+    shardCount: Cluster.data.TOTAL_SHARDS
 });
 
 // Connect to MongoDB Database
@@ -34,19 +38,21 @@ bot.rest.on('rateLimit', rateLimitData => {
 });
 
 bot.on('ready', async () => {
-    // Hotfix to run multiple shards
-    if (bot.shard.count - 1 === bot.shard.ids[0]) {
+    if (bot.cluster.count - 1 === bot.cluster.id) {
         if (process.env.NODE_ENV === "production") {
-            // Create Webhook
+            AutoPoster(process.env.API_TOPGG, bot)
             const { default: app } = await import("./lib/api.js");
 
             const port = process.env.PORT || 8700;
             app.listen(port, () => bot.logger.ready(`Vote Webhooks available on port: ${port}`));
         }
 
-        // Load Crons
+        // Load Global Crons
         await import("./lib/crons.js");
     }
+
+    // Load Cluster Crons
+    await import("./lib/clusterCrons.js");
 });
 
 // Global Error Handler
