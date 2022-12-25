@@ -5,9 +5,7 @@ import Cluster from 'discord-hybrid-sharding';
 import loggerStruct from './structures/Logger.js';
 
 const manager = new Cluster.Manager(`./src/bot.js`, {
-    // totalClusters: 2,
     shardsPerClusters: 2,
-    totalShards: 4,
     mode: 'process',
     token: process.env.DISCORD_TOKEN,
 });
