@@ -92,7 +92,7 @@ export default class extends Command {
             .setTitle("Airdrops have been enabled in this channel")
             .setColor(bot.config.embed.noColor)
             .setThumbnail("https://cdn.coinzbot.xyz/games/airdrop/airdrop.png")
-            .setDescription(":gift: **You will see one airdrop every 1-2 hours.**\n:bangbang: **You can only collect 1 airdrop every 90 minutes.**")
+            .setDescription(":gift: **You will see one airdrop every 1-12 hours.**\n:bangbang: **You can only collect 1 airdrop every 3 hours.**")
 
         try {
             await channel.send({ embeds: [startEmbed] });
@@ -103,7 +103,7 @@ export default class extends Command {
         const embed = new EmbedBuilder()
             .setTitle(`The Airdrop channel has been set!`)
             .setColor(bot.config.embed.color)
-            .setDescription(`You set the airdrop channel to <#${channel.id}>. You will now get random airdrops.\n\n**Drop rate:** Once every 1-2\n**Rate limits:** The same user can only collect 1 aidrop every 90 minutes.`)
+            .setDescription(`You set the airdrop channel to <#${channel.id}>. You will now get random airdrops.\n\n**Drop rate:** Once every 1-12 hours\n**Rate limits:** The same user can only collect 1 aidrop every 3 hours.`)
 
         await interaction.editReply({ embeds: [embed] });
 
@@ -113,7 +113,7 @@ export default class extends Command {
                 $set: {
                     airdropStatus: true,
                     airdropChannel: channel.id,
-                    airdropNext: parseInt(Date.now() / 1000) + randomNumber(3600, 7200)
+                    airdropNext: parseInt(Date.now() / 1000) + randomNumber(3600, 43200)
                 }
             },
             { upsert: true }
