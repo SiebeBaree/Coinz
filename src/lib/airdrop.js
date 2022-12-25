@@ -5,9 +5,9 @@ import Member from "../models/Member.js"
 import rewards from "../assets/loot/airdrop.json" assert { type: "json" }
 const keys = Object.keys(rewards);
 
-export const processAirdrop = async (guildData) => {
+export const processAirdrop = async (guildData, shardIds) => {
     const guild = await bot.guilds.fetch(guildData.id);
-    if (!guild) return await resetAirdrop(guildData.id);
+    if (!guild || !shardIds.includes(guild.shardId)) return;
     const channel = await guild.channels.fetch(guildData.airdropChannel);
 
     if (!guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages) || !guild.members.me.permissionsIn(channel).has(PermissionsBitField.Flags.SendMessages)) {
@@ -16,7 +16,7 @@ export const processAirdrop = async (guildData) => {
 
     await Guild.updateOne(
         { id: guildData.id },
-        { $set: { airdropNext: parseInt(Date.now() / 1000) + randomNumber(3600, 7200) } },
+        { $set: { airdropNext: getNextAirdrop() } },
         { upsert: true }
     );
 
@@ -26,10 +26,14 @@ export const processAirdrop = async (guildData) => {
 
     let rewardsText = "";
     let totalMoney = 0;
+    let totalTickets = 0;
     for (let i = 0; i < mappedKeys.length; i++) {
         if (mappedKeys[i].startsWith("money")) {
             totalMoney += parseInt(rewards[mappedKeys[i]] * mappedLoot[mappedKeys[i]]);
             rewardsText += `Money: :coin: ${rewards[mappedKeys[i]] * mappedLoot[mappedKeys[i]]}\n`;
+        } else if (mappedKeys[i].startsWith("ticket")) {
+            totalTickets += parseInt(rewards[mappedKeys[i]] * mappedLoot[mappedKeys[i]]);
+            rewardsText += `Tickets: <:ticket:1032669959161122976> ${rewards[mappedKeys[i]] * mappedLoot[mappedKeys[i]]}\n`;
         } else {
             const item = await fetchItem(mappedKeys[i]);
             rewardsText += `${rewards[mappedKeys[i]] * mappedLoot[mappedKeys[i]]}x **${item.name}** <:${item.itemId}:${item.emoteId}>\n`;
@@ -62,7 +66,7 @@ export const processAirdrop = async (guildData) => {
 
             let memberData = await fetchMember(userId);
             if (memberData.lastAirdrop === undefined) memberData.lastAirdrop = 0;
-            if (parseInt(Date.now() / 1000) - memberData.lastAirdrop >= 3600) {
+            if (parseInt(Date.now() / 1000) - memberData.lastAirdrop >= 10800) {
                 const newEmbed = new EmbedBuilder()
                     .setTitle("The airdrop has been collected.")
                     .setColor(Colors.Red)
@@ -71,7 +75,7 @@ export const processAirdrop = async (guildData) => {
                 await message.edit({ embeds: [newEmbed], components: [getRow(true)] });
 
                 await Member.updateOne({ id: userId }, { $set: { lastAirdrop: parseInt(Date.now() / 1000) } });
-                if (totalMoney > 0) await Member.updateOne({ id: userId }, { $inc: { wallet: totalMoney } });
+                if (totalMoney > 0 || totalTickets > 0) await Member.updateOne({ id: userId }, { $inc: { wallet: totalMoney, tickets: totalTickets } });
 
                 for (let i = 0; i < mappedKeys.length; i++) {
                     if (mappedKeys[i].startsWith("money")) continue;
@@ -84,7 +88,7 @@ export const processAirdrop = async (guildData) => {
                 try {
                     const member = await bot.users.fetch(userId);
                     const dmChannel = await member.createDM();
-                    await dmChannel.send({ content: `You already collected an airdrop in the last 60 minutes.` });
+                    await dmChannel.send({ content: `You already collected an airdrop in the last 3 hours.` });
                     await member.deleteDM();
                 } catch { }
             }
@@ -100,12 +104,12 @@ export const processAirdrop = async (guildData) => {
             const newEmbed = new EmbedBuilder()
                 .setTitle("The airdrop was not collected.")
                 .setColor(Colors.Red)
-                .setDescription(`:gift: **Nobody collected this airdrop**\n:airplane: **Next Airdrop:** 1-2 hours`)
+                .setDescription(`:gift: **Nobody collected this airdrop**\n:airplane: **Next Airdrop:** 1-12 hours`)
                 .addFields({ name: "Rewards", value: rewardsText, inline: false })
             await message.edit({ embeds: [newEmbed], components: [getRow(true)] });
         }
     });
-};
+}
 
 const resetAirdrop = async (guildId) => {
     const guild = await Guild.findOne({ id: guildId });
@@ -127,13 +131,13 @@ const resetAirdrop = async (guildId) => {
         await Guild.updateOne(
             { id: guildId },
             {
-                $set: { airdropNext: parseInt(Date.now() / 1000) + randomNumber(1800, 3600) },
+                $set: { airdropNext: getNextAirdrop() },
                 $inc: { airdropTries: 1 }
             },
             { upsert: true }
         );
     }
-};
+}
 
 const addItem = async (userId, itemId, quantity = 1, inventory = []) => {
     if (checkItem(inventory, itemId)) {
@@ -151,7 +155,7 @@ const addItem = async (userId, itemId, quantity = 1, inventory = []) => {
             },
         });
     }
-};
+}
 
 const checkItem = (inventory, itemId, new_ = false) => {
     for (let i = 0; i < inventory.length; i++) {
@@ -161,17 +165,21 @@ const checkItem = (inventory, itemId, new_ = false) => {
     }
 
     return false;
-};
+}
 
 const getRewards = (amount) => {
     let rewards = [];
     for (let i = 0; i < amount; i++) rewards.push(keys[randomNumber(0, keys.length - 1)]);
     return rewards || ["tv"];
-};
+}
 
 const randomNumber = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+}
+
+const getNextAirdrop = () => {
+    return parseInt(Date.now() / 1000) + randomNumber(1800, 43200);
+}
 
 const getRow = (disable = false) => {
     const button = new ButtonBuilder()
@@ -188,7 +196,7 @@ const getRow = (disable = false) => {
     }
 
     return new ActionRowBuilder().addComponents(button);
-};
+}
 
 export default {
     processAirdrop
