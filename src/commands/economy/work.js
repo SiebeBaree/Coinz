@@ -40,7 +40,15 @@ export default class extends Command {
         data.gameInProgress = true;
         if (data.user.job.startsWith("business")) {
             data.company = await getBusiness(data.user);
-            data.salary = data.company.isOwner ? 200 : data.company.employee.wage;
+
+            try {
+                data.salary = data.company.isOwner ? 200 : data.company.employee.wage;
+            } catch {
+                await Member.updateOne({ id: interaction.member.id }, { $set: { job: "" } });
+                await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
+                return await interaction.editReply({ content: `You don't have a job. Please find a job using </job list:983096143284174858>.` });
+            }
+
             data.hasBusiness = true;
 
             if (data.salary > data.company.company.balance) return await interaction.editReply({ content: `Your business hasn't enough money to pay you. Please produce items in the factories.` });
