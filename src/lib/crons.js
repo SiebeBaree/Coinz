@@ -1,8 +1,6 @@
 import { schedule } from "node-cron";
 import { getStockData, getCryptoData, isMarketOpen, uploadCryptoData, uploadStockData } from "./investing.js"
-import { processAirdrop } from "./airdrop.js"
 import Cooldown from "../models/Cooldown.js"
-import Guild from "../models/Guild.js"
 import Premium from "../models/Premium.js"
 import { writeFile, readFileSync } from "fs"
 
@@ -34,33 +32,12 @@ schedule("*/30 * * * *", async function () {
     bot.logger.log(`Removed ${deleted.deletedCount} expired cooldowns.`);
 });
 
-// Airdrop Cron
-schedule("*/20 * * * * *", async function () {
-    try {
-        if (!bot.isReady()) return;
-
-        const guilds = await Guild.find({
-            $and: [
-                { airdropStatus: true },
-                { airdropChannel: { $ne: "" } },
-                { airdropNext: { $lte: parseInt(Date.now() / 1000) } }
-            ]
-        });
-
-        for (let i = 0; i < guilds.length; i++) await processAirdrop(guilds[i]);
-    } catch (e) {
-        bot.logger.error(e);
-    }
-});
-
 // Update Stats Cron
 schedule("*/30 * * * *", async function () {
     try {
-        if (!bot.isReady()) return;
-
         const promises = [
-            bot.shard.fetchClientValues('guilds.cache.size'),
-            bot.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
+            bot.cluster.fetchClientValues('guilds.cache.size'),
+            bot.cluster.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
         ];
 
         Promise.all(promises)
@@ -85,14 +62,6 @@ schedule("*/30 * * * *", async function () {
 schedule("30 5 * * *", async function () {
     try {
         const now = Math.floor(Date.now() / 1000);
-
-        const expiredUsers = await Premium.find({
-            $and: [
-                { isPremium: true },
-                { premiumExpiresAt: { $lte: now } }
-            ]
-        });
-
         await Premium.deleteMany({ premiumExpiresAt: { $lte: now } });
     } catch (e) {
         bot.logger.error(e);
