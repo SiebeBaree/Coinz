@@ -4,6 +4,7 @@ import { createMessageComponentCollector } from '../../lib/embed.js'
 import Cooldown from '../../models/Cooldown.js'
 import idAchievements from '../../assets/achievements.json' assert { type: "json" }
 import { getLevel } from '../../lib/user.js'
+import Business from '../../models/Business.js'
 
 export default class extends Command {
     info = {
@@ -42,8 +43,22 @@ export default class extends Command {
         const stocks = await this.calcInvestments(memberData.stocks);
 
         let job = memberData.job === "" ? "None" : memberData.job;
-        if (memberData.job.startsWith("business")) job = "Working at a company";
-        if (memberData.job === "business") job = "Company CEO";
+        if (memberData.job.startsWith("business")) {
+            if (memberData.job === "business") {
+                job = "CEO of ";
+            } else {
+                job = "Working at ";
+            }
+
+            const ownerId = memberData.job === "business" ? interaction.member.id : memberData.job.split("-")[1];
+            const businessData = await Business.findOne({ ownerId: ownerId });
+
+            if (businessData) {
+                job += businessData.name;
+            } else {
+                job += `a business`;
+            }
+        }
 
         const displayedBadge = memberData.displayedBadge === undefined || memberData.displayedBadge === "" ? "" : ` <:${memberData.displayedBadge}:${idAchievements[memberData.displayedBadge]}>`;
 
@@ -96,7 +111,7 @@ export default class extends Command {
                 { name: 'Premium Status', value: premiumData.isPremium === true && expireTimestamp > 0 ? `:star: **Premium:** :white_check_mark:\n:hourglass: **Premium Expires:** <t:${expireTimestamp}:D>\n` : ":star: **Premium:** :x:", inline: false },
                 { name: 'Balance', value: `:dollar: **Wallet:** :coin: ${memberData.wallet}\n:bank: **Bank:** :coin: ${memberData.bank} / ${memberData.bankLimit}\n:moneybag: **Net Worth:** :coin: ${memberData.wallet + memberData.bank}\n:credit_card: **Tickets:** <:ticket:1032669959161122976> ${memberData.tickets || 0}\n:gem: **Inventory Worth:** \`${inventory.totalItems} items\` valued at :coin: ${inventory.value}`, inline: false },
                 { name: 'Investment Portfolio', value: `:dollar: **Worth:** :coin: ${stocks.currentWorth}\n:credit_card: **Amount:** ${parseInt(stocks.totalStocks)}\n:moneybag: **Invested:** :coin: ${stocks.initialWorth}`, inline: false },
-                { name: 'Misc', value: `:briefcase: **Current Job:** ${job}\n:sparkles: **Daily Streak:** ${memberData.streak - 1 > 0 ? memberData.streak - 1 : 0} days`, inline: false },
+                { name: 'Misc', value: `:briefcase: **Current Job:** ${job}\n:sparkles: **Daily Streak:** ${memberData.streak - 1 > 0 ? memberData.streak - 1 : 0} days\n:seedling: **Farm:** ${memberData.plots.length} plots`, inline: false },
                 { name: 'Badges (Achievements)', value: `${badgesStr === "" ? "None" : badgesStr}`, inline: false }
             )
         return embed;
