@@ -58,7 +58,7 @@ export const checkBet = (betStr, user, premiumStatus = false, minBet = 50, maxBe
         bet = user.wallet > maxBet ? maxBet : user.wallet;
     } else {
         bet = extractNumber(betStr);
-        if (bet === undefined) return "That's not a correct bet. Please use numbers or `1k` for example.";
+        if (bet === undefined || Number.isNaN(bet)) return "That's not a correct bet. Please use numbers or `1k` for example.";
         if (bet < minBet) return `The minimum bet is :coin: ${minBet}.`;
         if (bet > maxBet) return `You can only bet a maximum of :coin: ${maxBet}.`;
         if (bet > user.wallet) return `You don't have :coin: ${bet} in your wallet.`;
