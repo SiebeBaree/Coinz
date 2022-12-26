@@ -111,10 +111,18 @@ export default class extends Command {
 
         collector.on('end', async (interactionCollector) => {
             if (!data.gameFinished) {
-                data.gameFinished = true;
-                data.desc = `You lost :coin: ${data.bet}`;
-                data.color = Colors.Red;
-                await takeMoney(interaction.member.id, data.bet);
+                data = this.getDealerCards(data);
+                data = this.checkGameStatus(data);
+
+                if (data.tie === undefined) {
+                    if (data.playerWon) {
+                        await addRandomExperience(interaction.member.id);
+                        await addMoney(interaction.member.id, parseInt(this.getPrice(data.bet) - data.bet));
+                    } else {
+                        await takeMoney(interaction.member.id, data.bet);
+                    }
+                }
+
                 await interaction.editReply({ embeds: [this.createEmbed(data)], components: [this.setButtons(true)] });
             }
         });
