@@ -70,7 +70,7 @@ export const processAirdrop = async (guildData, shardIds) => {
                 const newEmbed = new EmbedBuilder()
                     .setTitle("The airdrop has been collected.")
                     .setColor(Colors.Red)
-                    .setDescription(`:gift: <@${userId}> **collected this airdrop.**\n:airplane: **Next Airdrop:** 1-2 hours`)
+                    .setDescription(`:gift: <@${userId}> **collected this airdrop.**\n:airplane: **Next Airdrop:** 1-12 hours`)
                     .addFields({ name: "Rewards", value: rewardsText, inline: false })
                 await message.edit({ embeds: [newEmbed], components: [getRow(true)] });
 
