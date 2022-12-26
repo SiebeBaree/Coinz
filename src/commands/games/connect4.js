@@ -73,15 +73,9 @@ export default class extends Command {
         }
 
         const secondPlayer = interaction.options.getUser('user');
-
-        if (secondPlayer.id === interaction.member.id) {
+        if (secondPlayer.id === interaction.member.id || secondPlayer.bot) {
             await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You cannot choose yourself as a second player.`, ephemeral: true });
-        }
-
-        if (secondPlayer.bot) {
-            await bot.cooldown.removeCooldown(interaction.member.id, this.info.name);
-            return await interaction.reply({ content: `You can't invite a bot to play a game of tic tac toe.`, ephemeral: true });
+            return await interaction.reply({ content: `You cannot choose yourself or a bot as a second player.`, ephemeral: true });
         }
 
         await interaction.deferReply();
@@ -126,7 +120,7 @@ export default class extends Command {
             return false;
         };
 
-        const message = await interaction.editReply({ content: `<@${secondPlayer.id}>\nDo you accept to play a game of Connect4 with <@${interaction.member.id}>?\n*If you accept, you have to place a bet of :coin: ${bet}.*`, components: [this.getConfirmButtons(false)], fetchReply: true });
+        const message = await interaction.editReply({ content: `<@${secondPlayer.id}> , do you accept to play a game of Connect4 with <@${interaction.member.id}>?\n*If you accept, you have to place a bet of :coin: ${bet}.*`, components: [this.getConfirmButtons(false)], fetchReply: true });
         const collector = message.createMessageComponentCollector({ filter, componentType: ComponentType.Button, time: 180_000 });
 
         collector.on('collect', async (i) => {
