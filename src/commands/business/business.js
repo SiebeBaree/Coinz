@@ -650,7 +650,9 @@ export default class extends Command {
             if (company.company.employees[i].userId === user.id) {
                 removedEmployee = true;
 
-                await Member.updateOne({ id: user.id }, { $set: { job: "" } });
+                const employee = await bot.database.fetchMember(user.id);
+                if (employee.job.endsWith(company.company.ownerId)) await Member.updateOne({ id: user.id }, { $set: { job: "" } });
+
                 await this.removeEmployee(company.company, user.id);
                 break;
             }
