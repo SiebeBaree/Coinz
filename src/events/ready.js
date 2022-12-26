@@ -7,11 +7,6 @@ export default class extends Event {
     }
 
     async run() {
-        // Make sure all guilds are stored in the database
-        this.cluster.broadcastEval(c => {
-            c.guilds.cache.forEach(guild => { this.database.fetchGuild(guild.id); })
-        });
-
         this.logger.ready(`Cluster ${this.cluster.id} loaded.`);
     }
 }
