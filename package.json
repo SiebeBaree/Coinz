@@ -45,6 +45,7 @@
     "moment-timezone": "^0.5.40",
     "mongoose": "^6.8.1",
     "node-cron": "^3.0.2",
+    "sharding-stats": "^2.2.0",
     "topgg-autoposter": "^2.0.1",
     "winston": "^3.8.2"
   },
