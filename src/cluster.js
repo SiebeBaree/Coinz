@@ -3,6 +3,7 @@ dotenv.config();
 
 import Cluster from 'discord-hybrid-sharding';
 import loggerStruct from './structures/Logger.js';
+import "./lib/crons.js";
 
 const manager = new Cluster.Manager(`./src/bot.js`, {
     shardsPerClusters: 2,
