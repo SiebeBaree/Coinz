@@ -1,0 +1,12 @@
+/dist
+.idea
+.vscode/
+logs/
+*.log
+node_modules/
+.env
+.DS_Store
+Thumbs.db
+
+# project unique assets
+src/assets/config.json

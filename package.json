@@ -1,0 +1,54 @@
+{
+  "name": "coinz",
+  "version": "3.0.0",
+  "description": "A feature rich discord bot with an entire economic system.",
+  "main": "src/manager.ts",
+  "scripts": {
+    "deploy": "NODE_ENV=production node ./dist/manager.js",
+    "start": "tsc && node ./dist/manager.js",
+    "dev": "concurrently \"tsc -w\" \"nodemon ./dist/manager.js\"",
+    "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "register-commands": "node ./dist/register.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SiebeBaree/Coinz.git"
+  },
+  "keywords": [
+    "economy",
+    "discord",
+    "bot",
+    "typescript",
+    "discord.js",
+    "crons",
+    "crypto",
+    "stocks",
+    "stock",
+    "market",
+    "cluster",
+    "shard",
+    "coinz"
+  ],
+  "author": "Siebe Baree",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/SiebeBaree/Coinz/issues"
+  },
+  "homepage": "https://github.com/SiebeBaree/Coinz#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.47.1",
+    "concurrently": "^7.6.0",
+    "eslint": "^8.30.0",
+    "nodemon": "^2.0.20",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "discord-hybrid-sharding": "github:meister03/discord-hybrid-sharding",
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security",
+    "mongoose": "^6.8.1",
+    "winston": "^3.8.2"
+  }
+}
