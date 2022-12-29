@@ -103,7 +103,7 @@ export const uploadStockData = async (data) => {
                 previousClose: data[element].previousClose,
                 lastUpdated: data[element].timestamp[data[element].timestamp.length - 1]
             });
-            await stockDocument.save().catch(e => bot.logger.error(e));
+            await stockDocument.save().catch(e => console.error(e));
         }
     }
 }
@@ -118,7 +118,7 @@ export const getCryptoData = async () => {
                 data[investments.crypto[i]] = { price: parseFloat(response.price) };
             }
         } catch (e) {
-            bot.logger.error(e);
+            console.error(e);
         }
     }
 
@@ -149,10 +149,10 @@ export const uploadCryptoData = async (data) => {
                     previousClose: response24h.open,
                     lastUpdated: parseInt(Date.now() / 1000)
                 });
-                await stockDocument.save().catch(e => bot.logger.error(e));
+                await stockDocument.save().catch(e => console.error(e));
             }
         } catch (e) {
-            bot.logger.error(e);
+            console.error(e);
         }
     }
 }
