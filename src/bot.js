@@ -1,7 +1,8 @@
 import Bot from "./structures/Bot.js"
 import { ActivityType, GatewayIntentBits, Partials } from "discord.js"
 import Cluster from "discord-hybrid-sharding"
-import { AutoPoster } from "topgg-autoposter";
+import { AutoPoster } from "topgg-autoposter"
+import Stats from "sharding-stats"
 import mongoose from "mongoose"
 const { connect } = mongoose;
 
@@ -18,6 +19,43 @@ const bot = global.bot = new Bot({
     shards: Cluster.data.SHARD_LIST,
     shardCount: Cluster.data.TOTAL_SHARDS
 });
+
+if (process.env.NODE_ENV === "production") {
+    // Connect to Sharding Stats
+    const statsClient = new Stats.Client(bot, {
+        customPoster: true,
+        authorizationkey: process.env.API_SHARDINGSTATS,
+        stats_uri: process.env.WEBSERVER_URL,
+    });
+
+    setInterval(() => postStats(), 20_000);
+}
+
+async function postStats() {
+    const shards = [...bot.ws.shards.values()];
+    const guilds = [...bot.guilds.cache.values()];
+    for (let i = 0; i < shards.length; i++) {
+        const filteredGuilds = guilds ? guilds
+            .filter(x => x.shardId === shards[i].id)
+            .filter(Boolean)
+            : [];
+
+        const body = {
+            id: shards[i] ? shards[i].id : -1,
+            cluster: bot.cluster?.id,
+            ping: shards[i] ? shards[i].ping : -1,
+            guildcount: filteredGuilds.length,
+            cpu: await statsClient.receiveCPUUsage(),
+            ram: statsClient.getRamUsageinMB()
+        }
+
+        try {
+            await statsClient.sendPostData(body);
+        } catch {
+
+        }
+    }
+}
 
 // Connect to MongoDB Database
 const DB_NAME = process.env.NODE_ENV === "production" ? "coinz" : "coinz_beta";
@@ -38,6 +76,8 @@ bot.rest.on('rateLimit', rateLimitData => {
 });
 
 bot.on('ready', async () => {
+    if (process.env.NODE_ENV === "production") await postStats() // To send the values on startup
+
     if (bot.cluster.count - 1 === bot.cluster.id) {
         if (process.env.NODE_ENV === "production") {
             AutoPoster(process.env.API_TOPGG, bot)
@@ -47,8 +87,8 @@ bot.on('ready', async () => {
             app.listen(port, () => bot.logger.ready(`Vote Webhooks available on port: ${port}`));
         }
 
-        // Load Global Crons
-        await import("./lib/crons.js");
+        // Load Bot Crons Once
+        await import("./lib/botCrons.js");
     }
 
     // Load Cluster Crons
