@@ -29,7 +29,7 @@ class Main {
         await this.client.login(process.env.DISCORD_TOKEN);
 
         // Connect to MongoDB Database
-        const DB_NAME = process.env.NODE_ENV === "production" ? "coinz" : "coinz_beta";
+        const DB_NAME = process.env.NODE_ENV === "production" ? "coinz_v3" : "coinz_v3_beta";
         set("strictQuery", false);
         connect(process.env.DATABASE_URI ?? "", {
             dbName: DB_NAME,
