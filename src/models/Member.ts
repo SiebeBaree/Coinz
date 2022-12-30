@@ -2,7 +2,7 @@ import { Schema, model, Types } from "mongoose";
 import InventoryItem from "../interfaces/InventoryItem";
 import { embed } from "../assets/config.json";
 
-interface IStock {
+export interface IInvestment {
     ticker: string;
     amount: Types.Decimal128;
     buyPrice: number;
@@ -45,7 +45,7 @@ export interface IMember {
     lastStreak: Date;
     passiveMode: boolean;
     inventory: InventoryItem[];
-    stocks: IStock[];
+    stocks: IInvestment[];
     plots: IPlot[];
     lastWatered: number;
     profileColor: string;
@@ -63,7 +63,7 @@ const Item = new Schema<InventoryItem>({
     amount: { type: Number, default: 1 },
 });
 
-const Stock = new Schema<IStock>({
+const Investment = new Schema<IInvestment>({
     ticker: { type: String, required: true },
     amount: { type: Types.Decimal128, required: true },
     buyPrice: { type: Number, required: true },
@@ -106,7 +106,7 @@ const memberSchema = new Schema<IMember>({
     lastStreak: { type: Date, default: new Date(0) },
     passiveMode: { type: Boolean, default: false },
     inventory: [{ type: Item, default: [] }],
-    stocks: [{ type: Stock, default: [] }],
+    stocks: [{ type: Investment, default: [] }],
     plots: [{ type: Plot, default: [] }],
     lastWatered: { type: Number, default: 0 },
     profileColor: { type: String, default: embed.color },
