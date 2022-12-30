@@ -115,8 +115,8 @@ const memberSchema = new Schema<IMember>({
     lastAirdrop: { type: Number, default: 0 },
     notifications: [{ type: String, default: [] }],
     lootboxes: [{ type: Item, default: [] }],
-    stats: { type: Stats },
-    premium: { type: Premium },
+    stats: { type: Stats, default: {} },
+    premium: { type: Premium, default: {} },
 }, { timestamps: true });
 
 export default model<IMember>("Member", memberSchema);
