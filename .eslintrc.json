@@ -40,7 +40,6 @@
             "error",
             4
         ],
-        "keyword-spacing": "error",
         "max-nested-callbacks": [
             "error",
             {
