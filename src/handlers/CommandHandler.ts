@@ -6,7 +6,7 @@ import ICommand from "../interfaces/ICommand.js";
 export default class CommandHandler extends Handler {
     private readonly client: Bot;
 
-    constructor(client: Bot, path = "/commands/", privateFolders = ["admin"]) {
+    constructor(client: Bot, path = "/commands/", privateFolders: string[] = []) {
         super();
         this.client = client;
 

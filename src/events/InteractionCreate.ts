@@ -16,6 +16,7 @@ export default class InteractionCreate implements IEvent {
 
             const command = client.commands.get(interaction.commandName);
             if (!command || command.info.enabled === false) return;
+            if (command.info.category === "admin" && interaction.guildId !== client.config.adminServerId) return;
 
             // Check cooldown
             const cooldown = await Cooldown.getRemainingCooldown(interaction.user.id, command.info.name);

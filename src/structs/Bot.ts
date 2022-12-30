@@ -12,13 +12,13 @@ export default class Bot extends Client {
     private _config = config;
     public cluster;
 
-    constructor(options: ClientOptions) {
+    constructor(options: ClientOptions, clusterLess = false) {
         super(options);
 
         this.commands = new Collection();
         this.events = new Collection();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.cluster = new ClusterClient(this as any);
+        if (!clusterLess) this.cluster = new ClusterClient(this as any);
     }
 
     get ping(): number {
