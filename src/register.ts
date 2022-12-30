@@ -2,7 +2,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { ApplicationCommandOption, REST, Routes } from "discord.js";
+import { CommandInteractionOption, REST, Routes } from "discord.js";
 import { adminServerId } from "./assets/config.json";
 import CommandHandler from "./handlers/CommandHandler";
 import Bot from "./structs/Bot";
@@ -10,7 +10,7 @@ import Bot from "./structs/Bot";
 interface CommandOptions {
     name: string;
     description: string;
-    options?: ApplicationCommandOption[];
+    options?: CommandInteractionOption[];
     dm_permission?: boolean;
 }
 
@@ -49,11 +49,11 @@ interface CommandOptions {
         console.log(`Started refreshing ${publicCommands.length + guildCommands.length} application (/) commands.`);
 
         // The put method is used to fully refresh all commands in the guild with the current set
-        const publicData = await rest.put(Routes.applicationCommands(process.env.CLIENT_ID ?? ""), { body: publicCommands });
-        const guildData = await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID ?? "", adminServerId), { body: guildCommands });
+        await rest.put(Routes.applicationCommands(process.env.CLIENT_ID ?? ""), { body: publicCommands });
+        await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID ?? "", adminServerId), { body: guildCommands });
 
-        console.log(`Successfully reloaded ${(publicData as any).length} public application (/) commands.`);
-        console.log(`Successfully reloaded ${(guildData as any).length} guild application (/) commands.`);
+        console.log(`Successfully reloaded ${publicCommands.length} public application (/) commands.`);
+        console.log(`Successfully reloaded ${guildCommands.length} guild application (/) commands.`);
     } catch (error) {
         console.error(error);
     } finally {
