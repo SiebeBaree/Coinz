@@ -4,7 +4,7 @@ import ICommand from "../../interfaces/ICommand";
 import Helpers from "../../utils/Helpers";
 import Command from "../../structs/Command";
 
-export default class Ping extends Command implements ICommand {
+export default class extends Command implements ICommand {
     readonly info = {
         name: "ping",
         description: "Get the time between the bot and discord in milliseconds.",
