@@ -67,7 +67,7 @@ export default class User {
         return inventory.some((item) => item.itemId === itemId);
     }
 
-    static async getLevel(experience: number): Promise<number> {
+    static getLevel(experience: number): number {
         return Math.floor(experience / 100);
     }
 
