@@ -33,11 +33,11 @@ export default class Database {
         return await Cooldown.findOne({ id: userId, command: command });
     }
 
-    static async getBusiness(ownerId: string, name: string, fetch = false): Promise<IBusiness> {
+    static async getBusiness(ownerId: string, name?: string, fetch = false): Promise<IBusiness> {
         const business = await Business.findOne({ ownerId: ownerId });
         if (business) return business;
 
-        const newBusiness = new Business({ ownerId: ownerId, name: name });
+        const newBusiness = new Business({ ownerId: ownerId, name: name ?? `Business ${ownerId}` });
 
         if (fetch) await newBusiness.save();
         return newBusiness;
