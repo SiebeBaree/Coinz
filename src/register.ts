@@ -49,8 +49,13 @@ interface CommandOptions {
         console.log(`Started refreshing ${publicCommands.length + guildCommands.length} application (/) commands.`);
 
         // The put method is used to fully refresh all commands in the guild with the current set
-        await rest.put(Routes.applicationCommands(process.env.CLIENT_ID ?? ""), { body: publicCommands });
-        await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID ?? "", adminServerId), { body: guildCommands });
+        if (process.env.NODE_ENV === "production") {
+            await rest.put(Routes.applicationCommands(process.env.CLIENT_ID ?? ""), { body: publicCommands });
+            await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID ?? "", adminServerId), { body: guildCommands });
+        } else {
+            await rest.put(Routes.applicationCommands(process.env.CLIENT_ID ?? ""), { body: [] });
+            await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID ?? "", adminServerId), { body: [...publicCommands, ...guildCommands] });
+        }
 
         console.log(`Successfully reloaded ${publicCommands.length} public application (/) commands.`);
         console.log(`Successfully reloaded ${guildCommands.length} guild application (/) commands.`);
