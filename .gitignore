@@ -10,3 +10,4 @@ Thumbs.db
 
 # project unique assets
 src/assets/config.json
+src/assets/stats.json
