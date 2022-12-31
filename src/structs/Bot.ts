@@ -7,6 +7,8 @@ import config from "../assets/config.json";
 import { ClusterClient } from "discord-hybrid-sharding";
 import Item from "../interfaces/Item";
 import items from "../assets/items.json";
+import Logger from "./Logger";
+import winston from "winston";
 
 export default class Bot extends Client {
     public commands: Collection<string, ICommand>;
@@ -14,6 +16,7 @@ export default class Bot extends Client {
     private _config = config;
     public cluster;
     private _items: Collection<string, Item>;
+    public logger: winston.Logger;
 
     constructor(options: ClientOptions, clusterLess = false) {
         super(options);
@@ -23,6 +26,10 @@ export default class Bot extends Client {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (!clusterLess) this.cluster = new ClusterClient(this as any);
         this._items = new Collection(Object.entries(items));
+
+        // create logger
+        const logger = new Logger();
+        this.logger = logger.logger;
     }
 
     get ping(): number {
@@ -43,7 +50,7 @@ export default class Bot extends Client {
 
         this.commands = await commandHandler.load();
         this.events = await eventHandler.load();
-        console.log(`Loaded ${this.commands.size} commands and ${this.events.size} events.`);
+        this.logger.info(`Loaded ${this.commands.size} commands and ${this.events.size} events.`);
         return await super.login(token);
     }
 }

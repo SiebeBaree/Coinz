@@ -58,8 +58,6 @@ export default class InteractionCreate implements IEvent {
                 await command.execute(interaction, member);
                 await Member.updateOne({ id: interaction.user.id }, { $inc: { "stats.commandsExecuted": 1 } });
             } catch (error) {
-                console.error(error);
-
                 if (interaction.replied) {
                     await interaction.editReply({ content: "There was an error while executing this command!" });
                 } else {
