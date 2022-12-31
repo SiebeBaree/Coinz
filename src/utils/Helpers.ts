@@ -51,6 +51,4 @@ export default class Helpers {
     static formatNumber(number: number): string {
         return FORMATTER.format(number);
     }
-
-
 }
