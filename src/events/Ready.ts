@@ -5,6 +5,6 @@ export default class Ready implements IEvent {
     public readonly name = "ready";
 
     async execute(client: Bot) {
-        console.log(`Logged in as ${client.user?.tag}!`);
+        client.logger.info(`Cluster ${client.cluster?.id} is ready!`);
     }
 }
