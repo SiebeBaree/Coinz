@@ -1,5 +1,6 @@
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
+import moment from "moment";
 
 export default class Logger {
     private _logger: winston.Logger;
@@ -25,12 +26,16 @@ export default class Logger {
         if (process.env.NODE_ENV !== "production") {
             this._logger.add(new winston.transports.Console({
                 format: winston.format.combine(
-                    winston.format.colorize(),
-                    winston.format.simple(),
+                    winston.format.timestamp(),
+                    this.formatConsole,
                 ),
             }));
         }
     }
+
+    private formatConsole = winston.format.printf(({ level, message, timestamp }) => {
+        return `[${moment(timestamp).format("YYYY-MM-DD HH:mm:ss")}] (${level.toUpperCase()}): ${message}`;
+    });
 
     public get logger(): winston.Logger {
         return this._logger;
