@@ -40,8 +40,22 @@ class Main {
             keepAlive: true,
             keepAliveInitialDelay: 300000,
         })
-            .then(() => console.log("Connected to MongoDB"))
-            .catch(console.error);
+            .then(() => this.client.logger.info("Connected to MongoDB"))
+            .catch(this.client.logger.error);
+
+        // Global Error Handler
+        const ignoredErrors = ["DiscordAPIError[10008]"];
+        process.on("uncaughtException", (err: Error) => {
+            if (!ignoredErrors.includes(`${err.name}`)) {
+                this.client.logger.error(err.stack);
+            }
+        });
+
+        process.on("unhandledRejection", (err: Error) => {
+            if (!ignoredErrors.includes(`${err.name}`)) {
+                this.client.logger.error(err.stack);
+            }
+        });
     }
 }
 
