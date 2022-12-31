@@ -44,7 +44,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "discord-hybrid-sharding": "github:meister03/discord-hybrid-sharding",
+    "discord-hybrid-sharding": "^2.0.4",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",
