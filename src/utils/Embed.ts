@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 
 export default class Embed {
-    static getPageButtons(page: number, maxPage: number, disableButtons = false): ActionRowBuilder[] {
+    static getPageButtons(page: number, maxPage: number, disableButtons = false): ActionRowBuilder<ButtonBuilder>[] {
         const disableBackButton = page <= 0 || disableButtons;
         const disableNextButton = page >= maxPage - 1 || disableButtons;
 
@@ -38,7 +38,7 @@ export default class Embed {
         return [buttonRow];
     }
 
-    static getSelectMenu(options: SelectMenuComponentOptionData[], customId: string, selected: string, disabled = false): ActionRowBuilder[] {
+    static getSelectMenu(options: SelectMenuComponentOptionData[], customId: string, selected: string, disabled = false): ActionRowBuilder<StringSelectMenuBuilder>[] {
         for (let i = 0; i < options.length; i++) {
             options[i].default = options[i].value === selected;
         }
