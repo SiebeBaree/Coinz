@@ -1,0 +1,125 @@
+{
+    "hard": {
+        "failMessage": "You got caught hunting exotic animals. You paid a :coin: %AMOUNT% fine and had to return your rifle.",
+        "successMessage": "You caught some exotic animals without anyone noticing. You sold their meat and skin for :coin: %AMOUNT%",
+        "risk": 35,
+        "failReward": [
+            200,
+            350
+        ],
+        "loot": [
+            {
+                "itemId": "elephant",
+                "name": "Elephant",
+                "sellPrice": 300,
+                "emoteId": "987701600334266398"
+            },
+            {
+                "itemId": "penguin",
+                "name": "Penguin",
+                "sellPrice": 250,
+                "emoteId": "987701604746670130"
+            },
+            {
+                "itemId": "monkey",
+                "name": "Monkey",
+                "sellPrice": 275,
+                "emoteId": "1002149882167038002"
+            },
+            {
+                "itemId": "zebra",
+                "name": "Zebra",
+                "sellPrice": 225,
+                "emoteId": "1002149892493422652"
+            },
+            {
+                "itemId": "giraffe",
+                "name": "Giraffe",
+                "sellPrice": 260,
+                "emoteId": "1002149899862818836"
+            }
+        ]
+    },
+    "medium": {
+        "failMessage": "You got hunted down by a bear. You lost your rifle during the escape.",
+        "successMessage": "You hunted some animals in the forest and sold their meat for :coin: %AMOUNT%.",
+        "risk": 20,
+        "failReward": [
+            0,
+            0
+        ],
+        "loot": [
+            {
+                "itemId": "pig",
+                "name": "Pig",
+                "sellPrice": 24,
+                "emoteId": "987701605816233985"
+            },
+            {
+                "itemId": "cow",
+                "name": "Cow",
+                "sellPrice": 28,
+                "emoteId": "987701595720532088"
+            },
+            {
+                "itemId": "fox",
+                "name": "Fox",
+                "sellPrice": 35,
+                "emoteId": "987701602603384863"
+            },
+            {
+                "itemId": "bear",
+                "name": "Bear",
+                "sellPrice": 45,
+                "emoteId": "987701592486740008"
+            },
+            {
+                "itemId": "deer",
+                "name": "Deer",
+                "sellPrice": 30,
+                "emoteId": "987701596953661490"
+            }
+        ]
+    },
+    "easy": {
+        "failMessage": "Other hunters are better than you. You didn't kill any animals...",
+        "successMessage": "You found some small animals and sold them to a butcher for :coin: %AMOUNT%.",
+        "risk": 30,
+        "failReward": [
+            0,
+            0
+        ],
+        "loot": [
+            {
+                "itemId": "duck",
+                "name": "Duck",
+                "sellPrice": 18,
+                "emoteId": "987701599226974318"
+            },
+            {
+                "itemId": "rabbit",
+                "name": "Rabbit",
+                "sellPrice": 20,
+                "emoteId": "987701609368797195"
+            },
+            {
+                "itemId": "chicken",
+                "name": "Chicken",
+                "sellPrice": 16,
+                "emoteId": "987701594630004736"
+            },
+            {
+                "itemId": "bird",
+                "name": "Bird",
+                "sellPrice": 12,
+                "emoteId": "987701593543675934"
+            },
+            {
+                "itemId": "sheep",
+                "name": "Sheep",
+                "sellPrice": 19,
+                "emoteId": "987701610027319297"
+            }
+        ]
+    }
+}
