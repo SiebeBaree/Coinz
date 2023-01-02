@@ -1,11 +1,12 @@
 /* eslint-disable semi */
-import { CommandInteractionOption, APIEmbedField, CommandInteraction } from "discord.js";
+import { CommandInteractionOption, APIEmbedField, ChatInputCommandInteraction } from "discord.js";
 import { IMember } from "../models/Member";
 
 export default interface ICommand {
     readonly info: {
         name: string;
         description: string;
+        helpDescription?: string;
         options: CommandInteractionOption[];
         category: string;
         extraFields?: APIEmbedField[],
@@ -14,7 +15,8 @@ export default interface ICommand {
         enabled?: boolean;
         deferReply?: boolean;
         isPremium?: boolean;
+        image?: string;
     };
 
-    execute: (interaction: CommandInteraction, member: IMember) => Promise<void>;
+    execute: (interaction: ChatInputCommandInteraction, member: IMember) => Promise<void>;
 }
