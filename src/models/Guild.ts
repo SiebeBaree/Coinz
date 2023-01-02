@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { embed } from "../assets/config.json";
 
 export interface IGuild {
     id: string;
@@ -14,6 +15,7 @@ export interface IGuild {
         tries: number;
     };
     currency: string;
+    embedColor: string;
 }
 
 const guildSchema = new Schema<IGuild>({
@@ -30,6 +32,7 @@ const guildSchema = new Schema<IGuild>({
         tries: { type: Number, default: 0 },
     },
     currency: { type: String, default: ":coin:" },
+    embedColor: { type: String, default: embed.color },
 }, { timestamps: true });
 
 export default model<IGuild>("Guild", guildSchema);
