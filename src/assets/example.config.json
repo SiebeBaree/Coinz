@@ -7,5 +7,6 @@
         "color": "",
         "footer": "",
         "icon": ""
-    }
+    },
+    "invalidCommand": ""
 }
