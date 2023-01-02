@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import axios from "axios"
 import moment from "moment-timezone"
 import Investment from "../models/Investment.js"
@@ -60,7 +63,7 @@ export const getStockData = async () => {
 
         return totalApiData;
     } catch (e) {
-        bot.logger.error(e);
+        console.error(e);
         return null;
     }
 }
