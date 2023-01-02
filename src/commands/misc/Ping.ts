@@ -1,4 +1,4 @@
-import { CommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction } from "discord.js";
 import Bot from "../../structs/Bot";
 import ICommand from "../../interfaces/ICommand";
 import Helpers from "../../utils/Helpers";
@@ -16,7 +16,7 @@ export default class extends Command implements ICommand {
         super(bot, file);
     }
 
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         const now = Date.now();
         await interaction.reply({
             content: `:ping_pong: **Ping:** ${this.client.ws.ping} ms\n` +

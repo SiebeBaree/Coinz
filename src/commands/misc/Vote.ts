@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, CommandInteraction, EmbedBuilder, ColorResolvable } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ColorResolvable, ChatInputCommandInteraction } from "discord.js";
 import Bot from "../../structs/Bot";
 import ICommand from "../../interfaces/ICommand";
 import Command from "../../structs/Command";
@@ -30,7 +30,7 @@ export default class extends Command implements ICommand {
         super(bot, file);
     }
 
-    async execute(interaction: CommandInteraction, member: IMember) {
+    async execute(interaction: ChatInputCommandInteraction, member: IMember) {
         const votes = member.votes === undefined ? 0 : member.votes;
         const embed = new EmbedBuilder()
             .setTitle("Coinz Vote Links")

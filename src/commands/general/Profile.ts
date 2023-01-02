@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandOptionType, ColorResolvable, CommandInteraction, ComponentType, EmbedBuilder, StringSelectMenuBuilder, User } from "discord.js";
+import { ActionRowBuilder, ApplicationCommandOptionType, ChatInputCommandInteraction, ColorResolvable, ComponentType, EmbedBuilder, StringSelectMenuBuilder, User } from "discord.js";
 import Bot from "../../structs/Bot";
 import ICommand from "../../interfaces/ICommand";
 import Command from "../../structs/Command";
@@ -35,7 +35,7 @@ export default class extends Command implements ICommand {
         super(bot, file);
     }
 
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         const selectedUser = interaction.options.getUser("user") || interaction.user;
 
         const selectedUserData = await Database.getMember(selectedUser.id);

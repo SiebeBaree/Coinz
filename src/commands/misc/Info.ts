@@ -1,4 +1,4 @@
-import { ColorResolvable, CommandInteraction, EmbedBuilder } from "discord.js";
+import { ChatInputCommandInteraction, ColorResolvable, EmbedBuilder } from "discord.js";
 import Bot from "../../structs/Bot";
 import ICommand from "../../interfaces/ICommand";
 import Command from "../../structs/Command";
@@ -19,7 +19,7 @@ export default class extends Command implements ICommand {
         super(bot, file);
     }
 
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         const stats = JSON.parse(readFileSync("./src/assets/stats.json").toString());
 
         const embed = new EmbedBuilder()
