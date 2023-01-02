@@ -10,7 +10,7 @@ export default class InteractionCreate implements IEvent {
     public readonly name = "interactionCreate";
 
     async execute(client: Bot, interaction: Interaction) {
-        if (interaction.isCommand()) {
+        if (interaction.isChatInputCommand()) {
             if (!interaction.guild || !interaction.guild.available) return;
             if (interaction.user.bot) return;
 
@@ -58,6 +58,8 @@ export default class InteractionCreate implements IEvent {
                 await command.execute(interaction, member);
                 await Member.updateOne({ id: interaction.user.id }, { $inc: { "stats.commandsExecuted": 1 } });
             } catch (error) {
+                client.logger.error((error as Error).stack || (error as Error).message);
+
                 if (interaction.replied) {
                     await interaction.editReply({ content: "There was an error while executing this command!" });
                 } else {
