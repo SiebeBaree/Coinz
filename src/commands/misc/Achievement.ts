@@ -93,21 +93,7 @@ export default class extends Command implements ICommand {
 
         collector.on("collect", async (i) => {
             if (i.customId.startsWith("page_")) {
-                switch (i.customId) {
-                    case "page_ToFirstPage":
-                        page = 0;
-                        break;
-                    case "page_ToPreviousPage":
-                        page--;
-                        break;
-                    case "page_ToNextPage":
-                        page++;
-                        break;
-                    case "page_ToLastPage":
-                        page = maxPage - 1;
-                        break;
-                }
-
+                page = Embed.calculatePageNumber(i.customId, page, maxPage);
                 await i.update({ embeds: [createEmbed(createList(page, ItemsPerPage), page, maxPage)], components: Embed.getPageButtons(page, maxPage) });
             }
         });
