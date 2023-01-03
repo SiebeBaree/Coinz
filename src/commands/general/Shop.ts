@@ -139,7 +139,7 @@ export default class extends Command implements ICommand {
 
             collector.on("collect", async (i) => {
                 if (i.componentType === ComponentType.Button) {
-                    page = Embed.calulatePageNumber(i.customId, page, maxPage);
+                    page = Embed.calculatePageNumber(i.customId, page, maxPage);
                 } else if (i.componentType === ComponentType.StringSelect) {
                     defaultLabel = i.values[0];
                     page = 0;
