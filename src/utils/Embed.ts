@@ -38,6 +38,25 @@ export default class Embed {
         return [buttonRow];
     }
 
+    static calculatePageNumber(customId: string, page: number, maxPage: number): number {
+        switch (customId) {
+            case "page_ToFirstPage":
+                page = 0;
+                break;
+            case "page_ToPreviousPage":
+                page = Math.max(page - 1, 0);
+                break;
+            case "page_ToNextPage":
+                page = Math.min(page + 1, maxPage - 1);
+                break;
+            case "page_ToLastPage":
+                page = maxPage - 1;
+                break;
+        }
+
+        return page;
+    }
+
     static getSelectMenu(options: SelectMenuComponentOptionData[], customId: string, selected: string, disabled = false): ActionRowBuilder<StringSelectMenuBuilder>[] {
         for (let i = 0; i < options.length; i++) {
             options[i].default = options[i].value === selected;
