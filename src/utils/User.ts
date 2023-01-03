@@ -1,4 +1,3 @@
-import InventoryItem from "../interfaces/InventoryItem";
 import Member, { IMember } from "../models/Member";
 import Database from "./Database";
 import Helpers from "./Helpers";
@@ -15,56 +14,6 @@ export default class User {
             const member = await Database.getMember(userId);
             await this.addMoney(userId, member.wallet < amount ? -member.wallet : -amount);
         }
-    }
-
-    static async addItem(userId: string, itemId: string, amount: 1, inventory?: InventoryItem[]): Promise<void> {
-        if (inventory === undefined) {
-            const member = await Database.getMember(userId, true);
-            inventory = member.inventory;
-        }
-
-        if (inventory.length > 0 && this.userHasItem(inventory, itemId)) {
-            await Member.updateOne(
-                { id: userId, "inventory.itemId": itemId },
-                { $inc: { "inventory.$.amount": amount } },
-            );
-        } else {
-            await Member.updateOne({ id: userId }, {
-                $push: { inventory: { itemId: itemId, amount: amount } },
-            });
-        }
-    }
-
-    static async removeItem(userId: string, itemId: string, amount: 1, inventory?: InventoryItem[]): Promise<boolean> {
-        if (inventory === undefined) {
-            const member = await Database.getMember(userId, true);
-            inventory = member.inventory;
-        }
-
-        if (inventory.length === 0 || !this.userHasItem(inventory, itemId)) {
-            return false;
-        }
-
-        const item = inventory.find((i) => i.itemId === itemId);
-        if (item === undefined) return false;
-
-        if (item.amount <= amount) {
-            await Member.updateOne(
-                { id: userId, "inventory.itemId": itemId },
-                { $pull: { inventory: { itemId: itemId } } },
-            );
-        } else {
-            await Member.updateOne(
-                { id: userId, "inventory.itemId": itemId },
-                { $inc: { "inventory.$.amount": -amount } },
-            );
-        }
-
-        return true;
-    }
-
-    static userHasItem(inventory: InventoryItem[], itemId: string): boolean {
-        return inventory.some((item) => item.itemId === itemId);
     }
 
     static getLevel(experience: number): number {
