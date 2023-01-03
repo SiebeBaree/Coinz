@@ -83,7 +83,7 @@ export default class extends Command implements ICommand {
         const returnObj = { value: 0, items: 0 };
 
         for (const invItem of inventory) {
-            const item = this.client.items.get(invItem.itemId);
+            const item = this.client.items.getById(invItem.itemId);
             if (!item) continue;
 
             returnObj.value += item.sellPrice ?? 0;

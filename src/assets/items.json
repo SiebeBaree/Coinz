@@ -1,5 +1,6 @@
-{
-    "potato": {
+[
+    {
+        "itemId": "potato",
         "category": "crops",
         "name": "Potato",
         "emoteId": "956643928013152306",
@@ -9,7 +10,8 @@
         "sellPrice": 15,
         "duration": 43200
     },
-    "lettuce": {
+    {
+        "itemId": "lettuce",
         "category": "crops",
         "name": "Lettuce",
         "emoteId": "956643928021565510",
@@ -19,7 +21,8 @@
         "sellPrice": 17,
         "duration": 54000
     },
-    "carrot": {
+    {
+        "itemId": "carrot",
         "category": "crops",
         "name": "Carrot",
         "emoteId": "956643927987986452",
@@ -29,7 +32,8 @@
         "sellPrice": 25,
         "duration": 64800
     },
-    "broccoli": {
+    {
+        "itemId": "broccoli",
         "category": "crops",
         "name": "Broccoli",
         "emoteId": "956643928382275684",
@@ -39,7 +43,8 @@
         "sellPrice": 28,
         "duration": 86400
     },
-    "tomato": {
+    {
+        "itemId": "tomato",
         "category": "crops",
         "name": "Tomato",
         "emoteId": "956643927992201306",
@@ -49,7 +54,8 @@
         "sellPrice": 40,
         "duration": 129600
     },
-    "strawberry": {
+    {
+        "itemId": "strawberry",
         "category": "crops",
         "name": "Strawberry",
         "emoteId": "956643928403226684",
@@ -59,7 +65,8 @@
         "sellPrice": 75,
         "duration": 172800
     },
-    "corn": {
+    {
+        "itemId": "corn",
         "category": "crops",
         "name": "Corn",
         "emoteId": "956643928034131989",
@@ -69,7 +76,8 @@
         "sellPrice": 75,
         "duration": 259200
     },
-    "melon": {
+    {
+        "itemId": "melon",
         "category": "crops",
         "name": "Melon",
         "emoteId": "956643928348704829",
@@ -77,10 +85,10 @@
         "longDescription": "A melon is any of various plants of the family Cucurbitaceae with sweet, edible, and fleshy fruit.\n\n**Grow Time:** `7 days`",
         "buyPrice": 500,
         "sellPrice": 175,
-        "multiplier": 0.0,
         "duration": 604800
     },
-    "shovel": {
+    {
+        "itemId": "shovel",
         "category": "tools",
         "name": "Shovel",
         "emoteId": "956861323352883230",
@@ -89,7 +97,8 @@
         "buyPrice": 250,
         "sellPrice": 80
     },
-    "fishing_rod": {
+    {
+        "itemId": "fishing_rod",
         "category": "tools",
         "name": "Fishing Rod",
         "emoteId": "956861323617107968",
@@ -98,7 +107,8 @@
         "buyPrice": 280,
         "sellPrice": 100
     },
-    "hunting_rifle": {
+    {
+        "itemId": "hunting_rifle",
         "category": "tools",
         "name": "Hunting Rifle",
         "emoteId": "987701755770994718",
@@ -107,7 +117,8 @@
         "buyPrice": 630,
         "sellPrice": 270
     },
-    "axe": {
+    {
+        "itemId": "axe",
         "category": "tools",
         "name": "Axe",
         "emoteId": "1013473902778908694",
@@ -116,7 +127,8 @@
         "buyPrice": 220,
         "sellPrice": 130
     },
-    "bag": {
+    {
+        "itemId": "bag",
         "category": "tools",
         "name": "Bag",
         "emoteId": "1013473900123926618",
@@ -125,7 +137,8 @@
         "buyPrice": 150,
         "sellPrice": 40
     },
-    "baguette": {
+    {
+        "itemId": "baguette",
         "category": "other",
         "name": "Baguette",
         "emoteId": "956916922576957440",
@@ -133,7 +146,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 3
     },
-    "trash": {
+    {
+        "itemId": "trash",
         "category": "other",
         "name": "Trash",
         "emoteId": "956916922610507777",
@@ -141,7 +155,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 25
     },
-    "shoe": {
+    {
+        "itemId": "shoe",
         "category": "other",
         "name": "Shoe",
         "emoteId": "956916922572763166",
@@ -149,7 +164,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 40
     },
-    "socks": {
+    {
+        "itemId": "socks",
         "category": "other",
         "name": "Socks",
         "emoteId": "956916922610507776",
@@ -157,7 +173,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 15
     },
-    "egg": {
+    {
+        "itemId": "egg",
         "category": "other",
         "name": "Egg",
         "emoteId": "956916922560163930",
@@ -165,7 +182,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 5
     },
-    "cookie": {
+    {
+        "itemId": "cookie",
         "category": "other",
         "name": "Cookie",
         "emoteId": "956916922673418300",
@@ -173,7 +191,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 2
     },
-    "apple": {
+    {
+        "itemId": "apple",
         "category": "other",
         "name": "Apple",
         "emoteId": "956916922631475210",
@@ -181,7 +200,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 6
     },
-    "playstation": {
+    {
+        "itemId": "playstation",
         "category": "other",
         "name": "Playstation",
         "emoteId": "956917165250990091",
@@ -190,7 +210,8 @@
         "buyPrice": 500,
         "sellPrice": 350
     },
-    "rubber_duck": {
+    {
+        "itemId": "rubber_duck",
         "category": "other",
         "name": "Rubber Duck",
         "emoteId": "956916922585321532",
@@ -198,7 +219,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 8
     },
-    "book": {
+    {
+        "itemId": "book",
         "category": "other",
         "name": "Book",
         "emoteId": "956916922837000293",
@@ -206,7 +228,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 10
     },
-    "doll": {
+    {
+        "itemId": "doll",
         "category": "other",
         "name": "Doll",
         "emoteId": "956916922446909442",
@@ -214,7 +237,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 45
     },
-    "tree": {
+    {
+        "itemId": "tree",
         "category": "other",
         "name": "Tree",
         "emoteId": "956916922623094834",
@@ -222,7 +246,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 125
     },
-    "lamp": {
+    {
+        "itemId": "lamp",
         "category": "other",
         "name": "Lamp",
         "emoteId": "956917165959815238",
@@ -230,7 +255,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 60
     },
-    "mirror": {
+    {
+        "itemId": "mirror",
         "category": "other",
         "name": "Mirror",
         "emoteId": "956916922597904434",
@@ -238,7 +264,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 50
     },
-    "soap": {
+    {
+        "itemId": "soap",
         "category": "other",
         "name": "Soap",
         "emoteId": "956916922295910511",
@@ -246,7 +273,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 15
     },
-    "computer_mouse": {
+    {
+        "itemId": "computer_mouse",
         "category": "other",
         "name": "Computer Mouse",
         "emoteId": "1003948939193626674",
@@ -255,7 +283,8 @@
         "buyPrice": 55,
         "sellPrice": 30
     },
-    "fidget_spinner": {
+    {
+        "itemId": "fidget_spinner",
         "category": "other",
         "name": "Fidget Spinner",
         "emoteId": "1003949592641019905",
@@ -264,7 +293,8 @@
         "buyPrice": 18,
         "sellPrice": 13
     },
-    "chair": {
+    {
+        "itemId": "chair",
         "category": "other",
         "name": "Chair",
         "emoteId": "1003948937603985480",
@@ -273,7 +303,8 @@
         "buyPrice": 80,
         "sellPrice": 45
     },
-    "pocket_watch": {
+    {
+        "itemId": "pocket_watch",
         "category": "other",
         "name": "Pocket Watch",
         "emoteId": "1003948943027220520",
@@ -282,7 +313,8 @@
         "buyPrice": 160,
         "sellPrice": 75
     },
-    "sofa": {
+    {
+        "itemId": "sofa",
         "category": "other",
         "name": "sofa",
         "emoteId": "1003948944310669403",
@@ -291,7 +323,8 @@
         "buyPrice": 180,
         "sellPrice": 80
     },
-    "tv": {
+    {
+        "itemId": "tv",
         "category": "other",
         "name": "Television",
         "emoteId": "1003948945359245323",
@@ -300,7 +333,8 @@
         "buyPrice": 250,
         "sellPrice": 120
     },
-    "damaged_airdrop": {
+    {
+        "itemId": "damaged_airdrop",
         "category": "other",
         "name": "Damaged Airdrop",
         "emoteId": "1013473898194538516",
@@ -308,7 +342,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 30
     },
-    "laptop": {
+    {
+        "itemId": "laptop",
         "category": "other",
         "name": "Laptop",
         "emoteId": "1013473904444059658",
@@ -316,7 +351,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 680
     },
-    "smartphone": {
+    {
+        "itemId": "smartphone",
         "category": "other",
         "name": "Smartphone",
         "emoteId": "1013474375275663530",
@@ -324,7 +360,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 470
     },
-    "wallet": {
+    {
+        "itemId": "wallet",
         "category": "other",
         "name": "Wallet",
         "emoteId": "1013474376601059430",
@@ -332,7 +369,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 60
     },
-    "binoculars": {
+    {
+        "itemId": "binoculars",
         "category": "other",
         "name": "Binoculars",
         "emoteId": "1013473894969135124",
@@ -340,7 +378,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 40
     },
-    "cupcake": {
+    {
+        "itemId": "cupcake",
         "category": "other",
         "name": "Cupcake",
         "emoteId": "1013473896583929878",
@@ -348,7 +387,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 5
     },
-    "alcohol": {
+    {
+        "itemId": "alcohol",
         "category": "other",
         "name": "Alcohol",
         "emoteId": "1013473893610176512",
@@ -356,7 +396,8 @@
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 10
     },
-    "plastic": {
+    {
+        "itemId": "plastic",
         "category": "other",
         "name": "Plastic",
         "emoteId": "1046874601646477353",
@@ -364,7 +405,8 @@
         "buyPrice": 20,
         "sellPrice": 8
     },
-    "cloth": {
+    {
+        "itemId": "cloth",
         "category": "other",
         "name": "Cloth",
         "emoteId": "1046874600362999868",
@@ -372,7 +414,8 @@
         "buyPrice": 30,
         "sellPrice": 18
     },
-    "silicon": {
+    {
+        "itemId": "silicon",
         "category": "other",
         "name": "Silicon",
         "emoteId": "1046874604184031252",
@@ -380,7 +423,8 @@
         "buyPrice": 90,
         "sellPrice": 60
     },
-    "soccerball": {
+    {
+        "itemId": "soccer_ball",
         "category": "other",
         "name": "Soccer Ball",
         "emoteId": "991232154321305680",
@@ -390,7 +434,8 @@
         "multiplier": 3.0,
         "duration": 5400
     },
-    "shirt": {
+    {
+        "itemId": "shirt",
         "category": "other",
         "name": "Shirt",
         "emoteId": "1046874602632138764",
@@ -400,28 +445,31 @@
         "multiplier": 5.0,
         "duration": 10800
     },
-    "earbuds": {
+    {
+        "itemId": "earbuds",
         "category": "other",
         "name": "Earbuds",
         "emoteId": "1013473901499650159",
         "description": "An item used for production in a factory.",
-        "longDescription": "",
         "buyPrice": 85,
         "sellPrice": 40,
         "multiplier": 3.0,
         "duration": 21600
     },
-    "processor": {
+    {
+        "itemId": "processor",
         "category": "other",
         "name": "Processor",
         "emoteId": "991232152060563486",
         "description": "An item used for production in a factory.",
+        "longDescription": "",
         "buyPrice": 260,
         "sellPrice": 140,
         "multiplier": 2.0,
         "duration": 43200
     },
-    "graphics_card": {
+    {
+        "itemId": "graphics_card",
         "category": "other",
         "name": "Graphics Card",
         "emoteId": "991232150961659974",
@@ -431,7 +479,8 @@
         "multiplier": 2.0,
         "duration": 86400
     },
-    "desktop": {
+    {
+        "itemId": "desktop",
         "category": "other",
         "name": "Desktop",
         "emoteId": "991232149896298546",
@@ -441,7 +490,8 @@
         "multiplier": 2.0,
         "duration": 172800
     },
-    "server": {
+    {
+        "itemId": "server",
         "category": "other",
         "name": "Server",
         "emoteId": "991232153188847626",
@@ -451,7 +501,8 @@
         "multiplier": 2.0,
         "duration": 432000
     },
-    "crown": {
+    {
+        "itemId": "crown",
         "category": "rare_items",
         "name": "Crown",
         "emoteId": "956919874494533642",
@@ -460,7 +511,8 @@
         "buyPrice": 12000,
         "sellPrice": 3000
     },
-    "diamond": {
+    {
+        "itemId": "diamond",
         "category": "rare_items",
         "name": "Diamond",
         "emoteId": "956919892085452820",
@@ -468,7 +520,8 @@
         "longDescription": "You have a extremely low chance of getting this item using the dig command.",
         "sellPrice": 6000
     },
-    "gold": {
+    {
+        "itemId": "gold",
         "category": "rare_items",
         "name": "Gold",
         "emoteId": "956920061191393280",
@@ -477,7 +530,8 @@
         "buyPrice": 4000,
         "sellPrice": 2200
     },
-    "oil": {
+    {
+        "itemId": "oil",
         "category": "rare_items",
         "name": "Oil",
         "emoteId": "956920061178835004",
@@ -486,7 +540,8 @@
         "buyPrice": 2800,
         "sellPrice": 1600
     },
-    "santas_hat": {
+    {
+        "itemId": "santas_hat",
         "category": "rare_items",
         "name": "Santa's hat",
         "emoteId": "956920060843274291",
@@ -494,7 +549,8 @@
         "longDescription": "A hat with no purpose other than to flex.",
         "sellPrice": 2000
     },
-    "trophy": {
+    {
+        "itemId": "trophy",
         "category": "rare_items",
         "name": "Trophy",
         "emoteId": "956920061187194970",
@@ -502,7 +558,8 @@
         "longDescription": "You can only get it by winning things.",
         "sellPrice": 1800
     },
-    "christmas_tree": {
+    {
+        "itemId": "christmas_tree",
         "category": "rare_items",
         "name": "Christmas Tree",
         "emoteId": "956919874653933568",
@@ -510,7 +567,8 @@
         "longDescription": "You can collect this tree, but don't ever touch it!",
         "sellPrice": 900
     },
-    "ring": {
+    {
+        "itemId": "ring",
         "category": "rare_items",
         "name": "Ring",
         "emoteId": "1003949880466751508",
@@ -518,7 +576,8 @@
         "buyPrice": 1800,
         "sellPrice": 1000
     },
-    "toilet_paper": {
+    {
+        "itemId": "toilet_paper",
         "category": "rare_items",
         "name": "Toilet Paper",
         "emoteId": "1003949881746006066",
@@ -527,4 +586,4 @@
         "buyPrice": 700,
         "sellPrice": 400
     }
-}
+]

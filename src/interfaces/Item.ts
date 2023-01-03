@@ -1,5 +1,6 @@
 /* eslint-disable semi */
 export default interface Item {
+    itemId: string;
     category: string;
     name: string;
     emoteId: string;
