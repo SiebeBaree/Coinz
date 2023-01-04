@@ -107,7 +107,31 @@ export default class extends Command {
                         ]
                     }
                 ]
-            }
+            },
+            {
+                name: 'passive-mode',
+                type: ApplicationCommandOptionType.Subcommand,
+                description: 'Turn passive mode on or off.',
+                options: [
+                    {
+                        name: 'value',
+                        type: ApplicationCommandOptionType.String,
+                        description: 'Enable/Disable the setting.',
+                        required: true,
+                        choices: [
+                            {
+                                name: "Enable",
+                                value: "true",
+                                focused: true
+                            },
+                            {
+                                name: "Disable",
+                                value: "false"
+                            }
+                        ]
+                    }
+                ]
+            },
         ],
         category: "misc",
         extraFields: [],
@@ -124,6 +148,7 @@ export default class extends Command {
     async run(interaction, data) {
         if (interaction.options.getSubcommand() === "set-notification") return await this.configNotifications(interaction, data);
         if (interaction.options.getSubcommand() === "profile-color") return await this.configProfileColor(interaction, data);
+        if (interaction.options.getSubcommand() === "passive-mode") return await this.configPassiveMode(interaction, data);
         return await interaction.reply({ content: `Sorry, invalid arguments. Please try again.\nIf you don't know how to use this command use \`/help command ${this.info.name}\`.`, ephemeral: true });
     }
 
@@ -173,6 +198,34 @@ export default class extends Command {
         const embed = new EmbedBuilder()
             .setTitle(`Changed your profile color to \`${color}\`.`)
             .setColor(color)
+        await interaction.editReply({ embeds: [embed] });
+    }
+
+    async configPassiveMode(interaction, data) {
+        await interaction.deferReply({ ephemeral: true });
+        const value = interaction.options.getString('value') ?? "true";
+
+        // check cooldown
+        if (await bot.cooldown.isOnCooldown(interaction.user.id, "passive-mode")) {
+            return await interaction.editReply({ content: `:x: You have to wait ${msToTime(await bot.cooldown.getCooldown(interaction.user.id, "passive-mode") * 1000)} toggle your passive mode again.` });
+        }
+
+        // check if user already has passive mode enabled
+        if (data.user.passiveMode === (value === "true")) {
+            return await interaction.editReply({ content: `:x: You already have passive mode ${value === "true" ? "enabled" : "disabled"}.` });
+        }
+
+        // set cooldown
+        await bot.cooldown.setCooldown(interaction.user.id, "passive-mode", 86400 * 7);
+
+        await MemberModel.updateOne(
+            { id: interaction.member.id },
+            { $set: { passiveMode: value === "true" } }
+        );
+
+        const embed = new EmbedBuilder()
+            .setTitle(`Changed your passive mode to \`${value === "true" ? "enabled" : "disabled"}\`.`)
+            .setColor(value === "true" ? Colors.Green : Colors.Red)
         await interaction.editReply({ embeds: [embed] });
     }
 }

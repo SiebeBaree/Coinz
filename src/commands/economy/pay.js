@@ -35,6 +35,11 @@ export default class extends Command {
     }
 
     async run(interaction, data) {
+        if (data.user.passiveMode) {
+            await bot.cooldown.removeCooldown(interaction.user.id, this.info.name);
+            return await interaction.reply({ content: 'You can\'t use this command while having passive mode enabled.', ephemeral: true });
+        }
+
         const member = interaction.options.getUser('user');
         const amount = interaction.options.getInteger('amount');
 

@@ -501,6 +501,9 @@ export default class extends Command {
             if (company.company.balance < 25) return await interaction.reply({ content: `Your business needs at least :coin: 25 to steal supplies.`, ephemeral: true });
             await interaction.deferReply();
 
+            const ownerData = await bot.database.fetchMember(company.company.ownerId);
+            if (ownerData.passiveMode) return await interaction.editReply({ content: `The business can't steal supplies while the owner is in passive mode.` });
+
             if (await bot.cooldown.isOnCooldown(company.company.ownerId, "business-steal")) {
                 return await interaction.editReply({ content: `:x: Your company has to wait ${msToTime(await bot.cooldown.getCooldown(company.company.ownerId, "business-steal") * 1000)} to steal supplies again.` });
             }
