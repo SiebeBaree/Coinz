@@ -103,7 +103,7 @@
             "emoteId": "956861323352883230",
             "shortDescription": "This allows you to use the /dig command.",
             "longDescription": "This item allows you to use the /dig command. You can get a lot of different items from that command. It has a small chance to break.",
-            "buyPrice": 250,
+            "buyPrice": 0,
             "sellPrice": 80,
             "multiplier": 0.0,
             "duration": 0
@@ -139,7 +139,7 @@
             "emoteId": "1013473902778908694",
             "shortDescription": "Collecters item. Doesn't have a purpose (yet).",
             "longDescription": "This tool can be bought or found in other commands.",
-            "buyPrice": 220,
+            "buyPrice": 0,
             "sellPrice": 130,
             "multiplier": 0.0,
             "duration": 0
