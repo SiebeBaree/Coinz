@@ -10,7 +10,7 @@
             }
         },
         "success": {
-            "message": "",
+            "message": "You caught some fish with a total worth of :coin: %AMOUNT%!",
             "sellItems": false,
             "amount": {
                 "min": 1,
@@ -46,7 +46,7 @@
             }
         },
         "success": {
-            "message": "",
+            "message": "You caught some fish with a total worth of :coin: %AMOUNT%!",
             "sellItems": false,
             "amount": {
                 "min": 1,
