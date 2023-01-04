@@ -70,10 +70,57 @@ export default class Shop {
         return true;
     }
 
+    async checkForDuplicates(member: IMember): Promise<void> {
+        const inventory = member.inventory;
+
+        // get the item ids and index of the duplicates
+        const duplicates = inventory
+            .map((a: InventoryItem, i: number) => ({ id: a.itemId, index: i }))
+            .filter((a: { id: string; index: number }, i: number, arr: { id: string; index: number }[]) => {
+                return arr.findIndex((b) => b.id === a.id) !== i;
+            });
+
+        // if there are no duplicates, return
+        if (duplicates.length === 0) return;
+
+        // create a new inventory
+        const newInventory: InventoryItem[] = [];
+
+        // loop through the inventory
+        for (const item of inventory) {
+            // if the item is not a duplicate, add it to the new inventory
+            if (!duplicates.some((a) => a.id === item.itemId)) {
+                newInventory.push(item);
+                continue;
+            }
+
+            // if the item is a duplicate, add it to the new inventory
+            // and add the amount to the item in the new inventory
+            const duplicate = duplicates.find((a) => a.id === item.itemId);
+            if (duplicate === undefined) continue;
+
+            const index = newInventory.findIndex((a) => a.itemId === item.itemId);
+            if (index === -1) {
+                newInventory.push(item);
+            } else {
+                newInventory[index].amount += item.amount;
+            }
+        }
+
+        // update the member's inventory
+        await Member.updateOne(
+            { id: member.id },
+            { $set: { inventory: newInventory } },
+        );
+    }
+
     getCategories(): SelectMenuComponentOptionData[] {
         return [
             { label: "Tools", value: "tools" },
             { label: "Crops", value: "crops" },
+            { label: "Animals", value: "animals" },
+            { label: "Fish", value: "fish" },
+            { label: "Factory Products", value: "factory" },
             { label: "Rare Items", value: "rare_items" },
             { label: "Other", value: "other" },
             { label: "All Items", value: "all" },
