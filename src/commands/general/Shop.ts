@@ -114,7 +114,7 @@ export default class extends Command implements ICommand {
             await interaction.reply({ embeds: [embed] });
         } else {
             let page = 0;
-            const ItemsPerPage = 10;
+            const ItemsPerPage = 7;
 
             const options = this.client.items.getCategories();
             let defaultLabel = options[0].value;
