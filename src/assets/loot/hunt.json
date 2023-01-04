@@ -1,125 +1,89 @@
 {
     "hard": {
-        "failMessage": "You got caught hunting exotic animals. You paid a :coin: %AMOUNT% fine and had to return your rifle.",
-        "successMessage": "You caught some exotic animals without anyone noticing. You sold their meat and skin for :coin: %AMOUNT%",
-        "risk": 35,
-        "failReward": [
-            200,
-            350
-        ],
-        "loot": [
-            {
-                "itemId": "elephant",
-                "name": "Elephant",
-                "sellPrice": 300,
-                "emoteId": "987701600334266398"
-            },
-            {
-                "itemId": "penguin",
-                "name": "Penguin",
-                "sellPrice": 250,
-                "emoteId": "987701604746670130"
-            },
-            {
-                "itemId": "monkey",
-                "name": "Monkey",
-                "sellPrice": 275,
-                "emoteId": "1002149882167038002"
-            },
-            {
-                "itemId": "zebra",
-                "name": "Zebra",
-                "sellPrice": 225,
-                "emoteId": "1002149892493422652"
-            },
-            {
-                "itemId": "giraffe",
-                "name": "Giraffe",
-                "sellPrice": 260,
-                "emoteId": "1002149899862818836"
+        "fail": {
+            "risk": 35,
+            "message": "You got caught hunting exotic animals. You paid a :coin: %AMOUNT% fine and had to return your hunting rifle.",
+            "looseRequiredItem": true,
+            "fine": {
+                "min": 250,
+                "max": 600
             }
-        ]
+        },
+        "success": {
+            "message": "You stole some exotic animals without anyone noticing. The animals are worth :coin: %AMOUNT%.",
+            "sellItems": false,
+            "amount": {
+                "min": 1,
+                "max": 3
+            },
+            "loot": [
+                "elephant",
+                "penguin",
+                "monkey",
+                "zebra",
+                "giraffe",
+                "gorilla",
+                "panda",
+                "bear"
+            ]
+        }
     },
     "medium": {
-        "failMessage": "You got hunted down by a bear. You lost your rifle during the escape.",
-        "successMessage": "You hunted some animals in the forest and sold their meat for :coin: %AMOUNT%.",
-        "risk": 20,
-        "failReward": [
-            0,
-            0
-        ],
-        "loot": [
-            {
-                "itemId": "pig",
-                "name": "Pig",
-                "sellPrice": 24,
-                "emoteId": "987701605816233985"
-            },
-            {
-                "itemId": "cow",
-                "name": "Cow",
-                "sellPrice": 28,
-                "emoteId": "987701595720532088"
-            },
-            {
-                "itemId": "fox",
-                "name": "Fox",
-                "sellPrice": 35,
-                "emoteId": "987701602603384863"
-            },
-            {
-                "itemId": "bear",
-                "name": "Bear",
-                "sellPrice": 45,
-                "emoteId": "987701592486740008"
-            },
-            {
-                "itemId": "deer",
-                "name": "Deer",
-                "sellPrice": 30,
-                "emoteId": "987701596953661490"
+        "fail": {
+            "risk": 30,
+            "message": "You got hunted down by a bear. You lost your rifle during the escape and paid a :coin: %AMOUNT% hospital bill.",
+            "looseRequiredItem": true,
+            "fine": {
+                "min": 10,
+                "max": 100
             }
-        ]
+        },
+        "success": {
+            "message": "You hunted some animals in the forest and they are :coin: %AMOUNT% worth.",
+            "sellItems": false,
+            "amount": {
+                "min": 2,
+                "max": 4
+            },
+            "loot": [
+                "pig",
+                "fox",
+                "cow",
+                "bear",
+                "deer",
+                "raccoon",
+                "wolf",
+                "pig",
+                "deer"
+            ]
+        }
     },
     "easy": {
-        "failMessage": "Other hunters are better than you. You didn't kill any animals...",
-        "successMessage": "You found some small animals and sold them to a butcher for :coin: %AMOUNT%.",
-        "risk": 30,
-        "failReward": [
-            0,
-            0
-        ],
-        "loot": [
-            {
-                "itemId": "duck",
-                "name": "Duck",
-                "sellPrice": 18,
-                "emoteId": "987701599226974318"
-            },
-            {
-                "itemId": "rabbit",
-                "name": "Rabbit",
-                "sellPrice": 20,
-                "emoteId": "987701609368797195"
-            },
-            {
-                "itemId": "chicken",
-                "name": "Chicken",
-                "sellPrice": 16,
-                "emoteId": "987701594630004736"
-            },
-            {
-                "itemId": "bird",
-                "name": "Bird",
-                "sellPrice": 12,
-                "emoteId": "987701593543675934"
-            },
-            {
-                "itemId": "sheep",
-                "name": "Sheep",
-                "sellPrice": 19,
-                "emoteId": "987701610027319297"
+        "fail": {
+            "risk": 40,
+            "message": "Other hunters are better than you. You didn't kill any animals...",
+            "looseRequiredItem": true,
+            "fine": {
+                "min": 0,
+                "max": 0
             }
-        ]
+        },
+        "success": {
+            "message": "You killed some small animals and a butcher is willing to pay :coin: %AMOUNT% for those animals.",
+            "sellItems": false,
+            "amount": {
+                "min": 2,
+                "max": 6
+            },
+            "loot": [
+                "chicken",
+                "bird",
+                "sheep",
+                "rabbit",
+                "duck",
+                "lizard",
+                "badger"
+            ]
+        }
     }
 }
