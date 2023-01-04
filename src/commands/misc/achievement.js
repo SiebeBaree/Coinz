@@ -130,16 +130,6 @@ export default class extends Command {
                 return `${statsData.catchedFish || 0}/100`;
             }
         },
-        "gold_digger": {
-            name: "Gold Digger",
-            description: "Find 20 diamonds in total while using </dig:983096143179284516>.",
-            isValid: (memberData, statsData) => {
-                return statsData.diamondsFound >= 20;
-            },
-            progress: (memberData, statsData) => {
-                return `${statsData.diamondsFound || 0}/20`;
-            }
-        },
         "keep_on_grinding": {
             name: "Keep on Griding",
             description: "Get a daily streak of 30.",
