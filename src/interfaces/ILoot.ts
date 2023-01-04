@@ -1,28 +1,28 @@
 /* eslint-disable semi */
-interface ILootItem {
-    itemId: string;
-    name: string;
-    emoteId: string;
-    sellPrice: number;
-    amount?: number;
+export interface IRange {
+    min: number;
+    max: number;
 }
 
-interface IComplexLootCategory {
-    failMessage: string;
-    successMessage: string;
-    risk: number;
-    failReward: [number, number];
-    loot: ILootItem[];
+export interface ILootCategory {
+    fail: {
+        risk: number;
+        message: string;
+        looseRequiredItem: boolean;
+        fine: IRange;
+    };
+    success: {
+        message: string;
+        sellItems: boolean;
+        amount: IRange;
+        loot: string[];
+    };
 }
 
-export type ISimpleLoot = {
-    loot: ILootItem[];
+export interface ILoot {
+    hard: ILootCategory;
+    medium?: ILootCategory;
+    easy: ILootCategory;
 }
 
-export type IComplexLoot = {
-    hard: IComplexLootCategory;
-    medium: IComplexLootCategory;
-    easy: IComplexLootCategory;
-}
-
-export type ILoot = ISimpleLoot | IComplexLoot;
+export default ILoot;
