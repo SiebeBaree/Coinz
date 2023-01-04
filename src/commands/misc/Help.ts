@@ -4,7 +4,7 @@ import ICommand from "../../interfaces/ICommand";
 import Command from "../../structs/Command";
 import Helpers from "../../utils/Helpers";
 import { readdirSync, readFileSync } from "fs";
-import { ILoot } from "../../interfaces/ILoot";
+import { ILoot, ILootCategory } from "../../interfaces/ILoot";
 
 export default class extends Command implements ICommand {
     guides = {
@@ -75,11 +75,11 @@ export default class extends Command implements ICommand {
                         choices: [
                             {
                                 name: "Fish",
-                                value: "simple.fish",
+                                value: "fish",
                             },
                             {
                                 name: "Hunt",
-                                value: "complex.hunt",
+                                value: "hunt",
                             },
                         ],
                     },
@@ -238,54 +238,27 @@ export default class extends Command implements ICommand {
     }
 
     async getLoot(interaction: ChatInputCommandInteraction) {
-        const command = interaction.options.getString("command", true).toLowerCase().split(".");
+        const command = interaction.options.getString("command", true).toLowerCase();
 
         const embed = new EmbedBuilder()
-            .setAuthor({ name: `Loot Table for ${command[1]}`, iconURL: this.client.user?.avatarURL() || this.client.config.embed.icon })
+            .setAuthor({ name: `Loot Table for ${command}`, iconURL: this.client.user?.avatarURL() || this.client.config.embed.icon })
             .setColor(<ColorResolvable>this.client.config.embed.color)
             .setFooter({ text: this.client.config.embed.footer });
 
-        const lootTable = this.lootTables.get(command[1]);
+        const lootTable = this.lootTables.get(command);
 
         if (!lootTable) {
-            return await interaction.reply({ content: `\`${command[1]}\` is not a valid command. Use </help categories:983096143439335467> to view all commands.`, ephemeral: true });
+            return await interaction.reply({ content: `\`${command}\` is not a valid command. Use </help categories:983096143439335467> to view all commands.`, ephemeral: true });
         }
 
-        if ("hard" in lootTable) {
-            const lootTableKeys = Object.keys(lootTable);
-
-            for (let i = 0; i < lootTableKeys.length; i++) {
-                const lootCategory = lootTable[lootTableKeys[i] as ("hard" | "medium" | "easy")];
-
-                let lootStr = "";
-                for (let j = 0; j < lootCategory.loot.length; j++) {
-                    if (typeof lootCategory.loot[j] === "object") {
-                        const item = lootCategory.loot[j];
-                        lootStr += `<:${item.itemId}:${item.emoteId}> ${item.name} - :coin: ${item.sellPrice}\n`;
-                    } else {
-                        lootStr += `${lootCategory.loot[j]}\n`;
-                    }
-                }
-
-                if (lootStr.length <= 0) lootStr = "No Loot";
-                embed.addFields({ name: `${lootTableKeys[i].toUpperCase()}`, value: lootStr, inline: true });
-            }
-        } else {
-            const lootArr = lootTable.loot;
-
-            let lootStr = "";
-            for (let i = 0; i < lootArr.length; i++) {
-                const item = lootArr[i];
-                lootStr += `<:${item.itemId}:${item.emoteId}> ${item.name} - :coin: ${item.sellPrice}\n`;
-            }
-
-            embed.addFields({ name: "Possible Loot", value: lootStr, inline: false });
-        }
+        if (lootTable.hard) embed.addFields({ name: command === "fish" ? "Premium Fishing Rod" : "HARD", value: this.getLootFieldValue(lootTable.hard), inline: true });
+        if (lootTable.medium) embed.addFields({ name: "MEDIUM", value: this.getLootFieldValue(lootTable.medium), inline: true });
+        if (lootTable.easy) embed.addFields({ name: command === "fish" ? "Fishing Rod" : "EASY", value: this.getLootFieldValue(lootTable.easy), inline: true });
 
         await interaction.reply({ embeds: [embed] });
     }
 
-    getCommandUsage(commandName: string, options: APIApplicationCommandOption[], insert = ""): string {
+    private getCommandUsage(commandName: string, options: APIApplicationCommandOption[], insert = ""): string {
         let usage = "";
 
         for (let i = 0; i < options.length; i++) {
@@ -310,7 +283,15 @@ export default class extends Command implements ICommand {
         return usage === "" ? `\`/${commandName}\`` : usage.endsWith("`") ? usage : usage + "`";
     }
 
-    getRequiredSyntax(name: string, isRequired = false): string {
+    private getRequiredSyntax(name: string, isRequired = false): string {
         return isRequired ? `<${name}>` : `[${name}]`;
+    }
+
+    private getLootFieldValue(loot: ILootCategory): string {
+        return loot.success.loot.map(itemId => {
+            const item = this.client.items.getById(itemId);
+            if (!item) return "";
+            return `<:${item.itemId}:${item.emoteId}> **${item.name}**${item.sellPrice ? ` ― :coin: ${item.sellPrice}` : ""}`;
+        }).join("\n");
     }
 }
