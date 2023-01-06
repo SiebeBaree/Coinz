@@ -34,8 +34,8 @@ export default class User {
         return amount;
     }
 
-    static async removeBetMoney(formattedBet: string, member: IMember, isPremium = false, removeMoney = true, minBet = 50, maxBet = -1): Promise<string | number> {
-        maxBet = maxBet === -1 ? (isPremium ? 10_000 : 5_000) : maxBet;
+    static async removeBetMoney(formattedBet: string, member: IMember, removeMoney = true, minBet = 50, maxBet = -1): Promise<string | number> {
+        maxBet = maxBet === -1 ? (member.premium.active ? 10_000 : 5_000) : maxBet;
 
         let bet = 0;
         if (["all", "max"].includes(formattedBet.toLowerCase())) {
