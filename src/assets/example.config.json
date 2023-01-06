@@ -8,5 +8,6 @@
         "footer": "",
         "icon": ""
     },
-    "invalidCommand": ""
+    "invalidCommand": "",
+    "premiumCommand": ""
 }
