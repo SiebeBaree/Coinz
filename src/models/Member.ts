@@ -41,6 +41,7 @@ export interface IMember {
     tickets: number;
     experience: number;
     job: string;
+    business: string;
     streak: number;
     lastStreak: Date;
     passiveMode: boolean;
@@ -102,6 +103,7 @@ const memberSchema = new Schema<IMember>({
     tickets: { type: Number, default: 0 },
     experience: { type: Number, default: 0 },
     job: { type: String, default: "" },
+    business: { type: String, default: "" },
     streak: { type: Number, default: 0 },
     lastStreak: { type: Date, default: new Date(0) },
     passiveMode: { type: Boolean, default: false },

@@ -45,16 +45,17 @@ export default class extends Command implements ICommand {
         const investments = await this.calculateInvestmentsValue(selectedUserData.stocks);
         let selectedOption = "profile";
 
-        let job = selectedUserData.job === "" ? "Unemployed" : selectedUserData.job;
-        if (job.startsWith("business")) {
-            job = selectedUserData.job === "business" ? "CEO of " : "Working at ";
+        const workJob = selectedUserData.job === "" ? "Unemployed" : selectedUserData.job;
+        let businessJob = "Not working at a business.";
 
-            const ownerId = selectedUserData.job === "business" ? interaction.user.id : selectedUserData.job.split("-")[0];
-            const business = await Database.getBusiness(ownerId);
-            job += business ? business.name : " a business";
+        if (selectedUserData.business !== "") {
+            const business = await Database.getBusiness(selectedUserData.business);
+
+            businessJob = selectedUserData.id === business.ownerId ? "CEO of " : "Working at ";
+            businessJob += business ? business.name : " a business";
         }
 
-        const message = await interaction.editReply({ embeds: [this.createProfileEmbed(selectedUser, selectedUserData, inventory, investments, job)], components: [...this.createSelectMenu(selectedOption)] });
+        const message = await interaction.editReply({ embeds: [this.createProfileEmbed(selectedUser, selectedUserData, inventory, investments, workJob, businessJob)], components: [...this.createSelectMenu(selectedOption)] });
         const collector = message.createMessageComponentCollector({ filter: (i) => i.user.id === interaction.user.id, max: 5, time: 90_000, componentType: ComponentType.StringSelect });
 
         collector.on("collect", async (i) => {
@@ -67,7 +68,7 @@ export default class extends Command implements ICommand {
                     embed = await this.createCooldownEmbed(selectedUser, selectedUserData.profileColor || this.client.config.embed.color);
                     break;
                 default:
-                    embed = this.createProfileEmbed(selectedUser, selectedUserData, inventory, investments, job);
+                    embed = this.createProfileEmbed(selectedUser, selectedUserData, inventory, investments, workJob, businessJob);
                     break;
             }
 
@@ -108,7 +109,7 @@ export default class extends Command implements ICommand {
         return returnObj;
     }
 
-    createProfileEmbed(user: User, userData: IMember, inventory: ICalulatedObject, stocks: ICalulatedObject, job: string): EmbedBuilder {
+    createProfileEmbed(user: User, userData: IMember, inventory: ICalulatedObject, stocks: ICalulatedObject, workJob: string, businessJob: string): EmbedBuilder {
         const createProgressBar = (current: number): string => {
             const progress = Math.round(current / 10);
             const bar = [];
@@ -132,7 +133,7 @@ export default class extends Command implements ICommand {
                 { name: "Premium Status", value: userData.premium.active && expireTimestamp > 0 ? `:star: **Premium:** :white_check_mark:\n:hourglass: **Premium Expires:** <t:${expireTimestamp}:D>\n` : ":star: **Premium:** :x:", inline: false },
                 { name: "Balance", value: `:dollar: **Wallet:** :coin: ${userData.wallet}\n:bank: **Bank:** :coin: ${userData.bank} / ${userData.bankLimit}\n:moneybag: **Net Worth:** :coin: ${userData.wallet + userData.bank}\n:credit_card: **Tickets:** <:ticket:1032669959161122976> ${userData.tickets || 0}\n:gem: **Inventory Worth:** \`${inventory.items} items\` valued at :coin: ${inventory.value}`, inline: false },
                 { name: "Investment Portfolio", value: `:dollar: **Worth:** :coin: ${stocks.value}\n:credit_card: **Amount:** ${stocks.items}\n:moneybag: **Invested:** :coin: ${stocks.initialValue}`, inline: false },
-                { name: "Misc", value: `:briefcase: **Current Job:** ${job}\n:sparkles: **Daily Streak:** ${userData.streak - 1 > 0 ? userData.streak - 1 : 0} days\n:seedling: **Farm:** ${userData.plots.length} plots`, inline: false },
+                { name: "Misc", value: `:briefcase: **Current Job:** ${workJob}\n:office: **Business:** ${businessJob}\n:sparkles: **Daily Streak:** ${userData.streak - 1 > 0 ? userData.streak - 1 : 0} days\n:seedling: **Farm:** ${userData.plots.length} plots`, inline: false },
                 { name: "Badges (Achievements)", value: `${userData.badges.length <= 0 ? "None" : userData.badges.map((id) => `<:${id}:${Achievement.getById(id)?.emoji}>`).join(" ")}`, inline: false },
             );
         return embed;
