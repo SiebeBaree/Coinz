@@ -2,11 +2,9 @@
     "carrot": 6,
     "tomato": 4,
     "lettuce": 3,
-    "shovel": 1,
     "fishing_rod": 1,
     "hunting_rifle": 1,
     "cookie": 30,
-    "apple": 18,
     "rubber_duck": 20,
     "money1": 50,
     "money2": 100,
@@ -24,8 +22,6 @@
     "earbuds": 1,
     "damaged_airdrop": 2,
     "cupcake": 15,
-    "axe": 1,
-    "bag": 1,
     "alcohol": 4,
     "wallet": 2
 }

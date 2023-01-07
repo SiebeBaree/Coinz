@@ -151,7 +151,7 @@
             "emoteId": "1013473900123926618",
             "shortDescription": "Collect more from the beg command.",
             "longDescription": "With this tool you can collect more money with the bag command. This also makes it easier for people to steal your bag and leave you with no money.",
-            "buyPrice": 150,
+            "buyPrice": 0,
             "sellPrice": 40,
             "multiplier": 0.0,
             "duration": 0
