@@ -41,7 +41,7 @@ export default class extends Command {
         let memberData = await bot.database.fetchMember(member.id);
 
         if (member.id !== interaction.user.id) return await interaction.editReply({ embeds: [this.getEmbed(member, memberData, "none")] });
-        let priceToIncrease = this.calculateBankLimitPrice(memberData.bankLimit || 7500);
+        let priceToIncrease = this.calculateBankLimitPrice(memberData.bankLimit);
         let hasEnoughMoney = memberData.wallet >= priceToIncrease;
         let interactionFinished = false;
 
@@ -58,17 +58,18 @@ export default class extends Command {
             if (i.customId === 'balance_add-limit' && !interactionFinished) {
                 memberData = await bot.database.fetchMember(member.id);
 
-                priceToIncrease = this.calculateBankLimitPrice(memberData.bankLimit || 7500);
-                hasEnoughMoney = memberData.wallet >= priceToIncrease;
+                let logBL = memberData.bankLimit;
 
-                let oldBankLimit = memberData.bankLimit || 7500;
+                priceToIncrease = this.calculateBankLimitPrice(memberData.bankLimit);
+                hasEnoughMoney = memberData.wallet >= priceToIncrease;
                 memberData.wallet -= priceToIncrease;
                 memberData.bankLimit *= 2;
+                bot.logger.log(`${interaction.user.id} (${interaction.user.tag}) increased their bank limit from ${logBL} to ${memberData.bankLimit} for ${priceToIncrease} coins.`);
 
                 if (!hasEnoughMoney) return await i.reply({ content: ':x: You do not have enough money in your wallet to increase your bank limit.', ephemeral: true });
-                await Member.updateOne({ id: member.id }, { $inc: { wallet: -priceToIncrease, bankLimit: oldBankLimit } });
+                await Member.updateOne({ id: member.id }, { $inc: { wallet: -priceToIncrease }, $set: { bankLimit: memberData.bankLimit } });
 
-                priceToIncrease = this.calculateBankLimitPrice(memberData.bankLimit || 7500);
+                priceToIncrease = this.calculateBankLimitPrice(memberData.bankLimit);
                 hasEnoughMoney = memberData.wallet >= priceToIncrease;
 
                 if (!hasEnoughMoney) interactionFinished = true;
