@@ -4,6 +4,7 @@ import ICommand from "../../interfaces/ICommand";
 import Command from "../../structs/Command";
 import Member, { IMember } from "../../models/Member";
 import User from "../../utils/User";
+import Cooldown from "../../utils/Cooldown";
 
 export default class extends Command implements ICommand {
     readonly info = {
@@ -38,10 +39,6 @@ export default class extends Command implements ICommand {
     }
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
-        if (this.getDayOfYear(new Date()) === this.getDayOfYear(member.lastStreak)) {
-            await interaction.reply({ content: ":x: You have already claimed your daily reward today.", ephemeral: true });
-            return;
-        }
         await interaction.deferReply();
 
         let alertMsg = "";
@@ -53,6 +50,9 @@ export default class extends Command implements ICommand {
         }
 
         const streakReward = this.calculateReward(member.streak, member.premium.active);
+
+        const secondsUntilEndOfTheDay = 86400 - Math.floor(Date.now() / 1000) % 86400;
+        await Cooldown.setCooldown(interaction.user.id, "daily", secondsUntilEndOfTheDay);
 
         await Member.updateOne({ id: interaction.user.id }, {
             $inc: { wallet: streakReward, spins: member.premium.active ? 1 : 0 },
@@ -69,7 +69,7 @@ export default class extends Command implements ICommand {
         await interaction.editReply({ embeds: [embed], components: [this.row] });
     }
 
-    checkDailyStreak(previousStreak: Date) {
+    private checkDailyStreak(previousStreak: Date) {
         if (previousStreak.getFullYear() === 1970) return true;
 
         const isLeapYear = previousStreak.getFullYear() % 4 === 0;
@@ -80,11 +80,11 @@ export default class extends Command implements ICommand {
         return now - lastStreak >= 0 && now - lastStreak <= 2;
     }
 
-    getDayOfYear(date: Date) {
+    private getDayOfYear(date: Date) {
         return Math.floor((date.getMilliseconds() - new Date(date.getFullYear(), 0, 0).getMilliseconds()) / 1000 / 60 / 60 / 24);
     }
 
-    calculateReward(days: number, isPremium = false) {
+    private calculateReward(days: number, isPremium = false) {
         days = days > this.maxDays ? this.maxDays : days;
         return this.defaultReward + (days * (isPremium ? this.premiumStreakMoney : this.dailyStreakMoney));
     }
