@@ -7,7 +7,6 @@ import Work from "./Work";
 import List from "./List";
 import Quit from "./Quit";
 import Apply from "./Apply";
-import DriverLicense from "./DriverLicense";
 
 export default class extends Command implements ICommand {
     readonly info = {
@@ -47,12 +46,6 @@ export default class extends Command implements ICommand {
                     },
                 ],
             },
-            {
-                name: "driver-license",
-                type: ApplicationCommandOptionType.Subcommand,
-                description: "Get your driver license to drive a car.",
-                options: [],
-            },
         ],
         category: "general",
     };
@@ -74,9 +67,6 @@ export default class extends Command implements ICommand {
                 break;
             case "apply":
                 await new Apply(this.client, this.info).execute(interaction, member);
-                break;
-            case "driver-license":
-                await new DriverLicense(this.client, this.info).execute(interaction, member);
                 break;
             default:
                 await interaction.reply({ content: this.client.config.invalidCommand, ephemeral: true });
