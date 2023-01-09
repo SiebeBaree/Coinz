@@ -26,7 +26,7 @@ export default class Database {
     }
 
     static async getInvestment(ticker: string): Promise<IInvestment | null> {
-        return await Investment.findOne({ ticket: ticker });
+        return await Investment.findOne({ ticker: ticker });
     }
 
     static async getCooldown(userId: string, command: string): Promise<ICooldown | null> {
