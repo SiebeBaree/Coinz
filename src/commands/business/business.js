@@ -468,7 +468,7 @@ export default class extends Command {
 
         if (amount >= itemAmount) {
             await Business.updateOne(
-                { ownerId: interaction.member.id },
+                { ownerId: company.company.ownerId },
                 {
                     $pull: { 'inventory': { itemId: item.itemId } },
                     $inc: { balance: price }
@@ -476,7 +476,7 @@ export default class extends Command {
             );
         } else {
             await Business.updateOne(
-                { ownerId: interaction.member.id, 'inventory.itemId': item.itemId },
+                { ownerId: company.company.ownerId, 'inventory.itemId': item.itemId },
                 { $inc: { balance: price, 'inventory.$.amount': -amount } }
             );
         }
