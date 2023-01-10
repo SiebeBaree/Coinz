@@ -206,11 +206,11 @@ export default class extends Command implements ICommand {
         const ownedStock = member.stocks.find((s) => s.ticker === stock.ticker);
         if (ownedStock) {
             await Member.updateOne({ id: interaction.user.id, "stocks.ticker": stock.ticker }, {
-                $inc: { "stocks.$.quantity": amount, "stocks.$.buyPrice": price, wallet: -price },
+                $inc: { "stocks.$.amount": amount, "stocks.$.buyPrice": price, wallet: -price },
             });
         } else {
             await Member.updateOne({ id: interaction.user.id }, {
-                $push: { stocks: { ticker: stock.ticker, quantity: amount, buyPrice: price } },
+                $push: { stocks: { ticker: stock.ticker, amount: amount, buyPrice: price } },
                 $inc: { wallet: -price },
             });
         }
@@ -256,7 +256,7 @@ export default class extends Command implements ICommand {
         } else {
             await Member.updateOne({ id: interaction.user.id, "stocks.ticker": stock.ticker }, {
                 $inc: {
-                    "stocks.$.quantity": -amount,
+                    "stocks.$.amount": -amount,
                     "stocks.$.buyPrice": -Math.floor(amount / parseFloat(ownedStock.amount.toString()) * parseFloat(ownedStock.buyPrice.toString())),
                     wallet: sellPrice,
                 },
