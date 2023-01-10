@@ -8,7 +8,7 @@ export interface IInvestment {
     buyPrice: number;
 }
 
-interface IPlot {
+export interface IPlot {
     plotId: number;
     status: string;
     harvestOn: number;
