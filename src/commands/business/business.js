@@ -497,6 +497,10 @@ export default class extends Command {
         if (!validItems.includes(itemId)) return await interaction.reply({ content: `The item ID you have entered is invalid. Please try </factory list-products:1040552927288377345>.`, ephemeral: true });
         const product = await bot.database.fetchItem(itemId);
 
+        const getNewRisk = (oldRisk, newRisk) => {
+            return oldRisk + newRisk > 85 ? 85 : (oldRisk + newRisk < 5 ? 5 : oldRisk + newRisk);
+        };
+
         if (option === "steal") {
             if (company.company.balance < 25) return await interaction.reply({ content: `Your business needs at least :coin: 25 to steal supplies.`, ephemeral: true });
             await interaction.deferReply();
@@ -511,7 +515,7 @@ export default class extends Command {
 
             if (!commandPassed(company.company.risk)) {
                 const amount = randomNumber(1, 4);
-                const newRisk = company.company.risk + 10 > 80 ? 80 - company.company.risk : 10;
+                const newRisk = getNewRisk(company.company.risk, 10);
 
                 if (checkItem(company.company.inventory, itemId)) {
                     await Business.updateOne({ ownerId: company.company.ownerId }, { $inc: { risk: newRisk } });
@@ -528,7 +532,7 @@ export default class extends Command {
                 return await interaction.editReply({ content: `You have successfully stolen ${amount}x <:${product.itemId}:${product.emoteId}> from another business. The risk went up to ${company.company.risk + newRisk}%.` });
             } else {
                 const amount = randomNumber(100, 750);
-                const newRisk = company.company.risk - 5 >= 0 ? -5 : 0;
+                const newRisk = getNewRisk(company.company.risk, 3);
                 await Business.updateOne({ ownerId: company.company.ownerId }, { $inc: { balance: -amount, risk: newRisk } });
                 return await interaction.editReply({ content: `You got caught stealing... You paid a :coin: ${amount} fine. The risk went down to ${company.company.risk + newRisk}%.` });
             }
@@ -539,7 +543,7 @@ export default class extends Command {
             if (!product) return await interaction.reply({ content: `The item with the ID \`${itemId}\` doesn't exist.` });
             if (totalPrice > company.company.balance) return await interaction.reply({ content: `You don't have enough money in your wallet.` });
             await interaction.deferReply();
-            const newRisk = company.company.risk - 15 >= 0 ? -15 : 0;
+            const newRisk = getNewRisk(company.company.risk, -5);
 
             if (checkItem(company.company.inventory, itemId)) {
                 await Business.updateOne({ ownerId: company.company.ownerId }, { $inc: { balance: -totalPrice, risk: newRisk } });
