@@ -8,7 +8,13 @@ const keys = Object.keys(rewards);
 export const processAirdrop = async (guildData, shardIds) => {
     const guild = await bot.guilds.fetch(guildData.id);
     if (!guild || !shardIds.includes(guild.shardId)) return;
-    const channel = await guild.channels.fetch(guildData.airdropChannel);
+
+    let channel;
+    try {
+        channel = await guild.channels.fetch(guildData.airdropChannel);
+    } catch {
+        return await resetAirdrop(guildData.id);
+    }
 
     if (!guild.members.me.permissions.has(PermissionsBitField.Flags.SendMessages) || !guild.members.me.permissionsIn(channel).has(PermissionsBitField.Flags.SendMessages)) {
         return await resetAirdrop(guildData.id);
