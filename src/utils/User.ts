@@ -1,6 +1,14 @@
+import { IBusiness, IEmployee } from "../models/Business";
 import Member, { IMember } from "../models/Member";
 import Database from "./Database";
 import Helpers from "./Helpers";
+
+export type BusinessData = {
+    id: string;
+    business?: IBusiness;
+    isOwner: boolean;
+    employee: IEmployee;
+}
 
 export default class User {
     static async addMoney(userId: string, amount: number): Promise<void> {
@@ -52,5 +60,30 @@ export default class User {
 
         if (removeMoney) await this.removeMoney(member.id, bet);
         return bet;
+    }
+
+    static async getBusiness(member: IMember): Promise<BusinessData> {
+        const data: BusinessData = {
+            id: member.id,
+            employee: {
+                userId: member.id,
+                role: "employee",
+                payout: 15,
+                hiredOn: Math.floor(Date.now() / 1000),
+                moneyEarned: 0,
+                timesWorked: 0,
+            },
+            isOwner: false,
+        };
+        if (member.business === "") return data;
+
+        const business = await Database.getBusiness(member.business);
+        if (!business) return data;
+
+        data.business = business;
+        data.employee = business.employees.find((e) => e.userId === member.id) ?? data.employee;
+        if (data.employee?.role === "ceo") data.isOwner = true;
+
+        return data;
     }
 }
