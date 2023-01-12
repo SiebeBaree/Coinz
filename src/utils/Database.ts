@@ -10,7 +10,6 @@ export default class Database {
         if (guild) return guild;
 
         const newGuild = new Guild({ id: guildId });
-
         if (fetch) await newGuild.save();
         return newGuild;
     }
@@ -20,7 +19,6 @@ export default class Database {
         if (member) return member;
 
         const newMember = new Member({ id: memberId });
-
         if (fetch) await newMember.save();
         return newMember;
     }
@@ -33,12 +31,11 @@ export default class Database {
         return await Cooldown.findOne({ id: userId, command: command });
     }
 
-    static async getBusiness(ownerId: string, name?: string, fetch = false): Promise<IBusiness> {
-        const business = await Business.findOne({ ownerId: ownerId });
+    static async getBusiness(name: string, fetch = false): Promise<IBusiness> {
+        const business = await Business.findOne({ name: name });
         if (business) return business;
 
-        const newBusiness = new Business({ ownerId: ownerId, name: name ?? `Business ${ownerId}` });
-
+        const newBusiness = new Business({ name: name });
         if (fetch) await newBusiness.save();
         return newBusiness;
     }

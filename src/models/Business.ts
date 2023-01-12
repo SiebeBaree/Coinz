@@ -1,10 +1,10 @@
 import { Schema, model } from "mongoose";
 import InventoryItem from "../interfaces/InventoryItem";
 
-interface IEmployee {
+export interface IEmployee {
     userId: string;
     role: string;
-    wage: number;
+    payout: number;
     hiredOn: number;
     moneyEarned: number;
     timesWorked: number;
@@ -20,7 +20,6 @@ interface IFactory {
 }
 
 export interface IBusiness {
-    ownerId: string;
     name: string;
     balance: number;
     taxRate: number;
@@ -33,7 +32,7 @@ export interface IBusiness {
 const Employee = new Schema<IEmployee>({
     userId: { type: String, required: true },
     role: { type: String, default: "employee" },
-    wage: { type: Number, default: 15 },
+    payout: { type: Number, default: 15, min: 10, max: 100 },
     hiredOn: { type: Number, default: Math.floor(Date.now() / 1000) },
     moneyEarned: { type: Number, default: 0 },
     timesWorked: { type: Number, default: 0 },
@@ -54,8 +53,7 @@ const Factory = new Schema<IFactory>({
 });
 
 const businessSchema = new Schema<IBusiness>({
-    ownerId: { type: String, required: true, unique: true, index: true },
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true, index: true },
     balance: { type: Number, default: 0 },
     taxRate: { type: Number, default: 0 },
     risk: { type: Number, default: 0 },
