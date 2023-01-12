@@ -50,8 +50,8 @@ export default class extends Command implements ICommand {
 
         if (selectedUserData.business !== "") {
             const business = await Database.getBusiness(selectedUserData.business);
-
-            businessJob = selectedUserData.id === business.ownerId ? "CEO of " : "Working at ";
+            const position = business.employees.find((e) => e.userId === selectedUser.id);
+            businessJob = position && position.role === "ceo" ? "CEO of " : "Working at ";
             businessJob += business ? business.name : " a business";
         }
 
