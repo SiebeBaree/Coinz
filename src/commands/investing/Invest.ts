@@ -123,7 +123,7 @@ export default class extends Command implements ICommand {
             const embed = new EmbedBuilder()
                 .setTitle(`${stock.type} - ${stock.fullName}`)
                 .setColor(<ColorResolvable>this.client.config.embed.color)
-                .setThumbnail(`https://cdn.coinzbot.xyz/ticket/${stock.ticker.toUpperCase()}.png`)
+                .setThumbnail(`https://cdn.coinzbot.xyz/v3/ticker${stock.ticker.toUpperCase()}.png`)
                 .addFields(
                     { name: "Info", value: `:envelope: **Type:** ${stock.type}\n:tickets: **Ticker:** ${stock.ticker}\n:apple: **Full Name:** ${stock.fullName}\n:clock1: **Last Updated:** <t:${stock.lastUpdated}:R>`, inline: true },
                     { name: "Statistics", value: `:moneybag: **Price:** :coin: ${stock.price}\n${icon} **Change:** ${changePercentage}%`, inline: true },
@@ -218,7 +218,7 @@ export default class extends Command implements ICommand {
         const embed = new EmbedBuilder()
             .setTitle(`You just bought ${amount}x ${stock.fullName}`)
             .setColor(<ColorResolvable>this.client.config.embed.color)
-            .setThumbnail(`https://cdn.coinzbot.xyz/ticker/${stock.ticker.toUpperCase()}.png`)
+            .setThumbnail(`https://cdn.coinzbot.xyz/v3/ticker/${stock.ticker.toUpperCase()}.png`)
             .addFields(
                 { name: "Info", value: `:envelope: **Type:** ${stock.type}\n:tickets: **Ticker:** ${stock.ticker}\n:apple: **Full Name:** ${stock.fullName}`, inline: true },
                 { name: "Stats", value: `:moneybag: **Unit Price:** :coin: ${stock.price}\n:1234: **Amount:** ${amount}x\n:gem: **Buy Price:** :coin: ${price}`, inline: true },
@@ -266,7 +266,7 @@ export default class extends Command implements ICommand {
         const embed = new EmbedBuilder()
             .setTitle(`You sold ${amount}x ${stock.fullName}`)
             .setColor(<ColorResolvable>this.client.config.embed.color)
-            .setThumbnail(`https://cdn.coinzbot.xyz/ticker/${stock.ticker.toUpperCase()}.png`)
+            .setThumbnail(`https://cdn.coinzbot.xyz/v3/ticker/${stock.ticker.toUpperCase()}.png`)
             .addFields(
                 { name: "Info", value: `:envelope: **Type:** ${stock.type}\n:tickets: **Ticker:** ${stock.ticker}\n:apple: **Full Name:** ${stock.fullName}`, inline: true },
                 { name: "Stats", value: `:moneybag: **Unit Price:** :coin: ${stock.price}\n:1234: **Amount:** ${amount}x\n:gem: **Sell Price:** :coin: ${sellPrice}`, inline: true },
