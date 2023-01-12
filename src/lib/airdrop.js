@@ -85,6 +85,7 @@ export const processAirdrop = async (guildData, shardIds) => {
 
                 for (let i = 0; i < mappedKeys.length; i++) {
                     if (mappedKeys[i].startsWith("money")) continue;
+                    if (mappedKeys[i].startsWith("ticket")) continue;
                     const userData = await fetchMember(userId);
                     await addItem(userId, mappedKeys[i], rewards[mappedKeys[i]] * mappedLoot[mappedKeys[i]], userData.inventory);
                 }
