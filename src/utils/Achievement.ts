@@ -13,10 +13,10 @@ const achievements: IAchievement[] = [
     {
         id: "hard_work",
         name: "Work Hard, Become Rich",
-        description: "Complete your work 50 times.",
+        description: "Complete your work 150 times.",
         emoji: "1013717949309272104",
-        hasAchieved: (member: IMember) => member.stats.timesWorked >= 50,
-        progress: (member: IMember) => `${member.stats.timesWorked ?? 0}/50`,
+        hasAchieved: (member: IMember) => member.stats.timesWorked >= 150,
+        progress: (member: IMember) => `${member.stats.timesWorked ?? 0}/150`,
     },
     {
         id: "big_spender",
@@ -29,7 +29,7 @@ const achievements: IAchievement[] = [
     {
         id: "going_places",
         name: "Going Places",
-        description: "Create a company and have 5 employees.",
+        description: "Create a company and have 7 employees.",
         emoji: "1013717946763329536",
         hasAchieved: () => false,
         progress: () => "",
@@ -61,10 +61,10 @@ const achievements: IAchievement[] = [
     {
         id: "touch_grass",
         name: "Go touch some grass",
-        description: "Execute 500 commands or more.",
+        description: "Execute 1,000 commands or more.",
         emoji: "1013717954459873310",
-        hasAchieved: (member: IMember) => member.stats.commandsExecuted >= 500,
-        progress: (member: IMember) => `${member.stats.commandsExecuted ?? 0}/500`,
+        hasAchieved: (member: IMember) => member.stats.commandsExecuted >= 1000,
+        progress: (member: IMember) => `${member.stats.commandsExecuted ?? 0}/1,000`,
     },
     {
         id: "local_fish_dealer",
@@ -77,18 +77,18 @@ const achievements: IAchievement[] = [
     {
         id: "keep_on_grinding",
         name: "Keep on Griding",
-        description: "Get a daily streak of 30.",
+        description: "Get a daily streak of 50.",
         emoji: "1013717950685007902",
-        hasAchieved: (member: IMember) => member.streak >= 30,
-        progress: (member: IMember) => `${member.streak ?? 0}/30`,
+        hasAchieved: (member: IMember) => member.streak >= 50,
+        progress: (member: IMember) => `${member.streak ?? 0}/50`,
     },
     {
         id: "feeling_lucky",
         name: "Feeling Lucky",
-        description: "Spin the lucky wheel 50 times.",
+        description: "Spin the lucky wheel 100 times.",
         emoji: "1013717944972349472",
-        hasAchieved: (member: IMember) => member.stats.luckyWheelSpins >= 50,
-        progress: (member: IMember) => `${member.stats.luckyWheelSpins ?? 0}/50`,
+        hasAchieved: (member: IMember) => member.stats.luckyWheelSpins >= 100,
+        progress: (member: IMember) => `${member.stats.luckyWheelSpins ?? 0}/100`,
     },
     {
         id: "easy_blackjack",
