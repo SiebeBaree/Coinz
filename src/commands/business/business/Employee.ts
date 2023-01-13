@@ -114,6 +114,14 @@ export default class extends Command {
                     await Member.updateOne({ userId: employee.id }, { $set: { business: data.business.name } });
                     await Business.updateOne({ name: data.business.name }, { $push: { employees: { userId: employee.id, role: "employee" } } });
 
+                    const ceo = data.business.employees.find((e) => e.role === "ceo");
+                    if (ceo) {
+                        const ceoData = await Database.getMember(ceo.userId, true);
+                        if (data.business.employees.length + 1 === 8 && !ceoData.badges.includes("going_places")) {
+                            await Member.updateOne({ userId: interaction.user.id }, { $push: { badges: "going_places" } });
+                        }
+                    }
+
                     const embed = new EmbedBuilder()
                         .setTitle(`${employee.tag} joined ${data.business.name}`)
                         .setDescription(`${employee.tag} has signed a contract with ${data.business.name} as an employee.`)
