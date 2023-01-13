@@ -1,7 +1,7 @@
 import Bot from "./structures/Bot.js"
 import { ActivityType, GatewayIntentBits, Partials } from "discord.js"
 import Cluster from "discord-hybrid-sharding"
-import { AutoPoster } from "topgg-autoposter"
+import topgg from "@top-gg/sdk"
 import Stats from "sharding-stats"
 import mongoose from "mongoose"
 const { connect } = mongoose;
@@ -80,7 +80,6 @@ bot.on('ready', async () => {
 
     if (bot.cluster.count - 1 === bot.cluster.id) {
         if (process.env.NODE_ENV === "production") {
-            AutoPoster(process.env.API_TOPGG, bot)
             const { default: app } = await import("./lib/api.js");
 
             const port = process.env.PORT || 8700;
@@ -89,6 +88,15 @@ bot.on('ready', async () => {
 
         // Load Bot Crons Once
         await import("./lib/botCrons.js");
+
+        const api = new topgg.Api(process.env.API_TOPGG);
+        setInterval(async () => {
+            const guilds = await bot.cluster.broadcastEval(c => c.guilds.cache.size);
+            await api.postStats({
+                serverCount: guilds.reduce((prev, val) => prev + val, 0),
+                shardCount: bot.cluster.info.TOTAL_SHARDS,
+            });
+        }, 1800000);
     }
 
     // Load Cluster Crons
