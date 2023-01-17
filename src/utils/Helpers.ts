@@ -51,4 +51,25 @@ export default class Helpers {
     static formatNumber(number: number): string {
         return FORMATTER.format(number);
     }
+
+    static parseNumbers(numberStr: string): number[] {
+        // remove all bad characters
+        numberStr = numberStr.replace(/[^0-9,-]/g, "");
+        const numbers: Set<number> = new Set();
+
+        numberStr.split(",").forEach(commaSeparated => {
+            if (!commaSeparated) return;
+            const hyphenNumbers = commaSeparated.split("-");
+            if (hyphenNumbers.length === 2) {
+                const start = parseInt(hyphenNumbers[0], 10);
+                const end = parseInt(hyphenNumbers[1], 10);
+                for (let i = start; i <= end; i++) {
+                    numbers.add(i);
+                }
+            } else {
+                numbers.add(parseInt(hyphenNumbers[0], 10));
+            }
+        });
+        return Array.from(numbers);
+    }
 }
