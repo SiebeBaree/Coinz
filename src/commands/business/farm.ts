@@ -76,7 +76,7 @@ export default class extends Command implements ICommand {
         }
     }
 
-    async getPlots(interaction: ChatInputCommandInteraction, member: IMember) {
+    private async getPlots(interaction: ChatInputCommandInteraction, member: IMember) {
         let finishedCommand = false;
         const message = await interaction.reply({ embeds: [await this.getEmbed(interaction.user, member)], components: [this.getButtons(member)], fetchReply: true });
         const collector = message.createMessageComponentCollector({ filter: (i) => i.user.id === interaction.user.id, max: 8, idle: 20_000, time: 90_000, componentType: ComponentType.Button });
@@ -120,7 +120,7 @@ export default class extends Command implements ICommand {
         });
     }
 
-    async getPlant(interaction: ChatInputCommandInteraction, member: IMember) {
+    private async getPlant(interaction: ChatInputCommandInteraction, member: IMember) {
         const plotIds = interaction.options.getString("plot-id", true);
         const cropId = interaction.options.getString("crop", true);
         const force = interaction.options.getString("force") === "yes" ? true : false;
@@ -130,7 +130,7 @@ export default class extends Command implements ICommand {
             return;
         }
 
-        const plantedPlots = this.parsePlotIds(plotIds);
+        const plantedPlots = Helpers.parseNumbers(plotIds);
 
         if (plantedPlots.length <= 0) {
             await interaction.reply({ content: "That is not a valid plot ID. Please enter a number or plant on multiple plots using this syntax:\nUse `,` to select another plot or `-` to select a range of plots.\n__Example:__ `1,3-6,9-11` will plant that crop on plot 1, 3, 4, 5, 6, 9, 10 and 11.", ephemeral: true });
@@ -150,7 +150,7 @@ export default class extends Command implements ICommand {
             const alreadyPlanted = plantedPlots.filter((plotId) => member.plots[plotId - 1].status !== "empty");
 
             if (alreadyPlanted.length > 0) {
-                await interaction.reply({ content: `You already planted something on plot${alreadyPlanted.length > 1 ? "s" : ""} ${alreadyPlanted.join(", ")}.\nUse \`/farm plant plot-id: ${plotIds} crop: ${cropId} force: yes\` to re-plant.`, ephemeral: true });
+                await interaction.reply({ content: `You already planted something on plot${alreadyPlanted.length > 1 ? "s" : ""} ${alreadyPlanted.join(", ")}.\nUse \`/${this.info.name} plant plot-id: ${plotIds} crop: ${cropId} force: yes\` to re-plant.`, ephemeral: true });
                 return;
             }
         }
@@ -173,7 +173,7 @@ export default class extends Command implements ICommand {
         await interaction.editReply({ content: `You successfully planted <:${crop.itemId}:${crop.emoteId}> **${crop.name}** on plot${plantedPlots.length > 1 ? "s" : ""} ${plantedPlots.join(", ")}.` });
     }
 
-    async getEmbed(user: User, member: IMember): Promise<EmbedBuilder> {
+    private async getEmbed(user: User, member: IMember): Promise<EmbedBuilder> {
         const plotLimit = member.premium.active ? 15 : 9;
         const now = Math.floor(Date.now() / 1000);
 
@@ -217,7 +217,7 @@ export default class extends Command implements ICommand {
                 cropStatus = `<:${item.itemId}:${item.emoteId}> in ${Helpers.msToTime((plot.harvestOn * 1000) - Date.now())}`;
             } else if (plot.status === "rotten") {
                 icon = ":wilted_rose:";
-                cropStatus = "Crops are rotten.";
+                cropStatus = "Crops are rotten";
             } else if (plot.status === "harvest") {
                 const item = this.client.items.getById(plot.crop);
                 if (!item) continue;
@@ -237,7 +237,7 @@ export default class extends Command implements ICommand {
         return embed;
     }
 
-    getButtons(member: IMember, disabled = false): ActionRowBuilder<ButtonBuilder> {
+    private getButtons(member: IMember, disabled = false): ActionRowBuilder<ButtonBuilder> {
         const [harvestStatus, waterStatus, buyPlotStatus] = this.getButtonStatus(member);
         return new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()
@@ -258,7 +258,7 @@ export default class extends Command implements ICommand {
         );
     }
 
-    getButtonStatus(member: IMember): boolean[] {
+    private getButtonStatus(member: IMember): boolean[] {
         return [
             member.plots.filter((plot) => plot.status === "harvest" || plot.status === "rotten").length === 0,
             member.plots.filter((plot) => plot.status === "growing").length === 0 || member.lastWatered + this.waterCooldown > Math.floor(Date.now() / 1000),
@@ -266,15 +266,15 @@ export default class extends Command implements ICommand {
         ];
     }
 
-    getPlotPrice(plotNumber: number): number {
+    private getPlotPrice(plotNumber: number): number {
         return plotNumber * 2500 + 2500;
     }
 
-    getVisualRow(icon: string): string {
+    private getVisualRow(icon: string): string {
         return icon.repeat(6);
     }
 
-    async pressWaterButton(member: IMember): Promise<void> {
+    private async pressWaterButton(member: IMember): Promise<void> {
         for (let i = 0; i < member.plots.length; i++) {
             if (member.plots[i].status === "growing") {
                 await Member.updateOne({ id: member.id, "plots.plotId": member.plots[i].plotId }, { $inc: { "plots.$.harvestOn": -3600 } });
@@ -284,7 +284,7 @@ export default class extends Command implements ICommand {
         await Member.updateOne({ id: member.id }, { $set: { lastWater: Math.floor(Date.now() / 1000) } });
     }
 
-    async pressHarvestButton(member: IMember): Promise<void> {
+    private async pressHarvestButton(member: IMember): Promise<void> {
         const harvestedPlots = member.plots.filter((plot) => plot.status === "harvest");
         const rottenPlots = member.plots.filter((plot) => plot.status === "rotten");
 
@@ -297,7 +297,7 @@ export default class extends Command implements ICommand {
 
         // add items to the inventory of the member
         for (const [itemId, amount] of Object.entries(items)) {
-            await this.client.items.addItem(itemId, member, amount);
+            await this.client.items.addItem(itemId, member, amount * 6);
         }
 
         // set the status of all harvested and rottenplots to "empty"
@@ -308,7 +308,7 @@ export default class extends Command implements ICommand {
         }
     }
 
-    async buyNewPlot(member: IMember): Promise<boolean> {
+    private async buyNewPlot(member: IMember): Promise<boolean> {
         if (member.wallet < this.getPlotPrice(member.plots.length)) return false;
 
         const plotObj: IPlot = {
@@ -325,26 +325,5 @@ export default class extends Command implements ICommand {
         });
 
         return true;
-    }
-
-    parsePlotIds(plotIdsStr: string): number[] {
-        // remove all bad characters
-        const cleanedPlotIdsStr = plotIdsStr.replace(/[^0-9,-]/g, "");
-        const plotIds: Set<number> = new Set();
-
-        cleanedPlotIdsStr.split(",").forEach(commaSeparated => {
-            if (!commaSeparated) return;
-            const hyphenPlots = commaSeparated.split("-");
-            if (hyphenPlots.length === 2) {
-                const start = parseInt(hyphenPlots[0], 10);
-                const end = parseInt(hyphenPlots[1], 10);
-                for (let i = start; i <= end; i++) {
-                    plotIds.add(i);
-                }
-            } else {
-                plotIds.add(parseInt(hyphenPlots[0], 10));
-            }
-        });
-        return Array.from(plotIds);
     }
 }
