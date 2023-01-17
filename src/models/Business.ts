@@ -10,10 +10,9 @@ export interface IEmployee {
     timesWorked: number;
 }
 
-interface IFactory {
+export interface IFactory {
     factoryId: number;
     level: number;
-    experience: number;
     production: string;
     status: string;
     produceOn: number;
@@ -46,9 +45,8 @@ const Item = new Schema<InventoryItem>({
 const Factory = new Schema<IFactory>({
     factoryId: { type: Number, required: true },
     level: { type: Number, default: 0 },
-    experience: { type: Number, default: 0 },
     production: { type: String, default: "none" },
-    status: { type: String, default: "idle" },
+    status: { type: String, default: "standby" },
     produceOn: { type: Number, default: 0 },
 });
 
