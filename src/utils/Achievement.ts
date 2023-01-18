@@ -46,7 +46,7 @@ const achievements: IAchievement[] = [
         id: "farmers_life",
         name: "Farmer's Life",
         description: "Buy at least 9 plots for your farm.",
-        emoji: "1013717943948951562",
+        emoji: "1060197317908639807",
         hasAchieved: (member: IMember) => member.plots.length >= 9,
         progress: (member: IMember) => `${member.plots.length ?? 0}/9`,
     },
