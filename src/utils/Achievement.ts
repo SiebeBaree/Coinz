@@ -76,7 +76,7 @@ const achievements: IAchievement[] = [
     },
     {
         id: "keep_on_grinding",
-        name: "Keep on Griding",
+        name: "Keep on Grinding",
         description: "Get a daily streak of 50.",
         emoji: "1013717950685007902",
         hasAchieved: (member: IMember) => member.streak >= 50,
