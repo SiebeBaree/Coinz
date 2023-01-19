@@ -1,4 +1,4 @@
-import { IBusiness, IEmployee } from "../models/Business";
+import Business, { IBusiness, IEmployee } from "../models/Business";
 import Member, { IMember } from "../models/Member";
 import Database from "./Database";
 import Helpers from "./Helpers";
@@ -85,5 +85,36 @@ export default class User {
         if (data.employee?.role === "ceo") data.isOwner = true;
 
         return data;
+    }
+
+    static async addEmployee(name: string, member: IMember, role = "employee", payout = 15): Promise<boolean> {
+        // find business
+        const business = await Business.findOne({ name: name });
+        if (!business) {
+            return false;
+        }
+
+        // check if user is already an employee
+        if (business.employees.find((e) => e.userId === member.id)) {
+            return false;
+        }
+
+        await Business.updateOne(
+            { name: name },
+            {
+                $push: {
+                    employees: {
+                        userId: member.id,
+                        role: role,
+                        payout: payout,
+                        hiredOn: Math.floor(Date.now() / 1000),
+                        moneyEarned: 0,
+                        timesWorked: 0,
+                    },
+                },
+            },
+        );
+
+        return true;
     }
 }
