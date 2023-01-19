@@ -44,7 +44,7 @@ export default class extends Command {
             await interaction.deferReply({ ephemeral: true });
             const cooldown = await Cooldown.getRemainingCooldown(interaction.user.id, "business.create");
             if (cooldown > 0) {
-                await interaction.reply({ content: `:x: You have to wait ${Helpers.msToTime(cooldown * 1000)} to create another business.`, ephemeral: true });
+                await interaction.editReply({ content: `:x: You have to wait ${Helpers.msToTime(cooldown * 1000)} to create another business.` });
                 return;
             }
 
@@ -56,12 +56,13 @@ export default class extends Command {
 
             await Cooldown.setCooldown(interaction.user.id, "business.create", 86400 * 14);
             await Database.getBusiness(name, true);
+            await interaction.editReply({ content: `You have successfully created a business named \`${name}\` for :coin: 4000.` });
+
+            await User.addEmployee(name, member, "ceo", 200);
             await Member.updateOne(
                 { id: interaction.user.id },
                 { $set: { business: name }, $inc: { wallet: -4000 } },
             );
-
-            await interaction.editReply({ content: `You have successfully created a business named \`${name}\` for :coin: 4000.` });
         } else {
             await interaction.reply({ content: `You already own or work at a business.\nPlease leave your business using </${this.info.name} leave:1048340073470513155>.`, ephemeral: true });
         }

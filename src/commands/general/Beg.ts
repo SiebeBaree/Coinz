@@ -25,7 +25,7 @@ export default class extends Command implements ICommand {
 
         if (Helpers.getRandomNumber(1, 100) <= 70) {
             await User.addMoney(member.id, money);
-            const experience = User.addExperience(member.id);
+            const experience = await User.addExperience(member.id);
             await interaction.editReply(`You begged for money and got :coin: **${money}**. You also gained **${experience} XP**.`);
         } else {
             await interaction.editReply("You begged for money but no one gave you any.");

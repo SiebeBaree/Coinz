@@ -22,7 +22,7 @@ export default class extends Command {
         if (name) {
             const business = await Database.getBusiness(name);
 
-            if (!business) {
+            if (business.employees.length === 0) {
                 await interaction.reply({
                     content: `No legal business with the name \`${name}\` exists.`,
                     ephemeral: true,
@@ -40,12 +40,12 @@ export default class extends Command {
         }
 
         let category = "overview";
-        const message = await interaction.reply({ embeds: [this.getEmbed(data, category)], components: [this.getSelectMenu(category, false, name !== null)], fetchReply: true });
+        const message = await interaction.reply({ embeds: [this.getEmbed(data, category, name === null)], components: [this.getSelectMenu(category, false, name !== null)], fetchReply: true });
         const collector = message.createMessageComponentCollector({ max: 8, time: 90_000, componentType: ComponentType.StringSelect });
 
         collector.on("collect", async (i) => {
             category = i.values[0];
-            await i.update({ embeds: [this.getEmbed(data, category)], components: [this.getSelectMenu(category, false, name !== null)] });
+            await i.update({ embeds: [this.getEmbed(data, category, name === null)], components: [this.getSelectMenu(category, false, name !== null)] });
         });
 
         collector.on("end", async () => {
@@ -53,7 +53,7 @@ export default class extends Command {
         });
     }
 
-    private getEmbed(data: BusinessData, category: string): EmbedBuilder {
+    private getEmbed(data: BusinessData, category: string, ownBusiness = false): EmbedBuilder {
         const embed = new EmbedBuilder()
             .setColor(<ColorResolvable>this.client.config.embed.color)
             .setFooter({ text: `${data.business?.name ?? "Business"} in Coinz`, iconURL: this.client.user?.avatarURL() ?? undefined });
@@ -63,7 +63,7 @@ export default class extends Command {
             return embed;
         }
 
-        if (category === "inventory") {
+        if (category === "inventory" && ownBusiness) {
             const items = [];
             let worth = 0;
             for (let i = 0; i < data.business.inventory.length; i++) {
@@ -97,19 +97,24 @@ export default class extends Command {
                 worth += item.sellPrice * invItem.amount;
             }
 
-            embed.setTitle(`Overview of ${data.business.name}`);
-            embed.addFields(
+            const fields = [
                 {
                     name: "Business Information",
                     value: `:sunglasses: **CEO:** <@${this.getCEO(data.business) ?? "No CEO Found..."}>\n:credit_card: **Bank Balance:** :coin: ${data.business.balance}\n:moneybag: **Worth:** :coin: ${worth}\n:factory: **Factories:** \`${data.business.factories.length}\``,
                     inline: false,
                 },
-                {
+            ];
+
+            if (!ownBusiness) {
+                fields.push({
                     name: "Your Status",
                     value: `**Position:** ${positions[data.employee.role as keyof typeof positions]}\n**Payout:** ${data.employee.payout}%\n**Money Collected:** :coin: ${data.employee.moneyEarned}\n**Times Worked:** ${data.employee.timesWorked}x`,
                     inline: false,
-                },
-            );
+                });
+            }
+
+            embed.setTitle(`Overview of ${data.business.name}`);
+            embed.addFields(fields);
         }
 
         return embed;
