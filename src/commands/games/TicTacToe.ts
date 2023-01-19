@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ColorResolvable, ComponentType, EmbedBuilder, User as DjsUser } from "discord.js";
+import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, ColorResolvable, ComponentType, EmbedBuilder, User as DjsUser } from "discord.js";
 import Bot from "../../structs/Bot";
 import ICommand from "../../interfaces/ICommand";
 import Command from "../../structs/Command";
@@ -115,10 +115,9 @@ export default class extends Command implements ICommand {
             fetchReply: true,
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const filter = async (i: any) => {
-            if (i.member.id === gameData.currentUser) return true;
-            await i.reply({ content: "It's not your turn or you are not a player in this game.", ephemeral: true, target: i.member });
+        const filter = async (i: ButtonInteraction) => {
+            if (i.user.id === gameData.currentUser) return true;
+            await i.reply({ content: "It's not your turn or you are not a player in this game.", ephemeral: true, target: i.user });
             return false;
         };
 
@@ -175,14 +174,15 @@ export default class extends Command implements ICommand {
             if (gameData.finishedCommand) return;
 
             if (gameData.gameHasStarted) {
-                if (gameData.hostWon === null && !gameData.tie) {
-                    await User.addMoney(gameData.currentUser === interaction.user.id ? gameData.secondUser.id : interaction.user.id, bet);
-                    await interaction.followUp({ content: `**${gameData.currentUser === interaction.user.id ? gameData.secondUser.username : interaction.user.username}** has won the game because ${gameData.currentUser === interaction.user.id ? interaction.user.username : gameData.secondUser.username} took too long to respond!` });
-                }
-
                 await interaction.editReply({ components: this.getButtons(gameData, true) });
+
+                if (gameData.hostWon === null && !gameData.tie) {
+                    await interaction.followUp({ content: `**${gameData.currentUser === interaction.user.id ? gameData.secondUser.username : interaction.user.username}** has won the game because ${gameData.currentUser === interaction.user.id ? interaction.user.username : gameData.secondUser.username} took too long to respond!` });
+                    await User.addMoney(gameData.currentUser === interaction.user.id ? gameData.secondUser.id : interaction.user.id, bet);
+                }
             } else {
                 await interaction.editReply({ components: [this.getConfirmButtons(true)] });
+                await User.addMoney(interaction.user.id, bet);
             }
         });
     }
