@@ -113,6 +113,7 @@ export default class extends Command implements ICommand {
         const secondMember = await Database.getMember(secondUser.id);
         if (bet > secondMember.wallet) {
             await interaction.reply({ content: `**${secondUser.tag}** doesn't have enough money in their wallet.`, ephemeral: true });
+            await User.addMoney(interaction.user.id, bet);
             return await Cooldown.removeCooldown(interaction.user.id, this.info.name);
         }
 
@@ -189,6 +190,7 @@ export default class extends Command implements ICommand {
                 await interaction.editReply({ components: this.getButtons(gameData, true) });
                 await interaction.followUp({ content: `**${gameData.currentUserId === gameData.user1.id ? gameData.user2.tag : gameData.user1.tag}** didn't make a move in time, you both lost your bet...`, ephemeral: true });
             } else {
+                await User.addMoney(interaction.user.id, bet);
                 await interaction.editReply({ content: `**${secondUser.tag}** didn't accept the game.`, components: this.getConfirmButton(true) });
             }
         });
