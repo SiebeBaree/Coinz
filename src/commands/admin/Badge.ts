@@ -36,7 +36,7 @@ export default class extends Command implements ICommand {
             {
                 name: "badge",
                 description: "The id or name of the badge to add/remove",
-                type: ApplicationCommandOptionType.Integer,
+                type: ApplicationCommandOptionType.String,
                 required: true,
                 min_length: 1,
                 max_length: 32,
