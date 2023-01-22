@@ -73,7 +73,7 @@ export default class extends Command implements ICommand {
                 return;
             }
 
-            bet = Math.min(member.wallet, member.premium.active ? 10_000 : 5_000);
+            bet = Math.min(member.wallet, member.premium.active && member.premium.tier === 2 ? 15_000 : (member.premium.active ? 10_000 : 5_000));
         } else {
             const newBet = await User.removeBetMoney(betStr, member);
 
