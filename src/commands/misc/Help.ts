@@ -189,7 +189,7 @@ export default class extends Command implements ICommand {
         const commandName = interaction.options.getString("command", true).toLowerCase();
         const command = this.client.commands.get(commandName);
 
-        if (!command) {
+        if (!command || command.info.category === "admin") {
             return await interaction.reply({ content: `\`/${commandName}\` is not a valid command. Use </help categories:983096143439335467> to view all commands.`, ephemeral: true });
         }
 
