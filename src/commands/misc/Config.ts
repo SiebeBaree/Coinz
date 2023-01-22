@@ -8,8 +8,8 @@ import Helpers from "../../utils/Helpers";
 
 export default class extends Command implements ICommand {
     readonly info = {
-        name: "user-config",
-        description: "Change settings for your profile.",
+        name: "config",
+        description: "Change settings for your account.",
         options: [
             {
                 name: "notification",
@@ -49,56 +49,93 @@ export default class extends Command implements ICommand {
                 ],
             },
             {
-                name: "profile-color",
-                type: ApplicationCommandOptionType.Subcommand,
-                description: "Change your profile color. (Only for premium users)",
+                name: "profile",
+                type: ApplicationCommandOptionType.SubcommandGroup,
+                description: "Change your profile settings.",
                 options: [
                     {
-                        name: "color",
-                        type: ApplicationCommandOptionType.String,
-                        description: "The color you want to change to.",
-                        required: true,
-                        choices: [
+                        name: "profile-color",
+                        type: ApplicationCommandOptionType.Subcommand,
+                        description: "Change your profile color. (Only for premium users)",
+                        options: [
                             {
-                                name: "Default",
-                                value: this.client.config.embed.color,
-                                focused: true,
+                                name: "color",
+                                type: ApplicationCommandOptionType.String,
+                                description: "The color you want to change to.",
+                                required: true,
+                                choices: [
+                                    {
+                                        name: "Default",
+                                        value: this.client.config.embed.color,
+                                        focused: true,
+                                    },
+                                    {
+                                        name: "White",
+                                        value: "#F2F3F5",
+                                    },
+                                    {
+                                        name: "Black",
+                                        value: "#000001",
+                                    },
+                                    {
+                                        name: "Red",
+                                        value: "#CF0A0A",
+                                    },
+                                    {
+                                        name: "Blue",
+                                        value: "#009EFF",
+                                    },
+                                    {
+                                        name: "Pink",
+                                        value: "#F56EB3",
+                                    },
+                                    {
+                                        name: "Purple",
+                                        value: "#A555EC",
+                                    },
+                                    {
+                                        name: "Green",
+                                        value: "#00A758",
+                                    },
+                                    {
+                                        name: "Dark Grey",
+                                        value: "#2F3136",
+                                    },
+                                    {
+                                        name: "Teal",
+                                        value: "#00B9A8",
+                                    },
+                                ],
                             },
+                        ],
+                    },
+                    {
+                        name: "set-birthday",
+                        type: ApplicationCommandOptionType.Subcommand,
+                        description: "Set your birthday. (Only for premium users)",
+                        options: [
                             {
-                                name: "White",
-                                value: "#F2F3F5",
+                                name: "birthday",
+                                type: ApplicationCommandOptionType.String,
+                                description: "Your birthday in the format of DD/MM/YYYY.",
+                                required: true,
+                                min_length: 8,
+                                max_length: 10,
                             },
+                        ],
+                    },
+                    {
+                        name: "set-bio",
+                        type: ApplicationCommandOptionType.Subcommand,
+                        description: "Set your bio for your profile. (Only for premium users)",
+                        options: [
                             {
-                                name: "Black",
-                                value: "#000001",
-                            },
-                            {
-                                name: "Red",
-                                value: "#CF0A0A",
-                            },
-                            {
-                                name: "Blue",
-                                value: "#009EFF",
-                            },
-                            {
-                                name: "Pink",
-                                value: "#F56EB3",
-                            },
-                            {
-                                name: "Purple",
-                                value: "#A555EC",
-                            },
-                            {
-                                name: "Green",
-                                value: "#00A758",
-                            },
-                            {
-                                name: "Dark Grey",
-                                value: "#2F3136",
-                            },
-                            {
-                                name: "Teal",
-                                value: "#00B9A8",
+                                name: "bio",
+                                type: ApplicationCommandOptionType.String,
+                                description: "Your bio for your profile, leave blank to remove your bio.",
+                                required: true,
+                                min_length: 0,
+                                max_length: 100,
                             },
                         ],
                     },
