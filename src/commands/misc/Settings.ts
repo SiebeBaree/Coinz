@@ -7,8 +7,8 @@ import Guild from "../../models/Guild";
 
 export default class extends Command implements ICommand {
     readonly info = {
-        name: "server-config",
-        description: "Change settings for the server.",
+        name: "settings",
+        description: "Change settings for THIS SERVER.",
         options: [
             {
                 name: "airdrop",
@@ -73,7 +73,7 @@ export default class extends Command implements ICommand {
         const guild = await Database.getGuild(interaction.guildId as string);
 
         if (guild.airdrops.channel === "") {
-            await interaction.editReply({ content: "You need to set a channel to receive airdrops in first. Use </server-config airdrop set-channel:1048340073470513152> ." });
+            await interaction.editReply({ content: "You need to set a channel to receive airdrops in first. Use </server-settings airdrop set-channel:1048340073470513152> ." });
             return;
         }
 
