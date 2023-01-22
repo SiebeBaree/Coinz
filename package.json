@@ -37,6 +37,7 @@
   },
   "homepage": "https://github.com/SiebeBaree/Coinz#readme",
   "devDependencies": {
+    "@types/bad-words": "^3.0.1",
     "@typescript-eslint/eslint-plugin": "^5.47.1",
     "concurrently": "^7.6.0",
     "eslint": "^8.30.0",
@@ -44,6 +45,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "bad-words": "^3.0.4",
     "discord-hybrid-sharding": "^2.0.4",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
