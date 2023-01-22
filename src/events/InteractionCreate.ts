@@ -33,7 +33,7 @@ export default class InteractionCreate implements IEvent {
 
             if (process.env.NODE_ENV === "production") {
                 const cooldownTime = command.info.cooldown === undefined || command.info.cooldown === 0
-                    ? (member.premium.active
+                    ? (member.premium.active === true
                         ? client.config.premiumTimeout
                         : client.config.defaultTimeout)
                     : command.info.cooldown;
@@ -61,7 +61,7 @@ export default class InteractionCreate implements IEvent {
                 client.logger.error((error as Error).stack || (error as Error).message);
 
                 if (interaction.replied) {
-                    await interaction.editReply({ content: "There was an error while executing this command!" });
+                    await interaction.followUp({ content: "There was an error while executing this command!", ephemeral: true });
                 } else {
                     await interaction.reply({ content: "There was an error while executing this command!", ephemeral: true });
                 }
