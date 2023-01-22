@@ -17,6 +17,12 @@ export default class extends Command implements ICommand {
                 description: "The user to steal from.",
                 required: true,
             },
+            {
+                name: "use-bomb",
+                type: ApplicationCommandOptionType.Boolean,
+                description: "Use a bomb to increase your chance of success. Default: true",
+                required: false,
+            },
         ],
         category: "general",
         extraFields: [
@@ -31,6 +37,7 @@ export default class extends Command implements ICommand {
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
         const victim = interaction.options.getUser("user", true);
+        const bombActivated = interaction.options.getBoolean("use-bomb", false) ?? true;
 
         if (victim.bot || victim.id === interaction.user.id) {
             await interaction.reply({ content: "You can't steal from a bot or yourself.", ephemeral: true });
@@ -47,22 +54,42 @@ export default class extends Command implements ICommand {
             return;
         }
 
-        await interaction.deferReply();
-        const victemMember = await Database.getMember(victim.id);
+        const bombInInventory = this.client.items.hasInInventory("bomb", member);
+        if (!bombInInventory && bombActivated) {
+            await interaction.reply({ content: "You don't have a bomb to use.", ephemeral: true });
+            return;
+        }
 
-        if (victemMember.wallet <= 0) {
+        await interaction.deferReply();
+        const victimMember = await Database.getMember(victim.id);
+
+        if (victimMember.wallet <= 0) {
             await interaction.editReply({ content: `**${victim.tag}** doesn't have any money to steal.` });
             return;
         }
 
-        const memberWon = Math.random() < 0.35;
+        const padlockInInventory = this.client.items.hasInInventory("padlock", victimMember);
+
+        let chance = 0.35;
+        if (padlockInInventory) chance -= 0.10;
+        if (bombInInventory) chance += 0.05;
+
+        const memberWon = Math.random() < chance;
         const amount = Math.floor(Math.random() * (Math.floor(member.wallet * (memberWon ? 0.5 : 0.4)) - 0 + 1) + 0);
 
         if (memberWon) {
             await User.addMoney(interaction.user.id, Math.floor(amount * 0.8));
             await User.removeMoney(victim.id, amount);
         } else {
+            if (padlockInInventory && Math.random() <= 0.25) {
+                await this.client.items.removeItem("padlock", victimMember);
+            }
+
             await User.removeMoney(interaction.user.id, amount);
+        }
+
+        if (bombActivated) {
+            await this.client.items.removeItem("bomb", member);
         }
 
         const embed = new EmbedBuilder()
