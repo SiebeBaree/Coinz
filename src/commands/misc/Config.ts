@@ -5,6 +5,8 @@ import Command from "../../structs/Command";
 import Member, { IMember } from "../../models/Member";
 import Cooldown from "../../utils/Cooldown";
 import Helpers from "../../utils/Helpers";
+import moment from "moment";
+import Filter from "bad-words";
 
 export default class extends Command implements ICommand {
     readonly info = {
@@ -169,8 +171,13 @@ export default class extends Command implements ICommand {
         category: "misc",
     };
 
+    private readonly filter: Filter;
+
     constructor(bot: Bot, file: string) {
         super(bot, file);
+        this.filter = new Filter({
+            list: ["dank memer"],
+        });
     }
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
@@ -181,6 +188,12 @@ export default class extends Command implements ICommand {
             case "profile-color":
                 await this.configProfileColor(interaction, member);
                 break;
+            case "set-birthday":
+                await this.configSetBirthday(interaction, member);
+                break;
+            case "set-bio":
+                await this.configSetBio(interaction, member);
+                break;
             case "passive-mode":
                 await this.configPassiveMode(interaction, member);
                 break;
@@ -189,7 +202,7 @@ export default class extends Command implements ICommand {
         }
     }
 
-    async configNotification(interaction: ChatInputCommandInteraction, member: IMember) {
+    private async configNotification(interaction: ChatInputCommandInteraction, member: IMember) {
         const notification = interaction.options.getString("notification", true);
         const value = interaction.options.getString("value", true);
 
@@ -211,7 +224,7 @@ export default class extends Command implements ICommand {
         await interaction.editReply({ content: `Successfully ${value === "true" ? "enabled" : "disabled"} the notification.` });
     }
 
-    async configProfileColor(interaction: ChatInputCommandInteraction, member: IMember) {
+    private async configProfileColor(interaction: ChatInputCommandInteraction, member: IMember) {
         if (!member.premium.active) {
             await interaction.reply({ content: this.client.config.premiumCommand, ephemeral: true });
             return;
@@ -232,7 +245,78 @@ export default class extends Command implements ICommand {
         await interaction.reply({ embeds: [embed] });
     }
 
-    async configPassiveMode(interaction: ChatInputCommandInteraction, member: IMember) {
+    private async configSetBirthday(interaction: ChatInputCommandInteraction, member: IMember) {
+        if (!member.premium.active) {
+            await interaction.reply({ content: this.client.config.premiumCommand, ephemeral: true });
+            return;
+        }
+
+        const birthday = interaction.options.getString("birthday", true);
+
+        // check if the birthday is valid
+        const date = moment(birthday, "DD/MM/YYYY");
+        if (!date.isValid()) {
+            await interaction.reply({ content: "Invalid birthday format, please use DD/MM/YYYY.", ephemeral: true });
+            return;
+        }
+
+        // check if the birthday is in the future
+        if (date.isAfter(moment())) {
+            await interaction.reply({ content: "Your birthday can't be in the future.", ephemeral: true });
+            return;
+        }
+
+        // check if the birthday is more than 100 years ago
+        if (date.isBefore(moment().subtract(100, "years"))) {
+            await interaction.reply({ content: "Your birthday can't be more than 100 years ago.", ephemeral: true });
+            return;
+        }
+
+        // check if the birthday is less than 13 years ago
+        if (date.isAfter(moment().subtract(13, "years"))) {
+            await interaction.reply({ content: "You must be at least 13 years old to use Discord.", ephemeral: true });
+            return;
+        }
+
+        await Member.updateOne({ id: interaction.user.id }, { birthday: date.toDate() });
+        const embed = new EmbedBuilder()
+            .setTitle(`Set your birthday to \`${date.format("DD/MM/YYYY")}\`.`)
+            .setColor(<ColorResolvable>this.client.config.embed.darkColor);
+        await interaction.reply({ embeds: [embed] });
+    }
+
+    private async configSetBio(interaction: ChatInputCommandInteraction, member: IMember) {
+        if (!member.premium.active) {
+            await interaction.reply({ content: this.client.config.premiumCommand, ephemeral: true });
+            return;
+        }
+
+        const bio = interaction.options.getString("bio", true);
+        if (this.filter.isProfane(bio)) {
+            await interaction.reply({ content: "Your bio contains a banned word.", ephemeral: true });
+            return;
+        }
+
+        if (bio.length > 100) {
+            await interaction.reply({ content: "Your bio can only be 100 characters long.", ephemeral: true });
+            return;
+        }
+
+        await Member.updateOne({ id: interaction.user.id }, { $set: { bio: bio } });
+
+        if (bio.length === 0) {
+            await interaction.reply({ content: "Successfully removed your bio." });
+            return;
+        }
+
+        const embed = new EmbedBuilder()
+            .setTitle("Set your bio to")
+            .setDescription(">>> " + bio)
+            .setColor(<ColorResolvable>this.client.config.embed.darkColor);
+        await interaction.reply({ embeds: [embed] });
+    }
+
+    private async configPassiveMode(interaction: ChatInputCommandInteraction, member: IMember) {
         const value = interaction.options.getString("value", true);
 
         const cooldown = await Cooldown.getRemainingCooldown(interaction.user.id, "config.passive-mode");
