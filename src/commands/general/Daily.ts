@@ -55,7 +55,7 @@ export default class extends Command implements ICommand {
         await Cooldown.setCooldown(interaction.user.id, "daily", secondsUntilEndOfTheDay);
 
         await Member.updateOne({ id: interaction.user.id }, {
-            $inc: { wallet: streakReward, spins: member.premium.active ? 1 : 0 },
+            $inc: { wallet: streakReward, spins: member.premium.active && member.premium.tier === 2 ? 1 : 0 },
             $set: { lastStreak: new Date(), streak: member.streak + 1 },
         });
 

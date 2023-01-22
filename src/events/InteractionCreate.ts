@@ -32,11 +32,15 @@ export default class InteractionCreate implements IEvent {
             const member = await Database.getMember(interaction.user.id, true);
 
             if (process.env.NODE_ENV === "production") {
-                const cooldownTime = command.info.cooldown === undefined || command.info.cooldown === 0
+                let cooldownTime = command.info.cooldown === undefined || command.info.cooldown === 0
                     ? (member.premium.active === true
                         ? client.config.premiumTimeout
                         : client.config.defaultTimeout)
                     : command.info.cooldown;
+
+                if (command.info.category === "games" && member.premium.active) {
+                    cooldownTime = member.premium.tier === 2 ? 180 : 240;
+                }
 
                 await Cooldown.setCooldown(interaction.user.id, command.info.name, cooldownTime);
             }

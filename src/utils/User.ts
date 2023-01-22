@@ -42,6 +42,14 @@ export default class User {
         return amount;
     }
 
+    static async addGameExperience(member: IMember): Promise<number> {
+        if (member.premium.active && member.premium.tier === 2) {
+            return await this.addExperience(member.id, Helpers.getRandomNumber(5, 8));
+        } else {
+            return await this.addExperience(member.id, Helpers.getRandomNumber(1, 4));
+        }
+    }
+
     static async removeBetMoney(formattedBet: string, member: IMember, removeMoney = true, minBet = 50, maxBet = -1): Promise<string | number> {
         maxBet = maxBet === -1 ? (member.premium.active && member.premium.tier === 2 ? 15_000 : (member.premium.active ? 10_000 : 5_000)) : maxBet;
 
