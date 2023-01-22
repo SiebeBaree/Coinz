@@ -29,6 +29,7 @@ interface IStats {
 interface IPremium {
     active: boolean;
     expires: number;
+    tier: number;
 }
 
 export interface IMember {
@@ -91,6 +92,7 @@ const Stats = new Schema<IStats>({
 const Premium = new Schema<IPremium>({
     active: { type: Boolean, default: false },
     expires: { type: Number, default: 0 },
+    tier: { type: Number, default: 0 },
 });
 
 const memberSchema = new Schema<IMember>({
