@@ -12,6 +12,7 @@ interface CommandOptions {
     description: string;
     options?: CommandInteractionOption[];
     dm_permission?: boolean;
+    default_member_permissions?: string;
 }
 
 (async () => {
@@ -43,6 +44,7 @@ interface CommandOptions {
                 description: command.info.description,
                 options: command.info.options,
                 dm_permission: false,
+                default_member_permissions: "0",
             });
         });
 
