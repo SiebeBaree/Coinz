@@ -83,7 +83,7 @@ export default class extends Command implements ICommand {
                 collector.stop();
 
                 await User.addMoney(interaction.user.id, gameData.profit + bet);
-                await User.addExperience(interaction.user.id);
+                await User.addGameExperience(member);
                 await interaction.editReply({ embeds: [this.getEmbed(gameData)], components: [this.getButton(gameData.finishedCommand)] });
             }
             await i.deferUpdate();

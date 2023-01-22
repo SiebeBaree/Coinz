@@ -117,6 +117,7 @@ export default class extends Command implements ICommand {
                     gameData.desc = `You lost against the bot! You lost :coin: ${gameData.bet}!`;
                 } else {
                     await User.addMoney(interaction.user.id, Math.floor(gameData.bet * gameData.multiplier - gameData.bet));
+                    await User.addGameExperience(member);
                 }
             }
 

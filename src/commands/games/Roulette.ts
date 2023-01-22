@@ -114,7 +114,7 @@ export default class extends Command implements ICommand {
         await interaction.editReply({ embeds: [embed] });
 
         if (gameData.userWon) {
-            await User.addExperience(interaction.user.id);
+            await User.addGameExperience(member);
             await User.addMoney(interaction.user.id, Math.floor(gameData.multiplier * gameData.bet));
         }
     }

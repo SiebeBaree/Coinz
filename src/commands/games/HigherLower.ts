@@ -111,6 +111,7 @@ export default class extends Command implements ICommand {
 
             if (gameData.finishedCommand && gameData.playerWon) {
                 await User.addMoney(interaction.user.id, this.getPrice(gameData.bet, gameData.timesCorrect));
+                await User.addGameExperience(member);
             }
 
             await i.update({ embeds: [this.getEmbed(gameData)], components: [this.getButtons(gameData.finishedCommand)] });

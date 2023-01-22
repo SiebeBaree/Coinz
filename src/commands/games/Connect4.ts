@@ -177,7 +177,7 @@ export default class extends Command implements ICommand {
                     } else {
                         await interaction.followUp({ content: `**${winner === gameData.user1.id ? gameData.user1.tag : gameData.user2.tag}** won this Connect4 game and earned :coin: ${Math.floor(gameData.bet * 2)}!` });
                         await User.addMoney(winner, Math.floor(gameData.bet * 2));
-                        await User.addExperience(winner);
+                        await User.addGameExperience(winner === gameData.user1.id ? member : secondMember);
                     }
                 }
             }

@@ -92,7 +92,7 @@ export default class extends Command implements ICommand {
             this.checkStatus(gameData);
 
             if (gameData.userWon) {
-                await User.addExperience(interaction.user.id);
+                await User.addGameExperience(member);
                 await User.addMoney(interaction.user.id, this.getReward(gameData.bet));
 
                 if (!member.badges.includes("easy_blackjack")) {
@@ -130,7 +130,7 @@ export default class extends Command implements ICommand {
                     gameData.color = gameData.userWon ? Colors.Green : Colors.Red;
 
                     if (gameData.userWon) {
-                        await User.addExperience(interaction.user.id);
+                        await User.addGameExperience(member);
                         await User.addMoney(interaction.user.id, this.getReward(gameData.bet));
                     } else if (gameData.tie) {
                         await User.addMoney(interaction.user.id, gameData.bet);
@@ -149,7 +149,7 @@ export default class extends Command implements ICommand {
                 gameData.color = gameData.userWon ? Colors.Green : Colors.Red;
 
                 if (gameData.userWon) {
-                    await User.addExperience(interaction.user.id);
+                    await User.addGameExperience(member);
                     await User.addMoney(interaction.user.id, this.getReward(gameData.bet));
                 } else if (gameData.tie) {
                     await User.addMoney(interaction.user.id, gameData.bet);

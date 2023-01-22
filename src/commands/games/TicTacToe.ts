@@ -157,6 +157,7 @@ export default class extends Command implements ICommand {
                 if (gameData.finishedCommand && gameData.hostWon !== null) {
                     await User.addMoney(gameData.hostWon ? interaction.user.id : gameData.secondUser.id, bet * 2);
                     await User.addMoney(gameData.hostWon ? gameData.secondUser.id : interaction.user.id, -bet);
+                    await User.addGameExperience(gameData.hostWon ? member : secondMember);
                 } else if (gameData.finishedCommand && gameData.hostWon === null) {
                     await User.addMoney(interaction.user.id, bet);
                     await User.addMoney(gameData.secondUser.id, bet);

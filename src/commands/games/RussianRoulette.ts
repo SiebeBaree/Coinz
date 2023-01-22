@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ColorResolvable, Colors, EmbedBuilder, User as DjsUser } from "discord.js";
+import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ColorResolvable, Colors, EmbedBuilder } from "discord.js";
 import Bot from "../../structs/Bot";
 import ICommand from "../../interfaces/ICommand";
 import Command from "../../structs/Command";
@@ -86,7 +86,7 @@ export default class extends Command implements ICommand {
         await interaction.editReply({ content: this.getContent(gameData), embeds: [this.getEmbed(gameData)], components: [this.getButtons(gameData.finishedCommand)] });
 
         if (gameData.finishedCommand) {
-            await this.endGame(interaction.user, gameData);
+            await this.endGame(member, gameData);
             return;
         }
 
@@ -115,7 +115,7 @@ export default class extends Command implements ICommand {
                     components: [this.getButtons(gameData.finishedCommand)],
                 });
 
-                await this.endGame(interaction.user, gameData);
+                await this.endGame(member, gameData);
             }
         });
 
@@ -125,7 +125,7 @@ export default class extends Command implements ICommand {
                 if (gameData.userWon === null) gameData.userWon = false;
 
                 await interaction.editReply({ components: [this.getButtons(gameData.finishedCommand)] });
-                await this.endGame(interaction.user, gameData);
+                await this.endGame(member, gameData);
             }
         });
     }
@@ -177,13 +177,13 @@ export default class extends Command implements ICommand {
         }
     }
 
-    private async endGame(user: DjsUser, gameData: GameData): Promise<void> {
+    private async endGame(member: IMember, gameData: GameData): Promise<void> {
         if (gameData.finishedCommand) {
             if (gameData.userWon === true) {
-                await User.addExperience(user.id);
-                await User.addMoney(user.id, Math.floor(gameData.bet * gameData.multiplier));
+                await User.addGameExperience(member);
+                await User.addMoney(member.id, Math.floor(gameData.bet * gameData.multiplier));
             } else {
-                await User.removeMoney(user.id, gameData.bet);
+                await User.removeMoney(member.id, gameData.bet);
             }
         }
     }

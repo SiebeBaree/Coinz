@@ -119,6 +119,7 @@ export default class extends Command implements ICommand {
                 if (gameData.buttonsClicked >= this.maxClicks || gameData.finishedCommand) {
                     gameData.finishedCommand = true;
                     await User.addMoney(interaction.user.id, Math.floor(gameData.bet * gameData.multiplier));
+                    await User.addGameExperience(member);
                     collector.stop();
                 }
 

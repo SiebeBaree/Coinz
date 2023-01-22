@@ -113,7 +113,7 @@ export default class extends Command implements ICommand {
                     gameData.color = Colors.Green;
 
                     await User.addMoney(interaction.user.id, Math.floor(gameData.bet * 3));
-                    await User.addExperience(interaction.user.id);
+                    await User.addGameExperience(member);
                 } else {
                     gameData.userWon = false;
                     gameData.color = Colors.Red;
