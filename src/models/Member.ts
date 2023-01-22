@@ -52,6 +52,8 @@ export interface IMember {
     lastWatered: number;
     profileColor: string;
     displayedBadge: string;
+    birthday: Date;
+    bio: string;
     badges: string[];
     lastAirdrop: number;
     notifications: string[];
@@ -115,6 +117,8 @@ const memberSchema = new Schema<IMember>({
     lastWatered: { type: Number, default: 0 },
     profileColor: { type: String, default: embed.color },
     displayedBadge: { type: String, default: "" },
+    birthday: { type: Date, default: new Date(0) },
+    bio: { type: String, default: "", minlength: 0, maxlength: 100 },
     badges: [{ type: String, default: [] }],
     lastAirdrop: { type: Number, default: 0 },
     notifications: [{ type: String, default: [] }],
