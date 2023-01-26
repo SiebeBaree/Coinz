@@ -2,7 +2,7 @@ import { ChatInputCommandInteraction, ApplicationCommandOptionType, EmbedBuilder
 import Bot from "../../structs/Bot";
 import ICommand from "../../interfaces/ICommand";
 import Command from "../../structs/Command";
-import { IMember } from "../../models/Member";
+import Member, { IMember } from "../../models/Member";
 import Item from "../../interfaces/Item";
 import Cooldown from "../../utils/Cooldown";
 import Helpers from "../../utils/Helpers";
@@ -10,6 +10,7 @@ import { IRange } from "../../interfaces/ILoot";
 import fishData from "../../assets/loot/fish.json";
 import Database from "../../utils/Database";
 import User from "../../utils/User";
+import Achievement from "../../utils/Achievement";
 
 export default class extends Command implements ICommand {
     private readonly requiredItems: Item[] = [];
@@ -40,9 +41,12 @@ export default class extends Command implements ICommand {
         cooldown: 1200,
     };
 
+    private readonly achievement;
+
     constructor(bot: Bot, file: string) {
         super(bot, file);
 
+        this.achievement = Achievement.getById("touch_grass");
         for (const itemId of ["fishing_rod", "premium_fishing_rod"]) {
             const item = this.client.items.getById(itemId);
 
@@ -152,6 +156,11 @@ export default class extends Command implements ICommand {
                     }
 
                     await this.client.items.checkForDuplicates(await Database.getMember(interaction.user.id));
+
+                    const fishCaught = mappedLoot.reduce((a, b) => a + b.amount, 0);
+                    await Member.updateOne({ id: interaction.user.id }, { $inc: { "stats.fishCaught": fishCaught } });
+
+                    await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
 
                     if (lootText.length > 0 && totalPrice > 0) {
                         await User.addExperience(interaction.user.id);

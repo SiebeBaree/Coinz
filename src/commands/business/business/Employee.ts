@@ -8,6 +8,7 @@ import Database from "../../../utils/Database";
 import jobs from "../../../assets/jobs.json";
 import positions from "../../../assets/positions.json";
 import Business from "../../../models/Business";
+import Achievement from "../../../utils/Achievement";
 
 export default class extends Command {
     private readonly info: Info;
@@ -119,6 +120,13 @@ export default class extends Command {
                         const ceoData = await Database.getMember(ceo.userId, true);
                         if (data.business.employees.length + 1 === 8 && !ceoData.badges.includes("going_places")) {
                             await Member.updateOne({ userId: interaction.user.id }, { $push: { badges: "going_places" } });
+
+                            const achievement = Achievement.getById("going_places");
+                            if (ceoData.id === interaction.user.id) {
+                                await interaction.followUp({ content: `You have unlocked the <:${achievement?.id}:${achievement?.emoji}> **${achievement?.name}** badge for having 7 employees (+1 CEO) in your business.`, ephemeral: true });
+                            } else {
+                                await interaction.followUp({ content: `Your CEO has unlocked the <:${achievement?.id}:${achievement?.emoji}> **${achievement?.name}** badge for having 7 employees (+1 CEO) in your business.`, ephemeral: true });
+                            }
                         }
                     }
 

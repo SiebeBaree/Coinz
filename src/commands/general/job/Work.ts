@@ -7,6 +7,7 @@ import Helpers from "../../../utils/Helpers";
 import User from "../../../utils/User";
 import words from "../../../assets/words.json";
 import Cooldown from "../../../utils/Cooldown";
+import Achievement from "../../../utils/Achievement";
 
 interface IButton {
     label: number | string;
@@ -17,10 +18,12 @@ interface IButton {
 export default class {
     private readonly client: Bot;
     private readonly info: Info;
+    private readonly achievement;
 
     constructor(client: Bot, info: Info) {
         this.client = client;
         this.info = info;
+        this.achievement = Achievement.getById("hard_work");
     }
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
@@ -164,10 +167,10 @@ export default class {
                     finishedCommand = true;
 
                     await i.deferUpdate();
-                    await Member.updateOne({ id: interaction.user.id }, { $inc: { wallet: job.salary, "stats.timesWorked": 1 } });
                     const exp = await User.addExperience(interaction.user.id);
-
                     await interaction.followUp({ content: `Correct answer! You earned :coin: ${job.salary} and gained ${exp} experience.` });
+                    await Member.updateOne({ id: interaction.user.id }, { $inc: { wallet: job.salary, "stats.timesWorked": 1 } });
+                    await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
                     collector.stop();
                 }
 
@@ -205,8 +208,9 @@ export default class {
             await i.deferUpdate();
             if (buttonIndex === correctIndex) {
                 const exp = await User.addExperience(interaction.user.id);
-                await Member.updateOne({ id: interaction.user.id }, { $inc: { wallet: job.salary, "stats.timesWorked": 1 } });
                 await interaction.followUp({ content: `Correct answer! You earned :coin: ${job.salary} and gained ${exp} experience.` });
+                await Member.updateOne({ id: interaction.user.id }, { $inc: { wallet: job.salary, "stats.timesWorked": 1 } });
+                await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
             } else {
                 options[buttonIndex].style = ButtonStyle.Danger;
                 await interaction.followUp({ content: "Wrong answer. You won't get paid for this hour." });

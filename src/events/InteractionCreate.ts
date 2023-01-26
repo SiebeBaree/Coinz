@@ -2,12 +2,19 @@ import { Interaction } from "discord.js";
 import IEvent from "../interfaces/IEvent";
 import Member from "../models/Member";
 import Bot from "../structs/Bot";
+import Achievement from "../utils/Achievement";
 import Cooldown from "../utils/Cooldown";
 import Database from "../utils/Database";
 import Helpers from "../utils/Helpers";
+import User from "../utils/User";
 
 export default class InteractionCreate implements IEvent {
     public readonly name = "interactionCreate";
+    private readonly achievement;
+
+    constructor() {
+        this.achievement = Achievement.getById("touch_grass");
+    }
 
     async execute(client: Bot, interaction: Interaction) {
         if (interaction.isChatInputCommand()) {
@@ -61,6 +68,7 @@ export default class InteractionCreate implements IEvent {
             try {
                 await command.execute(interaction, member);
                 await Member.updateOne({ id: interaction.user.id }, { $inc: { "stats.commandsExecuted": 1 } });
+                await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
             } catch (error) {
                 client.logger.error((error as Error).stack || (error as Error).message);
 
