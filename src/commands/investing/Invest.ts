@@ -7,6 +7,8 @@ import Database from "../../utils/Database";
 import Helpers from "../../utils/Helpers";
 import Investment, { IInvestment } from "../../models/Investment";
 import Embed from "../../utils/Embed";
+import Achievement from "../../utils/Achievement";
+import User from "../../utils/User";
 
 export default class extends Command implements ICommand {
     private readonly maxOwnedStock = 5_000_000;
@@ -89,8 +91,11 @@ export default class extends Command implements ICommand {
         category: "investing",
     };
 
+    private readonly achievement;
+
     constructor(bot: Bot, file: string) {
         super(bot, file);
+        this.achievement = Achievement.getById("warren_buffett");
     }
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
@@ -224,6 +229,7 @@ export default class extends Command implements ICommand {
                 { name: "Stats", value: `:moneybag: **Unit Price:** :coin: ${stock.price}\n:1234: **Amount:** ${amount}x\n:gem: **Buy Price:** :coin: ${price}`, inline: true },
             );
         await interaction.editReply({ embeds: [embed] });
+        await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
     }
 
     private async getSell(interaction: ChatInputCommandInteraction, member: IMember) {

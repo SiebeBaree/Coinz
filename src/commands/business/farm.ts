@@ -5,6 +5,8 @@ import Command from "../../structs/Command";
 import Member, { IMember, IPlot } from "../../models/Member";
 import Helpers from "../../utils/Helpers";
 import Database from "../../utils/Database";
+import Achievement from "../../utils/Achievement";
+import UtilUser from "../../utils/User";
 
 export default class extends Command implements ICommand {
     readonly info = {
@@ -58,9 +60,11 @@ export default class extends Command implements ICommand {
 
     private readonly waterCooldown = 21600;
     private readonly rottenDelay = 172800;
+    private readonly achievement;
 
     constructor(bot: Bot, file: string) {
         super(bot, file);
+        this.achievement = Achievement.getById("farmers_life");
     }
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
@@ -99,6 +103,7 @@ export default class extends Command implements ICommand {
                     case "farm_buyPlot":
                         if (await this.buyNewPlot(member)) {
                             await interaction.followUp({ content: "You successfully bought a new plot.", ephemeral: true });
+                            await UtilUser.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
                         }
                         break;
                     default:

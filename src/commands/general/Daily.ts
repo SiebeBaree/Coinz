@@ -5,6 +5,7 @@ import Command from "../../structs/Command";
 import Member, { IMember } from "../../models/Member";
 import User from "../../utils/User";
 import Cooldown from "../../utils/Cooldown";
+import Achievement from "../../utils/Achievement";
 
 export default class extends Command implements ICommand {
     readonly info = {
@@ -19,10 +20,12 @@ export default class extends Command implements ICommand {
     private readonly maxDays = 50;
     private readonly dailyStreakMoney = 3;
     private readonly premiumStreakMoney = 5;
+    private readonly achievement;
 
     constructor(bot: Bot, file: string) {
         super(bot, file);
 
+        this.achievement = Achievement.getById("keep_on_grinding");
         this.row = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
                 new ButtonBuilder()
@@ -59,6 +62,7 @@ export default class extends Command implements ICommand {
             $set: { lastStreak: new Date(), streak: member.streak + 1 },
         });
 
+        await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
         const premiumText = member.premium.active ?
             "*Because you are a **Coinz Premium** user you get a* </lucky-wheel spin:1005435550884442193> *for free.*" :
             "*Get better daily rewards with **Coinz Premium**. Go to the [**store**](https://coinzbot.xyz/store) to learn more.*";
@@ -67,6 +71,7 @@ export default class extends Command implements ICommand {
             .setColor(<ColorResolvable>this.client.config.embed.color)
             .setDescription(`:moneybag: **You claimed your daily reward!**${alertMsg}\n\n**Daily Reward:** :coin: ${this.defaultReward}\n**Daily Streak:** :coin: ${streakReward - this.defaultReward} for a \`${member.streak} ${member.streak === 1 ? "day" : "days"}\` streak\n**Total:** :coin: ${streakReward}\n**Gained XP:** \`${member.streak > 50 ? 50 : member.streak} XP\`\n\n${premiumText}\n*If you want more money consider voting. Use the buttons below to vote!*`);
         await interaction.editReply({ embeds: [embed], components: [this.row] });
+        await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
     }
 
     private checkDailyStreak(previousStreak: Date) {
