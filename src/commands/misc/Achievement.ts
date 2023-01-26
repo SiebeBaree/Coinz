@@ -105,7 +105,7 @@ export default class extends Command implements ICommand {
 
     async getRefresh(interaction: ChatInputCommandInteraction, member: IMember) {
         const achievements = Array.from(Achievement.all.values())
-            .filter((achievement) => achievement.hasAchieved(member) && !member.badges.includes(achievement.id));
+            .filter((achievement) => !member.badges.includes(achievement.id) && achievement.hasAchieved(member));
 
         if (!achievements.length) return await interaction.reply({ content: "You don't have any new achievements.", ephemeral: true });
         await Member.updateOne({ id: member.id }, { $push: { badges: { $each: achievements.map((achievement) => achievement.id) } } });
