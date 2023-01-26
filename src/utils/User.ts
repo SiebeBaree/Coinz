@@ -1,5 +1,7 @@
+import { ChatInputCommandInteraction } from "discord.js";
 import Business, { IBusiness, IEmployee } from "../models/Business";
 import Member, { IMember } from "../models/Member";
+import Achievement, { IAchievement } from "./Achievement";
 import Database from "./Database";
 import Helpers from "./Helpers";
 
@@ -124,5 +126,16 @@ export default class User {
         );
 
         return true;
+    }
+
+    static async sendAchievementMessage(interaction: ChatInputCommandInteraction, memberId: string, achievement: IAchievement | null, forceAchieved = false): Promise<void> {
+        if (!achievement) return;
+
+        const member = await Database.getMember(memberId, true);
+        if (!Achievement.hasAchievement(achievement.id, member) && !forceAchieved) return;
+        if (member.badges.includes(achievement.id)) return;
+
+        await interaction.followUp({ content: `:tada: You've unlocked the <:${achievement.id}:${achievement.emoji}> **${achievement.name}** achievement!` });
+        await Member.updateOne({ id: memberId }, { $push: { badges: achievement.id } });
     }
 }
