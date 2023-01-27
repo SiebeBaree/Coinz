@@ -5,6 +5,8 @@ import Command from "../../structs/Command";
 import Member, { IMember } from "../../models/Member";
 import loot from "../../assets/luckyWheel.json";
 import Helpers from "../../utils/Helpers";
+import Achievement from "../../utils/Achievement";
+import User from "../../utils/User";
 
 type RewardsItem = {
     itemId: string;
@@ -60,9 +62,12 @@ export default class extends Command implements ICommand {
         category: "general",
     };
 
+    private readonly achievement;
+
     constructor(bot: Bot, file: string) {
         super(bot, file);
 
+        this.achievement = Achievement.getById("feeling_lucky");
         const rewards: string[] = [];
         const keys = Object.keys(loot);
 
@@ -148,6 +153,8 @@ export default class extends Command implements ICommand {
         await Member.updateOne({ userId: interaction.user.id }, {
             $inc: { spins: -amount, coins: earnedCoins, tickets: earnedTickets, "stats.luckyWheelSpins": amount },
         });
+
+        await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
 
         const bonusTxt = earnedCoins > 0 || earnedTickets > 0 ? "\n:moneybag: **You also got :coin: ${money} and <:ticket:1032669959161122976> ${tickets} extra!**" : "";
         const embed = new EmbedBuilder()

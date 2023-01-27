@@ -2,10 +2,11 @@ import { ApplicationCommandOptionType, ChatInputCommandInteraction, ColorResolva
 import Bot from "../../structs/Bot";
 import ICommand from "../../interfaces/ICommand";
 import Command from "../../structs/Command";
-import { IMember } from "../../models/Member";
+import Member, { IMember } from "../../models/Member";
 import Database from "../../utils/Database";
 import InventoryItem from "../../interfaces/InventoryItem";
 import Embed from "../../utils/Embed";
+import Achievement from "../../utils/Achievement";
 
 export default class extends Command implements ICommand {
     readonly info = {
@@ -22,8 +23,11 @@ export default class extends Command implements ICommand {
         category: "general",
     };
 
+    private readonly achievement;
+
     constructor(bot: Bot, file: string) {
         super(bot, file);
+        this.achievement = Achievement.getById("collection");
     }
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
@@ -33,6 +37,15 @@ export default class extends Command implements ICommand {
         if (userData.inventory.length === 0) {
             await interaction.reply({ content: `${user.id === interaction.user.id ? "You don't" : `${user.tag} doesn't`} have anything in ${user.id === interaction.user.id ? "your" : "their"} inventory.`, ephemeral: true });
             return;
+        }
+
+        if (user.id === interaction.user.id && this.achievement) {
+            const totalItems = member.inventory.reduce((acc, item) => acc + item.amount, 0);
+
+            if (totalItems >= 1000 && !member.badges.includes(this.achievement.id)) {
+                await interaction.followUp({ content: `:tada: You've unlocked the <:${this.achievement.id}:${this.achievement.emoji}> **${this.achievement.name}** achievement!` });
+                await Member.updateOne({ id: member.id }, { $push: { badges: this.achievement.id } });
+            }
         }
 
         let page = 0;
