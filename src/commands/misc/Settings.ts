@@ -3,9 +3,29 @@ import Bot from "../../structs/Bot";
 import ICommand from "../../interfaces/ICommand";
 import Command from "../../structs/Command";
 import Database from "../../utils/Database";
-import Guild from "../../models/Guild";
+import Guild, { IGuild } from "../../models/Guild";
+import { IMember } from "../../models/Member";
 
 export default class extends Command implements ICommand {
+    private readonly dropRateChoices = [
+        {
+            name: "Every 1-12 hours",
+            value: "3600|43200",
+        },
+        {
+            name: "Every 1-8 hours",
+            value: "3600|28800",
+        },
+        {
+            name: "Every 1-6 hours",
+            value: "3600|21600",
+        },
+        {
+            name: "Every 1-4 hours",
+            value: "3600|14400",
+        },
+    ];
+
     readonly info = {
         name: "settings",
         description: "Change settings for THIS SERVER.",
@@ -34,6 +54,20 @@ export default class extends Command implements ICommand {
                             },
                         ],
                     },
+                    {
+                        name: "set-drop-rate",
+                        type: ApplicationCommandOptionType.Subcommand,
+                        description: "Change the current airdrop drop rate.",
+                        options: [
+                            {
+                                name: "drop-rate",
+                                type: ApplicationCommandOptionType.String,
+                                description: "The drop rate you want airdrops to be.",
+                                required: true,
+                                choices: this.dropRateChoices,
+                            },
+                        ],
+                    },
                 ],
             },
         ],
@@ -44,7 +78,7 @@ export default class extends Command implements ICommand {
         super(bot, file);
     }
 
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction, member: IMember, guild: IGuild) {
         switch (interaction.options.getSubcommandGroup()) {
             case "airdrop":
                 switch (interaction.options.getSubcommand()) {
@@ -53,6 +87,9 @@ export default class extends Command implements ICommand {
                         break;
                     case "set-channel":
                         await this.airdropSetChannel(interaction);
+                        break;
+                    case "set-drop-rate":
+                        await this.airdropSetDropRate(interaction, guild);
                         break;
                     default:
                         await interaction.reply({ content: this.client.config.invalidCommand, ephemeral: true });
@@ -63,7 +100,7 @@ export default class extends Command implements ICommand {
         }
     }
 
-    async airdropToggle(interaction: ChatInputCommandInteraction) {
+    private async airdropToggle(interaction: ChatInputCommandInteraction) {
         if (!this.hasEnoughPermissions(interaction.member as GuildMember)) {
             await interaction.reply({ content: "You need `Manage Channels` or `Administrator` permissions to use this command.", ephemeral: true });
             return;
@@ -72,7 +109,7 @@ export default class extends Command implements ICommand {
         await interaction.deferReply({ ephemeral: true });
         const guild = await Database.getGuild(interaction.guildId as string);
 
-        if (guild.airdrops.channel === "") {
+        if (guild.airdrop.channel === "") {
             await interaction.editReply({ content: "You need to set a channel to receive airdrops in first. Use </server-settings airdrop set-channel:1048340073470513152> ." });
             return;
         }
@@ -80,15 +117,15 @@ export default class extends Command implements ICommand {
         await Guild.updateOne({ id: interaction.guildId as string }, {
             $set: {
                 airdrops: {
-                    status: !guild.airdrops.status,
+                    status: !guild.airdrop.status,
                 },
             },
         });
 
-        await interaction.editReply({ content: `Airdrops are now ${guild.airdrops.status ? "disabled" : "enabled"} and will drop in <#${guild.airdrops.channel}>.` });
+        await interaction.editReply({ content: `Airdrops are now ${guild.airdrop.status ? "disabled" : "enabled"} and will drop in <#${guild.airdrop.channel}>.` });
     }
 
-    async airdropSetChannel(interaction: ChatInputCommandInteraction) {
+    private async airdropSetChannel(interaction: ChatInputCommandInteraction) {
         if (!this.hasEnoughPermissions(interaction.member as GuildMember)) {
             await interaction.reply({ content: "You need `Manage Channels` or `Administrator` permissions to use this command.", ephemeral: true });
             return;
@@ -125,7 +162,39 @@ export default class extends Command implements ICommand {
         await interaction.editReply({ content: `Airdrops will now be dropped in <#${channel.id}>.` });
     }
 
-    hasEnoughPermissions(member: GuildMember) {
+    private async airdropSetDropRate(interaction: ChatInputCommandInteraction, guild: IGuild) {
+        if (!this.hasEnoughPermissions(interaction.member as GuildMember)) {
+            await interaction.reply({ content: "You need `Manage Channels` or `Administrator` permissions to use this command.", ephemeral: true });
+            return;
+        }
+
+        if (!guild.premium.active) {
+            await interaction.reply({
+                content: "This feature is only available for Premium Servers.\n" +
+                    "If you want to use this command, consider buying **Coinz Premium for Servers**.\n" +
+                    "Go to the [**store**](<https://coinzbot.xyz/store>) to learn more.", ephemeral: true,
+            });
+            return;
+        }
+
+        const dropRate = interaction.options.getString("drop-rate", true);
+        const [minRate, maxRate] = dropRate.split("|").map((x) => parseInt(x, 10));
+
+        await interaction.deferReply({ ephemeral: true });
+        await Guild.updateOne({ id: interaction.guildId as string }, {
+            $set: {
+                "airdrop.interval": {
+                    min: minRate,
+                    max: maxRate,
+                },
+            },
+        });
+
+        const name = this.dropRateChoices.find((x) => x.value === dropRate)?.name ?? this.dropRateChoices[0].name;
+        await interaction.editReply({ content: `Airdrops will now drop ${name.toLowerCase()}.` });
+    }
+
+    private hasEnoughPermissions(member: GuildMember) {
         return member.permissions.has(PermissionsBitField.Flags.ManageChannels) || member.permissions.has(PermissionsBitField.Flags.Administrator);
     }
 }
