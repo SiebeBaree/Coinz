@@ -32,6 +32,16 @@ interface IPremium {
     tier: number;
 }
 
+interface ITree {
+    height: number;
+    planted: number;
+    timesWatered: number;
+    preference: string;
+    lastWatered: number;
+    nextEvent: number;
+    seedType: string;
+}
+
 export interface IMember {
     id: string;
     votes: number;
@@ -60,6 +70,7 @@ export interface IMember {
     lootboxes: InventoryItem[];
     stats: IStats;
     premium: IPremium;
+    tree: ITree;
 }
 
 const Item = new Schema<InventoryItem>({
@@ -97,6 +108,16 @@ const Premium = new Schema<IPremium>({
     tier: { type: Number, default: 0 },
 });
 
+const Tree = new Schema<ITree>({
+    height: { type: Number, default: 0 },
+    planted: { type: Number, default: 0 },
+    timesWatered: { type: Number, default: 0 },
+    preference: { type: String, default: "default" },
+    lastWatered: { type: Number, default: 0 },
+    nextEvent: { type: Number, default: 0 },
+    seedType: { type: String, default: "" },
+});
+
 const memberSchema = new Schema<IMember>({
     id: { type: String, required: true, unique: true, index: true },
     votes: { type: Number, default: 0 },
@@ -125,6 +146,7 @@ const memberSchema = new Schema<IMember>({
     lootboxes: [{ type: Item, default: [] }],
     stats: { type: Stats, default: {} },
     premium: { type: Premium, default: {} },
+    tree: { type: Tree, default: {} },
 }, { timestamps: true });
 
 export default model<IMember>("Member", memberSchema);
