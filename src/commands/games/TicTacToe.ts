@@ -6,6 +6,7 @@ import { IMember } from "../../models/Member";
 import Cooldown from "../../utils/Cooldown";
 import User from "../../utils/User";
 import Database from "../../utils/Database";
+import { IGuild } from "../../models/Guild";
 
 interface GameData {
     bet: number;
@@ -55,7 +56,7 @@ export default class extends Command implements ICommand {
         super(bot, file);
     }
 
-    async execute(interaction: ChatInputCommandInteraction, member: IMember) {
+    async execute(interaction: ChatInputCommandInteraction, member: IMember, guild: IGuild) {
         const betStr = interaction.options.getString("bet", true);
         const secondUser = interaction.options.getUser("user", true);
 
@@ -73,9 +74,9 @@ export default class extends Command implements ICommand {
                 return;
             }
 
-            bet = Math.min(member.wallet, member.premium.active && member.premium.tier === 2 ? 15_000 : (member.premium.active ? 10_000 : 5_000));
+            bet = Math.min(member.wallet, member.premium.active && member.premium.tier === 2 ? 15_000 : (member.premium.active || guild.premium.active ? 10_000 : 5_000));
         } else {
-            const newBet = await User.removeBetMoney(betStr, member);
+            const newBet = await User.removeBetMoney(betStr, member, guild);
 
             if (typeof newBet === "string") {
                 await Cooldown.removeCooldown(interaction.user.id, this.info.name);
@@ -157,7 +158,7 @@ export default class extends Command implements ICommand {
                 if (gameData.finishedCommand && gameData.hostWon !== null) {
                     await User.addMoney(gameData.hostWon ? interaction.user.id : gameData.secondUser.id, bet * 2);
                     await User.addMoney(gameData.hostWon ? gameData.secondUser.id : interaction.user.id, -bet);
-                    await User.addGameExperience(gameData.hostWon ? member : secondMember);
+                    await User.addGameExperience(gameData.hostWon ? member : secondMember, guild);
                 } else if (gameData.finishedCommand && gameData.hostWon === null) {
                     await User.addMoney(interaction.user.id, bet);
                     await User.addMoney(gameData.secondUser.id, bet);
