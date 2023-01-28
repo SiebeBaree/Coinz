@@ -9,7 +9,7 @@
     "dev": "concurrently \"tsc -w\" \"nodemon ./dist/manager.js\"",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
-    "register-commands": "tsc && node ./dist/register.js"
+    "register-commands": "node ./dist/register.js"
   },
   "repository": {
     "type": "git",
