@@ -13,7 +13,8 @@ export default class extends Command implements ICommand {
         category: "general",
         cooldown: 604800,
         deferReply: true,
-        isPremium: true,
+        isPremium: 1,
+        isServerUnlocked: true,
     };
 
     constructor(bot: Bot, file: string) {

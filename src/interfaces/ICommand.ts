@@ -1,5 +1,6 @@
 /* eslint-disable semi */
 import { CommandInteractionOption, APIEmbedField, ChatInputCommandInteraction } from "discord.js";
+import { IGuild } from "../models/Guild";
 import { IMember } from "../models/Member";
 
 export interface Info {
@@ -13,11 +14,12 @@ export interface Info {
     cooldown?: number;
     enabled?: boolean;
     deferReply?: boolean;
-    isPremium?: boolean;
+    isPremium?: number;
+    isServerUnlocked?: boolean;
     image?: string;
 }
 
 export default interface ICommand {
     readonly info: Info;
-    execute: (interaction: ChatInputCommandInteraction, member: IMember) => Promise<void>;
+    execute: (interaction: ChatInputCommandInteraction, member: IMember, guild: IGuild) => Promise<void>;
 }
