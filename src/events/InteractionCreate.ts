@@ -37,6 +37,7 @@ export default class InteractionCreate implements IEvent {
 
             if (command.info.deferReply) await interaction.deferReply();
             const member = await Database.getMember(interaction.user.id, true);
+            const guild = await Database.getGuild(interaction.guild.id, true);
 
             if (process.env.NODE_ENV === "production") {
                 let cooldownTime = command.info.cooldown === undefined || command.info.cooldown === 0
@@ -45,28 +46,27 @@ export default class InteractionCreate implements IEvent {
                         : client.config.defaultTimeout)
                     : command.info.cooldown;
 
-                if (command.info.category === "games" && member.premium.active) {
-                    cooldownTime = member.premium.tier === 2 ? 180 : 240;
-                }
-
+                cooldownTime = command.info.category === "games" && (member.premium.active || guild.premium.active) ? 240 : cooldownTime;
                 await Cooldown.setCooldown(interaction.user.id, command.info.name, cooldownTime);
             }
 
-            if (command.info.isPremium && !member.premium.active) {
-                const text = "This command is only available for premium users!\n" +
-                    "If you want to use this command, consider buying **Coinz Premium**.\n" +
-                    "Go to the [**store**](<https://coinzbot.xyz/store>) to learn more.";
+            if (command.info.isPremium && (!member.premium.active || member.premium.tier < command.info.isPremium)) {
+                if (!(command.info.isServerUnlocked && guild.premium.active)) {
+                    const text = "This command is only available for premium users!\n" +
+                        "If you want to use this command, consider buying **Coinz Premium**.\n" +
+                        "Go to the [**store**](<https://coinzbot.xyz/store>) to learn more.";
 
-                if (command.info.deferReply) {
-                    await interaction.editReply({ content: text });
-                } else {
-                    await interaction.reply({ content: text, ephemeral: true });
+                    if (command.info.deferReply) {
+                        await interaction.editReply({ content: text });
+                    } else {
+                        await interaction.reply({ content: text, ephemeral: true });
+                    }
+                    return;
                 }
-                return;
             }
 
             try {
-                await command.execute(interaction, member);
+                await command.execute(interaction, member, guild);
                 await Member.updateOne({ id: interaction.user.id }, { $inc: { "stats.commandsExecuted": 1 } });
                 await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
             } catch (error) {
