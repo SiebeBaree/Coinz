@@ -125,7 +125,7 @@ export default class extends Command implements ICommand {
             .setColor(<ColorResolvable>this.client.config.embed.color)
             .setDescription(":gear: **Spinning the wheel...**")
             .setFooter({ text: this.client.config.embed.footer })
-            .setImage("https://cdn.coinzbot.xyz/v3/bot/luckywheel.gif");
+            .setImage("https://cdn.coinzbot.xyz/games/luckywheel.gif");
         await interaction.reply({ embeds: [loadingEmbed] });
         await Helpers.getTimeout(3_500);
 

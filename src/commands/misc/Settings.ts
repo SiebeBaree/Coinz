@@ -111,7 +111,7 @@ export default class extends Command implements ICommand {
         const channelEmbed = new EmbedBuilder()
             .setTitle("Random Airdrops will be dropped here!")
             .setColor(<ColorResolvable>this.client.config.embed.darkColor)
-            .setThumbnail("https://cdn.coinzbot.xyz/v3/bot/airdrop.png")
+            .setThumbnail("https://cdn.coinzbot.xyz/games/airdrop.png")
             .setDescription(":gift: **You will see one airdrop every 1-12 hours.**\n:bangbang: **You can only collect 1 airdrop every 3 hours.**");
 
         try {

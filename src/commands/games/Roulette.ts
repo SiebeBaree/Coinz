@@ -42,7 +42,7 @@ export default class extends Command implements ICommand {
             { name: "Bet Formatting", value: "You can use formatting to make it easier to use big numbers.\n\n__For Example:__\n~~1000~~ **1K**\n~~1300~~ **1.3K**\nUse `all` or `max` to use a maximum of :coin: 5000.", inline: false },
             { name: "Space Multiplier", value: "[x36] Straight (1, 2, 3, ..., 36)\n[x3] 1-12, 13-24, 25-36\n[x3] 1st, 2nd, 3rd\n[x2] 1-18, 19-36\n[x 2] Odd, Even\n[x2] red, black", inline: false },
         ],
-        image: "https://cdn.coinzbot.xyz/games/roulette/table.png",
+        image: "https://cdn.coinzbot.xyz/games/table.png",
         cooldown: 420,
     };
 
