@@ -7,7 +7,7 @@ export interface ICooldown {
 }
 
 const cooldownSchema = new Schema<ICooldown>({
-    id: { type: String, required: true, unique: true, index: true },
+    id: { type: String, required: true, index: true },
     command: { type: String, required: true },
     expires: { type: Number, default: Math.floor(Date.now() / 1000) },
 });

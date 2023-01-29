@@ -7,7 +7,6 @@ export interface IEmployee {
     payout: number;
     hiredOn: number;
     moneyEarned: number;
-    timesWorked: number;
 }
 
 export interface IFactory {
@@ -34,7 +33,6 @@ const Employee = new Schema<IEmployee>({
     payout: { type: Number, default: 15, min: 10, max: 100 },
     hiredOn: { type: Number, default: Math.floor(Date.now() / 1000) },
     moneyEarned: { type: Number, default: 0 },
-    timesWorked: { type: Number, default: 0 },
 });
 
 const Item = new Schema<InventoryItem>({

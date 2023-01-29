@@ -42,6 +42,10 @@ export default class extends Command {
             remainingAmount -= payout;
 
             await User.addMoney(employee.userId, payout);
+            await Business.updateOne(
+                { name: data.business.name, "employees.userId": employee.userId },
+                { $inc: { "employees.$.moneyEarned": payout } },
+            );
         }
 
         await Business.updateOne(

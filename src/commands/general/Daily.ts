@@ -13,6 +13,7 @@ export default class extends Command implements ICommand {
         description: "Claim your daily reward.",
         options: [],
         category: "general",
+        deferReply: true,
     };
 
     private readonly row: ActionRowBuilder<ButtonBuilder>;
@@ -42,8 +43,6 @@ export default class extends Command implements ICommand {
     }
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
-        await interaction.deferReply();
-
         let alertMsg = "";
         if (!this.checkDailyStreak(member.lastStreak)) {
             alertMsg = "\n\n**You have lost your streak.**";

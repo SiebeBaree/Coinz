@@ -82,11 +82,11 @@ export default class extends Command {
             const employees = [];
             for (let i = 0; i < data.business.employees.length; i++) {
                 const employee = data.business.employees[i];
-                employees.push(`**${i + 1}.** <@${employee.userId}> (**${positions[employee.role as keyof typeof positions]}**) <@${employee.userId}> - ${employee.payout}%\n> **Money Collected:** :coin: ${employee.moneyEarned} - **Times Worked:** ${employee.timesWorked}`);
+                employees.push(`**${i + 1}.** <@${employee.userId}> (**${positions[employee.role as keyof typeof positions]}**) - ${employee.payout}%\n> **Dividends Received:** :coin: ${employee.moneyEarned}`);
             }
 
             embed.setTitle(`Employees of ${data.business.name}`);
-            embed.addFields({ name: "Employees", value: employees.length > 0 ? employees.join("\n\n") : "Your business has no employees..." });
+            embed.setDescription(employees.length > 0 ? employees.join("\n\n") : "Your business has no employees...");
         } else {
             let worth = 400 * data.business.factories.length;
             for (let i = 0; i < data.business.inventory.length; i++) {
@@ -100,15 +100,15 @@ export default class extends Command {
             const fields = [
                 {
                     name: "Business Information",
-                    value: `:sunglasses: **CEO:** <@${this.getCEO(data.business) ?? "No CEO Found..."}>\n:credit_card: **Bank Balance:** :coin: ${data.business.balance}\n:moneybag: **Worth:** :coin: ${worth}\n:factory: **Factories:** \`${data.business.factories.length}\``,
+                    value: `:sunglasses: **CEO:** <@${this.getCEO(data.business)?.userId ?? "No CEO Found..."}>\n:credit_card: **Bank Balance:** :coin: ${data.business.balance}\n:moneybag: **Worth:** :coin: ${worth}\n:factory: **Factories:** \`${data.business.factories.length}\``,
                     inline: false,
                 },
             ];
 
-            if (!ownBusiness) {
+            if (ownBusiness) {
                 fields.push({
                     name: "Your Status",
-                    value: `**Position:** ${positions[data.employee.role as keyof typeof positions]}\n**Payout:** ${data.employee.payout}%\n**Money Collected:** :coin: ${data.employee.moneyEarned}\n**Times Worked:** ${data.employee.timesWorked}x`,
+                    value: `**Position:** ${positions[data.employee.role as keyof typeof positions]}\n**Payout:** ${data.employee.payout}%\n**Dividends Received:** :coin: ${data.employee.moneyEarned}`,
                     inline: false,
                 });
             }

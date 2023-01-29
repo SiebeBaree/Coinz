@@ -8,13 +8,16 @@ import Cooldown from "../../../utils/Cooldown";
 import Helpers from "../../../utils/Helpers";
 import Database from "../../../utils/Database";
 import Business from "../../../models/Business";
+import Filter from "bad-words";
 
 export default class extends Command {
     private readonly info: Info;
+    private readonly filter: Filter;
 
     constructor(bot: Bot, file: string, info: Info) {
         super(bot, file);
         this.info = info;
+        this.filter = new Filter();
     }
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember, data: BusinessData) {
@@ -33,6 +36,11 @@ export default class extends Command {
 
             if (!/^[A-Za-z][a-zA-Z0-9 _-]*$/.test(name)) {
                 await interaction.reply({ content: "Your business name can only use `A-Z, a-z, 0-9, whitespaces, -, _` and you have to start with a letter.", ephemeral: true });
+                return;
+            }
+
+            if (this.filter.isProfane(name)) {
+                await interaction.reply({ content: "Your business name contains a banned word.", ephemeral: true });
                 return;
             }
 
@@ -58,7 +66,7 @@ export default class extends Command {
             await Database.getBusiness(name, true);
             await interaction.editReply({ content: `You have successfully created a business named \`${name}\` for :coin: 4000.` });
 
-            await User.addEmployee(name, member, "ceo", 200);
+            await User.addEmployee(name, member, "ceo", 50);
             await Member.updateOne(
                 { id: interaction.user.id },
                 { $set: { business: name }, $inc: { wallet: -4000 } },

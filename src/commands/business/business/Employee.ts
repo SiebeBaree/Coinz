@@ -59,6 +59,11 @@ export default class extends Command {
             return;
         }
 
+        if (data.business.employees.reduce((a, b) => a + b.payout, 0) > 85) {
+            await interaction.reply({ content: "Your total payout is over 85%, you can't hire another employee until you lower the payout of some employees.", ephemeral: true });
+            return;
+        }
+
         const employee = interaction.options.getUser("user", true);
 
         if (employee.id === interaction.user.id || employee.bot) {

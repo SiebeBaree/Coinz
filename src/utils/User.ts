@@ -88,7 +88,6 @@ export default class User {
                 payout: 15,
                 hiredOn: Math.floor(Date.now() / 1000),
                 moneyEarned: 0,
-                timesWorked: 0,
             },
             isOwner: false,
         };
@@ -126,7 +125,6 @@ export default class User {
                         payout: payout,
                         hiredOn: Math.floor(Date.now() / 1000),
                         moneyEarned: 0,
-                        timesWorked: 0,
                     },
                 },
             },

@@ -111,7 +111,7 @@ export default class extends Command implements ICommand {
         };
 
         const gameMessage = await interaction.reply({
-            content: `**${interaction.user.username}** has challenged **${secondUser.username}** to a game of Tic Tac Toe!\nDo you accept?`,
+            content: `**${interaction.user.tag}** has challenged ${secondUser} to a game of Tic Tac Toe!\nDo you accept?`,
             components: [this.getConfirmButtons()],
             fetchReply: true,
         });
@@ -132,6 +132,7 @@ export default class extends Command implements ICommand {
                 gameData.currentUser = interaction.user.id;
 
                 await i.update({
+                    content: "",
                     embeds: [this.getEmbed(gameData)],
                     components: this.getButtons(gameData),
                 });
@@ -150,7 +151,7 @@ export default class extends Command implements ICommand {
                     return;
                 }
 
-                await i.deferUpdate();
+                if (!i.deferred) await i.deferUpdate();
                 gameData.board[row][column] = gameData.currentUser === interaction.user.id ? this.symbolX : this.symbolO;
                 gameData.currentUser = gameData.currentUser === interaction.user.id ? gameData.secondUser.id : interaction.user.id;
 
@@ -164,7 +165,11 @@ export default class extends Command implements ICommand {
                     await User.addMoney(gameData.secondUser.id, bet);
                 }
 
-                if (gameData.finishedCommand) collector.stop();
+                if (gameData.finishedCommand) {
+                    collector.stop();
+                    await interaction.followUp({ content: gameData.hostWon !== null ? `**${gameData.hostWon ? interaction.user.tag : gameData.secondUser.tag}** has won :coin: ${gameData.bet * 2}!` : "The game has ended in a tie!" });
+                }
+
                 await interaction.editReply({
                     embeds: [this.getEmbed(gameData)],
                     components: this.getButtons(gameData),
@@ -179,7 +184,7 @@ export default class extends Command implements ICommand {
                 await interaction.editReply({ components: this.getButtons(gameData, true) });
 
                 if (gameData.hostWon === null && !gameData.tie) {
-                    await interaction.followUp({ content: `**${gameData.currentUser === interaction.user.id ? gameData.secondUser.username : interaction.user.username}** has won the game because ${gameData.currentUser === interaction.user.id ? interaction.user.username : gameData.secondUser.username} took too long to respond!` });
+                    await interaction.followUp({ content: `**${gameData.currentUser === interaction.user.id ? gameData.secondUser.tag : interaction.user.tag}** has won the game because **${gameData.currentUser === interaction.user.id ? interaction.user.tag : gameData.secondUser.tag}** took too long to respond!` });
                     await User.addMoney(gameData.currentUser === interaction.user.id ? gameData.secondUser.id : interaction.user.id, bet);
                 }
             } else {
@@ -265,7 +270,7 @@ export default class extends Command implements ICommand {
             .setDescription(gameData.description ?? "Try to get your symbol (:x: or :o:) in a row (horizontally, vertically or diagonal).")
             .addFields(
                 { name: "Bet", value: `:coin: ${gameData.bet}`, inline: true },
-                { name: "Second Player", value: `<@${gameData.secondUser}>`, inline: true },
+                { name: "Second Player", value: `<@${gameData.secondUser.id}>`, inline: true },
                 { name: "Turn Of", value: `<@${gameData.currentUser}>`, inline: true },
             );
     }
