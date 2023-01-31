@@ -73,9 +73,9 @@ export default class InteractionCreate implements IEvent {
                 client.logger.error((error as Error).stack || (error as Error).message);
 
                 if (interaction.replied) {
-                    await interaction.followUp({ content: "There was an error while executing this command!", ephemeral: true });
+                    await interaction.editReply({ content: "There was an error while executing this command! Please try again.\nIf this keeps happening please join our [support server](https://discord.gg/asnZQwc6kW)." });
                 } else {
-                    await interaction.reply({ content: "There was an error while executing this command!", ephemeral: true });
+                    await interaction.reply({ content: "There was an error while executing this command! Please try again.\nIf this keeps happening please join our [support server](https://discord.gg/asnZQwc6kW).", ephemeral: true });
                 }
             }
         }
