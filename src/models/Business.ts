@@ -48,7 +48,7 @@ const Factory = new Schema<IFactory>({
     produceOn: { type: Number, default: 0 },
 });
 
-const businessSchema = new Schema<IBusiness>({
+export const businessSchema = new Schema<IBusiness>({
     name: { type: String, required: true, unique: true, index: true },
     balance: { type: Number, default: 0 },
     taxRate: { type: Number, default: 0 },

@@ -65,7 +65,6 @@ export interface IMember {
     birthday: Date;
     bio: string;
     badges: string[];
-    lastAirdrop: number;
     notifications: string[];
     lootboxes: InventoryItem[];
     stats: IStats;
@@ -118,7 +117,7 @@ const Tree = new Schema<ITree>({
     seedType: { type: String, default: "" },
 });
 
-const memberSchema = new Schema<IMember>({
+export const memberSchema = new Schema<IMember>({
     id: { type: String, required: true, unique: true, index: true },
     votes: { type: Number, default: 0 },
     spins: { type: Number, default: 0 },
@@ -141,7 +140,6 @@ const memberSchema = new Schema<IMember>({
     birthday: { type: Date, default: new Date(0) },
     bio: { type: String, default: "", minlength: 0, maxlength: 100 },
     badges: [{ type: String, default: [] }],
-    lastAirdrop: { type: Number, default: 0 },
     notifications: [{ type: String, default: [] }],
     lootboxes: [{ type: Item, default: [] }],
     stats: { type: Stats, default: {} },
