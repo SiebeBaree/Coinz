@@ -10,4 +10,5 @@ Thumbs.db
 
 # project unique assets
 src/assets/config.json
-src/assets/stats.json
+src/assets/items.json
+src/migrations
