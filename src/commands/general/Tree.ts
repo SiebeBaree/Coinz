@@ -6,6 +6,8 @@ import Member, { IMember } from "../../models/Member";
 import Item from "../../interfaces/Item";
 import Database from "../../utils/Database";
 import Helpers from "../../utils/Helpers";
+import UtilUser from "../../utils/User";
+import Achievement, { IAchievement } from "../../utils/Achievement";
 
 export default class extends Command implements ICommand {
     readonly info = {
@@ -37,6 +39,7 @@ export default class extends Command implements ICommand {
     private readonly shovel: Item;
     private readonly MAX_TREE_HEIGHT = 100;
     private readonly WATER_COOLDOWN = 28800;
+    private readonly achievement: IAchievement;
 
     constructor(bot: Bot, file: string) {
         super(bot, file);
@@ -44,13 +47,16 @@ export default class extends Command implements ICommand {
         const wood = this.client.items.getById("wood");
         const bag = this.client.items.getById("bag");
         const shovel = this.client.items.getById("shovel");
-        if (!wood || !bag || !shovel) {
-            throw new Error("Wood item not found.");
+        const achievement = Achievement.getById("large_tree");
+
+        if (!wood || !bag || !shovel || !achievement) {
+            throw new Error("Item or Achivement not found.");
         }
 
         this.wood = wood;
         this.bag = bag;
         this.shovel = shovel;
+        this.achievement = achievement;
     }
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
@@ -76,6 +82,7 @@ export default class extends Command implements ICommand {
 
         const message = await interaction.reply({ embeds: [this.getEmbed(interaction.user, member)], components: [this.getButtons(member)], fetchReply: true });
         const collector = message.createMessageComponentCollector({ filter: (i) => i.user.id === interaction.user.id, max: 5, time: 60_000, componentType: ComponentType.Button });
+        await UtilUser.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
 
         collector.on("collect", async (i) => {
             if (i.customId === "tree_water") {
@@ -95,6 +102,7 @@ export default class extends Command implements ICommand {
                     { id: member.id },
                     { $inc: { "tree.timesWatered": 1 }, $set: { "tree.lastWatered": now } },
                 );
+                await UtilUser.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
             } else if (i.customId === "tree_plant") {
                 member = await Database.getMember(interaction.user.id);
 
@@ -213,7 +221,7 @@ export default class extends Command implements ICommand {
                     .setCustomId("tree_water")
                     .setLabel("Water your tree")
                     .setStyle(ButtonStyle.Primary)
-                    .setDisabled(disabled || member.tree.lastWatered + this.WATER_COOLDOWN > Math.floor(Date.now() / 1000)),
+                    .setDisabled(disabled || member.tree.lastWatered + this.WATER_COOLDOWN > Math.floor(Date.now() / 1000) || member.tree.height >= this.MAX_TREE_HEIGHT),
             );
         }
 
