@@ -106,6 +106,14 @@ const achievements: IAchievement[] = [
         hasAchieved: (member: IMember) => member.inventory.reduce((acc, item) => acc + item.amount, 0) >= 1000,
         progress: (member: IMember) => `${member.inventory.reduce((acc, item) => acc + item.amount, 0) ?? 0}/1,000`,
     },
+    {
+        id: "large_tree",
+        name: "That's a really large tree",
+        description: "Grow a tree 100 feet tall.",
+        emoji: "1070020720375103571",
+        hasAchieved: (member: IMember) => member.tree.height >= 100,
+        progress: (member: IMember) => `${member.tree.height ?? 0}/100`,
+    },
 ];
 
 export default class Achievement {
