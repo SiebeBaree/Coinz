@@ -29,6 +29,16 @@ export default class extends Command implements ICommand {
                                 value: "vote",
                                 focused: true,
                             },
+                            {
+                                name: "Vote Reminders",
+                                value: "vote-reminder",
+                                focused: true,
+                            },
+                            {
+                                name: "Steal Notification",
+                                value: "steal",
+                                focused: true,
+                            },
                         ],
                     },
                     {

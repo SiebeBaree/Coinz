@@ -78,9 +78,30 @@ export default class extends Command implements ICommand {
         const memberWon = Math.random() < chance;
         const amount = Math.floor(Math.random() * (Math.floor(member.wallet * (memberWon ? 0.5 : 0.4)) - 0 + 1) + 0);
 
+        const embed = new EmbedBuilder()
+            .setAuthor({ name: `Steal from ${victim.tag}`, iconURL: victim.displayAvatarURL() })
+            .setColor(memberWon ? Colors.Green : Colors.Red)
+            .setDescription(`You ${memberWon ? "stole" : "tried to steal, but failed and lost"} **${amount}** from **${victim.tag}**.`)
+            .setFooter({ text: this.client.config.embed.footer });
+        await interaction.editReply({ embeds: [embed] });
+
+        if (bombActivated) {
+            await this.client.items.removeItem("bomb", member);
+        }
+
         if (memberWon) {
             await User.addMoney(interaction.user.id, Math.floor(amount * 0.8));
             await User.removeMoney(victim.id, amount);
+
+            if (victimMember.notifications.includes("steal")) {
+                try {
+                    const dmChannel = await victim.createDM();
+                    await dmChannel.send({ content: `**${interaction.user.tag}** stole :coin: **${amount}** from you.` });
+                    await victim.deleteDM();
+                } catch {
+                    // Ignore
+                }
+            }
         } else {
             if (padlockInInventory && Math.random() <= 0.25) {
                 await this.client.items.removeItem("padlock", victimMember);
@@ -88,16 +109,5 @@ export default class extends Command implements ICommand {
 
             await User.removeMoney(interaction.user.id, amount);
         }
-
-        if (bombActivated) {
-            await this.client.items.removeItem("bomb", member);
-        }
-
-        const embed = new EmbedBuilder()
-            .setAuthor({ name: `Steal from ${victim.tag}`, iconURL: victim.displayAvatarURL() })
-            .setColor(memberWon ? Colors.Green : Colors.Red)
-            .setDescription(`You ${memberWon ? "stole" : "tried to steal, but failed and lost"} **${amount}** from **${victim.tag}**.`)
-            .setFooter({ text: this.client.config.embed.footer });
-        await interaction.editReply({ embeds: [embed] });
     }
 }

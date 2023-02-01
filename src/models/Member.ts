@@ -42,6 +42,13 @@ interface ITree {
     seedType: string;
 }
 
+interface IVoteTimestamps {
+    website: string;
+    lastVoted: number;
+    timesVoted: number;
+    sendReminder: boolean;
+}
+
 export interface IMember {
     id: string;
     votes: number;
@@ -70,6 +77,7 @@ export interface IMember {
     stats: IStats;
     premium: IPremium;
     tree: ITree;
+    voteTimestamps: IVoteTimestamps[];
 }
 
 const Item = new Schema<InventoryItem>({
@@ -117,6 +125,13 @@ const Tree = new Schema<ITree>({
     seedType: { type: String, default: "" },
 });
 
+const VoteTimestamps = new Schema<IVoteTimestamps>({
+    website: { type: String, required: true },
+    lastVoted: { type: Number, default: 0 },
+    timesVoted: { type: Number, default: 0 },
+    sendReminder: { type: Boolean, default: false },
+});
+
 export const memberSchema = new Schema<IMember>({
     id: { type: String, required: true, unique: true, index: true },
     votes: { type: Number, default: 0 },
@@ -140,11 +155,12 @@ export const memberSchema = new Schema<IMember>({
     birthday: { type: Date, default: new Date(0) },
     bio: { type: String, default: "", minlength: 0, maxlength: 100 },
     badges: [{ type: String, default: [] }],
-    notifications: [{ type: String, default: [] }],
+    notifications: [{ type: String, default: ["vote"] }],
     lootboxes: [{ type: Item, default: [] }],
     stats: { type: Stats, default: {} },
     premium: { type: Premium, default: {} },
     tree: { type: Tree, default: {} },
+    voteTimestamps: [{ type: VoteTimestamps, default: [] }],
 }, { timestamps: true });
 
 export default model<IMember>("Member", memberSchema);
