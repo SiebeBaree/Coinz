@@ -11,7 +11,7 @@ class Manager {
             token: process.env.DISCORD_TOKEN,
         });
 
-        manager.on("clusterCreate", cluster => logger.info(`Launched Cluster ${cluster.id}`));
+        manager.on("clusterCreate", cluster => logger.info(`Booting Cluster ${cluster.id}`));
         manager.spawn({ delay: 7_000, timeout: -1 });
     }
 }
