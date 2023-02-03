@@ -48,11 +48,11 @@ export default class extends Command implements ICommand {
 
     private readonly values = {
         "🎲": {
-            value: 0.4,
-            quantity: 4,
+            value: 0.6,
+            quantity: 5,
         },
         "💰": {
-            value: 0.6,
+            value: 0.8,
             quantity: 3,
         },
         "🎁": {
@@ -60,7 +60,7 @@ export default class extends Command implements ICommand {
             quantity: 2,
         },
         "💎": {
-            value: 1.3,
+            value: 1.5,
             quantity: 1,
         },
     };

@@ -195,7 +195,7 @@ export default class extends Command implements ICommand {
         return new EmbedBuilder()
             .setTitle(`${user.username}'s Tree`)
             .setColor(<ColorResolvable>this.client.config.embed.color)
-            .setImage(member.tree.seedType === "" ? `https://cdn.coinzbot.xyz/tree/${member.tree.preference.toLowerCase()}/unplanted.png` : imageURL)
+            .setImage(member.tree.planted === 0 ? `https://cdn.coinzbot.xyz/tree/${member.tree.preference.toLowerCase()}/unplanted.png` : imageURL)
             .setDescription(`${member.tree.planted === 0 ?
                 `:x: You haven't planted a tree yet.\n:seedling: To plant a tree you need a <:${this.shovel.itemId}:${this.shovel.emoteId}> **${this.shovel.name}**.\n\n`
                 : `:straight_ruler: **Height:** ${member.tree.height}ft (${Math.round(member.tree.height / this.FT_TO_M)}m)\n<:${this.wood.itemId}:${this.wood.emoteId}> **Total Wood:** ${Math.round(wood * 0.9)} (With <:${this.bag.itemId}:${this.bag.emoteId}> you get ${wood})`}`)

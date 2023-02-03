@@ -1,7 +1,7 @@
 {
     "hard": {
         "fail": {
-            "risk": 35,
+            "risk": 40,
             "message": "You got caught hunting exotic animals. You paid a :coin: %AMOUNT% fine and had to return your hunting rifle.",
             "looseRequiredItem": true,
             "fine": {
@@ -30,7 +30,7 @@
     },
     "medium": {
         "fail": {
-            "risk": 30,
+            "risk": 35,
             "message": "You got hunted down by a bear. You lost your rifle during the escape and paid a :coin: %AMOUNT% hospital bill.",
             "looseRequiredItem": true,
             "fine": {
@@ -60,7 +60,7 @@
     },
     "easy": {
         "fail": {
-            "risk": 40,
+            "risk": 45,
             "message": "Other hunters are better than you. You didn't kill any animals...",
             "looseRequiredItem": true,
             "fine": {

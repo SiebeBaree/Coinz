@@ -80,7 +80,7 @@ export default class extends Command implements ICommand {
             return;
         }
 
-        if (Helpers.getRandomNumber(1, 100) <= 4) {
+        if (Helpers.getRandomNumber(1, 100) <= 8) {
             await Cooldown.removeCooldown(interaction.user.id, this.info.name);
             await this.client.items.removeItem(requiredItem.itemId, member);
             await interaction.reply({ content: `Oh No! Your <:${requiredItem.itemId}:${requiredItem.emoteId}> **${requiredItem.name}** broke... You have to buy a new **${requiredItem.name}**. Use \`/shop buy item-id:${requiredItem.itemId}\` to buy a **${requiredItem.name}**.`, embeds: [], components: [] });
@@ -101,6 +101,7 @@ export default class extends Command implements ICommand {
         collector.on("collect", async (interactionCollector) => {
             if (finishedCommand) return;
             finishedCommand = true;
+            await interactionCollector.deferUpdate();
 
             if (requiredItem === undefined) return;
             if (interactionCollector.customId === "fish_end") {
