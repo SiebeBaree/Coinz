@@ -3,6 +3,7 @@ import Cooldown, { ICooldown } from "../models/Cooldown";
 import Guild, { IGuild } from "../models/Guild";
 import Investment, { IInvestment } from "../models/Investment";
 import Member, { IMember } from "../models/Member";
+import Premium, { IPremium } from "../models/Premium";
 
 export default class Database {
     static async getGuild(guildId: string, fetch = false): Promise<IGuild> {
@@ -38,5 +39,14 @@ export default class Database {
         const newBusiness = new Business({ name: name });
         if (fetch) await newBusiness.save();
         return newBusiness;
+    }
+
+    static async getPremium(userId: string, fetch = false): Promise<IPremium> {
+        const premium = await Premium.findOne({ id: userId });
+        if (premium) return premium;
+
+        const newPremium = new Premium({ id: userId });
+        if (fetch) await newPremium.save();
+        return newPremium;
     }
 }
