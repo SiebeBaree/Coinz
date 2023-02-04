@@ -4,7 +4,6 @@ import { embed } from "../assets/config.json";
 export interface IPremium {
     active: boolean;
     userId: string;
-    expires: number;
 }
 
 export interface IGuild {
@@ -17,7 +16,6 @@ export interface IGuild {
 const Premium = new Schema<IPremium>({
     active: { type: Boolean, default: false },
     userId: { type: String, default: "" },
-    expires: { type: Number, default: 0 },
 });
 
 const guildSchema = new Schema<IGuild>({
