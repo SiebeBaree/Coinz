@@ -123,7 +123,7 @@ export default class extends Command implements ICommand {
         for (const tier of Object.values(this.tiers)) {
             embed.addFields({
                 name: tier.name,
-                value: `${this.ticketEmote} **Price per month:** $${tier.price / 100} OR ${this.ticketEmote} ${tier.price}\n:star: **Perks:** [official store](https://coinzbot.xyz/store/)`,
+                value: `${this.ticketEmote} **Price per month:** $${tier.price / 100}${tier.isUser ? ` OR ${this.ticketEmote} ${tier.price}` : ""}\n:star: **Perks:** [official store](https://coinzbot.xyz/store/)`,
                 inline: false,
             });
         }
