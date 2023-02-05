@@ -5,6 +5,7 @@ import Command from "../../structs/Command";
 import { IMember } from "../../models/Member";
 import User from "../../utils/User";
 import Database from "../../utils/Database";
+import Item from "../../interfaces/Item";
 
 export default class extends Command implements ICommand {
     readonly info = {
@@ -31,8 +32,16 @@ export default class extends Command implements ICommand {
         cooldown: 86400,
     };
 
+    private readonly bomb: Item;
     constructor(bot: Bot, file: string) {
         super(bot, file);
+
+        const bomb = this.client.items.getById("bomb");
+        if (!bomb) {
+            throw new Error("Bomb item not found.");
+        }
+
+        this.bomb = bomb;
     }
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
@@ -54,9 +63,9 @@ export default class extends Command implements ICommand {
             return;
         }
 
-        const bombInInventory = this.client.items.hasInInventory("bomb", member);
+        const bombInInventory = this.client.items.hasInInventory(this.bomb.itemId, member);
         if (!bombInInventory && bombActivated) {
-            await interaction.reply({ content: "You don't have a bomb to use.", ephemeral: true });
+            await interaction.reply({ content: `You don't have a <:${this.bomb.itemId}:${this.bomb.emoteId}> **${this.bomb.name}** to use.`, ephemeral: true });
             return;
         }
 
@@ -81,12 +90,12 @@ export default class extends Command implements ICommand {
         const embed = new EmbedBuilder()
             .setAuthor({ name: `Steal from ${victim.tag}`, iconURL: victim.displayAvatarURL() })
             .setColor(memberWon ? Colors.Green : Colors.Red)
-            .setDescription(`You ${memberWon ? "stole" : "tried to steal, but failed and lost"} **${amount}** from **${victim.tag}**.`)
+            .setDescription(`You ${memberWon ? "stole" : "tried to steal, but failed and lost"} :coin: **${amount}** from **${victim.tag}**.`)
             .setFooter({ text: this.client.config.embed.footer });
         await interaction.editReply({ embeds: [embed] });
 
         if (bombActivated) {
-            await this.client.items.removeItem("bomb", member);
+            await this.client.items.removeItem(this.bomb.itemId, member);
         }
 
         if (memberWon) {
