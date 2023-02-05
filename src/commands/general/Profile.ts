@@ -31,6 +31,8 @@ export default class extends Command implements ICommand {
         deferReply: true,
     };
 
+    private readonly FT_TO_M = 3.28084;
+
     constructor(bot: Bot, file: string) {
         super(bot, file);
     }
@@ -138,7 +140,7 @@ export default class extends Command implements ICommand {
                 { name: "Premium Status", value: userData.premium.active ? `:star: **Premium:** :white_check_mark:\n:hourglass: **Premium Expires:** <t:${expireTimestamp}:D>\n` : ":star: **Premium:** :x:", inline: false },
                 { name: "Balance", value: `:dollar: **Wallet:** :coin: ${userData.wallet}\n:bank: **Bank:** :coin: ${userData.bank} / ${userData.bankLimit}\n:moneybag: **Net Worth:** :coin: ${userData.wallet + userData.bank}\n:credit_card: **Tickets:** <:ticket:1032669959161122976> ${userData.tickets || 0}\n:gem: **Inventory Worth:** \`${inventory.items} items\` valued at :coin: ${inventory.value}`, inline: false },
                 { name: "Investment Portfolio", value: `:dollar: **Worth:** :coin: ${Math.round((stocks.value + Number.EPSILON) * 100) / 100}\n:credit_card: **Amount:** ${Math.round((stocks.items + Number.EPSILON) * 100) / 100}x\n:moneybag: **Invested:** :coin: ${stocks.initialValue}`, inline: false },
-                { name: "Misc", value: `:briefcase: **Current Job:** ${workJob}\n:office: **Business:** ${businessJob}\n:sparkles: **Daily Streak:** ${userData.streak - 1 > 0 ? userData.streak - 1 : 0} days\n:seedling: **Farm:** ${userData.plots.length} plots`, inline: false },
+                { name: "Misc", value: `:briefcase: **Current Job:** ${workJob}\n:office: **Business:** ${businessJob}\n:sparkles: **Daily Streak:** ${userData.streak - 1 > 0 ? userData.streak - 1 : 0} days\n:seedling: **Farm:** ${userData.plots.length} plots\n:evergreen_tree: **Tree Height:** ${userData.tree.height ?? 0}ft (${Math.round(userData.tree.height / this.FT_TO_M)}m)`, inline: false },
                 { name: "Badges (Achievements)", value: `${userData.badges.length <= 0 ? "None" : userData.badges.map((id) => `<:${id}:${Achievement.getById(id)?.emoji}>`).join(" ")}`, inline: false },
             );
         return embed;
