@@ -2,7 +2,7 @@ import { ChatInputCommandInteraction, EmbedBuilder, Colors, ComponentType, Actio
 import Bot from "../../structs/Bot";
 import ICommand from "../../interfaces/ICommand";
 import Command from "../../structs/Command";
-import Member from "../../models/Member";
+import Member, { IMember } from "../../models/Member";
 import Business from "../../models/Business";
 
 export default class extends Command implements ICommand {
@@ -19,7 +19,7 @@ export default class extends Command implements ICommand {
         super(bot, file);
     }
 
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction, member: IMember) {
         const confirmEmbed = new EmbedBuilder()
             .setTitle("Are you sure you want to reset your account?")
             .setDescription("This will reset your account on EVERY server you're in.")
@@ -44,8 +44,41 @@ export default class extends Command implements ICommand {
 
         collector.on("collect", async (i) => {
             if (i.customId === "reset_confirm") {
+                await i.deferUpdate();
+                if (member.business !== "") {
+                    const business = await Business.findOne({ name: member.business });
+                    if (business) {
+                        const ceo = business.employees.find((e) => e.role === "ceo");
+
+                        if (ceo?.userId === interaction.user.id) {
+                            for (const employee of business.employees) {
+                                await Member.updateOne({ id: employee.userId }, { $set: { business: "" } });
+                            }
+
+                            await Business.deleteOne({ name: member.business });
+                        } else {
+                            await Business.updateOne(
+                                { name: member.business },
+                                { $pull: { employees: { userId: interaction.user.id } } },
+                            );
+                        }
+                    }
+                }
+
                 await Member.deleteOne({ id: interaction.user.id });
-                await Business.deleteOne({ ownerId: interaction.user.id });
+
+                await Member.updateOne(
+                    { id: interaction.user.id },
+                    {
+                        $set: {
+                            premium: {
+                                active: member.premium.active,
+                                expires: member.premium.expires,
+                                tier: member.premium.tier,
+                            },
+                        },
+                    },
+                );
 
                 const successEmbed = new EmbedBuilder()
                     .setTitle("Successfully reset your account!")
@@ -53,7 +86,7 @@ export default class extends Command implements ICommand {
                     .setColor(Colors.Green)
                     .setTimestamp(new Date())
                     .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.avatarURL() ?? undefined });
-                await i.update({ embeds: [successEmbed] });
+                await interaction.editReply({ embeds: [successEmbed] });
             } else if (i.customId === "reset_cancel") {
                 const cancelEmbed = new EmbedBuilder()
                     .setTitle("Cancelled")
