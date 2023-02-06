@@ -55,6 +55,7 @@
     "fs": "^0.0.1-security",
     "moment": "^2.29.4",
     "mongoose": "^6.9.0",
+    "sharding-stats": "^2.3.0",
     "winston": "^3.8.2",
     "winston-daily-rotate-file": "^4.7.1"
   }
