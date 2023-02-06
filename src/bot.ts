@@ -4,6 +4,10 @@ import { connect, set } from "mongoose";
 import topgg from "@top-gg/sdk";
 import Bot from "./structs/Bot";
 import axios from "axios";
+import Cluster from "discord-hybrid-sharding";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import Stats from "sharding-stats";
 
 class Main {
     private client: Bot;
@@ -24,6 +28,8 @@ class Main {
                     type: ActivityType.Watching,
                 }],
             },
+            shards: Cluster.getInfo().SHARD_LIST,
+            shardCount: Cluster.getInfo().TOTAL_SHARDS,
         });
 
     }
@@ -45,8 +51,37 @@ class Main {
             .catch(this.client.logger.error);
 
         this.client.on("ready", async () => {
-            if (this.client.cluster?.id === (this.client.cluster?.info.CLUSTER_COUNT ?? 1) - 1) {
-                if (process.env.NODE_ENV === "production") {
+            if (process.env.NODE_ENV === "production") {
+                const statsClient = new Stats.Client(this.client, {
+                    customPoster: true,
+                    authorizationkey: process.env.API_SHARDINGSTATS,
+                    stats_uri: process.env.WEBSERVER_URL,
+                });
+
+                setInterval(() => postStats(), 25_000);
+
+                const postStats = async () => {
+                    const shards = [...this.client.ws.shards.values()];
+                    const guilds = [...this.client.guilds.cache.values()];
+                    for (let i = 0; i < shards.length; i++) {
+                        const filteredGuilds = guilds ? guilds
+                            .filter(x => x.shardId === shards[i].id)
+                            .filter(Boolean)
+                            : [];
+
+                        const body = {
+                            id: shards[i] ? shards[i].id : -1,
+                            cluster: this.client.cluster?.id,
+                            ping: shards[i] ? shards[i].ping : -1,
+                            guildcount: filteredGuilds.length,
+                            ram: statsClient.getRamUsageinMB(),
+                        };
+
+                        await statsClient.sendPostData(body);
+                    }
+                };
+
+                if (this.client.cluster?.id === (this.client.cluster?.info.CLUSTER_COUNT ?? 1) - 1) {
                     const topggApi = new topgg.Api(process.env.API_BOTLIST_DBL ?? "");
 
                     setInterval(async () => {
