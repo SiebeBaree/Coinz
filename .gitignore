@@ -12,3 +12,7 @@ Thumbs.db
 src/assets/config.json
 src/assets/items.json
 src/migrations
+src/*.ts
+!src/bot.ts
+!src/manager.ts
+!src/register.ts
