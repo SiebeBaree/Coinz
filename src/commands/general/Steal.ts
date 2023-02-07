@@ -82,7 +82,7 @@ export default class extends Command implements ICommand {
         let chance = 0.35;
         if (padlockInInventory) chance -= 0.10;
         if (bombInInventory) chance += 0.05;
-        if (victimMember.premium.active) chance -= victimMember.premium.tier === 2 ? 0.15 : 0.05;
+        if (victimMember.premium.active && victimMember.premium.tier === 2) chance -= 0.10;
 
         const memberWon = Math.random() < chance;
         const amount = Math.floor(Math.random() * (Math.floor(member.wallet * (memberWon ? 0.5 : 0.4)) - 0 + 1) + 0);
