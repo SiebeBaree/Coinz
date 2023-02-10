@@ -10,7 +10,7 @@ import Guild from "../../models/Guild";
 export default class extends Command implements ICommand {
     readonly info = {
         name: "premium",
-        description: "Buy a premium subscription and (de)activate server features.",
+        description: "Get more info about premium and (de)activate server features.",
         options: [
             {
                 name: "info",
