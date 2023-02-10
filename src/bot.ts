@@ -4,7 +4,7 @@ import { connect, set } from "mongoose";
 import topgg from "@top-gg/sdk";
 import Bot from "./structs/Bot";
 import axios from "axios";
-import Cluster from "discord-hybrid-sharding";
+import { getInfo } from "discord-hybrid-sharding";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import Stats from "sharding-stats";
@@ -28,8 +28,8 @@ class Main {
                     type: ActivityType.Watching,
                 }],
             },
-            shards: Cluster.getInfo().SHARD_LIST,
-            shardCount: Cluster.getInfo().TOTAL_SHARDS,
+            shards: getInfo().SHARD_LIST,
+            shardCount: getInfo().TOTAL_SHARDS,
         });
 
     }
