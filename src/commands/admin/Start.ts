@@ -22,7 +22,7 @@ export default class extends Command implements ICommand {
         this.client.logger.info(`Giving ${interaction.user.tag} a starting balance.`);
         await Member.updateOne({ id: interaction.user.id }, {
             $inc: {
-                balance: 50000,
+                wallet: 50000,
                 tickets: 150,
                 experience: 500,
             },
