@@ -1,7 +1,6 @@
 import { ActivityType, GatewayIntentBits, Guild, Partials } from "discord.js";
 import { postBotStats } from "discordbotlist";
 import { connect, set } from "mongoose";
-import topgg from "@top-gg/sdk";
 import Bot from "./structs/Bot";
 import axios from "axios";
 import { getInfo } from "discord-hybrid-sharding";
@@ -58,8 +57,6 @@ class Main {
                     stats_uri: process.env.WEBSERVER_URL,
                 });
 
-                setInterval(() => postStats(), 25_000);
-
                 const postStats = async () => {
                     const shards = [...this.client.ws.shards.values()];
                     const guilds = [...this.client.guilds.cache.values()];
@@ -81,9 +78,10 @@ class Main {
                     }
                 };
 
-                if (this.client.cluster?.id === (this.client.cluster?.info.CLUSTER_COUNT ?? 1) - 1) {
-                    const topggApi = new topgg.Api(process.env.API_BOTLIST_DBL ?? "");
+                setInterval(() => postStats(), 25_000);
+                postStats();
 
+                if (this.client.cluster?.id === (this.client.cluster?.info.CLUSTER_COUNT ?? 1) - 1) {
                     setInterval(async () => {
                         try {
                             const guilds = await this.client.cluster?.broadcastEval(c => c.guilds.cache.size)
@@ -93,9 +91,14 @@ class Main {
                             this.client.logger.info(`Coinz Stats: ${guilds} guilds, ${users} users`);
 
                             // Posting to top.gg
-                            await topggApi.postStats({
-                                serverCount: guilds ?? 0,
-                                shardCount: this.client.cluster?.info.TOTAL_SHARDS ?? 1,
+                            axios.post(`https://top.gg/api/bots/${this.client.user?.id}/stats`, {
+                                body: {
+                                    server_count: guilds ?? 0,
+                                    shard_count: this.client.cluster?.info.TOTAL_SHARDS ?? 1,
+                                },
+                                headers: {
+                                    Authorization: process.env.API_BOTLIST_TOPGG,
+                                },
                             });
 
                             // Posting to discordbotlist.com
