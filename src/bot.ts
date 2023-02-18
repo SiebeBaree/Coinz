@@ -113,6 +113,7 @@ class Main {
                                     server_count: guilds ?? 0,
                                 },
                                 headers: {
+                                    "Content-Type": "application/json",
                                     Authorization: process.env.API_BOTLIST_DISCORDS,
                                 },
                             });
