@@ -52,7 +52,7 @@ export default class extends Command implements ICommand {
         const ItemsPerPage = 7;
 
         const options = this.client.items.getCategories();
-        let defaultLabel = options[0].value;
+        let defaultLabel = options[options.length - 1].value;
         let items = this.getItemsByCategory(userData.inventory, defaultLabel);
         let maxPage = Math.ceil(items.length / ItemsPerPage);
 
@@ -100,6 +100,7 @@ export default class extends Command implements ICommand {
     }
 
     getItemsByCategory(inventory: InventoryItem[], category: string) {
+        if (category === "all") return inventory;
         return inventory.filter((item) => this.client.items.getById(item.itemId)?.category === category);
     }
 }
