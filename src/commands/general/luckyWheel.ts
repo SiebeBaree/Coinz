@@ -134,7 +134,7 @@ export default class extends Command implements ICommand {
         let earnedTickets = 0;
         let totalValue = 0;
 
-        const rewardsStr = rewardItems.map(async (rItem) => {
+        const rewardsPromise = rewardItems.map(async (rItem) => {
             if (rItem.itemId.startsWith("money")) {
                 earnedCoins += rItem.amount;
                 return;
@@ -148,21 +148,22 @@ export default class extends Command implements ICommand {
                 await this.client.items.addItem(rItem.itemId, member, rItem.amount);
                 return `**${rItem.amount}x** <:${item.itemId}:${item.emoteId}> ${item.name}`;
             }
-        }).join("\n") || "No rewards :(";
+        });
 
-        await Member.updateOne({ userId: interaction.user.id }, {
+        const rewardsStr = await Promise.all(rewardsPromise);
+        await Member.updateOne({ id: interaction.user.id }, {
             $inc: { spins: -amount, coins: earnedCoins, tickets: earnedTickets, "stats.luckyWheelSpins": amount },
         });
 
         await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
 
-        const bonusTxt = earnedCoins > 0 || earnedTickets > 0 ? "\n:moneybag: **You also got :coin: ${money} and <:ticket:1032669959161122976> ${tickets} extra!**" : "";
+        const bonusTxt = earnedCoins > 0 || earnedTickets > 0 ? `\n:moneybag: **You also got :coin: ${earnedCoins} and <:ticket:1032669959161122976> ${earnedTickets} extra!**` : "";
         const embed = new EmbedBuilder()
             .setAuthor({ name: `${interaction.user.username}'s Lucky Wheel`, iconURL: interaction.user.displayAvatarURL() })
             .setColor(<ColorResolvable>this.client.config.embed.color)
             .setDescription(`:tada: **You spun the lucky wheel ${amount} time${amount === 1 ? "" : "s"}.**\n:gem: **Your rewards are :coin: ${totalValue} worth.**${bonusTxt}`)
             .setFooter({ text: this.client.config.embed.footer })
-            .addFields({ name: `Rewards (${amount} spin${amount === 1 ? "" : "s"})`, value: rewardsStr, inline: true });
+            .addFields({ name: `Rewards (${amount} spin${amount === 1 ? "" : "s"})`, value: rewardsStr.join("\n") || "No rewards :(", inline: true });
         await interaction.editReply({ embeds: [embed] });
         await this.client.items.checkForDuplicates(member);
     }
@@ -176,7 +177,7 @@ export default class extends Command implements ICommand {
             return;
         }
 
-        await Member.updateOne({ userId: interaction.user.id }, {
+        await Member.updateOne({ id: interaction.user.id }, {
             $inc: { spins: amount, tickets: -price },
         });
         await interaction.reply({ content: `You bought ${amount} spin${amount === 1 ? "" : "s"} for <:ticket:1032669959161122976> ${price}.` });
@@ -184,7 +185,7 @@ export default class extends Command implements ICommand {
 
     private getLoot(amount: number): RewardsItem[] {
         const rewards: RewardsItem[] = [];
-        const keys = Object.keys(rewards);
+        const keys = Object.keys(loot);
 
         for (let i = 0; i < amount; i++) {
             const itemId = keys[Math.floor(Math.random() * keys.length)];

@@ -12,6 +12,7 @@ import SellItem from "./SellItem";
 import Supply from "./Supply";
 import Employee from "./Employee";
 import PayDividends from "./PayDividends";
+import Leave from "./Leave";
 
 export default class extends Command implements ICommand {
     readonly info = {
@@ -257,6 +258,9 @@ export default class extends Command implements ICommand {
                 break;
             case "create":
                 new Create(this.client, this.file, this.info).execute(interaction, member, data);
+                break;
+            case "leave":
+                new Leave(this.client, this.file, this.info).execute(interaction, member, data);
                 break;
             case "rename":
                 new Rename(this.client, this.file, this.info).execute(interaction, member, data);

@@ -152,7 +152,7 @@ export default class extends Command implements ICommand {
         }
 
         if (!force) {
-            const alreadyPlanted = plantedPlots.filter((plotId) => member.plots[plotId - 1].status !== "empty");
+            const alreadyPlanted = plantedPlots.filter((plotId) => member.plots[plotId - 1].status === "harvest" || member.plots[plotId - 1].status === "growing");
 
             if (alreadyPlanted.length > 0) {
                 await interaction.reply({ content: `You already planted something on plot${alreadyPlanted.length > 1 ? "s" : ""} ${alreadyPlanted.join(", ")}.\nUse \`/${this.info.name} plant plot-id: ${plotIds} crop: ${cropId} force: yes\` to re-plant.`, ephemeral: true });
@@ -183,7 +183,7 @@ export default class extends Command implements ICommand {
         const now = Math.floor(Date.now() / 1000);
 
         const waterDescription = member.lastWatered + this.waterCooldown > now ?
-            `You can water your crops again in ${Helpers.msToTime((member.lastWatered + this.waterCooldown) * 1000 - Date.now())}.` :
+            `You can water your crops again <t:${(member.lastWatered + this.waterCooldown)}:R>.` :
             "You can water your plots.";
 
         const buyPlotDescription = member.plots.length < plotLimit ? `\n:moneybag: **You can buy a new plot for :coin: ${this.getPlotPrice(member.plots.length)}.**` : "";
@@ -219,7 +219,7 @@ export default class extends Command implements ICommand {
                 if (!item) continue;
 
                 icon = ":seedling:";
-                cropStatus = `<:${item.itemId}:${item.emoteId}> in ${Helpers.msToTime((plot.harvestOn * 1000) - Date.now())}`;
+                cropStatus = `<:${item.itemId}:${item.emoteId}> <t:${plot.harvestOn}:R>`;
             } else if (plot.status === "rotten") {
                 icon = ":wilted_rose:";
                 cropStatus = "Crops are rotten";
@@ -286,7 +286,7 @@ export default class extends Command implements ICommand {
             }
         }
 
-        await Member.updateOne({ id: member.id }, { $set: { lastWater: Math.floor(Date.now() / 1000) } });
+        await Member.updateOne({ id: member.id }, { $set: { lastWatered: Math.floor(Date.now() / 1000) } });
     }
 
     private async pressHarvestButton(member: IMember): Promise<void> {

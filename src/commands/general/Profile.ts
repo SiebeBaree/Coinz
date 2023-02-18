@@ -155,15 +155,13 @@ export default class extends Command implements ICommand {
             const maxCooldowns = 25;
 
             const now = Math.floor(Date.now() / 1000);
-            if (cooldowns.length <= 0) {
-                for (let i = 0; i < cooldowns.length; i++) {
-                    if (cooldowns[i].expires > now) {
-                        if (cooldownsAmount <= maxCooldowns) {
-                            cooldownStr += `**${cooldowns[i].command}:** <t:${cooldowns[i].expires}:R>\n`;
-                            cooldownsAmount++;
-                        } else {
-                            break;
-                        }
+            for (let i = 0; i < cooldowns.length; i++) {
+                if (cooldowns[i].expires > now) {
+                    if (cooldownsAmount <= maxCooldowns) {
+                        cooldownStr += `**${cooldowns[i].command}:** <t:${cooldowns[i].expires}:R>\n`;
+                        cooldownsAmount++;
+                    } else {
+                        break;
                     }
                 }
             }

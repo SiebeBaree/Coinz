@@ -62,7 +62,7 @@
         "fail": {
             "risk": 45,
             "message": "Other hunters are better than you. You didn't kill any animals...",
-            "looseRequiredItem": true,
+            "looseRequiredItem": false,
             "fine": {
                 "min": 0,
                 "max": 0

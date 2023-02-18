@@ -88,27 +88,27 @@ export default class extends Command implements ICommand {
                 gameData.playerWon = true;
                 gameData.color = Colors.Green;
                 collector.stop();
-            }
-
-            if (button === "higher" && nextNumber > gameData.number ||
-                button === "lower" && nextNumber < gameData.number ||
-                button === "jackpot" && nextNumber === gameData.number) {
-                gameData.timesCorrect++;
             } else {
-                gameData.finishedCommand = true;
-                gameData.playerWon = false;
-                gameData.color = Colors.Red;
-                collector.stop();
-            }
+                if (button === "higher" && nextNumber > gameData.number ||
+                    button === "lower" && nextNumber < gameData.number ||
+                    button === "jackpot" && nextNumber === gameData.number) {
+                    gameData.timesCorrect++;
+                } else {
+                    gameData.finishedCommand = true;
+                    gameData.playerWon = false;
+                    gameData.color = Colors.Red;
+                    collector.stop();
+                }
 
-            if (gameData.timesCorrect >= 5) {
-                gameData.finishedCommand = true;
-                gameData.playerWon = true;
-                gameData.color = Colors.Green;
-                collector.stop();
-            }
+                if (gameData.timesCorrect >= 5) {
+                    gameData.finishedCommand = true;
+                    gameData.playerWon = true;
+                    gameData.color = Colors.Green;
+                    collector.stop();
+                }
 
-            gameData.number = nextNumber;
+                gameData.number = nextNumber;
+            }
 
             if (gameData.finishedCommand && gameData.playerWon) {
                 await User.addMoney(interaction.user.id, this.getPrice(gameData.bet, gameData.timesCorrect));

@@ -116,8 +116,8 @@ export default class extends Command implements ICommand {
                 emoteId: item.emoteId,
                 name: item.name,
                 sellPrice: item.sellPrice ?? 0,
-                quantity: 0,
-                produceTime: 0,
+                quantity: Math.floor(item.multiplier ?? 1),
+                produceTime: item.duration ?? 3600,
                 requiredItems: Object.entries(requiredItems).map(([_itemId, amount]) => ({
                     itemId: _itemId,
                     amount,

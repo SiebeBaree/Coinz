@@ -17,7 +17,7 @@ export default class {
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
         const currentJob = jobs.find((j) => j.name === member.job);
         if (currentJob) {
-            await interaction.reply({ content: `You already have a job. Please leave your current job with </${this.info.name} leave:983096143284174858>.`, ephemeral: true });
+            await interaction.reply({ content: `You already have a job. Please leave your current job with </${this.info.name} quit:983096143284174858>.`, ephemeral: true });
             return;
         }
 

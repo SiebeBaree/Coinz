@@ -49,7 +49,7 @@ export default class extends Command {
 
         const product = data.items.find((item) => item.itemId === productId) ?? data.items.find((item) => item.name.toLowerCase() === productId);
         if (!product) {
-            await interaction.reply({ content: `That's not a valid product to produce... Please use </${this.info.name} list-products:993095062726647809> to get a list of all products.`, ephemeral: true });
+            await interaction.reply({ content: `That's not a valid product to produce... Please use </${this.info.name} list-products:1074380587508445277> to get a list of all products.`, ephemeral: true });
             return;
         }
 
@@ -102,7 +102,7 @@ export default class extends Command {
                 $set: {
                     "factories.$.production": productId,
                     "factories.$.status": "producing",
-                    "factories.$.produceOn": Math.floor(Date.now() + (product.produceTime * 1000)),
+                    "factories.$.produceOn": Math.floor(Date.now() / 1000) + product.produceTime,
                 },
             });
         }
