@@ -5,7 +5,6 @@ import { IMember } from "../../../models/Member";
 import { Info } from "../../../interfaces/ICommand";
 import { FactoryData } from ".";
 import Business, { IBusiness, IFactory } from "../../../models/Business";
-import Helpers from "../../../utils/Helpers";
 import Database from "../../../utils/Database";
 import User from "../../../utils/User";
 
@@ -72,7 +71,7 @@ export default class extends Command {
         const embed = new EmbedBuilder()
             .setTitle(`${business.name}'s Factory`)
             .setColor(<ColorResolvable>this.client.config.embed.color)
-            .setDescription(`:gear: **Use** </${this.info.name} set-production:993095062726647809> **to start producing products.**\n:package: **You can clear destoryed products by collecting all products.**\n:wrench: **All collected products can be found in your business inventory** </business info:1048340073470513155>**.**${buyFactoryDescription}`);
+            .setDescription(`:gear: **Use** </${this.info.name} set-production:1074380587508445277> **to start producing products.**\n:package: **You can clear destoryed products by collecting all products.**\n:wrench: **All collected products can be found in your business inventory** </business info:1048340073470513155>**.**${buyFactoryDescription}`);
 
         if (business.factories.length == 0) {
             embed.addFields({ name: "Buy a Factory", value: "Please press the button below to buy a factory.", inline: false });
@@ -100,7 +99,7 @@ export default class extends Command {
                 if (!item) continue;
 
                 icon = ":gear:";
-                factoryStatus = `<:${item.itemId}:${item.emoteId}> in ${Helpers.msToTime((factory.produceOn - now) * 1000)}`;
+                factoryStatus = `<:${item.itemId}:${item.emoteId}> <t:${factory.produceOn}:R>`;
             } else if (factory.status === "destroyed") {
                 icon = ":package:";
                 factoryStatus = "Product is destroyed";
@@ -114,7 +113,7 @@ export default class extends Command {
 
             embed.addFields({ name: `Factory Level ${factory.level} (ID: ${factory.factoryId + 1})`, value: `${this.getVisualRow(icon)}\n${factoryStatus}`, inline: true });
             if (factoryHasChanged) {
-                await Business.updateOne({ name: business.name, "factory.factoryId": factory.factoryId },
+                await Business.updateOne({ name: business.name, "factories.factoryId": factory.factoryId },
                     { $set: { "factories.$.status": factory.status } },
                 );
             }
@@ -142,7 +141,7 @@ export default class extends Command {
     private getButtonStatus(business?: IBusiness, member?: IMember): boolean[] {
         if (!business || !member) return [true, true];
         return [
-            business.factories.filter((factory) => factory.status === "ready" || factory.status === "destroyed").length === 0,
+            business?.factories.filter((factory) => factory.status === "ready" || factory.status === "destroyed").length === 0,
             business.factories.length >= this.getMaximumFactoryCount(business.employees) || member.wallet < this.getFactoryPrice(business.factories.length),
         ];
     }
@@ -169,7 +168,7 @@ export default class extends Command {
         // reduce the harvested plots to an object with the crop as key and the amount as value
         const items = readyFactories.reduce((acc, cur) => {
             const crop = cur.production.trim().toLowerCase();
-            acc[crop] = (acc[crop] || 0) + Math.min(6, cur.level + (newLevels.includes(cur.factoryId) ? 1 : 0) + 2);
+            acc[crop] = (acc[crop] || 0) + this.getQuantityOfItem(crop, cur.level + (newLevels.includes(cur.factoryId) ? 1 : 0));
             return acc;
         }, {} as { [key: string]: number });
 
@@ -190,7 +189,7 @@ export default class extends Command {
             }
         }
 
-        // set the status of all harvested and rottenplots to "empty"
+        // set the status of all harvested and rottenplots to "standby"
         for (const factory of readyFactories.concat(destoryedProducts)) {
             await Business.updateOne(
                 { name: business.name, "factories.factoryId": factory.factoryId },
@@ -220,5 +219,18 @@ export default class extends Command {
         await User.removeMoney(member.id, this.getFactoryPrice(business.factories.length));
 
         return true;
+    }
+
+    private getQuantityOfItem(itemId: string, factoryLevel: number): number {
+        const item = this.client.items.getById(itemId);
+        if (!item) return 0;
+
+        if (item.category === "factory") {
+            const multiplier = Math.floor(item.multiplier || 1);
+            const quantity = Math.floor(multiplier * (factoryLevel / 3));
+            return Math.min(Math.max(quantity, 1), multiplier + 1);
+        } else {
+            return 0;
+        }
     }
 }
