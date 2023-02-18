@@ -5,15 +5,14 @@
 [![invite](https://img.shields.io/badge/Invite-Coinz-DBA514?style=for-the-badge&logo=coil&logoColor=white)](https://coinzbot.xyz/invite)
 [![Discord](https://img.shields.io/discord/938177962698735616?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/asnZQwc6kW)
 
-Coinz is an open source Discord.js Bot. Coinz has a boatload of commands and features all related to the economy.
+Coinz is a next level discord bot using discord.js. The entire bot is written in TypeScript and uses the principles of Object Oriented Programming.
 
 ## Features
-* All commands are [slash commands](https://discord.com/blog/slash-commands-are-here).
 * Real stocks and crypto prices. (API key not included)
-* Create your own business and become rich.
+* Create your own business and manage your employees (real users).
 * Play more than 20 games inside discord.
-* Be a farmer and grow some crops.
-* And so much more!
+* Become a farmer, grow some crops and harvest them before they grow rotten.
+* Buy items from the shop and keep them in your inventory.
 
 ## Suggestions, bugs, feature requests
 
@@ -26,12 +25,12 @@ Want to contribute? Great, we love that! Please take your time on [opening a new
 *If you need any more help, consider joining our [Coinz support discord](https://coinzbot.xyz/discord).*
 
 ## Support Coinz
-If you really like this bot, consider donating to [Coinz](https://coinzbot.xyz/store).
+Coinz has started as a passion project but has developed way further than I ever imagined. To support this rappid growth please consider subscribing to [Coinz Premium](https://coinzbot.xyz/store).
 
-If you can't/don't want to donate, that's fine. You can also support Coinz by starring this repository. To make this bot even better consider opening a pull request or issue with a new feature.
+If you can't/don't want to buy anything, that's fine. You can also support Coinz by starring this repository. To make this bot even better consider opening a pull request or issue with a new feature.
 
 ## Disclamer
-You are not allowed to upload this bot to any service such as discordbotlist or top.gg, you are only allowed to host this bot for your community. You can use small parts of this code in your public bot. If you want to use the code of this bot, DM Siebe#0001 on Discord. I will NOT help you with understanding the source code.
+You are not allowed to upload this bot to any service such as discordbotlist or top.gg, you are only allowed to host this bot for your community. You can use small parts of this code in your public bot. If you want to use the code of this bot, DM Siebe#0001 on Discord. I will **NOT** help you with understanding the source code.
 
 ## License
 We use the GNU GPLv3-license. If you plan to use any part of this source code in your own bot, we would be grateful if you would include some form of credit somewhere.
