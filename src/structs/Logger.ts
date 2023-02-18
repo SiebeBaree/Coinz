@@ -23,14 +23,12 @@ export default class Logger {
             ],
         });
 
-        if (process.env.NODE_ENV !== "production") {
-            this._logger.add(new winston.transports.Console({
-                format: winston.format.combine(
-                    winston.format.timestamp(),
-                    this.formatConsole,
-                ),
-            }));
-        }
+        this._logger.add(new winston.transports.Console({
+            format: winston.format.combine(
+                winston.format.timestamp(),
+                this.formatConsole,
+            ),
+        }));
     }
 
     private formatConsole = winston.format.printf(({ level, message, timestamp }) => {
