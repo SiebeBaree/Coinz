@@ -58,7 +58,7 @@
         "canCombineWithBusiness": false
     },
     {
-        "name": "Laywer",
+        "name": "Lawyer",
         "salary": 130,
         "minLvl": 10,
         "required": [
