@@ -66,7 +66,7 @@ export default class extends Command {
 
         for (const itemId in Object.keys(product.requiredItems)) {
             const requiredItem = product.requiredItems[itemId];
-            const item = data.business.inventory.find((invItem) => invItem.itemId === itemId);
+            const item = data.business.inventory.find((invItem) => invItem.itemId === requiredItem.itemId);
 
             if (!item || requiredItem.amount > item.amount) {
                 const shopItem = this.client.items.getById(itemId);
@@ -80,7 +80,7 @@ export default class extends Command {
         // removing the required items from the business inventory
         for (const itemId in Object.keys(product.requiredItems)) {
             const requiredItem = product.requiredItems[itemId];
-            const item = data.business.inventory.find((invItem) => invItem.itemId === itemId);
+            const item = data.business.inventory.find((invItem) => invItem.itemId === requiredItem.itemId);
             if (!item) continue;
 
             if (item.amount <= requiredItem.amount) {
@@ -90,7 +90,7 @@ export default class extends Command {
                 );
             } else {
                 await Business.updateOne(
-                    { name: data.business.name, "inventory.itemId": itemId },
+                    { name: data.business.name, "inventory.itemId": requiredItem.itemId },
                     { $inc: { "inventory.$.amount": -requiredItem.amount } },
                 );
             }

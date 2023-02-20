@@ -16,7 +16,8 @@ type RewardsItem = {
 export default class extends Command implements ICommand {
     private readonly ticketPrice = 15;
     private readonly maxSpins = 50;
-    private readonly lootTable: string;
+    private readonly lootTable: string[];
+    private readonly achievement;
 
     readonly info = {
         name: "lucky-wheel",
@@ -62,14 +63,15 @@ export default class extends Command implements ICommand {
         category: "general",
     };
 
-    private readonly achievement;
-
     constructor(bot: Bot, file: string) {
         super(bot, file);
 
         this.achievement = Achievement.getById("feeling_lucky");
-        const rewards: string[] = [];
+        let rewards: string[] = [];
         const keys = Object.keys(loot);
+        const itemsPerField = Math.ceil(keys.length / 3);
+        const lootTable: string[] = [];
+        let count = 0;
 
         for (let i = 0; i < keys.length; i++) {
             if (keys[i].startsWith("money")) {
@@ -82,9 +84,21 @@ export default class extends Command implements ICommand {
 
                 rewards.push(`**${loot[keys[i] as keyof typeof loot]}x** <:${item.itemId}:${item.emoteId}> ${item.name}`);
             }
+
+            if (count >= itemsPerField) {
+                lootTable.push(rewards.join("\n"));
+                rewards = [];
+                count = 0;
+            }
+
+            count++;
         }
 
-        this.lootTable = rewards.join("\n");
+        if (rewards.length > 0) {
+            lootTable.push(rewards.join("\n"));
+        }
+
+        this.lootTable = lootTable;
     }
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
@@ -108,8 +122,12 @@ export default class extends Command implements ICommand {
             .setTitle("Lucky Wheel")
             .setColor(<ColorResolvable>this.client.config.embed.color)
             .setDescription(`:gift: **</lucky-wheel buy:1005435550884442193> or </vote:993095062726647810> to get more spins!**\n:moneybag: **Wheel Spins cost <:ticket:1032669959161122976> ${this.ticketPrice} per spin.**\n:warning: **You get 1 free spin per vote and double spins in the weekend.**\n:gem: **Premium users always get double spins, more info [here](https://coinzbot.xyz/store).**\n:star: **You have ${member.spins}x ${member.spins === 1 ? "spin" : "spins"} left**`)
-            .setFooter({ text: this.client.config.embed.footer })
-            .addFields({ name: "Possible Loot", value: this.lootTable, inline: true });
+            .setFooter({ text: this.client.config.embed.footer });
+
+        for (let i = 0; i < this.lootTable.length; i++) {
+            embed.addFields({ name: `Possible Rewards (${i + 1})`, value: this.lootTable[i], inline: true });
+        }
+
         await interaction.reply({ embeds: [embed] });
     }
 
