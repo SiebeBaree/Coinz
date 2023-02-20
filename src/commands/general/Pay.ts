@@ -54,7 +54,7 @@ export default class extends Command implements ICommand {
         await interaction.deferReply();
         await Database.getMember(user.id, true);
         await User.addMoney(user.id, amount);
-        await User.removeMoney(interaction.user.id, amount);
+        await User.removeMoney(interaction.user.id, amount, true);
         await interaction.editReply({ content: `:white_check_mark: You've sent :coin: ${amount} to **${user.tag}**.` });
     }
 }

@@ -136,7 +136,7 @@ export default class extends Command implements ICommand {
                     embeds: [this.getEmbed(gameData)],
                     components: this.getButtons(gameData),
                 });
-                await User.removeMoney(secondUser.id, bet);
+                await User.removeMoney(secondUser.id, bet, true);
             } else if (i.customId === "ttt_decline") {
                 gameData.finishedCommand = true;
                 await i.deferUpdate();

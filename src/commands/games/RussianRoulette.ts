@@ -186,7 +186,7 @@ export default class extends Command implements ICommand {
                 await User.addGameExperience(member, gameData.guild);
                 await User.addMoney(member.id, Math.floor(gameData.bet * gameData.multiplier));
             } else {
-                await User.removeMoney(member.id, gameData.bet);
+                await User.removeMoney(member.id, gameData.bet, true);
             }
         }
     }

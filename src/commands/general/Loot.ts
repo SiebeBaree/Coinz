@@ -100,7 +100,7 @@ export default class extends Command implements ICommand {
 
                     await i.update({ embeds: [this.getEmbed(gameData)], components: this.getRows(gameData) });
                     await interaction.followUp({ content: `You got caught and had to pay a fine of :coin: ${fine}.` });
-                    await User.removeMoney(member.id, fine);
+                    await User.removeMoney(member.id, fine, true);
                     return;
                 }
 
@@ -119,7 +119,7 @@ export default class extends Command implements ICommand {
 
                     await i.update({ embeds: [this.getEmbed(gameData)], components: this.getRows(gameData) });
                     await interaction.followUp({ content: `You got caught and had to pay a fine of :coin: ${fine}.` });
-                    await User.removeMoney(member.id, fine);
+                    await User.removeMoney(member.id, fine, true);
                 } else {
                     // add loot to gameData but check if the item is already in the loot
                     for (const item of loot.items) {
@@ -150,7 +150,7 @@ export default class extends Command implements ICommand {
 
                 await interaction.editReply({ embeds: [this.getEmbed(gameData)], components: this.getRows(gameData) });
                 await interaction.followUp({ content: `You took too long and got caught. You had to pay a fine of :coin: ${fine}.` });
-                await User.removeMoney(member.id, fine);
+                await User.removeMoney(member.id, fine, true);
             }
         });
     }

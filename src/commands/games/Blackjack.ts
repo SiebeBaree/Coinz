@@ -120,7 +120,7 @@ export default class extends Command implements ICommand {
                 } else if (i.customId === "bj_stand") {
                     this.runStand(gameData);
                 } else if (i.customId === "bj_doubleDown") {
-                    await User.removeMoney(interaction.user.id, gameData.bet);
+                    await User.removeMoney(interaction.user.id, gameData.bet, true);
                     this.runDoubleDown(gameData);
                 }
 

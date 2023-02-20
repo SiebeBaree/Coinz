@@ -147,7 +147,7 @@ export default class extends Command implements ICommand {
                 gameData.gameStarted = true;
                 this.startGame(gameData);
                 await i.update({ content: "", embeds: [this.getEmbed(gameData)], components: this.getButtons(gameData) });
-                await User.removeMoney(gameData.user2.id, gameData.bet);
+                await User.removeMoney(gameData.user2.id, gameData.bet, true);
             } else if (i.customId.startsWith("c4_column")) {
                 const column = parseInt(i.customId.replace("c4_column", ""));
                 let row = this.HEIGHT - 1;

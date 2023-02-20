@@ -100,7 +100,7 @@ export default class extends Command implements ICommand {
 
         if (memberWon) {
             await User.addMoney(interaction.user.id, Math.floor(amount * 0.8));
-            await User.removeMoney(victim.id, amount);
+            await User.removeMoney(victim.id, amount, true);
 
             if (victimMember.notifications.includes("steal")) {
                 try {
@@ -116,7 +116,7 @@ export default class extends Command implements ICommand {
                 await this.client.items.removeItem("padlock", victimMember);
             }
 
-            await User.removeMoney(interaction.user.id, amount);
+            await User.removeMoney(interaction.user.id, amount, true);
         }
     }
 }
