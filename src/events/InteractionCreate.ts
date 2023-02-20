@@ -39,17 +39,6 @@ export default class InteractionCreate implements IEvent {
             const member = await Database.getMember(interaction.user.id, true);
             const guild = await Database.getGuild(interaction.guild.id, true);
 
-            if (process.env.NODE_ENV === "production") {
-                let cooldownTime = command.info.cooldown === undefined || command.info.cooldown === 0
-                    ? (member.premium.active === true
-                        ? client.config.premiumTimeout
-                        : client.config.defaultTimeout)
-                    : command.info.cooldown;
-
-                cooldownTime = command.info.category === "games" && (member.premium.active || guild.premium.active) ? 240 : cooldownTime;
-                await Cooldown.setCooldown(interaction.user.id, command.info.name, cooldownTime);
-            }
-
             if (command.info.isPremium && (!member.premium.active || member.premium.tier < command.info.isPremium)) {
                 if (!(command.info.isServerUnlocked && guild.premium.active)) {
                     const text = "This command is only available for premium users!\n" +
@@ -63,6 +52,17 @@ export default class InteractionCreate implements IEvent {
                     }
                     return;
                 }
+            }
+
+            if (process.env.NODE_ENV === "production") {
+                let cooldownTime = command.info.cooldown === undefined || command.info.cooldown === 0
+                    ? (member.premium.active === true
+                        ? client.config.premiumTimeout
+                        : client.config.defaultTimeout)
+                    : command.info.cooldown;
+
+                cooldownTime = command.info.category === "games" && (member.premium.active || guild.premium.active) ? 240 : cooldownTime;
+                await Cooldown.setCooldown(interaction.user.id, command.info.name, cooldownTime);
             }
 
             try {
