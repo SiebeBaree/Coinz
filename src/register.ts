@@ -57,7 +57,7 @@ interface CommandOptions {
             await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID ?? "", adminServerId), { body: guildCommands });
 
             // send all public commands to discordbotlist.com
-            axios.post(`https://discordbotlist.com/api/v1/bots/${process.env.CLIENT_ID}/commands`, {
+            await axios.post(`https://discordbotlist.com/api/v1/bots/${process.env.CLIENT_ID}/commands`, {
                 body: publicCommands,
                 headers: {
                     Authorization: `Bot ${process.env.API_BOTLIST_DBL}`,
