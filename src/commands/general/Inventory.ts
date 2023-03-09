@@ -39,6 +39,7 @@ export default class extends Command implements ICommand {
             return;
         }
 
+        await interaction.deferReply();
         if (user.id === interaction.user.id && this.achievement) {
             const totalItems = member.inventory.reduce((acc, item) => acc + item.amount, 0);
 
@@ -56,10 +57,9 @@ export default class extends Command implements ICommand {
         let items = this.getItemsByCategory(userData.inventory, defaultLabel);
         let maxPage = Math.ceil(items.length / ItemsPerPage);
 
-        const message = await interaction.reply({
+        const message = await interaction.editReply({
             embeds: [this.getEmbed(user, items, page, maxPage, ItemsPerPage)],
             components: [...Embed.getPageButtons(page, maxPage), ...Embed.getSelectMenu(options, "inventory_selectMenu", defaultLabel)],
-            fetchReply: true,
         });
         const collector = message.createMessageComponentCollector({ filter: (i) => i.user.id === interaction.user.id, max: 20, idle: 20_000, time: 90_000 });
 

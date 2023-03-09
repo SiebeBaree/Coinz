@@ -6,6 +6,7 @@ import { IMember } from "../../models/Member";
 import User from "../../utils/User";
 import Database from "../../utils/Database";
 import Item from "../../interfaces/Item";
+import Cooldown from "../../utils/Cooldown";
 
 export default class extends Command implements ICommand {
     readonly info = {
@@ -49,22 +50,26 @@ export default class extends Command implements ICommand {
         const bombActivated = interaction.options.getBoolean("use-bomb", false) ?? true;
 
         if (victim.bot || victim.id === interaction.user.id) {
+            await Cooldown.removeCooldown(interaction.user.id, this.info.name);
             await interaction.reply({ content: "You can't steal from a bot or yourself.", ephemeral: true });
             return;
         }
 
         if (member.wallet <= 0) {
+            await Cooldown.removeCooldown(interaction.user.id, this.info.name);
             await interaction.reply({ content: "You don't have any money to steal.", ephemeral: true });
             return;
         }
 
         if (User.getLevel(member.experience) < 15) {
+            await Cooldown.removeCooldown(interaction.user.id, this.info.name);
             await interaction.reply({ content: "You need to be level 15 to steal.", ephemeral: true });
             return;
         }
 
         const bombInInventory = this.client.items.hasInInventory(this.bomb.itemId, member);
         if (!bombInInventory && bombActivated) {
+            await Cooldown.removeCooldown(interaction.user.id, this.info.name);
             await interaction.reply({ content: `You don't have a <:${this.bomb.itemId}:${this.bomb.emoteId}> **${this.bomb.name}** to use.`, ephemeral: true });
             return;
         }
@@ -73,6 +78,7 @@ export default class extends Command implements ICommand {
         const victimMember = await Database.getMember(victim.id);
 
         if (victimMember.wallet <= 0) {
+            await Cooldown.removeCooldown(interaction.user.id, this.info.name);
             await interaction.editReply({ content: `**${victim.tag}** doesn't have any money to steal.` });
             return;
         }

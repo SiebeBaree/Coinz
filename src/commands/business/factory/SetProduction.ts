@@ -59,7 +59,7 @@ export default class extends Command {
                 && data.business?.factories[factoryId - 1].status !== "destroyed");
 
             if (alreadyProducing.length > 0) {
-                await interaction.reply({ content: `You are already producing something on factor${alreadyProducing.length > 1 ? "ies" : "y"} with ID ${alreadyProducing.join(", ")}.\nUse \`/${this.info.name} set-production factory-id: ${factoryIds} product-id: ${productId} force: yes\` to reset production.`, ephemeral: true });
+                await interaction.reply({ content: `You are already producing something on factor${alreadyProducing.length > 1 ? "ies" : "y"} with ID ${alreadyProducing.join(", ")}.\nUse \`/${this.info.name} set-production factory-id:${factoryIds} product-id:${productId} force:yes\` to reset production.`, ephemeral: true });
                 return;
             }
         }
@@ -100,7 +100,7 @@ export default class extends Command {
         for (let i = 0; i < factories.length; i++) {
             await Business.updateOne({ name: data.business.name, "factories.factoryId": factories[i] - 1 }, {
                 $set: {
-                    "factories.$.production": productId,
+                    "factories.$.production": product.itemId,
                     "factories.$.status": "producing",
                     "factories.$.produceOn": Math.floor(Date.now() / 1000) + product.produceTime,
                 },

@@ -117,14 +117,14 @@ export default class extends Command {
                 await i.deferUpdate();
 
                 if (data.business) {
-                    await Member.updateOne({ userId: employee.id }, { $set: { business: data.business.name } });
+                    await Member.updateOne({ id: employee.id }, { $set: { business: data.business.name } });
                     await Business.updateOne({ name: data.business.name }, { $push: { employees: { userId: employee.id, role: "employee" } } });
 
                     const ceo = data.business.employees.find((e) => e.role === "ceo");
                     if (ceo) {
                         const ceoData = await Database.getMember(ceo.userId, true);
                         if (data.business.employees.length + 1 === 8 && !ceoData.badges.includes("going_places")) {
-                            await Member.updateOne({ userId: interaction.user.id }, { $push: { badges: "going_places" } });
+                            await Member.updateOne({ userId: ceoData.id }, { $push: { badges: "going_places" } });
 
                             const achievement = Achievement.getById("going_places");
                             if (ceoData.id === interaction.user.id) {

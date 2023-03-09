@@ -88,31 +88,38 @@ export default class extends Command implements ICommand {
         collector.on("collect", async (i) => {
             if (finishedCommand) return;
             if (i.customId.startsWith("farm_")) {
-                // update member to counter abuse
                 member = await Database.getMember(interaction.user.id);
 
-                switch (i.customId) {
-                    case "farm_harvestAllPlots":
-                        await this.pressHarvestButton(member);
-                        await interaction.followUp({ content: "Harvested all plots.", ephemeral: true });
-                        break;
-                    case "farm_waterPlots":
+                if (i.customId === "farm_harvestAllPlots") {
+                    const harvested = await this.pressHarvestButton(member);
+                    const returnStr = [];
+
+                    if (Object.keys(harvested).length > 0) {
+                        for (const [itemId, amount] of Object.entries(harvested)) {
+                            const item = this.client.items.getById(itemId);
+                            if (!item) continue;
+                            returnStr.push(`${amount}x <:${item.itemId}:${item.emoteId}> **${item.name}**`);
+                        }
+                    }
+
+                    await interaction.followUp({ content: returnStr.length === 0 ? "Harvested all plots." : `**Harvested the following crops:**\n\n${returnStr.join("\n")}`, ephemeral: true });
+                } else if (i.customId === "farm_waterPlots") {
+                    if (member.plots.filter((plot) => plot.status === "growing").length === 0 || member.lastWatered + this.waterCooldown > Math.floor(Date.now() / 1000)) {
+                        await interaction.followUp({ content: "You can't water your crops right now.", ephemeral: true });
+                    } else {
                         await this.pressWaterButton(member);
                         await interaction.followUp({ content: "I've watered the crops and they will now grow 1 hour faster.", ephemeral: true });
-                        break;
-                    case "farm_buyPlot":
-                        if (await this.buyNewPlot(member)) {
-                            await interaction.followUp({ content: "You successfully bought a new plot.", ephemeral: true });
-                            await UtilUser.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
-                        }
-                        break;
-                    default:
-                        return;
+                    }
+                } else if (i.customId === "farm_buyPlot") {
+                    if (await this.buyNewPlot(member)) {
+                        await interaction.followUp({ content: "You successfully bought a new plot.", ephemeral: true });
+                        await UtilUser.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
+                    }
+                } else {
+                    return;
                 }
 
-                // get updated member to update embed
                 member = await Database.getMember(interaction.user.id);
-
                 await i.update({ embeds: [await this.getEmbed(interaction.user, member)], components: [this.getButtons(member)] });
             }
         });
@@ -131,7 +138,7 @@ export default class extends Command implements ICommand {
         const force = interaction.options.getString("force") === "yes" ? true : false;
 
         if (member.plots.length <= 0) {
-            await interaction.reply({ content: "You don't have any plots yet. Buy a plot using </farm plots:1048340073470513154>.", ephemeral: true });
+            await interaction.reply({ content: "You don't have any plots yet. Buy a plot using </farm plots:1074380587508445275>.", ephemeral: true });
             return;
         }
 
@@ -175,6 +182,7 @@ export default class extends Command implements ICommand {
             });
         }
 
+        await this.client.items.removeItem(crop.itemId, member, plantedPlots.length);
         await interaction.editReply({ content: `You successfully planted <:${crop.itemId}:${crop.emoteId}> **${crop.name}** on plot${plantedPlots.length > 1 ? "s" : ""} ${plantedPlots.join(", ")}.` });
     }
 
@@ -191,7 +199,7 @@ export default class extends Command implements ICommand {
         const embed = new EmbedBuilder()
             .setTitle(`${user.username}'s Farm`)
             .setColor(<ColorResolvable>this.client.config.embed.color)
-            .setDescription(`:seedling: **Use** </${this.info.name} plant:1048340073470513154> **to plant a crop.**\n:droplet: **${waterDescription}**\n:wilted_rose: **You can clear rotten crops by harvesting all plots.**\n:basket: **All harvested crops are found in your inventory** </inventory:983096143179284519>**.**${buyPlotDescription}`);
+            .setDescription(`:seedling: **Use** </${this.info.name} plant:1074380587508445275> **to plant a crop.**\n:droplet: **${waterDescription}**\n:wilted_rose: **You can clear rotten crops by harvesting all plots.**\n:basket: **All harvested crops are found in your inventory** </inventory:1074380587751710799>**.**${buyPlotDescription}`);
 
         if (member.plots.length == 0) {
             embed.addFields({ name: "Buy a Plot", value: "Please press the button below to buy a plot.", inline: false });
@@ -289,7 +297,7 @@ export default class extends Command implements ICommand {
         await Member.updateOne({ id: member.id }, { $set: { lastWatered: Math.floor(Date.now() / 1000) } });
     }
 
-    private async pressHarvestButton(member: IMember): Promise<void> {
+    private async pressHarvestButton(member: IMember): Promise<{ [key: string]: number }> {
         const harvestedPlots = member.plots.filter((plot) => plot.status === "harvest");
         const rottenPlots = member.plots.filter((plot) => plot.status === "rotten");
 
@@ -311,6 +319,8 @@ export default class extends Command implements ICommand {
                 $set: { "plots.$.status": "empty", "plots.$.crop": "none" },
             });
         }
+
+        return items;
     }
 
     private async buyNewPlot(member: IMember): Promise<boolean> {
