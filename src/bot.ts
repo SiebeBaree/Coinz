@@ -91,7 +91,7 @@ class Main {
                             this.client.logger.info(`Coinz Stats: ${guilds} guilds, ${users} users`);
 
                             // Posting to top.gg
-                            axios.post(`https://top.gg/api/bots/${this.client.user?.id}/stats`, {
+                            await axios.post(`https://top.gg/api/bots/${this.client.user?.id}/stats`, {
                                 body: {
                                     server_count: guilds ?? 0,
                                     shard_count: this.client.cluster?.info.TOTAL_SHARDS ?? 1,
@@ -102,13 +102,13 @@ class Main {
                             });
 
                             // Posting to discordbotlist.com
-                            postBotStats(process.env.API_BOTLIST_DBL ?? "", this.client.user?.id ?? "", {
+                            await postBotStats(process.env.API_BOTLIST_DBL ?? "", this.client.user?.id ?? "", {
                                 guilds: guilds ?? 0,
                                 users: users ?? 0,
                             });
 
                             // Posting to discords.com
-                            axios.post(`https://discords.com/bots/api/bot/${this.client.user?.id}`, {
+                            await axios.post(`https://discords.com/bots/api/bot/${this.client.user?.id}`, {
                                 body: {
                                     server_count: guilds ?? 0,
                                 },
@@ -119,7 +119,7 @@ class Main {
                             });
 
                             // Posting to discord.bots.gg
-                            axios.post(`https://discord.bots.gg/api/v1/bots/${this.client.user?.id}/stats`, {
+                            await axios.post(`https://discord.bots.gg/api/v1/bots/${this.client.user?.id}/stats`, {
                                 body: {
                                     guildCount: guilds ?? 0,
                                     shardCount: this.client.cluster?.info.TOTAL_SHARDS ?? 1,
