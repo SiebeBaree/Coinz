@@ -6,7 +6,6 @@ import { CommandInteractionOption, REST, Routes } from "discord.js";
 import { adminServerId } from "./assets/config.json";
 import CommandHandler from "./handlers/CommandHandler";
 import Bot from "./structs/Bot";
-import axios from "axios";
 
 interface CommandOptions {
     name: string;
@@ -57,10 +56,13 @@ interface CommandOptions {
             await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID ?? "", adminServerId), { body: guildCommands });
 
             // send all public commands to discordbotlist.com
-            await axios.post(`https://discordbotlist.com/api/v1/bots/${process.env.CLIENT_ID}/commands`, {
-                body: publicCommands,
+            fetch(`https://discordbotlist.com/api/v1/bots/${process.env.CLIENT_ID}/commands`, {
+                method: "POST",
+                body: JSON.stringify(publicCommands),
                 headers: {
-                    Authorization: `Bot ${process.env.API_BOTLIST_DBL}`,
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bot ${process.env.API_BOTLIST_DBL}`,
                 },
             });
         } else {
