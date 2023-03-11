@@ -25,7 +25,7 @@ export default class Bot extends Client {
         this.events = new Collection();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (!clusterLess) this.cluster = new ClusterClient(this as any);
-        this.items = new Shop(itemList);
+        this.items = new Shop(itemList, true);
 
         // create logger
         const logger = new Logger();

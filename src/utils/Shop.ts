@@ -2,12 +2,22 @@ import { Collection, SelectMenuComponentOptionData } from "discord.js";
 import InventoryItem from "../interfaces/InventoryItem";
 import Item from "../interfaces/Item";
 import Member, { IMember } from "../models/Member";
+import ItemModel from "../models/Item";
 
 export default class Shop {
     private readonly _items: Collection<string, Item>;
 
-    constructor(items: Item[]) {
+    constructor(items: Item[], updateDatabase = false) {
         this._items = new Collection(items.map((i) => [i.itemId, i]));
+
+        // upload the items to the database
+        if (updateDatabase) {
+            ItemModel.deleteMany({}).exec();
+
+            for (const item of items) {
+                new ItemModel(item).save();
+            }
+        }
     }
 
     get all(): Map<string, Item> {
