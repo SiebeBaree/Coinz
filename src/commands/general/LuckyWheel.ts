@@ -170,7 +170,7 @@ export default class extends Command implements ICommand {
 
         const rewardsStr = await Promise.all(rewardsPromise);
         await Member.updateOne({ id: interaction.user.id }, {
-            $inc: { spins: -amount, coins: earnedCoins, tickets: earnedTickets, "stats.luckyWheelSpins": amount },
+            $inc: { spins: -amount, wallet: earnedCoins, tickets: earnedTickets, "stats.luckyWheelSpins": amount },
         });
 
         await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
