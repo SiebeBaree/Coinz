@@ -35,7 +35,7 @@ export default class extends Command {
             case "set-payout":
                 await this.getSetPayout(interaction, member, data);
                 break;
-            case "set-postion":
+            case "set-position":
                 await this.getSetPosition(interaction, member, data);
                 break;
             default:
