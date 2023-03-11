@@ -6,7 +6,6 @@ import { getInfo } from "discord-hybrid-sharding";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import Stats from "sharding-stats";
-import fetch from "node-fetch";
 
 class Main {
     private client: Bot;
