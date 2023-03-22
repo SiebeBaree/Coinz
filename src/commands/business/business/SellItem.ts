@@ -58,8 +58,10 @@ export default class extends Command {
         if (invItem.amount <= amount) {
             await Business.updateOne(
                 { name: data.business.name },
-                { $pull: { inventory: { itemId: item.itemId } } },
-                { $inc: { balance: price } },
+                {
+                    $pull: { inventory: { itemId: item.itemId } },
+                    $inc: { balance: price },
+                },
             );
         } else {
             await Business.updateOne(
