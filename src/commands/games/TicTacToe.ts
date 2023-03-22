@@ -23,7 +23,7 @@ interface GameData {
 export default class extends Command implements ICommand {
     readonly info = {
         name: "tictactoe",
-        description: "Connect 4 X's or O's in a row to win the game. Must be played with 2 users.",
+        description: "Connect 3 X's or O's in a row to win the game. Must be played with 2 users.",
         options: [
             {
                 name: "bet",
