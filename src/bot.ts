@@ -90,13 +90,14 @@ class Main {
                             this.client.logger.info(`Coinz Stats: ${guilds} guilds, ${users} users`);
 
                             // Posting to top.gg
-                            fetch(`https://top.gg/api/bots/${this.client.user?.id}/stats`, {
+                            await fetch(`https://top.gg/api/bots/${this.client.user?.id}/stats`, {
                                 method: "POST",
                                 body: JSON.stringify({
                                     "server_count": guilds ?? 0,
                                     "shard_count": this.client.cluster?.info.TOTAL_SHARDS ?? 1,
                                 }),
                                 headers: {
+                                    "Content-Type": "application/json",
                                     "Authorization": process.env.API_BOTLIST_TOPGG ?? "",
                                 },
                             });
@@ -108,18 +109,19 @@ class Main {
                             });
 
                             // Posting to discords.com
-                            fetch(`https://discords.com/bots/api/bot/${this.client.user?.id}`, {
+                            await fetch(`https://discords.com/bots/api/bot/${this.client.user?.id}`, {
                                 method: "POST",
                                 body: JSON.stringify({
                                     "server_count": guilds ?? 0,
                                 }),
                                 headers: {
+                                    "Content-Type": "application/json",
                                     "Authorization": process.env.API_BOTLIST_DISCORDS ?? "",
                                 },
                             });
 
                             // Posting to discord.bots.gg
-                            fetch(`https://discord.bots.gg/api/v1/bots/${this.client.user?.id}/stats`, {
+                            await fetch(`https://discord.bots.gg/api/v1/bots/${this.client.user?.id}/stats`, {
                                 method: "POST",
                                 body: JSON.stringify({
                                     guildCount: guilds ?? 0,
