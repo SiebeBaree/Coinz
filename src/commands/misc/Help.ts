@@ -31,13 +31,6 @@ export default class extends Command implements ICommand {
             { name: "How to get rich from my business?", value: "You can make money from your factories. It works the same as the farming feature but you sometimes need required items to produce another item. To pay everyone in your business use </business pay-dividends:1074380587508445276>. To earn more use </business employee set-payout:1074380587508445276> and increase the % you make from your business.", inline: false },
             { name: "What can employees do?", value: "Employees can increase the maximum number of factories your business can own and operate. They can also start producing items on your factories and buy new factories for your business. If you promote them, they can sell items and buy (or steal) supplies.", inline: false },
         ],
-        "Premium": [
-            { name: "Feature Coming Soon", value: "We've implemented the premium commands in the bot but we're having trouble with our website. This means you cannot buy a premium subscription at the moment.", inline: false },
-            // { name: "", value: "", inline: false },
-            // { name: "", value: "", inline: false },
-            // { name: "", value: "", inline: false },
-            // { name: "", value: "", inline: false },
-        ],
     } as Record<string, APIEmbedField[]>;
 
     readonly info = {
@@ -227,7 +220,7 @@ export default class extends Command implements ICommand {
                     name: "Cooldown",
                     value: command.info.cooldown !== undefined ?
                         Helpers.msToTime(command.info.cooldown * 1000) :
-                        `**Default:** \`${this.client.config.defaultTimeout}s\`\n**Premium:** \`${this.client.config.premiumTimeout}s\``,
+                        `\`${this.client.config.defaultTimeout}s\``,
                     inline: false,
                 },
             );
@@ -246,13 +239,13 @@ export default class extends Command implements ICommand {
     }
 
     async getGuide(interaction: ChatInputCommandInteraction) {
-        const topic = interaction.options.getString("topic")?.toLowerCase() ?? Object.keys(this.guides)[0];
+        const topic = interaction.options.getString("topic") ?? Object.keys(this.guides)[0];
 
         const embed = new EmbedBuilder()
             .setTitle(`${topic} Guide`)
             .setColor(<ColorResolvable>this.client.config.embed.color)
             .setFooter({ text: this.client.config.embed.footer })
-            .setDescription(":question: **If you still have a question please visit our** [**support server**](https://discord.gg/asnZQwc6kW)**!**\n:globe_with_meridians: **Don't forget to check out our** [**website**](${bot.config.website})**!**")
+            .setDescription(`:question: **If you still have a question please visit our** [**support server**](https://discord.gg/asnZQwc6kW)**!**\n:globe_with_meridians: **Don't forget to check out our** [**website**](${this.client.config.website})**!**`)
             .addFields(this.guides[topic]);
         await interaction.reply({ embeds: [embed] });
     }
