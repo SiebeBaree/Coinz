@@ -5,7 +5,6 @@ import Command from "../../structs/Command";
 import { IMember } from "../../models/Member";
 import Cooldown from "../../utils/Cooldown";
 import User from "../../utils/User";
-import { IGuild } from "../../models/Guild";
 
 interface GameData {
     bet: number;
@@ -41,7 +40,7 @@ export default class extends Command implements ICommand {
         super(bot, file);
     }
 
-    async execute(interaction: ChatInputCommandInteraction, member: IMember, guild: IGuild) {
+    async execute(interaction: ChatInputCommandInteraction, member: IMember) {
         const betStr = interaction.options.getString("bet", true);
 
         let bet = 50;
@@ -52,9 +51,9 @@ export default class extends Command implements ICommand {
                 return;
             }
 
-            bet = Math.min(member.wallet, member.premium.active && member.premium.tier === 2 ? 15_000 : (member.premium.active || guild.premium.active ? 10_000 : 5_000));
+            bet = Math.min(member.wallet, 10_000);
         } else {
-            const newBet = await User.removeBetMoney(betStr, member, guild);
+            const newBet = await User.removeBetMoney(betStr, member);
 
             if (typeof newBet === "string") {
                 await Cooldown.removeCooldown(interaction.user.id, this.info.name);
@@ -112,7 +111,7 @@ export default class extends Command implements ICommand {
 
             if (gameData.finishedCommand && gameData.playerWon) {
                 await User.addMoney(interaction.user.id, this.getPrice(gameData.bet, gameData.timesCorrect));
-                await User.addGameExperience(member, guild);
+                await User.addGameExperience(member);
             }
 
             await i.update({ embeds: [this.getEmbed(gameData)], components: [this.getButtons(gameData.finishedCommand)] });

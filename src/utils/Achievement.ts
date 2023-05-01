@@ -19,14 +19,6 @@ const achievements: IAchievement[] = [
         progress: (member: IMember) => `${member.stats.timesWorked ?? 0}/150`,
     },
     {
-        id: "big_spender",
-        name: "A True Coinz Supporter",
-        description: "Buy Coinz Premium.",
-        emoji: "1032670296538357800",
-        hasAchieved: (member: IMember) => member.premium.active,
-        progress: (member: IMember) => `${member.premium.active === true ? "1" : "0"}/1`,
-    },
-    {
         id: "going_places",
         name: "Going Places",
         description: "Create a company and have 7 employees.",

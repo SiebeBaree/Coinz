@@ -26,12 +26,6 @@ interface IStats {
     timesWatered: number;
 }
 
-interface IPremium {
-    active: boolean;
-    expires: number;
-    tier: number;
-}
-
 interface ITree {
     height: number;
     planted: number;
@@ -75,7 +69,6 @@ export interface IMember {
     notifications: string[];
     lootboxes: InventoryItem[];
     stats: IStats;
-    premium: IPremium;
     tree: ITree;
     voteTimestamps: IVoteTimestamps[];
 }
@@ -107,12 +100,6 @@ const Stats = new Schema<IStats>({
     timesRobbed: { type: Number, default: 0 },
     timesHarvested: { type: Number, default: 0 },
     timesWatered: { type: Number, default: 0 },
-});
-
-const Premium = new Schema<IPremium>({
-    active: { type: Boolean, default: false },
-    expires: { type: Number, default: 0 },
-    tier: { type: Number, default: 0 },
 });
 
 const Tree = new Schema<ITree>({
@@ -158,7 +145,6 @@ export const memberSchema = new Schema<IMember>({
     notifications: [{ type: String, default: ["vote"] }],
     lootboxes: [{ type: Item, default: [] }],
     stats: { type: Stats, default: {} },
-    premium: { type: Premium, default: {} },
     tree: { type: Tree, default: {} },
     voteTimestamps: [{ type: VoteTimestamps, default: [] }],
 }, { timestamps: true });

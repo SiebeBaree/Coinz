@@ -39,9 +39,7 @@ export default class extends Command implements ICommand {
 
     async execute(interaction: ChatInputCommandInteraction) {
         const selectedUser = interaction.options.getUser("user") || interaction.user;
-
         const selectedUserData = await Database.getMember(selectedUser.id);
-        selectedUserData.profileColor = selectedUserData.premium.active ? selectedUserData.profileColor : this.client.config.embed.color;
 
         const inventory = this.calculateInventoryValue(selectedUserData.inventory);
         const investments = await this.calculateInvestmentsValue(selectedUserData.stocks);
@@ -129,7 +127,6 @@ export default class extends Command implements ICommand {
         bio += userData.birthday.getTime() > 0 ? `**Age:** ${this.getAge(userData.birthday)} years old` : "";
         bio += userData.bio.length > 0 ? `\n**Bio:** ${userData.bio}` : "";
 
-        const expireTimestamp = userData.premium.expires > Math.floor(Date.now() / 1000) ? userData.premium.expires : 0;
         const embed = new EmbedBuilder()
             .setTitle(`${user.username}'s profile ${userData.displayedBadge === "" ? "" : `<:${userData.displayedBadge}:${Achievement.getById(userData.displayedBadge)?.emoji}>`}`)
             .setColor(<ColorResolvable>(userData.profileColor || this.client.config.embed.color))
@@ -137,7 +134,6 @@ export default class extends Command implements ICommand {
             .setThumbnail(user.displayAvatarURL() || this.client.config.embed.icon)
             .addFields(
                 { name: "Experience", value: `:beginner: **Level:** \`${UserUtil.getLevel(userData.experience)}\`\n:game_die: **Next Level:** \`${userData.experience % 100}%\`\n${createProgressBar(userData.experience % 100)}`, inline: false },
-                { name: "Premium Status", value: userData.premium.active ? `:star: **Premium:** :white_check_mark:\n:hourglass: **Premium Expires:** <t:${expireTimestamp}:D>\n` : ":star: **Premium:** :x:", inline: false },
                 { name: "Balance", value: `:dollar: **Wallet:** :coin: ${userData.wallet}\n:bank: **Bank:** :coin: ${userData.bank} / ${userData.bankLimit}\n:moneybag: **Net Worth:** :coin: ${userData.wallet + userData.bank}\n:credit_card: **Tickets:** <:ticket:1032669959161122976> ${userData.tickets || 0}\n:gem: **Inventory Worth:** \`${inventory.items} items\` valued at :coin: ${inventory.value}`, inline: false },
                 { name: "Investment Portfolio", value: `:dollar: **Worth:** :coin: ${Math.round((stocks.value + Number.EPSILON) * 100) / 100}\n:credit_card: **Amount:** ${Math.round((stocks.items + Number.EPSILON) * 100) / 100}x\n:moneybag: **Invested:** :coin: ${stocks.initialValue}`, inline: false },
                 { name: "Misc", value: `:briefcase: **Current Job:** ${workJob}\n:office: **Business:** ${businessJob}\n:sparkles: **Daily Streak:** ${userData.streak - 1 > 0 ? userData.streak - 1 : 0} days\n:seedling: **Farm:** ${userData.plots.length} plots\n:evergreen_tree: **Tree Height:** ${userData.tree.height ?? 0}ft (${Math.round(userData.tree.height / this.FT_TO_M)}m)`, inline: false },

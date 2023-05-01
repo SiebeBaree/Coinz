@@ -187,14 +187,13 @@ export default class extends Command implements ICommand {
     }
 
     private async getEmbed(user: User, member: IMember): Promise<EmbedBuilder> {
-        const plotLimit = member.premium.active ? 15 : 9;
         const now = Math.floor(Date.now() / 1000);
 
         const waterDescription = member.lastWatered + this.waterCooldown > now ?
             `You can water your crops again <t:${(member.lastWatered + this.waterCooldown)}:R>.` :
             "You can water your plots.";
 
-        const buyPlotDescription = member.plots.length < plotLimit ? `\n:moneybag: **You can buy a new plot for :coin: ${this.getPlotPrice(member.plots.length)}.**` : "";
+        const buyPlotDescription = member.plots.length < 15 ? `\n:moneybag: **You can buy a new plot for :coin: ${this.getPlotPrice(member.plots.length)}.**` : "";
 
         const embed = new EmbedBuilder()
             .setTitle(`${user.username}'s Farm`)
@@ -275,7 +274,7 @@ export default class extends Command implements ICommand {
         return [
             member.plots.filter((plot) => plot.status === "harvest" || plot.status === "rotten").length === 0,
             member.plots.filter((plot) => plot.status === "growing").length === 0 || member.lastWatered + this.waterCooldown > Math.floor(Date.now() / 1000),
-            member.plots.length >= (member.premium.active ? 15 : 9) || member.wallet < this.getPlotPrice(member.plots.length),
+            member.plots.length >= 15 || member.wallet < this.getPlotPrice(member.plots.length),
         ];
     }
 

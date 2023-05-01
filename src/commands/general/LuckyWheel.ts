@@ -121,7 +121,7 @@ export default class extends Command implements ICommand {
         const embed = new EmbedBuilder()
             .setTitle("Lucky Wheel")
             .setColor(<ColorResolvable>this.client.config.embed.color)
-            .setDescription(`:gift: **</lucky-wheel buy:1005435550884442193> or </vote:993095062726647810> to get more spins!**\n:moneybag: **Wheel Spins cost <:ticket:1032669959161122976> ${this.ticketPrice} per spin.**\n:warning: **You get 1 free spin per vote and double spins in the weekend.**\n:gem: **Premium users always get double spins, more info [here](https://coinzbot.xyz/store).**\n:star: **You have ${member.spins}x ${member.spins === 1 ? "spin" : "spins"} left**`)
+            .setDescription(`:gift: **</lucky-wheel buy:1005435550884442193> or </vote:993095062726647810> to get more spins!**\n:moneybag: **Wheel Spins cost <:ticket:1032669959161122976> ${this.ticketPrice} per spin.**\n:warning: **You get 1 free spin per vote and double spins in the weekend.**\n:star: **You have ${member.spins}x ${member.spins === 1 ? "spin" : "spins"} left**`)
             .setFooter({ text: this.client.config.embed.footer });
 
         for (let i = 0; i < this.lootTable.length; i++) {

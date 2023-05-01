@@ -6,7 +6,6 @@ import { IMember } from "../../models/Member";
 import Cooldown from "../../utils/Cooldown";
 import User from "../../utils/User";
 import Database from "../../utils/Database";
-import { IGuild } from "../../models/Guild";
 
 interface GameData {
     bet: number;
@@ -72,7 +71,7 @@ export default class extends Command implements ICommand {
         super(bot, file);
     }
 
-    async execute(interaction: ChatInputCommandInteraction, member: IMember, guild: IGuild) {
+    async execute(interaction: ChatInputCommandInteraction, member: IMember) {
         if (interaction.guild && interaction.channel) {
             if (!interaction.guild.members.me?.permissions.has(PermissionsBitField.Flags.UseExternalEmojis)
                 || !interaction.guild.members.me.permissionsIn(interaction.channel as GuildChannelResolvable).has(PermissionsBitField.Flags.UseExternalEmojis)) {
@@ -98,9 +97,9 @@ export default class extends Command implements ICommand {
                 return;
             }
 
-            bet = Math.min(member.wallet, member.premium.active && member.premium.tier === 2 ? 15_000 : (member.premium.active || guild.premium.active ? 10_000 : 5_000));
+            bet = Math.min(member.wallet, 10_000);
         } else {
-            const newBet = await User.removeBetMoney(betStr, member, guild);
+            const newBet = await User.removeBetMoney(betStr, member);
 
             if (typeof newBet === "string") {
                 await interaction.reply({ content: newBet, ephemeral: true });
@@ -178,7 +177,7 @@ export default class extends Command implements ICommand {
                     } else {
                         await interaction.followUp({ content: `**${winner === gameData.user1.id ? gameData.user1.tag : gameData.user2.tag}** won this Connect4 game and earned :coin: ${Math.floor(gameData.bet * 2)}!` });
                         await User.addMoney(winner, Math.floor(gameData.bet * 2));
-                        await User.addGameExperience(winner === gameData.user1.id ? member : secondMember, guild);
+                        await User.addGameExperience(winner === gameData.user1.id ? member : secondMember);
                     }
                 }
             }

@@ -68,7 +68,7 @@ export default class extends Command implements ICommand {
                     {
                         name: "profile-color",
                         type: ApplicationCommandOptionType.Subcommand,
-                        description: "Change your profile color. (Only for premium users)",
+                        description: "Change your profile color.",
                         options: [
                             {
                                 name: "color",
@@ -124,7 +124,7 @@ export default class extends Command implements ICommand {
                     {
                         name: "set-birthday",
                         type: ApplicationCommandOptionType.Subcommand,
-                        description: "Set your birthday. (Only for premium users)",
+                        description: "Set your birthday.",
                         options: [
                             {
                                 name: "birthday",
@@ -139,7 +139,7 @@ export default class extends Command implements ICommand {
                     {
                         name: "set-bio",
                         type: ApplicationCommandOptionType.Subcommand,
-                        description: "Set your bio for your profile. (Only for premium users)",
+                        description: "Set your bio for your profile.",
                         options: [
                             {
                                 name: "bio",
@@ -199,10 +199,10 @@ export default class extends Command implements ICommand {
                 await this.configProfileColor(interaction, member);
                 break;
             case "set-birthday":
-                await this.configSetBirthday(interaction, member);
+                await this.configSetBirthday(interaction);
                 break;
             case "set-bio":
-                await this.configSetBio(interaction, member);
+                await this.configSetBio(interaction);
                 break;
             case "passive-mode":
                 await this.configPassiveMode(interaction, member);
@@ -235,11 +235,6 @@ export default class extends Command implements ICommand {
     }
 
     private async configProfileColor(interaction: ChatInputCommandInteraction, member: IMember) {
-        if (!member.premium.active) {
-            await interaction.reply({ content: this.client.config.premiumCommand, ephemeral: true });
-            return;
-        }
-
         const color = interaction.options.getString("color", true);
 
         if (member.profileColor === color) {
@@ -255,12 +250,7 @@ export default class extends Command implements ICommand {
         await interaction.reply({ embeds: [embed] });
     }
 
-    private async configSetBirthday(interaction: ChatInputCommandInteraction, member: IMember) {
-        if (!member.premium.active) {
-            await interaction.reply({ content: this.client.config.premiumCommand, ephemeral: true });
-            return;
-        }
-
+    private async configSetBirthday(interaction: ChatInputCommandInteraction) {
         const birthday = interaction.options.getString("birthday", true);
 
         // check if the birthday is valid
@@ -295,12 +285,7 @@ export default class extends Command implements ICommand {
         await interaction.reply({ embeds: [embed] });
     }
 
-    private async configSetBio(interaction: ChatInputCommandInteraction, member: IMember) {
-        if (!member.premium.active) {
-            await interaction.reply({ content: this.client.config.premiumCommand, ephemeral: true });
-            return;
-        }
-
+    private async configSetBio(interaction: ChatInputCommandInteraction) {
         const bio = interaction.options.getString("bio", true);
         if (this.filter.isProfane(bio)) {
             await interaction.reply({ content: "Your bio contains a banned word.", ephemeral: true });

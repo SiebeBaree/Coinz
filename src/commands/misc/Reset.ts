@@ -67,19 +67,6 @@ export default class extends Command implements ICommand {
 
                 await Member.deleteOne({ id: interaction.user.id });
 
-                await Member.updateOne(
-                    { id: interaction.user.id },
-                    {
-                        $set: {
-                            premium: {
-                                active: member.premium.active,
-                                expires: member.premium.expires,
-                                tier: member.premium.tier,
-                            },
-                        },
-                    },
-                );
-
                 const successEmbed = new EmbedBuilder()
                     .setTitle("Successfully reset your account!")
                     .setDescription("Your account has been reset on EVERY server you're in.")

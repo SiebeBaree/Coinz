@@ -1,6 +1,5 @@
 import { ChatInputCommandInteraction } from "discord.js";
 import Business, { IBusiness, IEmployee } from "../models/Business";
-import { IGuild } from "../models/Guild";
 import Member, { IMember } from "../models/Member";
 import Achievement, { IAchievement } from "./Achievement";
 import Database from "./Database";
@@ -45,22 +44,12 @@ export default class User {
         return amount;
     }
 
-    static async addGameExperience(member: IMember, guild?: IGuild): Promise<number> {
-        if ((member.premium.active && member.premium.tier === 2) || (guild && guild.premium.active)) {
-            return await this.addExperience(member.id, Helpers.getRandomNumber(5, 8));
-        } else {
-            return await this.addExperience(member.id, Helpers.getRandomNumber(1, 4));
-        }
+    static async addGameExperience(member: IMember): Promise<number> {
+        return await this.addExperience(member.id, Helpers.getRandomNumber(1, 4));
     }
 
-    static async removeBetMoney(formattedBet: string, member: IMember, guild?: IGuild, removeMoney = true, minBet = 50, maxBet = -1): Promise<string | number> {
-        if (maxBet < 0) {
-            maxBet = member.premium.active && member.premium.tier === 2 ? 15_000 : (member.premium.active ? 10_000 : 5_000);
-
-            if (guild && guild.premium.active && !member.premium.active) {
-                maxBet = 10_000;
-            }
-        }
+    static async removeBetMoney(formattedBet: string, member: IMember, removeMoney = true, minBet = 50, maxBet = -1): Promise<string | number> {
+        if (maxBet < 0) maxBet = 10_000;
 
         let bet = 0;
         if (["all", "max"].includes(formattedBet.toLowerCase())) {

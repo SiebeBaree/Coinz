@@ -37,36 +37,14 @@ export default class InteractionCreate implements IEvent {
 
             if (command.info.deferReply) await interaction.deferReply();
             const member = await Database.getMember(interaction.user.id, true);
-            const guild = await Database.getGuild(interaction.guild.id, true);
-
-            if (command.info.isPremium && (!member.premium.active || member.premium.tier < command.info.isPremium)) {
-                if (!(command.info.isServerUnlocked && guild.premium.active)) {
-                    const text = "This command is only available for premium users!\n" +
-                        "If you want to use this command, consider buying **Coinz Premium**.\n" +
-                        "Go to the [**store**](<https://coinzbot.xyz/store>) to learn more.";
-
-                    if (command.info.deferReply) {
-                        await interaction.editReply({ content: text });
-                    } else {
-                        await interaction.reply({ content: text, ephemeral: true });
-                    }
-                    return;
-                }
-            }
 
             if (process.env.NODE_ENV === "production") {
-                let cooldownTime = command.info.cooldown === undefined || command.info.cooldown === 0
-                    ? (member.premium.active === true
-                        ? client.config.premiumTimeout
-                        : client.config.defaultTimeout)
-                    : command.info.cooldown;
-
-                cooldownTime = command.info.category === "games" && (member.premium.active || guild.premium.active) ? 240 : cooldownTime;
+                const cooldownTime = command.info.cooldown === undefined || command.info.cooldown === 0 ? client.config.defaultTimeout : command.info.cooldown;
                 await Cooldown.setCooldown(interaction.user.id, command.info.name, cooldownTime);
             }
 
             try {
-                await command.execute(interaction, member, guild);
+                await command.execute(interaction, member);
                 await Member.updateOne({ id: interaction.user.id }, { $inc: { "stats.commandsExecuted": 1 } });
                 await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
             } catch (error) {

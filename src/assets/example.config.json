@@ -4,13 +4,11 @@
     "shopChannelId": "",
     "website": "",
     "defaultTimeout": 0,
-    "premiumTimeout": 0,
     "embed": {
         "color": "",
         "darkColor": "",
         "footer": "",
         "icon": ""
     },
-    "invalidCommand": "",
-    "premiumCommand": ""
+    "invalidCommand": ""
 }
