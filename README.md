@@ -25,12 +25,17 @@ Want to contribute? Great, we love that! Please take your time on [opening a new
 *If you need any more help, consider joining our [Coinz support discord](https://coinzbot.xyz/discord).*
 
 ## Support Coinz
-Coinz has started as a passion project but has developed way further than I ever imagined. To support this rappid growth please consider subscribing to [Coinz Premium](https://coinzbot.xyz/store).
+Coinz has started as a passion project but has developed way further than I ever imagined. To support this rappid growth please consider [donating](https://coinzbot.xyz/donate).
 
-If you can't/don't want to buy anything, that's fine. You can also support Coinz by starring this repository. To make this bot even better consider opening a pull request or issue with a new feature.
+If you can't/don't want to donate anything, that's fine. You can also support Coinz by starring this repository. To make this bot even better consider opening a pull request or issue with a new feature.
 
-## Disclamer
-You are not allowed to upload this bot to any service such as discordbotlist or top.gg, you are only allowed to host this bot for your community. You can use small parts of this code in your public bot. If you want to use the code of this bot, DM Siebe#0001 on Discord. I will **NOT** help you with understanding the source code.
+## Disclaimer
+* You are not allowed to use the entire code of Coinz without making significant changes or improvements to the original code.
+* When using any part of this code, you are required to make your project open source, and provide proper credit and acknowledgement to the original project.
+* You are strictly prohibited from making any profit or monetizing projects that use this code, directly or indirectly.
+* Uploading this code to any service such as discordbotlist or top.gg is strictly forbidden. You are only allowed to host this bot for your community or utilize small portions of this code for your own public bot.
+
+Please note that the author, `Siebe#0001` on Discord, will **NOT** provide assistance in understanding or implementing the source code. It is your responsibility to understand and adapt the code as needed for your own project.
 
 ## License
 We use the GNU GPLv3-license. If you plan to use any part of this source code in your own bot, we would be grateful if you would include some form of credit somewhere.
