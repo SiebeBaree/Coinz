@@ -20,11 +20,11 @@ export default class extends Command implements ICommand {
             },
             {
                 name: "amount",
-                type: ApplicationCommandOptionType.Integer,
+                type: ApplicationCommandOptionType.String,
                 description: "The amount of money you want to give.",
                 required: true,
                 min_value: 1,
-                max_value: 7000,
+                max_value: 8000,
             },
         ],
         category: "general",
@@ -37,7 +37,28 @@ export default class extends Command implements ICommand {
 
     async execute(interaction: ChatInputCommandInteraction, member: IMember) {
         const user = interaction.options.getUser("user", true);
-        const amount = interaction.options.getInteger("amount", true);
+        const amountStr = interaction.options.getString("amount", true);
+
+        let amount = 1;
+        if (amountStr.toLowerCase() === "all" || amountStr.toLowerCase() === "max") {
+            if (member.wallet <= 0) {
+                await Cooldown.removeCooldown(interaction.user.id, this.info.name);
+                await interaction.reply({ content: "You don't have any money in your wallet to give to someone!", ephemeral: true });
+                return;
+            }
+
+            amount = Math.min(member.wallet, 8_000);
+        } else {
+            const newAmount = await User.removeBetMoney(amountStr, member, false, 1, 8_000);
+
+            if (typeof newAmount === "string") {
+                await Cooldown.removeCooldown(interaction.user.id, this.info.name);
+                await interaction.reply({ content: newAmount, ephemeral: true });
+                return;
+            }
+
+            amount = newAmount;
+        }
 
         if (user.id === interaction.user.id || user.bot) {
             await Cooldown.removeCooldown(interaction.user.id, this.info.name);
@@ -51,10 +72,9 @@ export default class extends Command implements ICommand {
             return;
         }
 
-        await interaction.deferReply();
+        await interaction.reply({ content: `:white_check_mark: You've sent :coin: ${amount} to **${user.tag}**.` });
         await Database.getMember(user.id, true);
         await User.addMoney(user.id, amount);
         await User.removeMoney(interaction.user.id, amount, true);
-        await interaction.editReply({ content: `:white_check_mark: You've sent :coin: ${amount} to **${user.tag}**.` });
     }
 }
