@@ -20,7 +20,6 @@ export default class extends Command implements ICommand {
     private readonly defaultReward = 10;
     private readonly maxDays = 50;
     private readonly dailyStreakMoney = 3;
-    private readonly premiumStreakMoney = 5;
     private readonly achievement;
 
     constructor(bot: Bot, file: string) {
@@ -48,27 +47,23 @@ export default class extends Command implements ICommand {
             alertMsg = "\n\n**You have lost your streak.**";
             member.streak = 0;
         } else {
-            User.addExperience(interaction.user.id, member.streak > 50 ? 50 : member.streak);
+            User.addExperience(interaction.user.id, member.streak > 50 ? 25 : Math.floor(member.streak / 2));
         }
 
-        const streakReward = this.calculateReward(member.streak, member.premium.active);
+        const streakReward = this.calculateReward(member.streak);
 
         const secondsUntilEndOfTheDay = 86400 - Math.floor(Date.now() / 1000) % 86400;
         await Cooldown.setCooldown(interaction.user.id, "daily", secondsUntilEndOfTheDay);
 
         await Member.updateOne({ id: interaction.user.id }, {
-            $inc: { wallet: streakReward, spins: member.premium.active && member.premium.tier === 2 ? 1 : 0 },
+            $inc: { wallet: streakReward },
             $set: { lastStreak: new Date(), streak: member.streak + 1 },
         });
 
         await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
-        const premiumText = member.premium.active ?
-            "*Because you are a **Coinz Premium** user you get a* </lucky-wheel spin:1005435550884442193> *for free.*" :
-            "*Get better daily rewards with **Coinz Premium**. Go to the [**store**](https://coinzbot.xyz/store) to learn more.*";
-
         const embed = new EmbedBuilder()
             .setColor(<ColorResolvable>this.client.config.embed.color)
-            .setDescription(`:moneybag: **You claimed your daily reward!**${alertMsg}\n\n**Daily Reward:** :coin: ${this.defaultReward}\n**Daily Streak:** :coin: ${streakReward - this.defaultReward} for a \`${member.streak} ${member.streak === 1 ? "day" : "days"}\` streak\n**Total:** :coin: ${streakReward}\n**Gained XP:** \`${member.streak > 50 ? 50 : member.streak} XP\`\n\n${premiumText}\n*If you want more money consider voting. Use the buttons below to vote!*`);
+            .setDescription(`:moneybag: **You claimed your daily reward!**${alertMsg}\n\n**Daily Reward:** :coin: ${this.defaultReward}\n**Daily Streak:** :coin: ${streakReward - this.defaultReward} for a \`${member.streak + 1} ${member.streak + 1 === 1 ? "day" : "days"}\` streak\n**Total:** :coin: ${streakReward}\n**Gained XP:** \`${member.streak > 50 ? 25 : Math.floor(member.streak / 2)} XP\`\n\n*If you want more money consider voting. Use the buttons below to vote!*`);
         await interaction.editReply({ embeds: [embed], components: [this.row] });
         await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
     }
@@ -88,8 +83,8 @@ export default class extends Command implements ICommand {
         return Math.floor((date.getMilliseconds() - new Date(date.getFullYear(), 0, 0).getMilliseconds()) / 1000 / 60 / 60 / 24);
     }
 
-    private calculateReward(days: number, isPremium = false) {
+    private calculateReward(days: number) {
         days = days > this.maxDays ? this.maxDays : days;
-        return this.defaultReward + (days * (isPremium ? this.premiumStreakMoney : this.dailyStreakMoney));
+        return this.defaultReward + (days * this.dailyStreakMoney);
     }
 }
