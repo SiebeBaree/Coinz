@@ -36,7 +36,7 @@ export default class extends Command {
         await interaction.deferReply();
         let remainingAmount = amount;
         for (const employee of data.business.employees) {
-            const payout = amount * (employee.payout / 100);
+            const payout = Math.round(amount * (employee.payout / 100));
 
             if (payout > remainingAmount) continue;
             remainingAmount -= payout;
