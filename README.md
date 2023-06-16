@@ -35,7 +35,7 @@ If you can't/don't want to donate anything, that's fine. You can also support Co
 * You are strictly prohibited from making any profit or monetizing projects that use this code, directly or indirectly.
 * Uploading this code to any service such as discordbotlist or top.gg is strictly forbidden. You are only allowed to host this bot for your community or utilize small portions of this code for your own public bot.
 
-Please note that the author, `Siebe#0001` on Discord, will **NOT** provide assistance in understanding or implementing the source code. It is your responsibility to understand and adapt the code as needed for your own project.
+Please note that the author, `siebe_b` on Discord, will **NOT** provide assistance in understanding or implementing the source code. It is your responsibility to understand and adapt the code as needed for your own project.
 
 ## License
 We use the GNU GPLv3-license. If you plan to use any part of this source code in your own bot, we would be grateful if you would include some form of credit somewhere.
