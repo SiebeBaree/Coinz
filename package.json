@@ -53,7 +53,7 @@
     "dotenv": "^16.3.1",
     "fs": "^0.0.1-security",
     "moment": "^2.29.4",
-    "mongoose": "^6.11.2",
+    "mongoose": "^6.11.3",
     "sharding-stats": "^2.4.0",
     "winston": "^3.9.0",
     "winston-daily-rotate-file": "^4.7.1"
