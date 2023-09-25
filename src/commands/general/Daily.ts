@@ -52,8 +52,10 @@ export default class extends Command implements ICommand {
 
         const streakReward = this.calculateReward(member.streak);
 
-        const secondsUntilEndOfTheDay = 86400 - Math.floor(Date.now() / 1000) % 86400;
-        await Cooldown.setCooldown(interaction.user.id, "daily", secondsUntilEndOfTheDay);
+        if (process.env.NODE_ENV === "production") {
+            const secondsUntilEndOfTheDay = 86400 - Math.floor(Date.now() / 1000) % 86400;
+            await Cooldown.setCooldown(interaction.user.id, "daily", secondsUntilEndOfTheDay);
+        }
 
         await Member.updateOne({ id: interaction.user.id }, {
             $inc: { wallet: streakReward },
@@ -63,7 +65,10 @@ export default class extends Command implements ICommand {
         await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
         const embed = new EmbedBuilder()
             .setColor(<ColorResolvable>this.client.config.embed.color)
-            .setDescription(`:moneybag: **You claimed your daily reward!**${alertMsg}\n\n**Daily Reward:** :coin: ${this.defaultReward}\n**Daily Streak:** :coin: ${streakReward - this.defaultReward} for a \`${member.streak + 1} ${member.streak + 1 === 1 ? "day" : "days"}\` streak\n**Total:** :coin: ${streakReward}\n**Gained XP:** \`${member.streak > 50 ? 25 : Math.floor(member.streak / 2)} XP\`\n\n*If you want more money consider voting. Use the buttons below to vote!*`);
+            .setDescription(`:moneybag: **You claimed your daily reward!**${alertMsg}\n\n**Daily Reward:** :coin: ${this.defaultReward}\n**Daily Streak:** :coin: ${streakReward - this.defaultReward} for a \`${member.streak + 1} ${member.streak + 1 === 1 ? "day" : "days"}\` streak\n**Total:** :coin: ${streakReward}\n**Gained XP:** \`${member.streak > 50 ? 25 : Math.floor(member.streak / 2)} XP\``)
+            .addFields(
+                { name: "Survey", value: "Coinz is 100% free-to-use. If you want to support the bot, please consider filling out this survey about your sporting journey. This survey will take ~5 minutes to fill in.\n\n> :paperclip: [**Survey**](https://forms.gle/XV6fTcr2YqNfzUde9)", inline: false },
+            );
         await interaction.editReply({ embeds: [embed], components: [this.row] });
         await User.sendAchievementMessage(interaction, interaction.user.id, this.achievement);
     }

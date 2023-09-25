@@ -8,9 +8,9 @@ class Manager {
     async init() {
         const logger = new Logger().logger;
         const manager = new ClusterManager(`${__dirname}/bot.js`, {
-            totalShards: process.env.NODE_ENV === "production" ? 9 : "auto",
+            totalShards: process.env.NODE_ENV === "production" ? 12 : "auto",
             totalClusters: process.env.NODE_ENV === "production" ? 3 : 1,
-            shardsPerClusters: process.env.NODE_ENV === "production" ? 3 : 1,
+            shardsPerClusters: process.env.NODE_ENV === "production" ? 4 : 1,
             token: process.env.DISCORD_TOKEN,
         });
 
