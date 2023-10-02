@@ -1,7 +1,6 @@
 "use client";
 
 import ReactMarkdown from "react-markdown";
-import changelog from "@/lib/data/changelog.json";
 import { Changelog } from "@/lib/interfaces";
 import { useEffect } from "react";
 import { copyCode } from "@/lib/utils";
@@ -15,7 +14,7 @@ export default function ChangelogSection({ data }: {
 
     return (
         <div className="flex flex-col gap-8 mb-12">
-            {changelog.map((item: Changelog, index: number) => (
+            {data.map((item: Changelog, index: number) => (
                 <ChangelogCard key={index} update={item}/>
             ))}
         </div>
