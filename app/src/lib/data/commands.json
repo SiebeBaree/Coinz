@@ -1,0 +1,25 @@
+{
+  "info": {
+    "description": "this is a test",
+    "category": "misc",
+    "cooldown": 0,
+    "usage": [],
+    "premium": 0
+  },
+  "invite": {
+    "description": "this is a test 2",
+    "category": "misc",
+    "cooldown": 0,
+    "usage": [],
+    "premium": 2
+  },
+  "blackjack": {
+    "description": "this is a test 3",
+    "category": "games",
+    "cooldown": 420,
+    "usage": [
+      "/blackjack <bet>"
+    ],
+    "premium": 0
+  }
+}

@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "Ginto Nord";
+    src: url('/GintoNord-Black.ttf');
+    font-weight: bold;
+    font-display: swap;
+}
+
+:root {
+    --color-text: #F5F5F5;
+    --color-text-soft: rgba(255, 255, 255, 0.6);
+    --color-text-dark: #111111;
+    --color-background: #26272F;
+    --color-background-soft: #32343D;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+    --color-highlight: rgba(255, 255, 255, 0.15);
+    --color-watermark: rgba(255, 255, 255, 0.05);
+    --color-selected: #FFCA21;
+    --color-background-blur: rgba(255, 255, 255, 0.1);
+    --color-discord-mention: #3D4276;
+    --color-shard-online: #4CAB61;
+    --color-shard-offline: #DC3645;
+    --color-shard-slow: #FFC205;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    position: relative;
+    font-weight: normal;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+
+    font-family: Inter, -apple-system, BlinkMacSystemFont, Roboto, Ubuntu, 'Helvetica Neue', sans-serif;
+
+    background: var(--color-background);
+    color: var(--color-text);
+    overflow-x: initial;
+    line-height: 1.6;
+    font-size: 1rem;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-selected) var(--color-background);
+}
+
+*::-webkit-scrollbar {
+    width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--color-background);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--color-selected);
+    border-radius: 20px;
+    border: 2px solid var(--color-background);
+}
+
+code {
+    background-color: var(--color-discord-mention);
+    padding: 3px 6px;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+}
+
+.page-title {
+    position: relative;
+    margin-top: 70px;
+    margin-bottom: 30px;
+}
+
+.page-title h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+.page-title p {
+    width: 50%;
+}
+
+.watermark {
+    color: var(--color-watermark);
+    font-size: 120px;
+    font-weight: bold;
+    position: absolute;
+    top: -80%;
+    left: -8%;
+}
+
+.formatted-text h4 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+.formatted-text ul {
+    list-style-type: disc;
+    margin-left: 30px;
+}
+
+.formatted-text li {
+    margin: 4px 0;
+}
+
+.formatted-text a {
+    color: var(--color-selected);
+    text-decoration: none;
+}
+
+.formatted-text a:hover {
+    text-decoration: underline;
+}
+
+.formatted-text em {
+    background-color: var(--color-background);
+    padding: 4px 8px;
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+.code-copy code::before,
+.code-copy code::after {
+    position: absolute;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    z-index: 1;
+    visibility: hidden;
+}
+
+.code-copy code::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+    z-index: 1;
+}
+
+.code-copy code::after {
+    position: absolute;
+    top: -39px;
+    right: auto;
+    padding: 4px 5px;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+    white-space: nowrap;
+    z-index: 2;
+}
+
+.code-copy code:hover::before,
+.code-copy code:hover::after {
+    visibility: visible;
+}
+
+.code-copy code:not([data-tooltip])::after {
+    content: "Click to copy";
+}
+
+.code-copy code[data-tooltip]::after {
+    content: attr(data-tooltip);
+}
