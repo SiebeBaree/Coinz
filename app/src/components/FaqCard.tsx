@@ -23,9 +23,9 @@ export default function FaqCard({ title, description }: {
             className={cn(isOpen ? "border-highlight" : "border-1 border-transparent", "flex flex-col justify-center bg-secondary rounded-md px-5 py-2")}>
             <div onClick={() => setIsOpen(!isOpen)}
                  className={cn(isOpen && "pb-1", "flex justify-between items-center gap-3 select-none cursor-pointer transition-all duration-300 ease-in-out")}>
-                <h4 className="font-medium text-2xl">{title}</h4>
+                <h4 className="font-semibold sm:font-medium sm:text-xl md:text-2xl">{title}</h4>
                 <ChevronDownIcon
-                    className="fill-primary h-12 w-12 transition-all duration-300 ease-in-out" style={{
+                    className="fill-primary h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 transition-all duration-300 ease-in-out" style={{
                     transform: `rotate(${isOpen ? "180deg" : "0"})`,
                 }}/>
             </div>

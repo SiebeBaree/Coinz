@@ -7,7 +7,7 @@ export default function Search({ placeholder, searchTerm, onChangeHandler }: {
     onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
 }) {
     return (
-        <div className="flex items-center rounded overflow-hidden bg-secondary px-3 py-2">
+        <div className="flex items-center rounded overflow-hidden bg-secondary px-3 py-2 min-w-full md:min-w-[250px]">
             <SearchIcon className="fill-primary"/>
             <input
                 type="text"

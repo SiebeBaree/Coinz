@@ -75,8 +75,8 @@ export default function CommandSection() {
 
     return (
         <div className="flex flex-col gap-6">
-            <div className="flex justify-between items-center gap-8 flex-wrap">
-                <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="flex flex-wrap items-center gap-3">
                     {Object.keys(categories).map((name) => (
                         <CategoryCard key={name} name={categories[name]} value={name} selectedCategory={category}
                                       setCategory={setCategory}/>
@@ -116,7 +116,7 @@ function CommandCard({ name, command }: {
     return (
         <div
             className={cn(isOpen ? "border-highlight" : "border-1 border-transparent", "flex items-center gap-6 bg-secondary rounded-md px-5 py-2")}>
-            <div className="transition-all duration-300 ease-in-out" style={{
+            <div className="transition-all duration-300 ease-in-out hidden sm:block" style={{
                 transform: `rotate(${isOpen ? "180deg" : "0"})`,
             }}>
                 {isOpen ? (
@@ -129,8 +129,8 @@ function CommandCard({ name, command }: {
                 <div onClick={() => setIsOpen(!isOpen)}
                      className={cn(isOpen && "pb-1", "flex justify-between items-center gap-3 select-none cursor-pointer transition-transform duration-300 ease-in-out")}>
                     <div className="py-2">
-                        <h4 className="font-semibold text-2xl">/{name}</h4>
-                        <p className="text-muted">{command.description}</p>
+                        <h4 className="font-semibold text-xl sm:text-2xl">/{name}</h4>
+                        <p className="text-sm sm:text-base text-muted">{command.description}</p>
                     </div>
                     <ChevronDownIcon
                         className="fill-primary h-12 w-12 transition-all duration-300 ease-in-out" style={{

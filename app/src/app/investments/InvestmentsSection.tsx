@@ -33,8 +33,8 @@ export default function InvestmentsSection({ data }: {
 
     return (
         <div className="flex flex-col gap-6 mb-12">
-            <div className="flex justify-between items-center gap-8 flex-wrap">
-                <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="flex flex-wrap items-center gap-3">
                     {Object.keys(categories).map((name) => (
                         <CategoryCard key={name} name={categories[name]} value={name} selectedCategory={category}
                                       setCategory={setCategory}/>

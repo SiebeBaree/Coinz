@@ -61,7 +61,7 @@ export default function ItemsSection({ items }: { items: Item[] }) {
 
     return (
         <div>
-            <div className="flex justify-between items-center gap-8 flex-wrap">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div className="flex flex-wrap items-center gap-3">
                     {Object.keys(categories).map((name) => (
                         <CategoryCard key={name} name={categories[name]} value={name} selectedCategory={category}
@@ -75,7 +75,7 @@ export default function ItemsSection({ items }: { items: Item[] }) {
                 }}/>
             </div>
 
-            <div className="mt-8 mb-12 flex items-start justify-between gap-4 relative h-full">
+            <div className="mt-8 mb-12 flex flex-col-reverse lg:flex-row items-start justify-between gap-4 relative h-full">
                 <div className="flex flex-wrap gap-4">
                     {visibleItems.map((item) => (
                         <ItemCard key={item.itemId} item={item} setItem={setSelectedItem}
@@ -83,7 +83,7 @@ export default function ItemsSection({ items }: { items: Item[] }) {
                     ))}
                 </div>
 
-                <div className="sticky top-4 min-w-[400px] max-w-[400px] bg-secondary px-6 py-8 rounded-lg">
+                <div className="lg:sticky lg:top-4 min-w-full lg:min-w-[400px] lg:max-w-[400px] bg-secondary px-6 py-8 rounded-lg">
                     <div className="flex gap-6">
                         <Image
                             src={`https://cdn.discordapp.com/emojis/${selectedItem.emoteId}.webp?size=96&quality=lossless`}
@@ -166,7 +166,8 @@ function ItemCard({ item, isSelected, setItem }: {
 
             <Image src={`https://cdn.discordapp.com/emojis/${item.emoteId}.webp?size=56&quality=lossless`}
                    alt={item.name} width={52} height={52} priority={false} loading="lazy" quality={90}
-                   onLoadingComplete={() => setIsLoaded(true)}/>
+                   onLoadingComplete={() => setIsLoaded(true)}
+            className="w-10 h-10 md:w-[52px] md:h-[52px] transition-all duration-300 ease-in-out"/>
         </div>
     );
 }

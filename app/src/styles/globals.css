@@ -87,26 +87,62 @@ code {
 
 .page-title {
     position: relative;
-    margin-top: 70px;
+    margin-top: 30px;
     margin-bottom: 30px;
 }
 
 .page-title h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 600;
 }
 
 .page-title p {
-    width: 50%;
+    width: 100%;
 }
 
 .watermark {
     color: var(--color-watermark);
-    font-size: 120px;
     font-weight: bold;
     position: absolute;
-    top: -80%;
-    left: -8%;
+    display: none;
+}
+
+@media screen and (min-width: 640px) {
+    .page-title {
+        margin-top: 70px;
+    }
+
+    .watermark {
+        font-size: 100px;
+        top: -50%;
+        left: -5%;
+        display: block;
+    }
+
+    .page-title h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .page-title p {
+        width: 50%;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .watermark {
+        top: -60%;
+        left: -5%;
+    }
+}
+
+@media screen and (min-width: 1536px) {
+    .watermark {
+        font-size: 120px;
+        top: -70%;
+        left: -8%;
+    }
 }
 
 .formatted-text h4 {
