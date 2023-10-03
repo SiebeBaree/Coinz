@@ -4,6 +4,7 @@ import Link from "next/link";
 import styles from "@/styles/Navbar.module.css";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import NavUser from "@/components/NavUser";
 
 export default function Navbar() {
     const pathname = usePathname();
@@ -33,8 +34,7 @@ export default function Navbar() {
 
             <div className="flex gap-6 justify-between items-center">
                 <Link href={"/premium"} className={cn(pathname === "/premium" ? styles.activeNav : "", "")}>Premium</Link>
-                <Link href={"/login"}
-                      className="bg-primary text-primary-foreground font-semibold rounded-md px-3 py-1">Login</Link>
+                <NavUser/>
             </div>
         </nav>
     );
