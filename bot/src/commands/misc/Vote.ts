@@ -1,0 +1,56 @@
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ChatInputCommandInteraction,
+    ColorResolvable,
+    EmbedBuilder,
+} from "discord.js";
+import Bot from "../../domain/Bot";
+import ICommand from "../../domain/ICommand";
+import Command from "../../domain/Command";
+import { IMember } from "../../models/Member";
+
+const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder()
+        .setLabel("Top.gg")
+        .setStyle(ButtonStyle.Link)
+        .setEmoji("<:topgg:990540015853506590>")
+        .setURL("https://top.gg/bot/938771676433362955/vote"),
+    new ButtonBuilder()
+        .setLabel("Discordbotlist.com")
+        .setStyle(ButtonStyle.Link)
+        .setEmoji("<:dbl:990540323967103036>")
+        .setURL("https://discordbotlist.com/bots/coinz/upvote"),
+    new ButtonBuilder()
+        .setLabel("Discords.com")
+        .setStyle(ButtonStyle.Link)
+        .setEmoji("<:discords:1157587361069273119>")
+        .setURL("https://discords.com/bots/bot/938771676433362955/vote"),
+);
+
+export default class extends Command implements ICommand {
+    readonly info = {
+        name: "vote",
+        description: "Get all the links to the voting sites for rewards.",
+        options: [],
+        category: "misc",
+    };
+
+    constructor(bot: Bot, file: string) {
+        super(bot, file);
+    }
+
+    async execute(interaction: ChatInputCommandInteraction, member: IMember) {
+        const votes = member.votes === undefined ? 0 : member.votes;
+        const embed = new EmbedBuilder()
+            .setTitle("Vote Links")
+            .setColor(<ColorResolvable>this.client.config.embed.color)
+            .addFields(
+                { name: "Rewards (For each vote)", value: "A free wheel spin. Use `/lucky-wheel rewards` to see possible rewards.", inline: false },
+                { name: "Total Votes", value: `${votes > 0 ? `You have voted ${votes}x in total! Thank you!` : "You haven't voted yet. Please click on the links below to vote."}`, inline: false },
+            )
+            .setFooter({ text: this.client.config.embed.footer });
+        await interaction.reply({ embeds: [embed], components: [row] });
+    }
+}
