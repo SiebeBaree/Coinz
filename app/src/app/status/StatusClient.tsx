@@ -53,7 +53,7 @@ export default function StatusClient({ clusters, statusUrl, updateInterval }: {
                 <div className="text-center my-24">
                     <h2 className="text-xl font-semibold">Could not retrieve the status of Coinz, please refresh this
                         page to try again.</h2>
-                    <h3 className="text-muted">If this issue keeps happening, please <Link href="/support"
+                    <h3 className="text-muted">If this issue keeps happening, please <Link href={"/support"}
                                                                                            target="_blank"
                                                                                            className="underline">contact
                         us.</Link>
