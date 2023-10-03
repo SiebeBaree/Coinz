@@ -34,7 +34,7 @@ export default function Navbar() {
             <div className="flex gap-6 justify-between items-center">
                 <Link href="/premium" className={cn(pathname === "/premium" ? styles.activeNav : "", "")}>Premium</Link>
                 <Link href="/login"
-                      className="bg-primary text-primary-foreground font-semibold rounded-lg px-3 py-1">Login</Link>
+                      className="bg-primary text-primary-foreground font-semibold rounded-md px-3 py-1">Login</Link>
             </div>
         </nav>
     );
