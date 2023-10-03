@@ -4,7 +4,7 @@ export const dynamic = "force-static";
 export const revalidate = "force-cache";
 
 export default async function ItemsPage() {
-    const response = await fetch(process.env.APP_URL! + "/api/items");
+    const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL! + "/api/items");
     const items = await response.json();
 
     return (
