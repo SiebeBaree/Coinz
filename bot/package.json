@@ -1,0 +1,59 @@
+{
+  "name": "coinz-bot",
+  "version": "4.0.0",
+  "description": "A feature rich discord bot with an entire economic system.",
+  "main": "dist/manager.js",
+  "scripts": {
+    "start": "tsc && node ./dist/manager.js",
+    "dev": "concurrently \"tsc -w\" \"nodemon ./dist/manager.js\"",
+    "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "register-commands": "node ./dist/register.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SiebeBaree/Coinz.git"
+  },
+  "author": "SiebeBaree",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/SiebeBaree/Coinz/issues"
+  },
+  "homepage": "https://github.com/SiebeBaree/Coinz#readme",
+  "keywords": [
+    "economy",
+    "discord",
+    "bot",
+    "typescript",
+    "discord.js",
+    "crons",
+    "crypto",
+    "stocks",
+    "stock",
+    "market",
+    "cluster",
+    "shard",
+    "coinz"
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "concurrently": "^8.2.1",
+    "eslint": "^8.50.0",
+    "nodemon": "^3.0.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "discord-api-types": "^0.37.58",
+    "discord-hybrid-sharding": "^2.1.3",
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1",
+    "fs": "^0.0.1-security",
+    "module-alias": "^2.2.3",
+    "moment": "^2.29.4",
+    "mongoose": "^7.5.2",
+    "redis": "^4.6.10",
+    "sharding-stats": "^2.4.0",
+    "winston": "^3.10.0",
+    "winston-daily-rotate-file": "^4.7.1"
+  }
+}
