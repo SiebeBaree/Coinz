@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: "Ginto Nord";
-    src: url('/GintoNord-Black.ttf');
+    src: url('../lib/fonts/GintoNord-Black.ttf');
     font-weight: bold;
     font-display: swap;
 }
