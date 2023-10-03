@@ -25,3 +25,14 @@ export interface Changelog {
     timestamp: number;
     content: string[];
 }
+
+export interface Cluster {
+    id: number;
+    shards: Shard[];
+}
+
+export interface Shard {
+    id: number;
+    ping: number;
+    guildcount: number;
+}
