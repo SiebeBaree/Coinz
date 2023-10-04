@@ -6,16 +6,18 @@ import IEvent from "./IEvent";
 import EventHandler from "./EventHandler";
 import ICommand from "./ICommand";
 import CommandHandler from "./CommandHandler";
-import { createClient, RedisClientType } from "redis";
 import config from "../data/config.json";
+import Cooldown from "../lib/Cooldown";
+import Achievement from "../lib/Achievement";
 
 export default class Bot extends Client {
     public commands: Collection<string, ICommand>;
     public events: Collection<string, IEvent>;
     public readonly cluster;
     public readonly logger: winston.Logger;
-    public readonly redisClient: RedisClientType;
+    public readonly cooldown: Cooldown;
     public readonly config: typeof config;
+    public readonly achievement: Achievement;
 
     constructor(options: ClientOptions) {
         super(options);
@@ -28,12 +30,9 @@ export default class Bot extends Client {
 
         const logger = new Logger();
         this.logger = logger.logger;
-
-        this.redisClient = createClient({
-            url: process.env.REDIS_URL
-        });
-
+        this.cooldown = new Cooldown();
         this.config = config;
+        this.achievement = new Achievement();
     }
 
     async login(token?: string | undefined): Promise<string> {
