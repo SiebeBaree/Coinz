@@ -5,6 +5,7 @@ import Command from "../../domain/Command";
 import { IMember } from "../../models/Member";
 import Utils from "../../lib/Utils";
 import UserUtils from "../../lib/UserUtils";
+import UserStats from "../../models/UserStats";
 
 export default class extends Command implements ICommand {
     readonly info = {
@@ -26,11 +27,16 @@ export default class extends Command implements ICommand {
         }
 
         const money = Utils.getRandomNumber(15, 50);
-
         if (Utils.getRandomNumber(1, 100) <= 75) {
             await UserUtils.addMoney(member.id, money);
             const experience = await UserUtils.addExperience(member.id);
             await interaction.reply(`You begged for money and got :coin: **${money}**. You also gained **${experience} XP**.`);
+
+            await UserStats.updateOne(
+                { id: interaction.user.id },
+                { $inc: { totalEarned: money } },
+                { upsert: true },
+            );
         } else {
             await interaction.reply("You begged for money but no one gave you any.");
         }
