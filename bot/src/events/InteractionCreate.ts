@@ -39,8 +39,8 @@ export default class InteractionCreate implements IEvent {
             try {
                 await command.execute(interaction, member);
 
-                let userStats = await UserStats.findOne({ userId: interaction.user.id });
-                if (!userStats) userStats = new UserStats({ userId: interaction.user.id });
+                let userStats = await UserStats.findOne({ id: interaction.user.id });
+                if (!userStats) userStats = new UserStats({ id: interaction.user.id });
                 userStats.dailyActivity.totalCommands++;
                 await userStats.save();
 
