@@ -33,7 +33,7 @@ class Main {
         await this.client.login(process.env.DISCORD_TOKEN);
 
         connect(process.env.DATABASE_URI!)
-            .then(() => this.client.logger.info("Connected to MongoDB"))
+            .then(() => this.client.logger.debug("Connected to MongoDB"))
             .catch(this.client.logger.error);
 
         process.on("uncaughtException", (err: Error) => {
