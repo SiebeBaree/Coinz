@@ -11,5 +11,19 @@
     "icon": "https://cdn.discordapp.com/embed/avatars/1.png"
   },
   "invalidCommand": "Invalid arguments, use `/help command <command>` to see the command usage.",
-  "supportServer": "https://discord.gg/asnZQwc6kW"
+  "supportServer": "https://discord.gg/asnZQwc6kW",
+  "bets": {
+    "free": {
+        "min": 50,
+        "max": 5000
+    },
+    "plus": {
+        "min": 50,
+        "max": 10000
+    },
+    "pro": {
+        "min": 50,
+        "max": 20000
+    }
+  }
 }
