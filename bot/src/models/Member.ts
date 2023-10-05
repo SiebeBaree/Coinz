@@ -17,11 +17,12 @@ export interface IPlot {
 
 interface ITree {
     height: number;
-    planted: number;
+    plantedAt: number;
     timesWatered: number;
-    preference: string;
-    lastWatered: number;
-    nextEvent: number;
+    wateredAt: number;
+    nextEventAt: number;
+    isCuttingDown: number;
+    extraHeight: number;
 }
 
 export interface IMember {
@@ -71,11 +72,12 @@ const Plot = new Schema<IPlot>({
 
 const Tree = new Schema<ITree>({
     height: { type: Number, default: 0 },
-    planted: { type: Number, default: 0 },
+    plantedAt: { type: Number, default: 0 },
     timesWatered: { type: Number, default: 0 },
-    preference: { type: String, default: "default" },
-    lastWatered: { type: Number, default: 0 },
-    nextEvent: { type: Number, default: 0 },
+    wateredAt: { type: Number, default: 0 },
+    nextEventAt: { type: Number, default: 0 },
+    isCuttingDown: { type: Number, default: 0 },
+    extraHeight: { type: Number, default: 0 },
 });
 
 export const memberSchema = new Schema<IMember>({
