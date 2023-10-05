@@ -9,6 +9,7 @@ import CommandHandler from "./CommandHandler";
 import config from "../data/config.json";
 import Cooldown from "../lib/Cooldown";
 import Achievement from "../lib/Achievement";
+import Shop from "../lib/Shop";
 
 export default class Bot extends Client {
     public commands: Collection<string, ICommand>;
@@ -18,6 +19,7 @@ export default class Bot extends Client {
     public readonly cooldown: Cooldown;
     public readonly config: typeof config;
     public readonly achievement: Achievement;
+    public readonly items: Shop;
 
     constructor(options: ClientOptions) {
         super(options);
@@ -33,16 +35,19 @@ export default class Bot extends Client {
         this.cooldown = new Cooldown();
         this.config = config;
         this.achievement = new Achievement();
+        this.items = new Shop(this.logger);
     }
 
     async login(token?: string | undefined): Promise<string> {
+        if (this.items.all.size === 0) await this.items.fetchItems();
+
         const eventHandler = new EventHandler(this);
         this.events = await eventHandler.load();
 
         const commandHandler = new CommandHandler(this);
         this.commands = await commandHandler.load();
 
-        this.logger.info(`Loaded ${this.commands.size} commands and ${this.events.size} events.`);
+        this.logger.debug(`Loaded ${this.commands.size} commands and ${this.events.size} events.`);
         return await super.login(token);
     }
 }
