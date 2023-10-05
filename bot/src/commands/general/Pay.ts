@@ -5,7 +5,6 @@ import Command from "../../domain/Command";
 import Member, { IMember } from "../../models/Member";
 import User from "../../lib/User";
 import UserStats from "../../models/UserStats";
-import Database from "../../lib/Database";
 
 export default class extends Command implements ICommand {
     readonly info = {
