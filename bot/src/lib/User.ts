@@ -35,4 +35,21 @@ export default class User {
         if (removeMoney) await this.removeMoney(member.id, bet);
         return bet;
     }
+
+    static async addExperience(userId: string, amount?: number): Promise<number> {
+        if (amount === undefined) {
+            amount = Utils.getRandomNumber(1, 4);
+        }
+
+        await Member.updateOne(
+            { id: userId },
+            { $inc: { experience: amount } }
+        );
+
+        return amount;
+    }
+
+    static async addGameExperience(member: IMember): Promise<number> {
+        return await this.addExperience(member.id, Utils.getRandomNumber(1, 4));
+    }
 }
