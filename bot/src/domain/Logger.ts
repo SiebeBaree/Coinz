@@ -16,7 +16,7 @@ export default class Logger {
         });
 
         this._logger = winston.createLogger({
-            level: "info",
+            level: "debug",
             format: winston.format.json(),
             transports: [
                 transport,
