@@ -38,11 +38,9 @@ export default class extends Command implements ICommand {
             return;
         }
 
-        await interaction.deferReply();
         let userData = interaction.user.id === user.id ? member : await Database.getMember(user.id);
-
         if (interaction.user.id !== user.id) {
-            await interaction.editReply({ embeds: [this.getEmbed(user, userData, -1, false)] });
+            await interaction.reply({ embeds: [this.getEmbed(user, userData, -1, false)] });
             return;
         }
 
@@ -50,7 +48,7 @@ export default class extends Command implements ICommand {
         let enoughMoney = userData.wallet >= price;
         let interactionFinished = false;
 
-        const message = await interaction.editReply({ embeds: [this.getEmbed(user, userData, price, enoughMoney)], components: [this.getButton(enoughMoney)] });
+        const message = await interaction.reply({ embeds: [this.getEmbed(user, userData, price, enoughMoney)], components: [this.getButton(enoughMoney)] });
         const collector = message.createMessageComponentCollector({ filter: (i) => i.user.id === interaction.user.id, max: 10, idle: 30_000, componentType: ComponentType.Button });
 
         collector.on("collect", async (i) => {
