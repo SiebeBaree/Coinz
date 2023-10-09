@@ -13,6 +13,7 @@ import Member, { IMember } from "../../models/Member";
 import Item from "../../domain/Item";
 import Database from "../../lib/Database";
 import Utils from "../../lib/Utils";
+import UserStats from "../../models/UserStats";
 
 interface Event {
     name: string;
@@ -210,7 +211,10 @@ export default class extends Command implements ICommand {
 
                 if (Utils.getRandomNumber(1, 100) <= 30) {
                     await this.client.items.removeItem("shovel", member);
-                    await interaction.followUp({ content: ":x: You broke your shovel while planting the tree.", ephemeral: true });
+                    await interaction.followUp({
+                        content: ":x: You broke your shovel while planting the tree.",
+                        ephemeral: true,
+                    });
                 }
 
                 member.tree.plantedAt = now;
@@ -233,7 +237,10 @@ export default class extends Command implements ICommand {
                     await interaction.followUp({ content: ":x: You don't have a tree planted.", ephemeral: true });
                     return;
                 } else if (member.tree.height < 15) {
-                    await interaction.followUp({ content: ":x: Your tree isn't tall enough to be cut down.", ephemeral: true });
+                    await interaction.followUp({
+                        content: ":x: Your tree isn't tall enough to be cut down.",
+                        ephemeral: true,
+                    });
                     return;
                 } else if (member.tree.isCuttingDown !== 0 && member.tree.isCuttingDown > now) {
                     await interaction.followUp({ content: `:x: You are already cutting down your tree. You can cut it down in <t:${member.tree.isCuttingDown}:R>` });
@@ -258,7 +265,10 @@ export default class extends Command implements ICommand {
                             embeds: [this.getEmbed(interaction.user, member)],
                             components: [this.getButtons(member)],
                         });
-                        await interaction.followUp({ content: `You started cutting down your tree. You can cut it down <t:${member.tree.isCuttingDown}:R>`, ephemeral: true });
+                        await interaction.followUp({
+                            content: `You started cutting down your tree. You can cut it down <t:${member.tree.isCuttingDown}:R>`,
+                            ephemeral: true,
+                        });
                         await Member.updateOne({ id: member.id }, { $set: { "tree.isCuttingDown": member.tree.isCuttingDown } });
                         return;
                     } else {
@@ -287,6 +297,18 @@ export default class extends Command implements ICommand {
                 });
                 await Member.updateOne({ id: member.id }, { $set: { tree: member.tree } });
                 await this.client.items.addItem("wood", member, totalWood);
+
+                const userStats = await Database.getUserStats(member.id);
+                if (userStats.treesCutDown + 1 === 50) {
+                    await this.client.achievement.sendAchievementMessage(interaction, member.id, this.client.achievement.getById("lumberjack"));
+                }
+
+                await UserStats.updateOne({ id: member.id }, {
+                    $inc: {
+                        treesCutDown: 1,
+                        totalTreeHeight: member.tree.height,
+                    },
+                }, { upsert: true });
             }
         });
 
