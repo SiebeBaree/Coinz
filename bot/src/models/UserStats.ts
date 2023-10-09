@@ -18,7 +18,7 @@ export interface IUserStats {
         moneyLost: number;
     };
     treesCutDown: number;
-    averageHeightOfTree: number;
+    totalTreeHeight: number;
     luckyWheelSpins: number;
     timesWorked: number;
     fishCaught: number;
@@ -48,7 +48,7 @@ export const userStatsSchema = new Schema<IUserStats>({
         moneyLost: { type: Number, default: 0 },
     },
     treesCutDown: { type: Number, default: 0 },
-    averageHeightOfTree: { type: Number, default: 0 },
+    totalTreeHeight: { type: Number, default: 0 },
     luckyWheelSpins: { type: Number, default: 0 },
     timesWorked: { type: Number, default: 0 },
     fishCaught: { type: Number, default: 0 },
