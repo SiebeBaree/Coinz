@@ -7,6 +7,7 @@ import crypto from "../lib/crypto";
 
 type InvestmentResponse = {
     ticker: string;
+    name: string;
     price: string;
     changed: string;
     expires: Date;
@@ -19,7 +20,7 @@ schedule("*/10 * * * 1-5", async () => {
     const stockPromises: Promise<InvestmentResponse | null>[] = [];
     try {
         for (const stock of investments.stocks) {
-            const stockPromise = axios.get(`https://realstonks.p.rapidapi.com/${stock.toUpperCase()}`, {
+            const stockPromise = axios.get(`https://realstonks.p.rapidapi.com/${stock.ticker.toUpperCase()}`, {
                 headers: {
                     "X-RapidAPI-Key": process.env.STOCKS_API_KEY!,
                     "X-RapidAPI-Host": "realstonks.p.rapidapi.com",
@@ -29,7 +30,8 @@ schedule("*/10 * * * 1-5", async () => {
                     if (response.status !== 200) return null;
 
                     return {
-                        ticker: stock,
+                        ticker: stock.ticker,
+                        name: stock.name,
                         price: response.data["price"].toString(),
                         changed: response.data["change_percentage"].toString(),
                         expires: getExpireTime(),
@@ -55,12 +57,16 @@ schedule("*/10 * * * 1-5", async () => {
                 investment = new Investment({
                     ticker: ticker.toUpperCase(),
                     type: "Stock",
-                    fullName: "Unconfigured",
+                    fullName: data.name,
                     price: data.price,
                     changed: data.changed,
                     expires: data.expires,
                 });
             } else {
+                if (investment.fullName !== data.name) {
+                    investment.fullName = data.name;
+                }
+
                 investment.price = data.price;
                 investment.changed = data.changed;
                 investment.expires = data.expires;
@@ -78,30 +84,36 @@ schedule("*/10 * * * 1-5", async () => {
 
 // Run every minute
 schedule("* * * * *", async () => {
-    for (const ticker of investments.crypto) {
+    for (const investmentInfo of investments.crypto) {
         try {
-            const response = await crypto.ticker24h({ market: `${ticker.toUpperCase()}-EUR` });
+            const response = await crypto.ticker24h({ market: `${investmentInfo.ticker.toUpperCase()}-EUR` });
             if (response.errorCode !== undefined) continue;
 
             const factor = Math.pow(10, 2);
             let changePercentage = Math.round((((response.last - response.open) / response.open * 100) + Number.EPSILON) * factor) / factor;
             if (isNaN(changePercentage)) changePercentage = 0;
 
-            let investment = await Investment.findOne({ ticker });
+            let investment = await Investment.findOne({ ticker: investmentInfo.ticker });
             if (investment === null) {
                 investment = new Investment({
-                    ticker: ticker.toUpperCase(),
+                    ticker: investmentInfo.ticker.toUpperCase(),
                     type: "Crypto",
-                    fullName: "Unconfigured",
+                    fullName: investmentInfo.name,
                     price: response.last.toString(),
                     changed: changePercentage.toString(),
                     expires: new Date(Date.now() + (1000 * 60)),
                 });
+            } else {
+                if (investment.fullName !== investmentInfo.name) {
+                    investment.fullName = investmentInfo.name;
+                }
+
+                investment.price = response.last.toString();
+                investment.changed = changePercentage.toString();
+                investment.expires = new Date(Date.now() + (1000 * 60));
             }
 
-            investment.price = response.last.toString();
-            investment.changed = changePercentage.toString();
-            investment.expires = new Date(Date.now() + (1000 * 60));
+            await investment.save();
         } catch (error) {
             console.error(error);
         }
