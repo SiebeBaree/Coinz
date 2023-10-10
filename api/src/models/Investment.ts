@@ -37,4 +37,4 @@ export const investmentSchema = new Schema<IInvestment>({
     },
 }, { timestamps: true });
 
-export default model<IInvestment>("Investment", investmentSchema);
+export default model<IInvestment>("Investment", investmentSchema, "Investment");
