@@ -1,7 +1,7 @@
 import InvestmentsSection from "@/app/investments/InvestmentsSection";
 import { prisma } from "@/lib/prisma";
 
-export const revalidate = 180;
+export const revalidate = 60;
 
 export default async function InvestmentsPage() {
     const investments = await prisma.investment.findMany({});
