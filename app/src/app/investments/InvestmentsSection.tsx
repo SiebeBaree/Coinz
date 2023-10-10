@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import CategoryCard from "@/components/CategoryCard";
 import Search from "@/components/Search";
 import { cn } from "@/lib/utils";
-import { TrendingDown, TrendingUp } from "lucide-react";
+import TrendingUpIcon from "@/components/icons/TrendingUp";
+import TrendingDownIcon from "@/components/icons/TrendingDown";
 
 const categories: { [key: string]: string } = {
     all: "All",
@@ -60,13 +61,12 @@ export default function InvestmentsSection({ data }: {
 function InvestmentCard({ investment }: {
     investment: Investment;
 }) {
-    const change = calculateChange(parseFloat(investment.previousClose), parseFloat(investment.price));
-
     return (
         <div
             className="bg-secondary rounded-md p-4 flex flex-col justify-between gap-6 border border-transparent hover:border-highlight transition-all duration-150 ease-in-out">
             <div className="flex items-start">
-                <Image src={`https://cdn.coinzbot.xyz/ticker/${investment.ticker}.png`} alt="" width={50} height={50}
+                <Image src={`https://cdn.coinzbot.xyz/ticker/${investment.ticker}.png`} alt="Investment company logo"
+                       width={50} height={50}
                        className="mr-4 rounded-md"/>
 
                 <div className="w-full">
@@ -85,20 +85,14 @@ function InvestmentCard({ investment }: {
                     <p className="font-semibold text-2xl">{investment.price}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                    {change >= 0 ? (
-                        <TrendingUp className="text-green-600"/>
+                    {parseFloat(investment.changed) >= 0 ? (
+                        <TrendingUpIcon className="fill-green-600"/>
                     ) : (
-                        <TrendingDown className="text-red-600"/>
+                        <TrendingDownIcon className="fill-red-600"/>
                     )}
-                    <p className={cn(change >= 0 ? "text-green-600" : "text-red-600", "font-medium text-lg")}>{change}%</p>
+                    <p className={cn(parseFloat(investment.changed) >= 0 ? "text-green-600" : "text-red-600", "font-medium text-lg")}>{investment.changed}%</p>
                 </div>
             </div>
         </div>
     );
-}
-
-function calculateChange(previousPrice: number, currentPrice: number): number {
-    const factor = Math.pow(10, 2);
-    let changePercentage = Math.round((((currentPrice - previousPrice) / previousPrice * 100) + Number.EPSILON) * factor) / factor;
-    return isNaN(changePercentage) ? 0 : changePercentage;
 }
