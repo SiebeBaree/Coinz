@@ -33,6 +33,11 @@ export interface IUserStats {
     };
     moneyDonated: number;
     moneyReceived: number;
+    investments: {
+        amountOfTimesBought: number;
+        amountOfTimesSold: number;
+        totalBuyPrice: number;
+    }
 }
 
 export const userStatsSchema = new Schema<IUserStats>({
@@ -63,6 +68,11 @@ export const userStatsSchema = new Schema<IUserStats>({
     },
     moneyDonated: { type: Number, default: 0 },
     moneyReceived: { type: Number, default: 0 },
+    investments: {
+        amountOfTimesBought: { type: Number, default: 0 },
+        amountOfTimesSold: { type: Number, default: 0 },
+        totalBuyPrice: { type: Number, default: 0 },
+    }
 }, { timestamps: true });
 
 export default model<IUserStats>("UserStats", userStatsSchema);
