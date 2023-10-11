@@ -10,6 +10,7 @@ import config from "../data/config.json";
 import Cooldown from "../lib/Cooldown";
 import Achievement from "../lib/Achievement";
 import Shop from "../lib/Shop";
+import Investment from "../lib/Investment";
 
 export default class Bot extends Client {
     public commands: Collection<string, ICommand>;
@@ -20,6 +21,7 @@ export default class Bot extends Client {
     public readonly config: typeof config;
     public readonly achievement: Achievement;
     public readonly items: Shop;
+    public readonly investment: Investment;
 
     constructor(options: ClientOptions) {
         super(options);
@@ -36,6 +38,7 @@ export default class Bot extends Client {
         this.config = config;
         this.achievement = new Achievement();
         this.items = new Shop(this.logger);
+        this.investment = new Investment();
     }
 
     async login(token?: string | undefined): Promise<string> {
