@@ -40,7 +40,7 @@ export interface IMember {
     lastStreak: Date;
     passiveMode: boolean;
     inventory: InventoryItem[];
-    stocks: IInvestment[];
+    investments: IInvestment[];
     plots: IPlot[];
     lastWatered: number;
     profileColor: string;
@@ -95,7 +95,7 @@ export const memberSchema = new Schema<IMember>({
     lastStreak: { type: Date, default: new Date(0) },
     passiveMode: { type: Boolean, default: false },
     inventory: [{ type: Item, default: [] }],
-    stocks: [{ type: Investment, default: [] }],
+    investments: [{ type: Investment, default: [] }],
     plots: [{ type: Plot, default: [] }],
     lastWatered: { type: Number, default: 0 },
     profileColor: { type: String, default: "" },
