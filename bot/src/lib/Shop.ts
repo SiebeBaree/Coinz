@@ -8,21 +8,18 @@ export default class Shop {
     private readonly _items: Collection<string, Item>;
     private readonly logger: winston.Logger;
 
-    constructor(logger: winston.Logger, startItems: Item[] = [], fetch: boolean = true) {
+    constructor(logger: winston.Logger, startItems: Item[] = []) {
         this.logger = logger;
         this._items = new Collection();
-
-        if (fetch) {
-            this.fetchItems().then(() => null);
-        }
+        startItems.forEach((item: Item) => this._items.set(item.itemId, item));
     }
 
     public async fetchItems(): Promise<void> {
         try {
-            const items = await fetch(`${process.env.API_URL}/items`).then(res => res.json());
+            const items = await fetch(`${process.env.API_URL}/items`).then((res) => res.json());
             items.forEach((item: Item) => this._items.set(item.itemId, item));
-        } catch (err) {
-            this.logger.error(err);
+        } catch {
+            this.logger.error("Failed to fetch items from the API.");
         }
     }
 
