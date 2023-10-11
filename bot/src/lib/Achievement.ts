@@ -34,8 +34,8 @@ const achievements: IAchievement[] = [
         name: "The New Warren Buffett",
         description: "Invest 75k or more.",
         emoji: "1013717955734941737",
-        hasAchieved: (member: IMember) => member.stocks.reduce((acc, stock) => acc + stock.buyPrice, 0) >= 75000,
-        progress: (member: IMember) => `${member.stocks.reduce((acc, stock) => acc + stock.buyPrice, 0) ?? 0}/75,000`,
+        hasAchieved: (member: IMember) => member.investments.reduce((acc, stock) => acc + stock.buyPrice, 0) >= 75000,
+        progress: (member: IMember) => `${member.investments.reduce((acc, stock) => acc + stock.buyPrice, 0) ?? 0}/75,000`,
     },
     {
         id: "local_fish_dealer",
