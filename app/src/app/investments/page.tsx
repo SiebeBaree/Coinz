@@ -1,21 +1,17 @@
 import InvestmentsSection from "@/app/investments/InvestmentsSection";
-import { prisma } from "@/lib/prisma";
+import {db} from "@/server/db";
+import PageTitle from "@/components/PageTitle";
 
 export const revalidate = 60;
 
 export default async function InvestmentsPage() {
-    const investments = await prisma.investment.findMany({});
+    const investments = await db.investment.findMany({});
 
     return (
-        <main className="container mx-auto px-5">
-            <div className="page-title">
-                <h2 className="watermark">Investments</h2>
-                <h1>Investments</h1>
-                <p>You&apos;ll find a comprehensive list of all the available commands for Coinz. We&apos;ve
-                    compiled this list to help you quickly and easily access the commands in Coinz effectively.</p>
-            </div>
-
+        <>
+            <PageTitle title="Investments"
+                       description="You'll find a comprehensive list of all the available commands for Coinz. We've compiled this list to help you quickly and easily access the commands in Coinz effectively."/>
             <InvestmentsSection data={investments}/>
-        </main>
+        </>
     );
 }
