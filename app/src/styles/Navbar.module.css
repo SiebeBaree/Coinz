@@ -1,5 +1,0 @@
-.activeNav {
-    transition: all 0.2s ease-in-out;
-    font-weight: bold;
-    color: var(--color-selected);
-}
