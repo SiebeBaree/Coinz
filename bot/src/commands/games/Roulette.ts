@@ -129,6 +129,7 @@ export default class extends Command implements ICommand {
                 { id: interaction.user.id },
                 {
                     $inc: {
+                        totalEarned: money,
                         "games.won": 1,
                         "games.moneyEarned": money,
                         "games.moneySpent": gameData.bet,
@@ -141,6 +142,7 @@ export default class extends Command implements ICommand {
                 { id: interaction.user.id },
                 {
                     $inc: {
+                        totalSpend: gameData.bet,
                         "games.lost": 1,
                         "games.moneyLost": gameData.bet,
                         "games.moneySpent": gameData.bet,
