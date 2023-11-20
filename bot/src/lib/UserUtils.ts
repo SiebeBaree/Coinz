@@ -16,8 +16,13 @@ export default class UserUtils {
         }
     }
 
+    // TODO: Rework leveling system make it harder to level up each level
     static getLevel(experience: number): number {
         return Math.floor(experience / 100);
+    }
+
+    static getExperience(level: number): number {
+        return level * 100;
     }
 
     static async addExperience(userId: string, amount?: number): Promise<number> {
