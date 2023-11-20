@@ -2,11 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import DiscordIcon from "@/components/icons/Discord";
 import React from "react";
-import ServerIcon from "@/components/icons/Server";
-import UsersIcon from "@/components/icons/Users";
-import TerminalIcon from "@/components/icons/Terminal";
-import { Statistic } from "@/components/Statistic";
-import CandlesIcon from "@/components/icons/Candles";
+import Statistics from "@/components/Statistics";
 import heroImg from "@/lib/img/hero.png";
 import { IconProps } from "@/lib/interfaces";
 import { cn } from "@/lib/utils";
@@ -57,19 +53,12 @@ export default function Home() {
 
                 <div id="statistics" className="bg-secondary py-8">
                     <div className="flex flex-wrap gap-8 items-center justify-around container mx-auto px-5">
-                        <Statistic Icon={<ServerIcon className="fill-primary h-12 w-12"/>}
-                                   title="Servers" value={3500} suffix="+"/>
-                        <Statistic Icon={<UsersIcon className="fill-primary h-12 w-12"/>}
-                                   title="Users" value={400} suffix="K+"/>
-                        <Statistic Icon={<TerminalIcon className="fill-primary h-12 w-12"/>}
-                                   title="Commands" value={35}/>
-                        <Statistic Icon={<CandlesIcon className="fill-primary h-12 w-12"/>}
-                                   title="Investments" value={60}/>
+                        <Statistics/>
                     </div>
                 </div>
             </div>
 
-            <div className="container mx-auto px-5 mt-24">
+            <div className="container mx-auto px-5 my-24">
                 <div className="flex flex-col gap-64">
                     <FeatureCard imagePath="/investing.webp" Icon={InvestingIcon} title="Buy, hold and sell stocks"
                                  description="Enhance your knowledge of the stock and crypto market by buying, holding and selling stocks and crypto within Coinz. All prices are updated regularly. Coinz currently has 30 stocks and 27 crypto currencies."/>

@@ -1,6 +1,6 @@
 "use client";
 
-import {CandlestickChartIcon, LucideIcon, ServerIcon, TerminalSquareIcon, Users2Icon} from "lucide-react";
+import { CandlestickChartIcon, LucideIcon, ServerIcon, TerminalSquareIcon, Users2Icon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 export default function Statistics() {

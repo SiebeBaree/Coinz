@@ -3,7 +3,7 @@ export default function TermsOfUsePage() {
         <main className="container mx-auto px-5">
             <div className="page-title">
                 <h2 className="watermark" style={{
-                    fontSize: '5rem',
+                    fontSize: "5rem",
                 }}>Terms Of Use</h2>
                 <h1>Terms Of Use</h1>
             </div>

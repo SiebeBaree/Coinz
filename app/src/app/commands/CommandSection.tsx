@@ -172,8 +172,8 @@ function CommandCard({ name, command }: {
 
                     {(command.usage && command.usage.length > 0) ? (
                         <div>
-                            <h3 className="text-lg font-medium">Usage</h3>
-                            <div className="code-copy">
+                            <h3 className="text-lg font-medium mb-1">Usage</h3>
+                            <div className="code-copy flex flex-col gap-1 items-start">
                                 {command.usage.map((usage, index) => (
                                     <code key={index}>{usage}</code>
                                 ))}

@@ -1,5 +1,5 @@
 import premium from "@/lib/data/premium.json";
-import {Check} from "lucide-react";
+import { Check } from "lucide-react";
 import Image from "next/image";
 import PageTitle from "@/components/PageTitle";
 
@@ -16,7 +16,7 @@ interface Subscription {
 
 export default function PremiumPage() {
     return (
-        <>
+        <main className="container mx-auto px-5">
             <PageTitle title="Premium"
                        description="Here, you'll find all the information you need to stay up to date with the status of our bot. We've provided detailed information for every cluster and shard of Coinz, so you can quickly and easily see if everything is running smoothly."/>
 
@@ -27,11 +27,11 @@ export default function PremiumPage() {
                     <SubscriptionCard key={key} subscription={premium[key]}/>
                 ))}
             </div>
-        </>
+        </main>
     );
 }
 
-function SubscriptionCard({subscription}: {
+function SubscriptionCard({ subscription }: {
     subscription: Subscription;
 }) {
     return (

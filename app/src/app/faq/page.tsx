@@ -9,7 +9,7 @@ interface FaqItem {
 
 export default function FaqPage() {
     return (
-        <>
+        <main className="container mx-auto px-5">
             <PageTitle watermark="Questions" title="Frequently Asked Questions"
                        description="Find quick answers to your questions about Coinz. Your question might already be answered here! If you can't find what you're looking for, contact us. We're here to help!"/>
 
@@ -19,6 +19,6 @@ export default function FaqPage() {
                              description={item.description}/>
                 ))}
             </div>
-        </>
+        </main>
     );
 }
