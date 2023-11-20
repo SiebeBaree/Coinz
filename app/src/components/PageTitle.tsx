@@ -1,4 +1,4 @@
-export default function PageTitle({watermark, title, description}: {
+export default function PageTitle({ watermark, title, description }: {
     watermark?: string,
     title: string,
     description: string
