@@ -17,7 +17,7 @@ import Embed from "../../lib/Embed";
 export default class extends Command implements ICommand {
     readonly info = {
         name: "inventory",
-        description: "View your or someone else's inventory",
+        description: "View your or someone else's inventory.",
         options: [
             {
                 name: "user",
