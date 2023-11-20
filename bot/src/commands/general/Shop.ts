@@ -16,7 +16,7 @@ import User from "../../lib/User";
 export default class extends Command implements ICommand {
     readonly info = {
         name: "shop",
-        description: "Buy, sell or view items in the shop",
+        description: "Buy, sell or view items in the shop.",
         options: [
             {
                 name: "info",
@@ -24,9 +24,9 @@ export default class extends Command implements ICommand {
                 description: "View information about an item or get a list of all items",
                 options: [
                     {
-                        name: "item-id",
+                        name: "item",
                         type: ApplicationCommandOptionType.String,
-                        description: "The ID of the item you want to view",
+                        description: "The name of ID of the item you want to view",
                         required: false,
                     },
                 ],
@@ -39,7 +39,7 @@ export default class extends Command implements ICommand {
                     {
                         name: "item-id",
                         type: ApplicationCommandOptionType.String,
-                        description: "The ID of the item you want to buy",
+                        description: "The name of ID of the item you want to buy",
                         required: true,
                     },
                     {
@@ -60,7 +60,7 @@ export default class extends Command implements ICommand {
                     {
                         name: "item-id",
                         type: ApplicationCommandOptionType.String,
-                        description: "The ID of the item you want to sell",
+                        description: "The name of ID of the item you want to sell",
                         required: true,
                     },
                     {
