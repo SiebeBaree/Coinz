@@ -1,3 +1,5 @@
+import { setTimeout } from 'node:timers';
+
 const FORMATTER = new Intl.NumberFormat('en-US', { notation: 'compact' });
 
 export function getRandomNumber(min: number, max: number): number {
@@ -5,7 +7,7 @@ export function getRandomNumber(min: number, max: number): number {
 }
 
 export function roundNumber(num: number, dec: number): number {
-    const factor = Math.pow(10, dec);
+    const factor = 10 ** dec;
     return Math.round((num + Number.EPSILON) * factor) / factor;
 }
 
@@ -16,10 +18,10 @@ export async function wait(ms: number): Promise<void> {
 }
 
 export function msToTime(ms: number): string {
-    const days = Math.floor(ms / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+    const days = Math.floor(ms / (1_000 * 60 * 60 * 24));
+    const hours = Math.floor((ms % (1_000 * 60 * 60 * 24)) / (1_000 * 60 * 60));
+    const minutes = Math.floor((ms % (1_000 * 60 * 60)) / (1_000 * 60));
+    const seconds = Math.floor((ms % (1_000 * 60)) / 1_000);
 
     let result = '';
     if (days > 0) result += `${days}d `;
@@ -31,21 +33,21 @@ export function msToTime(ms: number): string {
 
 export function parseStrToNum(str: string): number {
     try {
-        if (/^[0-9]+$/.test(str)) return parseInt(str);
+        if (/^\d+$/.test(str)) return Number.parseInt(str, 10);
 
-        if (str[str.length - 1] === 'k') {
+        if (str.endsWith('k')) {
             return Number(str.slice(0, -1)) * 1_000;
-        } else if (str[str.length - 1] === 'M') {
+        } else if (str.endsWith('M')) {
             return Number(str.slice(0, -1)) * 1_000_000;
         } else if (/^\d+$/.test(str)) {
             // s consists only of digits, so it is already in base form
             return Number(str);
         } else {
             // s is invalid, so return NaN
-            return NaN;
+            return Number.NaN;
         }
     } catch {
-        return NaN;
+        return Number.NaN;
     }
 }
 
@@ -55,34 +57,35 @@ export function formatNumber(num: number): string {
 
 export function parsePlots(str: string): number[] {
     const segments = str.split(',');
-    let result: Set<number> = new Set();
+    const result: Set<number> = new Set();
 
-    for (let segment of segments) {
+    for (const segment of segments) {
         if (segment.includes('-')) {
             const rangeParts = segment.split('-').map(Number);
             const start = rangeParts[0];
             const end = rangeParts[1];
 
             // Validate range
-            if (start === undefined || end === undefined || isNaN(start) || isNaN(end)) {
+            if (start === undefined || end === undefined || Number.isNaN(start) || Number.isNaN(end)) {
                 throw new Error(`"${segment}" is not a valid plot`);
             }
 
             // Handle reverse ranges
             if (start > end) {
-                for (let i = end; i <= start; i++) {
-                    result.add(i);
+                for (let plot = end; plot <= start; plot++) {
+                    result.add(plot);
                 }
             } else {
-                for (let i = start; i <= end; i++) {
-                    result.add(i);
+                for (let plot = start; plot <= end; plot++) {
+                    result.add(plot);
                 }
             }
         } else {
             const number = Number(segment);
-            if (isNaN(number)) {
-                throw new Error(`"${segment}" is not a valid plot`);
+            if (Number.isNaN(number)) {
+                throw new TypeError(`"${segment}" is not a valid plot`);
             }
+
             result.add(number);
         }
     }

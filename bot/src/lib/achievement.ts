@@ -2,7 +2,7 @@ import type { ChatInputCommandInteraction } from 'discord.js';
 import type { IMember } from '../models/Member';
 import Member from '../models/Member';
 import type { IUserStats } from '../models/UserStats';
-import { getLevel } from "../utils";
+import { getLevel } from '../utils';
 import Database from './database';
 
 export type IAchievement = {
@@ -12,7 +12,7 @@ export type IAchievement = {
     emoji: string;
     hasAchieved(member: IMember, userStats: IUserStats): boolean;
     progress(member: IMember, userStats: IUserStats): string;
-}
+};
 
 const achievements: IAchievement[] = [
     {

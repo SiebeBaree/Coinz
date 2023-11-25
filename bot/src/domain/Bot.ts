@@ -1,12 +1,13 @@
-import { Client, ClientOptions, Collection } from 'discord.js';
+import { join } from 'node:path';
+import { ClusterClient } from 'discord-hybrid-sharding';
+import type { ClientOptions } from 'discord.js';
+import { Client, Collection } from 'discord.js';
+import type { Logger } from 'winston';
+import { loadCommands, loadEvents } from '../utils/loaders';
+import logger from '../utils/logger';
+import { registerEvents } from '../utils/registerEvents';
 import type { Command } from './Command';
 import type { Event } from './Event';
-import { Logger } from 'winston';
-import { ClusterClient } from 'discord-hybrid-sharding';
-import logger from '../utils/logger';
-import { registerEvents } from "../utils/registerEvents";
-import { loadCommands, loadEvents } from '../utils/loaders';
-import { join } from 'path';
 
 export default class Bot extends Client {
     public commands: Collection<string, Command>;
@@ -14,7 +15,7 @@ export default class Bot extends Client {
     public readonly cluster: ClusterClient<any>;
     public readonly logger: Logger;
 
-    constructor(options: ClientOptions) {
+    public constructor(options: ClientOptions) {
         super(options);
 
         this.commands = new Collection();
@@ -26,13 +27,13 @@ export default class Bot extends Client {
         this.logger = logger;
     }
 
-    override async login(token: string): Promise<string> {
+    public override async login(token: string): Promise<string> {
         const events = await loadEvents(join(__dirname, '../events'));
         this.commands = await loadCommands(join(__dirname, '../commands'));
 
         this.events = new Collection(events.map((event) => [event.name, event]));
         registerEvents(events, this);
 
-        return await super.login(token);
+        return super.login(token);
     }
 }

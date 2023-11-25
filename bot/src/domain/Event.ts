@@ -1,6 +1,6 @@
 import type { ClientEvents } from 'discord.js';
 import type { StructurePredicate } from '../utils/loaders.ts';
-import Bot from "./Bot";
+import type Bot from './Bot';
 
 /**
  * Defines the structure of an event.

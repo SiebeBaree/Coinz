@@ -1,21 +1,21 @@
 import { Schema, model, Types } from 'mongoose';
-import { InventoryItem } from '../lib/types';
+import type { InventoryItem } from '../lib/types';
 
-export interface IInvestment {
+export type IInvestment = {
     ticker: string;
     amount: Types.Decimal128;
     buyPrice: number;
-}
+};
 
-export interface IPlot {
+export type IPlot = {
     plotId: number;
     status: string;
     harvestOn: number;
     crop: string;
     soilQuality: number;
-}
+};
 
-interface ITree {
+type ITree = {
     height: number;
     plantedAt: number;
     timesWatered: number;
@@ -23,9 +23,9 @@ interface ITree {
     nextEventAt: number;
     isCuttingDown: number;
     extraHeight: number;
-}
+};
 
-export interface IMember {
+export type IMember = {
     id: string;
     banned: boolean;
     votes: number;
@@ -49,7 +49,7 @@ export interface IMember {
     bio: string;
     badges: string[];
     tree: ITree;
-}
+};
 
 const Item = new Schema<InventoryItem>({
     itemId: { type: String, required: true },
@@ -88,7 +88,7 @@ export const memberSchema = new Schema<IMember>(
         spins: { type: Number, default: 0 },
         wallet: { type: Number, default: 0 },
         bank: { type: Number, default: 0 },
-        bankLimit: { type: Number, default: 7500 },
+        bankLimit: { type: Number, default: 7_500 },
         experience: { type: Number, default: 0 },
         job: { type: String, default: '' },
         business: { type: String, default: '' },

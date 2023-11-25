@@ -1,8 +1,9 @@
-import { ActivityType, GatewayIntentBits, Partials } from 'discord.js';
-import Bot from './domain/Bot';
+import process from 'node:process';
 import { getInfo } from 'discord-hybrid-sharding';
+import { ActivityType, GatewayIntentBits, Partials } from 'discord.js';
 import { connect } from 'mongoose';
-import logger from "./utils/logger";
+import Bot from './domain/Bot';
+import logger from './utils/logger';
 
 (async () => {
     const bot = new Bot({
@@ -20,17 +21,21 @@ import logger from "./utils/logger";
         shards: getInfo().SHARD_LIST,
     });
 
-    connect(process.env.DATABASE_URI!)
-        .then(() => logger.debug("Connected to MongoDB"))
-        .catch(logger.error);
+    try {
+        await connect(process.env.DATABASE_URI!);
+        logger.info('Connected to the database.');
+    } catch (error) {
+        logger.error(error);
+        process.exit(1);
+    }
 
     await bot.login(process.env.DISCORD_TOKEN!);
 })();
 
-process.on("uncaughtException", (err: Error) => {
+process.on('uncaughtException', (err: Error) => {
     logger.error(err.stack);
 });
 
-process.on("unhandledRejection", (err: Error) => {
+process.on('unhandledRejection', (err: Error) => {
     logger.error(err.stack);
 });

@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-export interface IUserStats {
+export type IUserStats = {
     id: string;
     totalEarned: number;
     totalSpend: number;
@@ -33,7 +33,7 @@ export interface IUserStats {
         amountOfTimesSold: number;
         totalBuyPrice: number;
     };
-}
+};
 
 export const userStatsSchema = new Schema<IUserStats>(
     {

@@ -1,6 +1,7 @@
-import Member, { IMember } from '../models/Member';
+import type { IMember } from '../models/Member';
+import Member from '../models/Member';
 import UserStats from '../models/UserStats';
-import { formatNumber, getRandomNumber, parseStrToNum } from "./index";
+import { formatNumber, getRandomNumber, parseStrToNum } from './index';
 
 export async function addMoney(userId: string, amount: number): Promise<void> {
     await Member.updateOne(
@@ -35,7 +36,7 @@ export async function removeBetMoney(
     removeMoneyFromPlayer = true,
     minBet = 50,
     maxBet = -1,
-): Promise<string | number> {
+): Promise<number | string> {
     if (maxBet < 0) maxBet = 10_000;
 
     let bet = 0;
@@ -60,12 +61,13 @@ export async function removeBetMoney(
             },
             {
                 $inc: {
-                    "games.moneySpent": bet,
+                    'games.moneySpent': bet,
                 },
             },
             { upsert: true },
         );
     }
+
     return bet;
 }
 

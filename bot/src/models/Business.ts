@@ -1,23 +1,23 @@
 import { Schema, model } from 'mongoose';
-import { InventoryItem } from '../lib/types';
+import type { InventoryItem } from '../lib/types';
 
-export interface IEmployee {
+export type IEmployee = {
     userId: string;
     role: string;
     payout: number;
     hiredOn: number;
     moneyEarned: number;
-}
+};
 
-export interface IFactory {
+export type IFactory = {
     factoryId: number;
     level: number;
     production: string;
     status: string;
     produceOn: number;
-}
+};
 
-export interface IBusiness {
+export type IBusiness = {
     name: string;
     balance: number;
     taxRate: number;
@@ -25,13 +25,13 @@ export interface IBusiness {
     employees: IEmployee[];
     inventory: InventoryItem[];
     factories: IFactory[];
-}
+};
 
 const Employee = new Schema<IEmployee>({
     userId: { type: String, required: true },
     role: { type: String, default: 'employee' },
     payout: { type: Number, default: 15, min: 10, max: 100 },
-    hiredOn: { type: Number, default: Math.floor(Date.now() / 1000) },
+    hiredOn: { type: Number, default: Math.floor(Date.now() / 1_000) },
     moneyEarned: { type: Number, default: 0 },
 });
 

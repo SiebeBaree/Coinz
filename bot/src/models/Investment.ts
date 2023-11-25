@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-export interface IInvestment {
+export type IInvestment = {
     ticker: string;
     type: string;
     fullName: string;
@@ -9,7 +9,7 @@ export interface IInvestment {
     expires: Date;
     createdAt: Date;
     updatedAt: Date;
-}
+};
 
 export const investmentSchema = new Schema<IInvestment>(
     {

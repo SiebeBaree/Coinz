@@ -1,11 +1,11 @@
 import type { PathLike } from 'node:fs';
 import { readdir, stat } from 'node:fs/promises';
+import { join } from 'node:path';
+import { Collection } from 'discord.js';
 import type { Command } from '../domain/Command';
 import { predicate as commandPredicate } from '../domain/Command';
 import type { Event } from '../domain/Event';
 import { predicate as eventPredicate } from '../domain/Event';
-import { join } from 'path';
-import { Collection } from 'discord.js';
 
 /**
  * A predicate to check if the structure is valid
