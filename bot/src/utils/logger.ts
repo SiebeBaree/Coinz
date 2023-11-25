@@ -1,33 +1,45 @@
+import process from 'node:process';
 import winston from 'winston';
 import 'winston-daily-rotate-file';
 
-const { combine, timestamp, printf, colorize, align, errors } = winston.format;
+const { combine, timestamp, printf, colorize, align, errors, json } = winston.format;
 
-const fileRotateTransport = new winston.transports.DailyRotateFile({
-    filename: 'coinz-%DATE%.log',
-    datePattern: 'YYYY-MM-DD',
-    maxFiles: '30d',
-    maxSize: '20m',
-    dirname: './logs',
-});
+const fileFormat = combine(timestamp(), json());
 
 const logger = winston.createLogger({
-    level: process.env.LOG_LEVEL || 'info',
-    format: combine(
-        colorize({ all: true }),
-        timestamp({
-            format: 'YYYY-MM-DD hh:mm:ss.SSS A',
-        }),
-        align(),
-        printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`),
-        errors({ stack: true }),
-    ),
+    level: process.env.LOG_LEVEL ?? 'info',
     defaultMeta: {
         service: 'bot',
     },
-    transports: [new winston.transports.Console(), fileRotateTransport],
-    exceptionHandlers: [new winston.transports.File({ filename: './logs/exception.log' })],
-    rejectionHandlers: [new winston.transports.File({ filename: './logs/rejections.log' })],
+    transports: [
+        new winston.transports.Console({
+            format: combine(
+                colorize(),
+                timestamp(),
+                align(),
+                errors({ stack: true }),
+                printf(({ level, message, timestamp, stack }) => {
+                    return `${timestamp} ${level}: ${stack || message}`;
+                }),
+            ),
+        }),
+        new winston.transports.DailyRotateFile({
+            filename: 'coinz-%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
+            maxFiles: '30d',
+            maxSize: '20m',
+            dirname: './logs',
+            format: fileFormat,
+        }),
+    ],
+    exceptionHandlers: [new winston.transports.File({
+        filename: './logs/exception.log',
+        format: fileFormat,
+    })],
+    rejectionHandlers: [new winston.transports.File({
+        filename: './logs/rejections.log',
+        format: fileFormat,
+    })],
 });
 
 export default logger;
