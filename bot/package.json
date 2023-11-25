@@ -37,10 +37,14 @@
     "coinz"
   ],
   "dependencies": {
+    "bufferutil": "^4.0.8",
     "discord.js": "^14.14.1",
+    "ioredis": "^5.3.2",
     "mongoose": "^8.0.1",
+    "utf-8-validate": "^6.0.3",
     "winston": "^3.11.0",
-    "winston-daily-rotate-file": "^4.7.1"
+    "winston-daily-rotate-file": "^4.7.1",
+    "zlib-sync": "^0.1.9"
   },
   "devDependencies": {
     "@types/node": "^20.9.3",
