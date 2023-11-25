@@ -3,7 +3,7 @@ import type { IMember } from '../models/Member';
 import Member from '../models/Member';
 import type { IUserStats } from '../models/UserStats';
 import { getLevel } from '../utils';
-import Database from './database';
+import { getMember, getUserStats } from "./database";
 
 export type IAchievement = {
     id: string;
@@ -213,8 +213,8 @@ export default class Achievement {
     ): Promise<void> {
         if (!achievement) return;
 
-        const member = await Database.getMember(memberId);
-        const userStats = await Database.getUserStats(memberId);
+        const member = await getMember(memberId);
+        const userStats = await getUserStats(memberId);
         if (member.badges.includes(achievement.id)) return;
         if (!force && !this.hasAchievement(achievement.id, member, userStats)) return;
 
