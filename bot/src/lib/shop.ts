@@ -9,11 +9,8 @@ import type { InventoryItem, Item } from './types';
 export default class Shop {
     private readonly _items: Collection<string, Item>;
 
-    public constructor(startItems: Item[] = []) {
+    public constructor() {
         this._items = new Collection();
-        for (const item of startItems) {
-            this._items.set(item.itemId, item);
-        }
     }
 
     public async fetchItems(): Promise<void> {

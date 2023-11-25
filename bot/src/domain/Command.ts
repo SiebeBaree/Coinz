@@ -1,5 +1,13 @@
 import type { RESTPostAPIApplicationCommandsJSONBody, CommandInteraction } from 'discord.js';
 import type { StructurePredicate } from '../utils/loaders';
+import type Bot from "./Bot";
+
+type CommandData = {
+    /**
+     * The category of the command
+     */
+    category: string;
+} & RESTPostAPIApplicationCommandsJSONBody
 
 /**
  * Defines the structure of a command
@@ -8,13 +16,14 @@ export type Command = {
     /**
      * The data for the command
      */
-    data: RESTPostAPIApplicationCommandsJSONBody;
+    data: CommandData;
     /**
      * The function to execute when the command is called
      *
+     * @param client - The bot instance
      * @param interaction - The interaction of the command
      */
-    execute(interaction: CommandInteraction): Promise<void> | void;
+    execute(client: Bot, interaction: CommandInteraction): Promise<void> | void;
 };
 
 // Defines the predicate to check if an object is a valid Command type

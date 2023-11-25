@@ -12,7 +12,7 @@ export default {
                 throw new Error(`Command '${interaction.commandName}' not found.`);
             }
 
-            await command.execute(interaction);
+            await command.execute(client, interaction);
         }
     },
 } satisfies Event<Events.InteractionCreate>;
