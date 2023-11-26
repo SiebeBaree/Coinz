@@ -8,7 +8,7 @@ import Cooldown from '../lib/cooldown';
 import Investment from '../lib/investment';
 import Shop from '../lib/shop';
 import { loadCommands, loadEvents } from '../utils/loaders';
-import logger from "../utils/logger";
+import logger from '../utils/logger';
 import { registerEvents } from '../utils/registerEvents';
 import type { Command } from './Command';
 import type { Event } from './Event';

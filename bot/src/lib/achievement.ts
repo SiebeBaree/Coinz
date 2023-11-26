@@ -3,7 +3,7 @@ import type { IMember } from '../models/Member';
 import Member from '../models/Member';
 import type { IUserStats } from '../models/UserStats';
 import { getLevel } from '../utils';
-import { getMember, getUserStats } from "./database";
+import { getMember, getUserStats } from './database';
 
 export type IAchievement = {
     id: string;
