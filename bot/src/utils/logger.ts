@@ -32,14 +32,18 @@ const logger = winston.createLogger({
             format: fileFormat,
         }),
     ],
-    exceptionHandlers: [new winston.transports.File({
-        filename: './logs/exception.log',
-        format: fileFormat,
-    })],
-    rejectionHandlers: [new winston.transports.File({
-        filename: './logs/rejections.log',
-        format: fileFormat,
-    })],
+    exceptionHandlers: [
+        new winston.transports.File({
+            filename: './logs/exception.log',
+            format: fileFormat,
+        }),
+    ],
+    rejectionHandlers: [
+        new winston.transports.File({
+            filename: './logs/rejections.log',
+            format: fileFormat,
+        }),
+    ],
 });
 
 export default logger;

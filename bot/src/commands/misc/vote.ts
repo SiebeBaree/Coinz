@@ -1,4 +1,4 @@
-import type { ColorResolvable} from 'discord.js';
+import type { ColorResolvable } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
 import type { Command } from '../../domain/Command';
 

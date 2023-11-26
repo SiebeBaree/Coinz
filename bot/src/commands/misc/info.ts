@@ -1,4 +1,4 @@
-import type { ColorResolvable} from 'discord.js';
+import type { ColorResolvable } from 'discord.js';
 import { EmbedBuilder, version } from 'discord.js';
 import type { Command } from '../../domain/Command';
 import { msToTime } from '../../utils';
@@ -20,7 +20,7 @@ export default {
             .setDescription(
                 `**If you like this bot, consider buying [Coinz Premium](${client.config.website}/premium).**`,
             )
-            .addFields(
+            .addFields([
                 {
                     name: 'Info',
                     value:
@@ -47,7 +47,7 @@ export default {
                     value: 'Icons from the shop are from [icons8](https://icons8.com).',
                     inline: false,
                 },
-            );
+            ]);
         await interaction.reply({ embeds: [embed] });
     },
 } satisfies Command;
