@@ -1,29 +1,29 @@
 {
-  "adminServerId": "1057599341294002278",
-  "website": "https://coinzbot.xyz",
-  "cooldown": {
-    "default": 5,
-    "premium": 1
-  },
-  "embed": {
-    "color": "#DBA514",
-    "footer": "Coinz | coinzbot.xyz",
-    "icon": "https://cdn.discordapp.com/embed/avatars/1.png"
-  },
-  "invalidCommand": "Invalid arguments, use `/help command <command>` to see the command usage.",
-  "supportServer": "https://discord.gg/asnZQwc6kW",
-  "bets": {
-    "free": {
-      "min": 50,
-      "max": 5000
+    "adminServerId": "1057599341294002278",
+    "website": "https://coinzbot.xyz",
+    "cooldown": {
+        "default": 5,
+        "premium": 1
     },
-    "plus": {
-      "min": 50,
-      "max": 10000
+    "embed": {
+        "color": "#DBA514",
+        "footer": "Coinz | coinzbot.xyz",
+        "icon": "https://cdn.discordapp.com/embed/avatars/1.png"
     },
-    "pro": {
-      "min": 50,
-      "max": 20000
+    "invalidCommand": "Invalid arguments, use `/help command <command>` to see the command usage.",
+    "supportServer": "https://discord.gg/asnZQwc6kW",
+    "bets": {
+        "free": {
+            "min": 50,
+            "max": 5000
+        },
+        "plus": {
+            "min": 50,
+            "max": 10000
+        },
+        "pro": {
+            "min": 50,
+            "max": 20000
+        }
     }
-  }
 }
