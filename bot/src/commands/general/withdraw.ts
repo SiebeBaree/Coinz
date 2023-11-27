@@ -24,6 +24,7 @@ export default {
                 inline: false,
             },
         ],
+        usage: ['<amount>'],
     },
     async execute(client, interaction, member) {
         const amountStr = interaction.options.getString('amount', true);

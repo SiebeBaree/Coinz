@@ -13,6 +13,7 @@ type CommandData = RESTPostAPIApplicationCommandsJSONBody & {
         value: string;
         inline?: boolean;
     }[];
+    usage?: string[];
 };
 
 /**
