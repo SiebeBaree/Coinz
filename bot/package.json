@@ -4,12 +4,12 @@
     "description": "A feature rich discord bot with an entire economic system.",
     "main": "dist/manager.js",
     "scripts": {
-        "start": "npm run build && node --env-file .env ./dist/sharder.js",
-        "dev": "concurrently \"npm run build -- --watch\" \"nodemon --env-file .env ./dist/sharder.js\"",
+        "start": "pnpm run build && node --env-file .env ./dist/sharder.js",
+        "dev": "concurrently \"pnpm run build -- --watch\" \"nodemon --env-file .env ./dist/sharder.js\"",
         "build": "tsc",
         "lint": "prettier --check . && eslint --ext .ts --format=pretty src",
         "format": "prettier --write . && eslint --ext .ts --fix --format=pretty src",
-        "register-commands": "npm run build && node --env-file .env ./dist/register.js"
+        "register-commands": "pnpm run build && node --env-file .env ./dist/register.js"
     },
     "repository": {
         "type": "git",
