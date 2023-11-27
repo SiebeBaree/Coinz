@@ -1,16 +1,18 @@
-import type { RESTPostAPIApplicationCommandsJSONBody, CommandInteraction } from 'discord.js';
+import type { RESTPostAPIApplicationCommandsJSONBody, ChatInputCommandInteraction } from 'discord.js';
 import type { IMember } from '../models/Member';
 import type { StructurePredicate } from '../utils/loaders';
 import type Bot from './Bot';
 
 type CommandData = RESTPostAPIApplicationCommandsJSONBody & {
-    /**
-     * The category of the command
-     */
     category: string;
     enabled?: boolean;
     deferReply?: boolean;
     cooldown?: number;
+    extraFields?: {
+        name: string;
+        value: string;
+        inline?: boolean;
+    }[];
 };
 
 /**
@@ -28,7 +30,7 @@ export type Command = {
      * @param interaction - The interaction of the command
      * @param member - The member who called the command
      */
-    execute(client: Bot, interaction: CommandInteraction, member: IMember): Promise<void> | void;
+    execute(client: Bot, interaction: ChatInputCommandInteraction, member: IMember): Promise<void> | void;
 };
 
 // Defines the predicate to check if an object is a valid Command type
