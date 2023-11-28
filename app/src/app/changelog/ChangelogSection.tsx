@@ -1,13 +1,11 @@
-"use client";
+'use client';
 
-import ReactMarkdown from "react-markdown";
-import { Changelog } from "@/lib/interfaces";
-import { useEffect } from "react";
-import { copyCode } from "@/lib/utils";
+import ReactMarkdown from 'react-markdown';
+import { Changelog } from '@/lib/interfaces';
+import { useEffect } from 'react';
+import { copyCode } from '@/lib/utils';
 
-export default function ChangelogSection({ data }: {
-    data: Changelog[];
-}) {
+export default function ChangelogSection({ data }: { data: Changelog[] }) {
     useEffect(() => {
         copyCode();
     }, []);
@@ -15,7 +13,7 @@ export default function ChangelogSection({ data }: {
     return (
         <div className="flex flex-col gap-8 mb-12">
             {data.map((item: Changelog, index: number) => (
-                <ChangelogCard key={index} update={item}/>
+                <ChangelogCard key={index} update={item} />
             ))}
         </div>
     );
@@ -30,12 +28,11 @@ function ChangelogCard({ update }: { update: Changelog }) {
             </div>
             <div className="formatted-text my-4 code-copy">
                 {update.content.map((line: string, index: number) => (
-                    <ReactMarkdown key={update.name + "-" + index}>{line}</ReactMarkdown>
+                    <ReactMarkdown key={update.name + '-' + index}>{line}</ReactMarkdown>
                 ))}
             </div>
 
-            <h4 className="text-muted text-sm">Update posted
-                on: {new Date(update.timestamp * 1000).toDateString()}</h4>
+            <h4 className="text-muted text-sm">Update posted on: {new Date(update.timestamp * 1000).toDateString()}</h4>
         </div>
     );
 }

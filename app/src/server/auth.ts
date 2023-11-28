@@ -1,11 +1,7 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import {
-    getServerSession,
-    type DefaultSession,
-    type NextAuthOptions,
-} from "next-auth";
-import { db } from "@/server/db";
-import Discord from "next-auth/providers/discord";
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import { getServerSession, type DefaultSession, type NextAuthOptions } from 'next-auth';
+import { db } from '@/server/db';
+import Discord from 'next-auth/providers/discord';
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -13,11 +9,11 @@ import Discord from "next-auth/providers/discord";
  *
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
-declare module "next-auth" {
+declare module 'next-auth' {
     interface Session extends DefaultSession {
         user: {
             id: string;
-        } & DefaultSession["user"];
+        } & DefaultSession['user'];
     }
 }
 

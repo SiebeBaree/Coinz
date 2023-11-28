@@ -1,25 +1,282 @@
 {
-  "info": {
-    "description": "this is a test",
-    "category": "misc",
-    "cooldown": 0,
-    "usage": [],
-    "premium": 0
-  },
-  "invite": {
-    "description": "this is a test 2",
-    "category": "misc",
-    "cooldown": 0,
-    "usage": [],
-    "premium": 2
-  },
-  "blackjack": {
-    "description": "this is a test 3",
-    "category": "games",
-    "cooldown": 420,
-    "usage": [
-      "/blackjack <bet>"
-    ],
-    "premium": 0
-  }
+    "info": {
+        "description": "Get some information about Coinz.",
+        "category": "misc",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "invite": {
+        "description": "Get a invite to invite the bot and to join our support server.",
+        "category": "misc",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 2
+    },
+    "vote": {
+        "description": "Get all the links to the voting sites for rewards.",
+        "category": "misc",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "reset": {
+        "description": "Reset your account on EVERY server.",
+        "category": "misc",
+        "cooldown": 86400,
+        "usage": ["/reset <confirm>"],
+        "premium": 0
+    },
+    "achievement": {
+        "description": "Get a list of all achievements or refresh your achievements.",
+        "category": "misc",
+        "cooldown": 0,
+        "usage": ["/achievement list", "/achievement refresh", "/achievement select <achievement>"],
+        "premium": 0
+    },
+    "help": {
+        "description": "",
+        "category": "misc",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "settings": {
+        "description": "",
+        "category": "misc",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "balance": {
+        "description": "Get your balance or the balance of another user.",
+        "category": "general",
+        "cooldown": 0,
+        "usage": ["/balance [user]"],
+        "premium": 0
+    },
+    "deposit": {
+        "description": "Deposit money from your wallet to your bank account.",
+        "category": "general",
+        "cooldown": 0,
+        "usage": ["/deposit <amount>"],
+        "premium": 0
+    },
+    "withdraw": {
+        "description": "Withdraw money from your bank to your wallet.",
+        "category": "general",
+        "cooldown": 0,
+        "usage": ["/withdraw <amount>"],
+        "premium": 0
+    },
+    "profile": {
+        "description": "Get your or another user's profile. You can see detailed information here.",
+        "category": "general",
+        "cooldown": 0,
+        "usage": ["/profile [user]"],
+        "premium": 0
+    },
+    "shop": {
+        "description": "Buy, sell or view items in the shop.",
+        "category": "general",
+        "cooldown": 0,
+        "usage": ["/shop info [item]", "/shop buy <item> [amount]", "/shop sell <item> [amount]"],
+        "premium": 0
+    },
+    "inventory": {
+        "description": "View your or someone else's inventory.",
+        "category": "general",
+        "cooldown": 0,
+        "usage": ["/inventory [user]"],
+        "premium": 0
+    },
+    "lucky-wheel": {
+        "description": "",
+        "category": "general",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "pay": {
+        "description": "Give some of your money to another user.",
+        "category": "general",
+        "cooldown": 7200,
+        "usage": ["/pay <user> <amount>"],
+        "premium": 0
+    },
+    "beg": {
+        "description": "If you really need the money you can beg for it.",
+        "category": "general",
+        "cooldown": 600,
+        "usage": [],
+        "premium": 0
+    },
+    "fish": {
+        "description": "",
+        "category": "general",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "hunt": {
+        "description": "",
+        "category": "general",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "loot": {
+        "description": "",
+        "category": "general",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "steal": {
+        "description": "",
+        "category": "general",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "daily": {
+        "description": "",
+        "category": "general",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "weekly": {
+        "description": "",
+        "category": "general",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 1
+    },
+    "monthly": {
+        "description": "",
+        "category": "general",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 2
+    },
+    "job": {
+        "description": "",
+        "category": "general",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "blackjack": {
+        "description": "",
+        "category": "games",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "connect4": {
+        "description": "",
+        "category": "games",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "crash": {
+        "description": "",
+        "category": "games",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "higher-lower": {
+        "description": "",
+        "category": "games",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "horse-race": {
+        "description": "",
+        "category": "games",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "rock-paper-scissors": {
+        "description": "",
+        "category": "games",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "roulette": {
+        "description": "Play a game of roulette.",
+        "category": "games",
+        "cooldown": 480,
+        "usage": ["/roulette <bet> <space>"],
+        "premium": 0
+    },
+    "russian-roulette": {
+        "description": "",
+        "category": "games",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "scratch": {
+        "description": "",
+        "category": "games",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "tictactoe": {
+        "description": "",
+        "category": "games",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "business": {
+        "description": "",
+        "category": "business",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "factory": {
+        "description": "",
+        "category": "business",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "farm": {
+        "description": "",
+        "category": "business",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "tree": {
+        "description": "Plant a tree and watch it grow! Cut it down to get some wood.",
+        "category": "business",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "invest": {
+        "description": "Buy, sell or get info about an investment.",
+        "category": "investing",
+        "cooldown": 0,
+        "usage": ["/invest info [ticker]", "/invest buy <ticker> [amount] [price]", "/invest sell <ticker> <amount>"],
+        "premium": 0
+    },
+    "portfolio": {
+        "description": "Get your investment portfolio or the portfolio from another user.",
+        "category": "investing",
+        "cooldown": 0,
+        "usage": ["/portfolio [user]"],
+        "premium": 0
+    }
 }

@@ -1,38 +1,38 @@
 {
-  "coinz_plus": {
-    "name": "Coinz Plus",
-    "price": {
-      "month": 200,
-      "quarter": 500
+    "coinz_plus": {
+        "name": "Coinz Plus",
+        "price": {
+            "month": 200,
+            "quarter": 500
+        },
+        "logo": "https://cdn.coinzbot.xyz/logo.png",
+        "perks": [
+            "Able to buy up to 12 farming plots",
+            "All 5s cooldowns reduced to 1s",
+            "Unlock /weekly",
+            "Unlock an exclusive Coinz Plus badge",
+            "Change your profile color",
+            "Earn up to 🪙 250/day with /daily (Free tier: 🪙 125/day)",
+            "Gamble limit increased to 🪙 10.000"
+        ]
     },
-    "logo": "https://cdn.coinzbot.xyz/logo.png",
-    "perks": [
-      "Able to buy up to 12 farming plots",
-      "All 5s cooldowns reduced to 1s",
-      "Unlock /weekly",
-      "Unlock an exclusive Coinz Plus badge",
-      "Change your profile color",
-      "Earn up to 🪙 250/day with /daily (Free tier: 🪙 125/day)",
-      "Gamble limit increased to 🪙 10.000"
-    ]
-  },
-  "coinz_pro": {
-    "name": "Coinz Pro",
-    "price": {
-      "month": 500,
-      "quarter": 1200
-    },
-    "logo": "https://cdn.coinzbot.xyz/logo.png",
-    "perks": [
-      "All perks from Coinz Plus",
-      "Able to buy up to 15 farming plots",
-      "Unlock /monthly",
-      "Unlock an exclusive Coinz Pro badge",
-      "Gamble limit increased to 🪙 20.000",
-      "Get 2 lucky wheel spins for every vote",
-      "Get a lucky when spin with /daily",
-      "Earn double XP",
-      "Gamble cooldowns reduced to 4 minutes"
-    ]
-  }
+    "coinz_pro": {
+        "name": "Coinz Pro",
+        "price": {
+            "month": 500,
+            "quarter": 1200
+        },
+        "logo": "https://cdn.coinzbot.xyz/logo.png",
+        "perks": [
+            "All perks from Coinz Plus",
+            "Able to buy up to 15 farming plots",
+            "Unlock /monthly",
+            "Unlock an exclusive Coinz Pro badge",
+            "Gamble limit increased to 🪙 20.000",
+            "Get 2 lucky wheel spins for every vote",
+            "Get a lucky when spin with /daily",
+            "Earn double XP",
+            "Gamble cooldowns reduced to 4 minutes"
+        ]
+    }
 }

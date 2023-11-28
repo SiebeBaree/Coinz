@@ -1,17 +1,21 @@
-import SearchIcon from "@/components/icons/Search";
-import React from "react";
+import SearchIcon from '@/components/icons/Search';
+import React from 'react';
 
-export default function Search({ placeholder, searchTerm, onChangeHandler }: {
-    placeholder?: string,
-    searchTerm: string,
-    onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
+export default function Search({
+    placeholder,
+    searchTerm,
+    onChangeHandler,
+}: {
+    placeholder?: string;
+    searchTerm: string;
+    onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
     return (
         <div className="flex items-center rounded overflow-hidden bg-secondary px-3 py-2 min-w-full md:min-w-[250px]">
-            <SearchIcon className="fill-primary"/>
+            <SearchIcon className="fill-primary" />
             <input
                 type="text"
-                placeholder={placeholder || "Search..."}
+                placeholder={placeholder || 'Search...'}
                 value={searchTerm}
                 onChange={onChangeHandler}
                 className="w-full pl-2 border-none outline-none bg-transparent text-foreground"

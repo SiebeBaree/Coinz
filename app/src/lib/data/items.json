@@ -1,1072 +1,1072 @@
 [
-  {
-    "itemId": "potato",
-    "category": "crops",
-    "name": "Potato",
-    "emoteId": "956643928013152306",
-    "description": "A crop that grows in 4 hours.",
-    "buyPrice": 25,
-    "sellPrice": 15,
-    "duration": 14400
-  },
-  {
-    "itemId": "wheat",
-    "category": "crops",
-    "name": "Wheat",
-    "emoteId": "1060169754284920832",
-    "description": "A crop that grows in 6 hours",
-    "buyPrice": 36,
-    "sellPrice": 21,
-    "duration": 21600
-  },
-  {
-    "itemId": "radish",
-    "category": "crops",
-    "name": "Radish",
-    "emoteId": "1060169749784436746",
-    "description": "A crop that grows in 10 hours.",
-    "buyPrice": 52,
-    "sellPrice": 32,
-    "duration": 36000
-  },
-  {
-    "itemId": "lettuce",
-    "category": "crops",
-    "name": "Lettuce",
-    "emoteId": "956643928021565510",
-    "description": "A crop that grows in 15 hours.",
-    "buyPrice": 45,
-    "sellPrice": 37,
-    "duration": 50400
-  },
-  {
-    "itemId": "soybean",
-    "category": "crops",
-    "name": "Soybean",
-    "emoteId": "1060169751822860338",
-    "description": "A crop that grows in 20 hours",
-    "buyPrice": 115,
-    "sellPrice": 60,
-    "duration": 72000
-  },
-  {
-    "itemId": "carrot",
-    "category": "crops",
-    "name": "Carrot",
-    "emoteId": "956643927987986452",
-    "description": "A crop that grows in 1 day.",
-    "buyPrice": 70,
-    "sellPrice": 56,
-    "duration": 86400
-  },
-  {
-    "itemId": "broccoli",
-    "category": "crops",
-    "name": "Broccoli",
-    "emoteId": "956643928382275684",
-    "description": "A crop that grows in 1 day and 12 hours.",
-    "buyPrice": 100,
-    "sellPrice": 75,
-    "duration": 129600
-  },
-  {
-    "itemId": "cauliflower",
-    "category": "crops",
-    "name": "Cauliflower",
-    "emoteId": "1060169744717721640",
-    "description": "A crop that grows in 2 days",
-    "buyPrice": 110,
-    "sellPrice": 85,
-    "duration": 172800
-  },
-  {
-    "itemId": "tomato",
-    "category": "crops",
-    "name": "Tomato",
-    "emoteId": "956643927992201306",
-    "description": "A crop that grows in 3 days.",
-    "buyPrice": 160,
-    "sellPrice": 115,
-    "duration": 259200
-  },
-  {
-    "itemId": "cucumber",
-    "category": "crops",
-    "name": "Cucumber",
-    "emoteId": "1060169746001186929",
-    "description": "A crop that grows in 4 days.",
-    "buyPrice": 260,
-    "sellPrice": 142,
-    "duration": 345600
-  },
-  {
-    "itemId": "sunflower",
-    "category": "crops",
-    "name": "Sunflower",
-    "emoteId": "1060169753064378438",
-    "description": "A crop that grows in 5 days.",
-    "buyPrice": 165,
-    "sellPrice": 135,
-    "duration": 432000
-  },
-  {
-    "itemId": "strawberry",
-    "category": "crops",
-    "name": "Strawberry",
-    "emoteId": "956643928403226684",
-    "description": "A crop that grows in 6 days.",
-    "buyPrice": 245,
-    "sellPrice": 150,
-    "duration": 518400
-  },
-  {
-    "itemId": "corn",
-    "category": "crops",
-    "name": "Corn",
-    "emoteId": "956643928034131989",
-    "description": "A crop that grows in 7 days.",
-    "buyPrice": 350,
-    "sellPrice": 155,
-    "duration": 604800
-  },
-  {
-    "itemId": "melon",
-    "category": "crops",
-    "name": "Melon",
-    "emoteId": "956643928348704829",
-    "description": "A crop that grows in 8 days.",
-    "buyPrice": 500,
-    "sellPrice": 170,
-    "duration": 691200
-  },
-  {
-    "itemId": "pumpkin",
-    "category": "crops",
-    "name": "Pumpkin",
-    "emoteId": "1060169748102529075",
-    "description": "A crop that grows in 10 days.",
-    "buyPrice": 800,
-    "sellPrice": 220,
-    "duration": 864000
-  },
-  {
-    "itemId": "shovel",
-    "category": "tools",
-    "name": "Shovel",
-    "emoteId": "1068190960506388590",
-    "description": "Dig a hole in the ground.",
-    "longDescription": "You can use this item to dig a hole in the ground to plant a tree.",
-    "buyPrice": 180,
-    "sellPrice": 80
-  },
-  {
-    "itemId": "axe",
-    "category": "tools",
-    "name": "Axe",
-    "emoteId": "1068589334309126184",
-    "description": "Cut down a large tree.",
-    "longDescription": "With this item you can cut down a large tree.",
-    "buyPrice": 225,
-    "sellPrice": 120
-  },
-  {
-    "itemId": "bag",
-    "category": "tools",
-    "name": "Bag",
-    "emoteId": "1068584468706766888",
-    "description": "Collect more wood from fallen trees.",
-    "longDescription": "You can collect 10% more wood from fallen trees with this item.",
-    "buyPrice": 110,
-    "sellPrice": 60
-  },
-  {
-    "itemId": "fishing_rod",
-    "category": "tools",
-    "name": "Fishing Rod",
-    "emoteId": "956861323617107968",
-    "description": "A tool that can be used to catch fish.",
-    "buyPrice": 250,
-    "sellPrice": 90
-  },
-  {
-    "itemId": "premium_fishing_rod",
-    "category": "tools",
-    "name": "Premium Fishing Rod",
-    "emoteId": "1060169660177334332",
-    "description": "A premium tool that can be used to catch better and more fish.",
-    "buyPrice": 460,
-    "sellPrice": 185
-  },
-  {
-    "itemId": "knife",
-    "category": "tools",
-    "name": "Knife",
-    "emoteId": "1060169658063396914",
-    "description": "A knife is a very versatile tool. It can be used to cut down small trees, catch fish, and even skin animals.",
-    "buyPrice": 190,
-    "sellPrice": 40
-  },
-  {
-    "itemId": "bow",
-    "category": "tools",
-    "name": "Bow",
-    "emoteId": "1060169656813486100",
-    "description": "A bow is a tool that can be used to hunt animals.",
-    "buyPrice": 405,
-    "sellPrice": 120
-  },
-  {
-    "itemId": "hunting_rifle",
-    "category": "tools",
-    "name": "Hunting Rifle",
-    "emoteId": "987701755770994718",
-    "description": "A hunting rifle is a tool that can be used to hunt animals.",
-    "buyPrice": 630,
-    "sellPrice": 270
-  },
-  {
-    "itemId": "padlock",
-    "category": "tools",
-    "name": "Padlock",
-    "emoteId": "956861323189297162",
-    "description": "Get 10% more protection from thieves using steal.",
-    "buyPrice": 550,
-    "sellPrice": 230
-  },
-  {
-    "itemId": "bomb",
-    "category": "tools",
-    "name": "Bomb",
-    "emoteId": "956861322790842399",
-    "description": "This will increase the chance of a successful steal by 5%.",
-    "buyPrice": 700,
-    "sellPrice": 280
-  },
-  {
-    "itemId": "wood",
-    "category": "other",
-    "name": "Wood",
-    "emoteId": "1068192373886177280",
-    "description": "Collect this item by cutting down trees.",
-    "longDescription": "You get this item using the `/tree cut` command.",
-    "sellPrice": 40
-  },
-  {
-    "itemId": "laptop",
-    "category": "other",
-    "name": "Laptop",
-    "emoteId": "1013473904444059658",
-    "description": "Required for the Developer job.",
-    "longDescription": "You need this item if you want to apply for a job as a Developer.",
-    "buyPrice": 800,
-    "sellPrice": 570
-  },
-  {
-    "itemId": "broom",
-    "category": "other",
-    "name": "Broom",
-    "emoteId": "1060949557732704306",
-    "description": "Required for the Janitor job.",
-    "longDescription": "You need this item if you want to apply for a job as a Janitor.",
-    "buyPrice": 75,
-    "sellPrice": 50
-  },
-  {
-    "itemId": "helmet",
-    "category": "other",
-    "name": "Helmet",
-    "emoteId": "1060949562568736768",
-    "description": "Required for the Construction Worker job.",
-    "longDescription": "You need this item if you want to apply for a job as a Construction Worker.",
-    "buyPrice": 120,
-    "sellPrice": 70
-  },
-  {
-    "itemId": "driver_license",
-    "category": "other",
-    "name": "Driver License",
-    "emoteId": "1060949561302061066",
-    "description": "Required for the Taxi or Truck Driver job.",
-    "longDescription": "You need this item if you want to apply for a job as a Taxi or Truck Driver.",
-    "buyPrice": 1000,
-    "sellPrice": 1
-  },
-  {
-    "itemId": "lawbook",
-    "category": "other",
-    "name": "Lawbook",
-    "emoteId": "1060949564804304916",
-    "description": "Required for the Lawyer job.",
-    "longDescription": "You need this item if you want to apply for a job as a Lawyer.",
-    "buyPrice": 350,
-    "sellPrice": 280
-  },
-  {
-    "itemId": "suit",
-    "category": "other",
-    "name": "Suit",
-    "emoteId": "1060949569636151366",
-    "description": "Required for the Lawyer or Politician job.",
-    "longDescription": "You need this item if you want to apply for a job as a Lawyer or Politician.",
-    "buyPrice": 1200,
-    "sellPrice": 800
-  },
-  {
-    "itemId": "stethoscope",
-    "category": "other",
-    "name": "Stethoscope",
-    "emoteId": "1060949567245398158",
-    "description": "Required for the Doctor job.",
-    "longDescription": "You need this item if you want to apply for a job as a Doctor.",
-    "buyPrice": 80,
-    "sellPrice": 50
-  },
-  {
-    "itemId": "thermometer",
-    "category": "other",
-    "name": "Thermometer",
-    "emoteId": "1060949570978320506",
-    "description": "Required for the Doctor job.",
-    "longDescription": "You need this item if you want to apply for a job as a Doctor.",
-    "buyPrice": 60,
-    "sellPrice": 43
-  },
-  {
-    "itemId": "pen",
-    "category": "other",
-    "name": "Pen",
-    "emoteId": "1060949565999697941",
-    "description": "Required for the Politician job.",
-    "longDescription": "You need this item if you want to apply for a job as a Politician.",
-    "buyPrice": 12,
-    "sellPrice": 6
-  },
-  {
-    "itemId": "car",
-    "category": "other",
-    "name": "Car",
-    "emoteId": "1060949560031191101",
-    "description": "Required for the Taxi Driver job.",
-    "longDescription": "You need this item if you want to apply for a job as a Taxi Driver.",
-    "buyPrice": 8000,
-    "sellPrice": 5600
-  },
-  {
-    "itemId": "baguette",
-    "category": "other",
-    "name": "Baguette",
-    "emoteId": "956916922576957440",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 3
-  },
-  {
-    "itemId": "apple",
-    "category": "other",
-    "name": "Apple",
-    "emoteId": "1072105813331685396",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 4
-  },
-  {
-    "itemId": "trash",
-    "category": "other",
-    "name": "Trash",
-    "emoteId": "956916922610507777",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 25
-  },
-  {
-    "itemId": "shoe",
-    "category": "other",
-    "name": "Shoe",
-    "emoteId": "956916922572763166",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 40
-  },
-  {
-    "itemId": "socks",
-    "category": "other",
-    "name": "Socks",
-    "emoteId": "956916922610507776",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 15
-  },
-  {
-    "itemId": "egg",
-    "category": "other",
-    "name": "Egg",
-    "emoteId": "956916922560163930",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 5
-  },
-  {
-    "itemId": "cookie",
-    "category": "other",
-    "name": "Cookie",
-    "emoteId": "956916922673418300",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 2
-  },
-  {
-    "itemId": "playstation",
-    "category": "other",
-    "name": "Playstation",
-    "emoteId": "956917165250990091",
-    "description": "The best gaming console in the world.",
-    "longDescription": "Coinz shop has still enough stock to sell playstations at a fair price.",
-    "buyPrice": 500,
-    "sellPrice": 350
-  },
-  {
-    "itemId": "rubber_duck",
-    "category": "other",
-    "name": "Rubber Duck",
-    "emoteId": "956916922585321532",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 8
-  },
-  {
-    "itemId": "book",
-    "category": "other",
-    "name": "Book",
-    "emoteId": "956916922837000293",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 10
-  },
-  {
-    "itemId": "doll",
-    "category": "other",
-    "name": "Doll",
-    "emoteId": "956916922446909442",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 45
-  },
-  {
-    "itemId": "lamp",
-    "category": "other",
-    "name": "Lamp",
-    "emoteId": "956917165959815238",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 60
-  },
-  {
-    "itemId": "mirror",
-    "category": "other",
-    "name": "Mirror",
-    "emoteId": "956916922597904434",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 50
-  },
-  {
-    "itemId": "soap",
-    "category": "other",
-    "name": "Soap",
-    "emoteId": "956916922295910511",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 15
-  },
-  {
-    "itemId": "computer_mouse",
-    "category": "other",
-    "name": "Computer Mouse",
-    "emoteId": "1003948939193626674",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "buyPrice": 55,
-    "sellPrice": 30
-  },
-  {
-    "itemId": "fidget_spinner",
-    "category": "other",
-    "name": "Fidget Spinner",
-    "emoteId": "1003949592641019905",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "buyPrice": 18,
-    "sellPrice": 13
-  },
-  {
-    "itemId": "chair",
-    "category": "other",
-    "name": "Chair",
-    "emoteId": "1003948937603985480",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "buyPrice": 80,
-    "sellPrice": 45
-  },
-  {
-    "itemId": "pocket_watch",
-    "category": "other",
-    "name": "Pocket Watch",
-    "emoteId": "1003948943027220520",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "buyPrice": 160,
-    "sellPrice": 75
-  },
-  {
-    "itemId": "sofa",
-    "category": "other",
-    "name": "sofa",
-    "emoteId": "1003948944310669403",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "buyPrice": 180,
-    "sellPrice": 80
-  },
-  {
-    "itemId": "tv",
-    "category": "other",
-    "name": "Television",
-    "emoteId": "1003948945359245323",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "buyPrice": 250,
-    "sellPrice": 120
-  },
-  {
-    "itemId": "smartphone",
-    "category": "other",
-    "name": "Smartphone",
-    "emoteId": "1013474375275663530",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 470
-  },
-  {
-    "itemId": "wallet",
-    "category": "other",
-    "name": "Wallet",
-    "emoteId": "1013474376601059430",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 60
-  },
-  {
-    "itemId": "binoculars",
-    "category": "other",
-    "name": "Binoculars",
-    "emoteId": "1013473894969135124",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 40
-  },
-  {
-    "itemId": "cupcake",
-    "category": "other",
-    "name": "Cupcake",
-    "emoteId": "1013473896583929878",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 5
-  },
-  {
-    "itemId": "glass",
-    "category": "other",
-    "name": "Glass",
-    "emoteId": "1071812521960423616",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 18
-  },
-  {
-    "itemId": "plate",
-    "category": "other",
-    "name": "Plate",
-    "emoteId": "1071812524216950794",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 23
-  },
-  {
-    "itemId": "fork",
-    "category": "other",
-    "name": "Fork",
-    "emoteId": "1071812520836333588",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 12
-  },
-  {
-    "itemId": "alcohol",
-    "category": "other",
-    "name": "Alcohol",
-    "emoteId": "1013473893610176512",
-    "description": "Can be collected or sold.",
-    "longDescription": "This item has no purpose other than to be sold or collected.",
-    "sellPrice": 10
-  },
-  {
-    "itemId": "plastic",
-    "category": "factory",
-    "name": "Plastic",
-    "emoteId": "1046874601646477353",
-    "description": "Used to produce other items in a factory.",
-    "buyPrice": 20,
-    "sellPrice": 8
-  },
-  {
-    "itemId": "cloth",
-    "category": "factory",
-    "name": "Cloth",
-    "emoteId": "1046874600362999868",
-    "description": "Used to produce other items in a factory.",
-    "buyPrice": 30,
-    "sellPrice": 18
-  },
-  {
-    "itemId": "silicon",
-    "category": "factory",
-    "name": "Silicon",
-    "emoteId": "1046874604184031252",
-    "description": "Used to produce other items in a factory.",
-    "buyPrice": 90,
-    "sellPrice": 60
-  },
-  {
-    "itemId": "soccer_ball",
-    "category": "factory",
-    "name": "Soccer Ball",
-    "emoteId": "991232154321305680",
-    "description": "An item used for production in a factory.",
-    "buyPrice": 25,
-    "sellPrice": 10,
-    "multiplier": 3.0,
-    "duration": 14400
-  },
-  {
-    "itemId": "shirt",
-    "category": "factory",
-    "name": "Shirt",
-    "emoteId": "1046874602632138764",
-    "description": "An item used for production in a factory.",
-    "buyPrice": 40,
-    "sellPrice": 20,
-    "multiplier": 5.0,
-    "duration": 21600
-  },
-  {
-    "itemId": "earbuds",
-    "category": "factory",
-    "name": "Earbuds",
-    "emoteId": "1013473901499650159",
-    "description": "An item used for production in a factory.",
-    "buyPrice": 85,
-    "sellPrice": 40,
-    "multiplier": 3.0,
-    "duration": 43200
-  },
-  {
-    "itemId": "processor",
-    "category": "factory",
-    "name": "Processor",
-    "emoteId": "991232152060563486",
-    "description": "An item used for production in a factory.",
-    "buyPrice": 260,
-    "sellPrice": 140,
-    "multiplier": 2.0,
-    "duration": 86400
-  },
-  {
-    "itemId": "graphics_card",
-    "category": "factory",
-    "name": "Graphics Card",
-    "emoteId": "991232150961659974",
-    "description": "An item used for production in a factory.",
-    "buyPrice": 550,
-    "sellPrice": 320,
-    "multiplier": 2.0,
-    "duration": 172800
-  },
-  {
-    "itemId": "desktop",
-    "category": "factory",
-    "name": "Desktop",
-    "emoteId": "991232149896298546",
-    "description": "An item used for production in a factory.",
-    "buyPrice": 1100,
-    "sellPrice": 750,
-    "multiplier": 2.0,
-    "duration": 432000
-  },
-  {
-    "itemId": "server",
-    "category": "factory",
-    "name": "Server",
-    "emoteId": "991232153188847626",
-    "description": "An item used for production in a factory.",
-    "buyPrice": 3500,
-    "sellPrice": 1900,
-    "multiplier": 2.0,
-    "duration": 604800
-  },
-  {
-    "itemId": "crown",
-    "category": "rare_items",
-    "name": "Crown",
-    "emoteId": "956919874494533642",
-    "description": "Show your royalty.",
-    "longDescription": "Buy this item and prove that you have royal blood.",
-    "buyPrice": 12000,
-    "sellPrice": 3000
-  },
-  {
-    "itemId": "diamond",
-    "category": "rare_items",
-    "name": "Diamond",
-    "emoteId": "956919892085452820",
-    "description": "Ooooh shiny!",
-    "longDescription": "You have a extremely low chance of getting this item using the dig command.",
-    "sellPrice": 6000
-  },
-  {
-    "itemId": "gold",
-    "category": "rare_items",
-    "name": "Gold",
-    "emoteId": "956920061191393280",
-    "description": "Never trust money more than gold.",
-    "longDescription": "\"Gold is a treasure, and he who possesses it does all he wishes to in this world and succeeds in helping souls into paradise\"\n> - Christopher Columbus",
-    "buyPrice": 4000,
-    "sellPrice": 2200
-  },
-  {
-    "itemId": "oil",
-    "category": "rare_items",
-    "name": "Oil",
-    "emoteId": "956920061178835004",
-    "description": "A delicious black substance.",
-    "longDescription": "Buy the most wanted thing in the world.",
-    "buyPrice": 2800,
-    "sellPrice": 1600
-  },
-  {
-    "itemId": "trophy",
-    "category": "rare_items",
-    "name": "Trophy",
-    "emoteId": "956920061187194970",
-    "description": "What have I won?",
-    "longDescription": "You can only get it by winning things.",
-    "sellPrice": 1800
-  },
-  {
-    "itemId": "ring",
-    "category": "rare_items",
-    "name": "Ring",
-    "emoteId": "1003949880466751508",
-    "description": "A ring to show eternal love <3",
-    "buyPrice": 1800,
-    "sellPrice": 1000
-  },
-  {
-    "itemId": "toilet_paper",
-    "category": "rare_items",
-    "name": "Toilet Paper",
-    "emoteId": "1003949881746006066",
-    "description": "Where is all the toilet paper?!",
-    "longDescription": "Can you buy the last roll of toilet paper?",
-    "buyPrice": 700,
-    "sellPrice": 400
-  },
-  {
-    "itemId": "bear",
-    "category": "animals",
-    "name": "Bear",
-    "emoteId": "987701592486740008",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 45
-  },
-  {
-    "itemId": "chicken",
-    "category": "animals",
-    "name": "Chicken",
-    "emoteId": "987701594630004736",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 16
-  },
-  {
-    "itemId": "cow",
-    "category": "animals",
-    "name": "Cow",
-    "emoteId": "987701595720532088",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 28
-  },
-  {
-    "itemId": "deer",
-    "category": "animals",
-    "name": "Deer",
-    "emoteId": "987701596953661490",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 30
-  },
-  {
-    "itemId": "monkey",
-    "category": "animals",
-    "name": "Monkey",
-    "emoteId": "1002149882167038002",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 275
-  },
-  {
-    "itemId": "giraffe",
-    "category": "animals",
-    "name": "Giraffe",
-    "emoteId": "1002149899862818836",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 260
-  },
-  {
-    "itemId": "zebra",
-    "category": "animals",
-    "name": "Zebra",
-    "emoteId": "1002149892493422652",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 225
-  },
-  {
-    "itemId": "penguin",
-    "category": "animals",
-    "name": "Pengiun",
-    "emoteId": "987701604746670130",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 250
-  },
-  {
-    "itemId": "pig",
-    "category": "animals",
-    "name": "Pig",
-    "emoteId": "987701605816233985",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 24
-  },
-  {
-    "itemId": "rabbit",
-    "category": "animals",
-    "name": "Rabbit",
-    "emoteId": "987701609368797195",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 20
-  },
-  {
-    "itemId": "fox",
-    "category": "animals",
-    "name": "Fox",
-    "emoteId": "987701602603384863",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 35
-  },
-  {
-    "itemId": "elephant",
-    "category": "animals",
-    "name": "Elephant",
-    "emoteId": "987701600334266398",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 300
-  },
-  {
-    "itemId": "sheep",
-    "category": "animals",
-    "name": "Sheep",
-    "emoteId": "987701610027319297",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 19
-  },
-  {
-    "itemId": "duck",
-    "category": "animals",
-    "name": "Duck",
-    "emoteId": "987701599226974318",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 18
-  },
-  {
-    "itemId": "bird",
-    "category": "animals",
-    "name": "Bird",
-    "emoteId": "987701593543675934",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 12
-  },
-  {
-    "itemId": "badger",
-    "category": "animals",
-    "name": "Badger",
-    "emoteId": "1060169565176332360",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 32
-  },
-  {
-    "itemId": "gorilla",
-    "category": "animals",
-    "name": "Gorilla",
-    "emoteId": "1060169567147671573",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 210
-  },
-  {
-    "itemId": "lizard",
-    "category": "animals",
-    "name": "Lizard",
-    "emoteId": "1060169568821190759",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 23
-  },
-  {
-    "itemId": "panda",
-    "category": "animals",
-    "name": "Panda",
-    "emoteId": "1060169570058514484",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 185
-  },
-  {
-    "itemId": "raccoon",
-    "category": "animals",
-    "name": "Raccoon",
-    "emoteId": "1060169572122112060",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 40
-  },
-  {
-    "itemId": "wolf",
-    "category": "animals",
-    "name": "Wolf",
-    "emoteId": "1060169616200048690",
-    "description": "This animal can be found using the hunt command.",
-    "sellPrice": 65
-  },
-  {
-    "itemId": "goldfish",
-    "category": "fish",
-    "name": "Goldfish",
-    "emoteId": "956848497963982889",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 17
-  },
-  {
-    "itemId": "blobfish",
-    "category": "fish",
-    "name": "Blobfish",
-    "emoteId": "956848497976561734",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 75
-  },
-  {
-    "itemId": "crab",
-    "category": "fish",
-    "name": "Crab",
-    "emoteId": "956848497959780382",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 40
-  },
-  {
-    "itemId": "cod",
-    "category": "fish",
-    "name": "Cod",
-    "emoteId": "956848497951399986",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 5
-  },
-  {
-    "itemId": "salmon",
-    "category": "fish",
-    "name": "Salmon",
-    "emoteId": "956848497989152818",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 12
-  },
-  {
-    "itemId": "tuna",
-    "category": "fish",
-    "name": "Tuna",
-    "emoteId": "956848497955577867",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 10
-  },
-  {
-    "itemId": "jellyfish",
-    "category": "fish",
-    "name": "Jellyfish",
-    "emoteId": "956848497682968608",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 30
-  },
-  {
-    "itemId": "sardine",
-    "category": "fish",
-    "name": "Sardine",
-    "emoteId": "956848497980760064",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 8
-  },
-  {
-    "itemId": "catfish",
-    "category": "fish",
-    "name": "Catfish",
-    "emoteId": "956848497955577866",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 18
-  },
-  {
-    "itemId": "sea_turtle",
-    "category": "fish",
-    "name": "Sea Turtle",
-    "emoteId": "956848497984950363",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 75
-  },
-  {
-    "itemId": "starfish",
-    "category": "fish",
-    "name": "Starfish",
-    "emoteId": "956848497838157855",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 55
-  },
-  {
-    "itemId": "octopus",
-    "category": "fish",
-    "name": "Octopus",
-    "emoteId": "956848497682968607",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 57
-  },
-  {
-    "itemId": "lobster",
-    "category": "fish",
-    "name": "Lobster",
-    "emoteId": "956848498043654154",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 45
-  },
-  {
-    "itemId": "squid",
-    "category": "fish",
-    "name": "Squid",
-    "emoteId": "956848498190471238",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 60
-  },
-  {
-    "itemId": "shark",
-    "category": "fish",
-    "name": "Shark",
-    "emoteId": "1060167927212544000",
-    "description": "A fish that can be caught using a fishing rod.",
-    "sellPrice": 110
-  }
+    {
+        "itemId": "potato",
+        "category": "crops",
+        "name": "Potato",
+        "emoteId": "956643928013152306",
+        "description": "A crop that grows in 4 hours.",
+        "buyPrice": 25,
+        "sellPrice": 15,
+        "duration": 14400
+    },
+    {
+        "itemId": "wheat",
+        "category": "crops",
+        "name": "Wheat",
+        "emoteId": "1060169754284920832",
+        "description": "A crop that grows in 6 hours",
+        "buyPrice": 36,
+        "sellPrice": 21,
+        "duration": 21600
+    },
+    {
+        "itemId": "radish",
+        "category": "crops",
+        "name": "Radish",
+        "emoteId": "1060169749784436746",
+        "description": "A crop that grows in 10 hours.",
+        "buyPrice": 52,
+        "sellPrice": 32,
+        "duration": 36000
+    },
+    {
+        "itemId": "lettuce",
+        "category": "crops",
+        "name": "Lettuce",
+        "emoteId": "956643928021565510",
+        "description": "A crop that grows in 15 hours.",
+        "buyPrice": 45,
+        "sellPrice": 37,
+        "duration": 50400
+    },
+    {
+        "itemId": "soybean",
+        "category": "crops",
+        "name": "Soybean",
+        "emoteId": "1060169751822860338",
+        "description": "A crop that grows in 20 hours",
+        "buyPrice": 115,
+        "sellPrice": 60,
+        "duration": 72000
+    },
+    {
+        "itemId": "carrot",
+        "category": "crops",
+        "name": "Carrot",
+        "emoteId": "956643927987986452",
+        "description": "A crop that grows in 1 day.",
+        "buyPrice": 70,
+        "sellPrice": 56,
+        "duration": 86400
+    },
+    {
+        "itemId": "broccoli",
+        "category": "crops",
+        "name": "Broccoli",
+        "emoteId": "956643928382275684",
+        "description": "A crop that grows in 1 day and 12 hours.",
+        "buyPrice": 100,
+        "sellPrice": 75,
+        "duration": 129600
+    },
+    {
+        "itemId": "cauliflower",
+        "category": "crops",
+        "name": "Cauliflower",
+        "emoteId": "1060169744717721640",
+        "description": "A crop that grows in 2 days",
+        "buyPrice": 110,
+        "sellPrice": 85,
+        "duration": 172800
+    },
+    {
+        "itemId": "tomato",
+        "category": "crops",
+        "name": "Tomato",
+        "emoteId": "956643927992201306",
+        "description": "A crop that grows in 3 days.",
+        "buyPrice": 160,
+        "sellPrice": 115,
+        "duration": 259200
+    },
+    {
+        "itemId": "cucumber",
+        "category": "crops",
+        "name": "Cucumber",
+        "emoteId": "1060169746001186929",
+        "description": "A crop that grows in 4 days.",
+        "buyPrice": 260,
+        "sellPrice": 142,
+        "duration": 345600
+    },
+    {
+        "itemId": "sunflower",
+        "category": "crops",
+        "name": "Sunflower",
+        "emoteId": "1060169753064378438",
+        "description": "A crop that grows in 5 days.",
+        "buyPrice": 165,
+        "sellPrice": 135,
+        "duration": 432000
+    },
+    {
+        "itemId": "strawberry",
+        "category": "crops",
+        "name": "Strawberry",
+        "emoteId": "956643928403226684",
+        "description": "A crop that grows in 6 days.",
+        "buyPrice": 245,
+        "sellPrice": 150,
+        "duration": 518400
+    },
+    {
+        "itemId": "corn",
+        "category": "crops",
+        "name": "Corn",
+        "emoteId": "956643928034131989",
+        "description": "A crop that grows in 7 days.",
+        "buyPrice": 350,
+        "sellPrice": 155,
+        "duration": 604800
+    },
+    {
+        "itemId": "melon",
+        "category": "crops",
+        "name": "Melon",
+        "emoteId": "956643928348704829",
+        "description": "A crop that grows in 8 days.",
+        "buyPrice": 500,
+        "sellPrice": 170,
+        "duration": 691200
+    },
+    {
+        "itemId": "pumpkin",
+        "category": "crops",
+        "name": "Pumpkin",
+        "emoteId": "1060169748102529075",
+        "description": "A crop that grows in 10 days.",
+        "buyPrice": 800,
+        "sellPrice": 220,
+        "duration": 864000
+    },
+    {
+        "itemId": "shovel",
+        "category": "tools",
+        "name": "Shovel",
+        "emoteId": "1068190960506388590",
+        "description": "Dig a hole in the ground.",
+        "longDescription": "You can use this item to dig a hole in the ground to plant a tree.",
+        "buyPrice": 220,
+        "sellPrice": 120
+    },
+    {
+        "itemId": "axe",
+        "category": "tools",
+        "name": "Axe",
+        "emoteId": "1068589334309126184",
+        "description": "Cut down a large tree in 1 hour.",
+        "longDescription": "With this item you can cut down a large tree, but it will take some time (1 hour).",
+        "buyPrice": 280,
+        "sellPrice": 140
+    },
+    {
+        "itemId": "chainsaw",
+        "category": "tools",
+        "name": "Chainsaw",
+        "emoteId": "1157587368774209587",
+        "description": "Cut down a large tree instantly.",
+        "longDescription": "With this item you can cut down a large tree instantly.",
+        "buyPrice": 850,
+        "sellPrice": 380
+    },
+    {
+        "itemId": "fishing_rod",
+        "category": "tools",
+        "name": "Fishing Rod",
+        "emoteId": "956861323617107968",
+        "description": "A tool that can be used to catch fish.",
+        "buyPrice": 250,
+        "sellPrice": 90
+    },
+    {
+        "itemId": "premium_fishing_rod",
+        "category": "tools",
+        "name": "Premium Fishing Rod",
+        "emoteId": "1060169660177334332",
+        "description": "A premium tool that can be used to catch better and more fish.",
+        "buyPrice": 460,
+        "sellPrice": 185
+    },
+    {
+        "itemId": "knife",
+        "category": "tools",
+        "name": "Knife",
+        "emoteId": "1060169658063396914",
+        "description": "A knife is a very versatile tool. It can be used to cut down small trees, catch fish, and even skin animals.",
+        "buyPrice": 190,
+        "sellPrice": 40
+    },
+    {
+        "itemId": "bow",
+        "category": "tools",
+        "name": "Bow",
+        "emoteId": "1060169656813486100",
+        "description": "A bow is a tool that can be used to hunt animals.",
+        "buyPrice": 405,
+        "sellPrice": 120
+    },
+    {
+        "itemId": "hunting_rifle",
+        "category": "tools",
+        "name": "Hunting Rifle",
+        "emoteId": "987701755770994718",
+        "description": "A hunting rifle is a tool that can be used to hunt animals.",
+        "buyPrice": 630,
+        "sellPrice": 270
+    },
+    {
+        "itemId": "padlock",
+        "category": "tools",
+        "name": "Padlock",
+        "emoteId": "956861323189297162",
+        "description": "Get 10% more protection from thieves using steal.",
+        "buyPrice": 550,
+        "sellPrice": 230
+    },
+    {
+        "itemId": "bomb",
+        "category": "tools",
+        "name": "Bomb",
+        "emoteId": "956861322790842399",
+        "description": "This will increase the chance of a successful steal by 5%.",
+        "buyPrice": 700,
+        "sellPrice": 280
+    },
+    {
+        "itemId": "wood",
+        "category": "other",
+        "name": "Wood",
+        "emoteId": "1068192373886177280",
+        "description": "Collect this item by cutting down trees.",
+        "longDescription": "You get this item using the `/tree cut` command.",
+        "sellPrice": 40
+    },
+    {
+        "itemId": "laptop",
+        "category": "other",
+        "name": "Laptop",
+        "emoteId": "1013473904444059658",
+        "description": "Required for the Developer job.",
+        "longDescription": "You need this item if you want to apply for a job as a Developer.",
+        "buyPrice": 800,
+        "sellPrice": 570
+    },
+    {
+        "itemId": "broom",
+        "category": "other",
+        "name": "Broom",
+        "emoteId": "1060949557732704306",
+        "description": "Required for the Janitor job.",
+        "longDescription": "You need this item if you want to apply for a job as a Janitor.",
+        "buyPrice": 75,
+        "sellPrice": 50
+    },
+    {
+        "itemId": "helmet",
+        "category": "other",
+        "name": "Helmet",
+        "emoteId": "1060949562568736768",
+        "description": "Required for the Construction Worker job.",
+        "longDescription": "You need this item if you want to apply for a job as a Construction Worker.",
+        "buyPrice": 120,
+        "sellPrice": 70
+    },
+    {
+        "itemId": "driver_license",
+        "category": "other",
+        "name": "Driver License",
+        "emoteId": "1060949561302061066",
+        "description": "Required for the Taxi or Truck Driver job.",
+        "longDescription": "You need this item if you want to apply for a job as a Taxi or Truck Driver.",
+        "buyPrice": 1000,
+        "sellPrice": 1
+    },
+    {
+        "itemId": "lawbook",
+        "category": "other",
+        "name": "Lawbook",
+        "emoteId": "1060949564804304916",
+        "description": "Required for the Lawyer job.",
+        "longDescription": "You need this item if you want to apply for a job as a Lawyer.",
+        "buyPrice": 350,
+        "sellPrice": 280
+    },
+    {
+        "itemId": "suit",
+        "category": "other",
+        "name": "Suit",
+        "emoteId": "1060949569636151366",
+        "description": "Required for the Lawyer or Politician job.",
+        "longDescription": "You need this item if you want to apply for a job as a Lawyer or Politician.",
+        "buyPrice": 1200,
+        "sellPrice": 800
+    },
+    {
+        "itemId": "stethoscope",
+        "category": "other",
+        "name": "Stethoscope",
+        "emoteId": "1060949567245398158",
+        "description": "Required for the Doctor job.",
+        "longDescription": "You need this item if you want to apply for a job as a Doctor.",
+        "buyPrice": 80,
+        "sellPrice": 50
+    },
+    {
+        "itemId": "thermometer",
+        "category": "other",
+        "name": "Thermometer",
+        "emoteId": "1060949570978320506",
+        "description": "Required for the Doctor job.",
+        "longDescription": "You need this item if you want to apply for a job as a Doctor.",
+        "buyPrice": 60,
+        "sellPrice": 43
+    },
+    {
+        "itemId": "pen",
+        "category": "other",
+        "name": "Pen",
+        "emoteId": "1060949565999697941",
+        "description": "Required for the Politician job.",
+        "longDescription": "You need this item if you want to apply for a job as a Politician.",
+        "buyPrice": 12,
+        "sellPrice": 6
+    },
+    {
+        "itemId": "car",
+        "category": "other",
+        "name": "Car",
+        "emoteId": "1060949560031191101",
+        "description": "Required for the Taxi Driver job.",
+        "longDescription": "You need this item if you want to apply for a job as a Taxi Driver.",
+        "buyPrice": 8000,
+        "sellPrice": 5600
+    },
+    {
+        "itemId": "baguette",
+        "category": "other",
+        "name": "Baguette",
+        "emoteId": "956916922576957440",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 3
+    },
+    {
+        "itemId": "apple",
+        "category": "other",
+        "name": "Apple",
+        "emoteId": "1072105813331685396",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 4
+    },
+    {
+        "itemId": "trash",
+        "category": "other",
+        "name": "Trash",
+        "emoteId": "956916922610507777",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 25
+    },
+    {
+        "itemId": "shoe",
+        "category": "other",
+        "name": "Shoe",
+        "emoteId": "956916922572763166",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 40
+    },
+    {
+        "itemId": "socks",
+        "category": "other",
+        "name": "Socks",
+        "emoteId": "956916922610507776",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 15
+    },
+    {
+        "itemId": "egg",
+        "category": "other",
+        "name": "Egg",
+        "emoteId": "956916922560163930",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 5
+    },
+    {
+        "itemId": "cookie",
+        "category": "other",
+        "name": "Cookie",
+        "emoteId": "956916922673418300",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 2
+    },
+    {
+        "itemId": "playstation",
+        "category": "other",
+        "name": "Playstation",
+        "emoteId": "956917165250990091",
+        "description": "The best gaming console in the world.",
+        "longDescription": "Coinz shop has still enough stock to sell playstations at a fair price.",
+        "buyPrice": 500,
+        "sellPrice": 350
+    },
+    {
+        "itemId": "rubber_duck",
+        "category": "other",
+        "name": "Rubber Duck",
+        "emoteId": "956916922585321532",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 8
+    },
+    {
+        "itemId": "book",
+        "category": "other",
+        "name": "Book",
+        "emoteId": "956916922837000293",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 10
+    },
+    {
+        "itemId": "doll",
+        "category": "other",
+        "name": "Doll",
+        "emoteId": "956916922446909442",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 45
+    },
+    {
+        "itemId": "lamp",
+        "category": "other",
+        "name": "Lamp",
+        "emoteId": "956917165959815238",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 60
+    },
+    {
+        "itemId": "mirror",
+        "category": "other",
+        "name": "Mirror",
+        "emoteId": "956916922597904434",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 50
+    },
+    {
+        "itemId": "soap",
+        "category": "other",
+        "name": "Soap",
+        "emoteId": "956916922295910511",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 15
+    },
+    {
+        "itemId": "computer_mouse",
+        "category": "other",
+        "name": "Computer Mouse",
+        "emoteId": "1003948939193626674",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "buyPrice": 55,
+        "sellPrice": 30
+    },
+    {
+        "itemId": "fidget_spinner",
+        "category": "other",
+        "name": "Fidget Spinner",
+        "emoteId": "1003949592641019905",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "buyPrice": 18,
+        "sellPrice": 13
+    },
+    {
+        "itemId": "chair",
+        "category": "other",
+        "name": "Chair",
+        "emoteId": "1003948937603985480",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "buyPrice": 80,
+        "sellPrice": 45
+    },
+    {
+        "itemId": "pocket_watch",
+        "category": "other",
+        "name": "Pocket Watch",
+        "emoteId": "1003948943027220520",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "buyPrice": 160,
+        "sellPrice": 75
+    },
+    {
+        "itemId": "sofa",
+        "category": "other",
+        "name": "sofa",
+        "emoteId": "1003948944310669403",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "buyPrice": 180,
+        "sellPrice": 80
+    },
+    {
+        "itemId": "tv",
+        "category": "other",
+        "name": "Television",
+        "emoteId": "1003948945359245323",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "buyPrice": 250,
+        "sellPrice": 120
+    },
+    {
+        "itemId": "smartphone",
+        "category": "other",
+        "name": "Smartphone",
+        "emoteId": "1013474375275663530",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 470
+    },
+    {
+        "itemId": "wallet",
+        "category": "other",
+        "name": "Wallet",
+        "emoteId": "1013474376601059430",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 60
+    },
+    {
+        "itemId": "binoculars",
+        "category": "other",
+        "name": "Binoculars",
+        "emoteId": "1013473894969135124",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 40
+    },
+    {
+        "itemId": "cupcake",
+        "category": "other",
+        "name": "Cupcake",
+        "emoteId": "1013473896583929878",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 5
+    },
+    {
+        "itemId": "glass",
+        "category": "other",
+        "name": "Glass",
+        "emoteId": "1071812521960423616",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 18
+    },
+    {
+        "itemId": "plate",
+        "category": "other",
+        "name": "Plate",
+        "emoteId": "1071812524216950794",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 23
+    },
+    {
+        "itemId": "fork",
+        "category": "other",
+        "name": "Fork",
+        "emoteId": "1071812520836333588",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 12
+    },
+    {
+        "itemId": "alcohol",
+        "category": "other",
+        "name": "Alcohol",
+        "emoteId": "1013473893610176512",
+        "description": "Can be collected or sold.",
+        "longDescription": "This item has no purpose other than to be sold or collected.",
+        "sellPrice": 10
+    },
+    {
+        "itemId": "plastic",
+        "category": "factory",
+        "name": "Plastic",
+        "emoteId": "1046874601646477353",
+        "description": "Used to produce other items in a factory.",
+        "buyPrice": 20,
+        "sellPrice": 8
+    },
+    {
+        "itemId": "cloth",
+        "category": "factory",
+        "name": "Cloth",
+        "emoteId": "1046874600362999868",
+        "description": "Used to produce other items in a factory.",
+        "buyPrice": 30,
+        "sellPrice": 18
+    },
+    {
+        "itemId": "silicon",
+        "category": "factory",
+        "name": "Silicon",
+        "emoteId": "1046874604184031252",
+        "description": "Used to produce other items in a factory.",
+        "buyPrice": 90,
+        "sellPrice": 60
+    },
+    {
+        "itemId": "soccer_ball",
+        "category": "factory",
+        "name": "Soccer Ball",
+        "emoteId": "991232154321305680",
+        "description": "An item used for production in a factory.",
+        "buyPrice": 25,
+        "sellPrice": 10,
+        "multiplier": 3.0,
+        "duration": 14400
+    },
+    {
+        "itemId": "shirt",
+        "category": "factory",
+        "name": "Shirt",
+        "emoteId": "1046874602632138764",
+        "description": "An item used for production in a factory.",
+        "buyPrice": 40,
+        "sellPrice": 20,
+        "multiplier": 5.0,
+        "duration": 21600
+    },
+    {
+        "itemId": "earbuds",
+        "category": "factory",
+        "name": "Earbuds",
+        "emoteId": "1013473901499650159",
+        "description": "An item used for production in a factory.",
+        "buyPrice": 85,
+        "sellPrice": 40,
+        "multiplier": 3.0,
+        "duration": 43200
+    },
+    {
+        "itemId": "processor",
+        "category": "factory",
+        "name": "Processor",
+        "emoteId": "991232152060563486",
+        "description": "An item used for production in a factory.",
+        "buyPrice": 260,
+        "sellPrice": 140,
+        "multiplier": 2.0,
+        "duration": 86400
+    },
+    {
+        "itemId": "graphics_card",
+        "category": "factory",
+        "name": "Graphics Card",
+        "emoteId": "991232150961659974",
+        "description": "An item used for production in a factory.",
+        "buyPrice": 550,
+        "sellPrice": 320,
+        "multiplier": 2.0,
+        "duration": 172800
+    },
+    {
+        "itemId": "desktop",
+        "category": "factory",
+        "name": "Desktop",
+        "emoteId": "991232149896298546",
+        "description": "An item used for production in a factory.",
+        "buyPrice": 1100,
+        "sellPrice": 750,
+        "multiplier": 2.0,
+        "duration": 432000
+    },
+    {
+        "itemId": "server",
+        "category": "factory",
+        "name": "Server",
+        "emoteId": "991232153188847626",
+        "description": "An item used for production in a factory.",
+        "buyPrice": 3500,
+        "sellPrice": 1900,
+        "multiplier": 2.0,
+        "duration": 604800
+    },
+    {
+        "itemId": "crown",
+        "category": "rare_items",
+        "name": "Crown",
+        "emoteId": "956919874494533642",
+        "description": "Show your royalty.",
+        "longDescription": "Buy this item and prove that you have royal blood.",
+        "buyPrice": 12000,
+        "sellPrice": 3000
+    },
+    {
+        "itemId": "diamond",
+        "category": "rare_items",
+        "name": "Diamond",
+        "emoteId": "956919892085452820",
+        "description": "Ooooh shiny!",
+        "longDescription": "You have a extremely low chance of getting this item using the dig command.",
+        "sellPrice": 6000
+    },
+    {
+        "itemId": "gold",
+        "category": "rare_items",
+        "name": "Gold",
+        "emoteId": "956920061191393280",
+        "description": "Never trust money more than gold.",
+        "longDescription": "\"Gold is a treasure, and he who possesses it does all he wishes to in this world and succeeds in helping souls into paradise\"\n> - Christopher Columbus",
+        "buyPrice": 4000,
+        "sellPrice": 2200
+    },
+    {
+        "itemId": "oil",
+        "category": "rare_items",
+        "name": "Oil",
+        "emoteId": "956920061178835004",
+        "description": "A delicious black substance.",
+        "longDescription": "Buy the most wanted thing in the world.",
+        "buyPrice": 2800,
+        "sellPrice": 1600
+    },
+    {
+        "itemId": "trophy",
+        "category": "rare_items",
+        "name": "Trophy",
+        "emoteId": "956920061187194970",
+        "description": "What have I won?",
+        "longDescription": "You can only get it by winning things.",
+        "sellPrice": 1800
+    },
+    {
+        "itemId": "ring",
+        "category": "rare_items",
+        "name": "Ring",
+        "emoteId": "1003949880466751508",
+        "description": "A ring to show eternal love <3",
+        "buyPrice": 1800,
+        "sellPrice": 1000
+    },
+    {
+        "itemId": "toilet_paper",
+        "category": "rare_items",
+        "name": "Toilet Paper",
+        "emoteId": "1003949881746006066",
+        "description": "Where is all the toilet paper?!",
+        "longDescription": "Can you buy the last roll of toilet paper?",
+        "buyPrice": 700,
+        "sellPrice": 400
+    },
+    {
+        "itemId": "bear",
+        "category": "animals",
+        "name": "Bear",
+        "emoteId": "987701592486740008",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 45
+    },
+    {
+        "itemId": "chicken",
+        "category": "animals",
+        "name": "Chicken",
+        "emoteId": "987701594630004736",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 16
+    },
+    {
+        "itemId": "cow",
+        "category": "animals",
+        "name": "Cow",
+        "emoteId": "987701595720532088",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 28
+    },
+    {
+        "itemId": "deer",
+        "category": "animals",
+        "name": "Deer",
+        "emoteId": "987701596953661490",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 30
+    },
+    {
+        "itemId": "monkey",
+        "category": "animals",
+        "name": "Monkey",
+        "emoteId": "1002149882167038002",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 275
+    },
+    {
+        "itemId": "giraffe",
+        "category": "animals",
+        "name": "Giraffe",
+        "emoteId": "1002149899862818836",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 260
+    },
+    {
+        "itemId": "zebra",
+        "category": "animals",
+        "name": "Zebra",
+        "emoteId": "1002149892493422652",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 225
+    },
+    {
+        "itemId": "penguin",
+        "category": "animals",
+        "name": "Pengiun",
+        "emoteId": "987701604746670130",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 250
+    },
+    {
+        "itemId": "pig",
+        "category": "animals",
+        "name": "Pig",
+        "emoteId": "987701605816233985",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 24
+    },
+    {
+        "itemId": "rabbit",
+        "category": "animals",
+        "name": "Rabbit",
+        "emoteId": "987701609368797195",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 20
+    },
+    {
+        "itemId": "fox",
+        "category": "animals",
+        "name": "Fox",
+        "emoteId": "987701602603384863",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 35
+    },
+    {
+        "itemId": "elephant",
+        "category": "animals",
+        "name": "Elephant",
+        "emoteId": "987701600334266398",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 300
+    },
+    {
+        "itemId": "sheep",
+        "category": "animals",
+        "name": "Sheep",
+        "emoteId": "987701610027319297",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 19
+    },
+    {
+        "itemId": "duck",
+        "category": "animals",
+        "name": "Duck",
+        "emoteId": "987701599226974318",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 18
+    },
+    {
+        "itemId": "bird",
+        "category": "animals",
+        "name": "Bird",
+        "emoteId": "987701593543675934",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 12
+    },
+    {
+        "itemId": "badger",
+        "category": "animals",
+        "name": "Badger",
+        "emoteId": "1060169565176332360",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 32
+    },
+    {
+        "itemId": "gorilla",
+        "category": "animals",
+        "name": "Gorilla",
+        "emoteId": "1060169567147671573",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 210
+    },
+    {
+        "itemId": "lizard",
+        "category": "animals",
+        "name": "Lizard",
+        "emoteId": "1060169568821190759",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 23
+    },
+    {
+        "itemId": "panda",
+        "category": "animals",
+        "name": "Panda",
+        "emoteId": "1060169570058514484",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 185
+    },
+    {
+        "itemId": "raccoon",
+        "category": "animals",
+        "name": "Raccoon",
+        "emoteId": "1060169572122112060",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 40
+    },
+    {
+        "itemId": "wolf",
+        "category": "animals",
+        "name": "Wolf",
+        "emoteId": "1060169616200048690",
+        "description": "This animal can be found using the hunt command.",
+        "sellPrice": 65
+    },
+    {
+        "itemId": "goldfish",
+        "category": "fish",
+        "name": "Goldfish",
+        "emoteId": "956848497963982889",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 17
+    },
+    {
+        "itemId": "blobfish",
+        "category": "fish",
+        "name": "Blobfish",
+        "emoteId": "956848497976561734",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 75
+    },
+    {
+        "itemId": "crab",
+        "category": "fish",
+        "name": "Crab",
+        "emoteId": "956848497959780382",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 40
+    },
+    {
+        "itemId": "cod",
+        "category": "fish",
+        "name": "Cod",
+        "emoteId": "956848497951399986",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 5
+    },
+    {
+        "itemId": "salmon",
+        "category": "fish",
+        "name": "Salmon",
+        "emoteId": "956848497989152818",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 12
+    },
+    {
+        "itemId": "tuna",
+        "category": "fish",
+        "name": "Tuna",
+        "emoteId": "956848497955577867",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 10
+    },
+    {
+        "itemId": "jellyfish",
+        "category": "fish",
+        "name": "Jellyfish",
+        "emoteId": "956848497682968608",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 30
+    },
+    {
+        "itemId": "sardine",
+        "category": "fish",
+        "name": "Sardine",
+        "emoteId": "956848497980760064",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 8
+    },
+    {
+        "itemId": "catfish",
+        "category": "fish",
+        "name": "Catfish",
+        "emoteId": "956848497955577866",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 18
+    },
+    {
+        "itemId": "sea_turtle",
+        "category": "fish",
+        "name": "Sea Turtle",
+        "emoteId": "956848497984950363",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 75
+    },
+    {
+        "itemId": "starfish",
+        "category": "fish",
+        "name": "Starfish",
+        "emoteId": "956848497838157855",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 55
+    },
+    {
+        "itemId": "octopus",
+        "category": "fish",
+        "name": "Octopus",
+        "emoteId": "956848497682968607",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 57
+    },
+    {
+        "itemId": "lobster",
+        "category": "fish",
+        "name": "Lobster",
+        "emoteId": "956848498043654154",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 45
+    },
+    {
+        "itemId": "squid",
+        "category": "fish",
+        "name": "Squid",
+        "emoteId": "956848498190471238",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 60
+    },
+    {
+        "itemId": "shark",
+        "category": "fish",
+        "name": "Shark",
+        "emoteId": "1060167927212544000",
+        "description": "A fish that can be caught using a fishing rod.",
+        "sellPrice": 110
+    }
 ]

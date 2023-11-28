@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
 
 export default function SupportPage() {
-    return redirect("https://discord.gg/asnZQwc6kW");
+    return redirect('https://discord.gg/asnZQwc6kW');
 }

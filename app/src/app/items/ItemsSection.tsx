@@ -1,34 +1,34 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Image from "next/image";
-import CategoryCard from "@/components/CategoryCard";
-import { Item } from "@/lib/interfaces";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
-import Fuse from "fuse.js";
-import Search from "@/components/Search";
+import { useState } from 'react';
+import Image from 'next/image';
+import CategoryCard from '@/components/CategoryCard';
+import { Item } from '@/lib/interfaces';
+import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import Fuse from 'fuse.js';
+import Search from '@/components/Search';
 
 const categories: { [key: string]: string } = {
-    all: "All Items",
-    tools: "Tools",
-    crops: "Crops",
-    animals: "Animals",
-    fish: "Fish",
-    factory: "Factory Products",
-    rare_items: "Rare Items",
-    other: "Other",
+    all: 'All Items',
+    tools: 'Tools',
+    crops: 'Crops',
+    animals: 'Animals',
+    fish: 'Fish',
+    factory: 'Factory Products',
+    rare_items: 'Rare Items',
+    other: 'Other',
 };
 
 export default function ItemsSection({ items }: { items: Item[] }) {
     const [category, setCategory] = useState(Object.keys(categories)[0]);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState('');
     const [visibleItems, setVisibleItems] = useState(items);
     const [selectedItem, setSelectedItem] = useState(items[0]);
 
     const fuse = new Fuse(items, {
-        keys: ["name", "itemId"],
+        keys: ['name', 'itemId'],
     });
 
     const updateCategory = (cat: string) => {
@@ -40,10 +40,10 @@ export default function ItemsSection({ items }: { items: Item[] }) {
         let newItems = items;
 
         if (searchQuery.length > 1) {
-            setCategory("all");
+            setCategory('all');
             const searchResults = fuse.search(searchQuery);
             newItems = searchResults.map((result) => result.item);
-        } else if (cat !== "all") {
+        } else if (cat !== 'all') {
             newItems = newItems.filter((shopItem) => shopItem.category === cat);
         }
 
@@ -64,22 +64,35 @@ export default function ItemsSection({ items }: { items: Item[] }) {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div className="flex flex-wrap items-center gap-3">
                     {Object.keys(categories).map((name) => (
-                        <CategoryCard key={name} name={categories[name]} value={name} selectedCategory={category}
-                                      setCategory={updateCategory}/>
+                        <CategoryCard
+                            key={name}
+                            name={categories[name]}
+                            value={name}
+                            selectedCategory={category}
+                            setCategory={updateCategory}
+                        />
                     ))}
                 </div>
 
-                <Search placeholder="Search items..." searchTerm={searchTerm} onChangeHandler={(e) => {
-                    setSearchTerm(e.target.value);
-                    updateVisibleItems(category, e.target.value);
-                }}/>
+                <Search
+                    placeholder="Search items..."
+                    searchTerm={searchTerm}
+                    onChangeHandler={(e) => {
+                        setSearchTerm(e.target.value);
+                        updateVisibleItems(category, e.target.value);
+                    }}
+                />
             </div>
 
             <div className="mt-8 mb-12 flex flex-col-reverse lg:flex-row items-start justify-between gap-4 relative h-full">
                 <div className="flex flex-wrap gap-4">
                     {visibleItems.map((item) => (
-                        <ItemCard key={item.itemId} item={item} setItem={setSelectedItem}
-                                  isSelected={selectedItem.itemId === item.itemId}/>
+                        <ItemCard
+                            key={item.itemId}
+                            item={item}
+                            setItem={setSelectedItem}
+                            isSelected={selectedItem.itemId === item.itemId}
+                        />
                     ))}
                 </div>
 
@@ -87,18 +100,25 @@ export default function ItemsSection({ items }: { items: Item[] }) {
                     <div className="flex gap-6">
                         <Image
                             src={`https://cdn.discordapp.com/emojis/${selectedItem.emoteId}.webp?size=96&quality=lossless`}
-                            alt={selectedItem.name} width={96} height={96} className="select-none"/>
+                            alt={selectedItem.name}
+                            width={96}
+                            height={96}
+                            className="select-none"
+                        />
 
                         <div className="flex flex-col gap-1">
                             <h2 className="text-2xl font-bold">{selectedItem.name}</h2>
                             <div className="text-muted font-medium flex gap-1 items-center">
                                 <p>Item ID:</p>
-                                <Badge variant="secondary" className="bg-background">{selectedItem.itemId}</Badge>
+                                <Badge variant="secondary" className="bg-background">
+                                    {selectedItem.itemId}
+                                </Badge>
                             </div>
                             <div className="text-muted font-medium flex gap-1 items-center">
                                 <p>Category:</p>
-                                <Badge variant="secondary"
-                                       className="bg-background">{categories[selectedItem.category]}</Badge>
+                                <Badge variant="secondary" className="bg-background">
+                                    {categories[selectedItem.category]}
+                                </Badge>
                             </div>
                         </div>
                     </div>
@@ -115,7 +135,10 @@ export default function ItemsSection({ items }: { items: Item[] }) {
                                     <>
                                         <Image
                                             src="https://cdn.discordapp.com/emojis/987800268223709254.webp?size=24&quality=lossless"
-                                            alt="Coinz Currency" width={24} height={24}/>
+                                            alt="Coinz Currency"
+                                            width={24}
+                                            height={24}
+                                        />
                                         <p>{selectedItem.buyPrice}</p>
                                     </>
                                 ) : (
@@ -132,7 +155,10 @@ export default function ItemsSection({ items }: { items: Item[] }) {
                                     <>
                                         <Image
                                             src="https://cdn.discordapp.com/emojis/987800268223709254.webp?size=24&quality=lossless"
-                                            alt="Coinz Currency" width={24} height={24}/>
+                                            alt="Coinz Currency"
+                                            width={24}
+                                            height={24}
+                                        />
                                         <p>{selectedItem.sellPrice}</p>
                                     </>
                                 ) : (
@@ -147,27 +173,35 @@ export default function ItemsSection({ items }: { items: Item[] }) {
     );
 }
 
-function ItemCard({ item, isSelected, setItem }: {
-    item: Item;
-    isSelected?: boolean;
-    setItem: (i: Item) => void,
-}) {
+function ItemCard({ item, isSelected, setItem }: { item: Item; isSelected?: boolean; setItem: (i: Item) => void }) {
     const [isLoaded, setIsLoaded] = useState(false);
 
     return (
-        <div onClick={() => setItem(item)}
-             className={cn(isSelected ? "border-primary" : "border-transparent", "relative bg-secondary rounded-md select-none p-4 cursor-pointer border-[3px] transition-all duration-200 ease-in-out")}>
+        <div
+            onClick={() => setItem(item)}
+            className={cn(
+                isSelected ? 'border-primary' : 'border-transparent',
+                'relative bg-secondary rounded-md select-none p-4 cursor-pointer border-[3px] transition-all duration-200 ease-in-out',
+            )}
+        >
             {!isLoaded && (
                 <>
-                    <Skeleton className="w-full h-full z-20 absolute top-0 left-0"/>
+                    <Skeleton className="w-full h-full z-20 absolute top-0 left-0" />
                     <div className="w-full h-full absolute z-10 bg-secondary rounded-md top-0 left-0"></div>
                 </>
             )}
 
-            <Image src={`https://cdn.discordapp.com/emojis/${item.emoteId}.webp?size=56&quality=lossless`}
-                   alt={item.name} width={52} height={52} priority={false} loading="lazy" quality={90}
-                   onLoadingComplete={() => setIsLoaded(true)}
-            className="w-10 h-10 md:w-[52px] md:h-[52px] transition-all duration-300 ease-in-out"/>
+            <Image
+                src={`https://cdn.discordapp.com/emojis/${item.emoteId}.webp?size=56&quality=lossless`}
+                alt={item.name}
+                width={52}
+                height={52}
+                priority={false}
+                loading="lazy"
+                quality={90}
+                onLoadingComplete={() => setIsLoaded(true)}
+                className="w-10 h-10 md:w-[52px] md:h-[52px] transition-all duration-300 ease-in-out"
+            />
         </div>
     );
 }
