@@ -80,7 +80,7 @@ const Tree = new Schema<ITree>({
     extraHeight: { type: Number, default: 0 },
 });
 
-export const memberSchema = new Schema<IMember>(
+export const member = new Schema<IMember>(
     {
         id: { type: String, required: true, unique: true, index: true },
         banned: { type: Boolean, default: false },
@@ -109,4 +109,4 @@ export const memberSchema = new Schema<IMember>(
     { timestamps: true },
 );
 
-export default model<IMember>('Member', memberSchema);
+export default model<IMember>('Member', member);

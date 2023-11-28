@@ -1,7 +1,7 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
-import type { IMember } from '../models/Member';
-import Member from '../models/Member';
-import type { IUserStats } from '../models/UserStats';
+import type { IMember } from '../models/member';
+import Member from '../models/member';
+import type { IUserStats } from '../models/userStats';
 import { getLevel } from '../utils';
 import { getMember, getUserStats } from './database';
 

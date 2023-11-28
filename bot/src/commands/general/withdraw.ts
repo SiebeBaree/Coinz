@@ -1,7 +1,7 @@
 import type { ColorResolvable } from 'discord.js';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import type { Command } from '../../domain/Command';
-import Member from '../../models/Member';
+import Member from '../../models/member';
 import { parseStrToNum } from '../../utils';
 
 export default {

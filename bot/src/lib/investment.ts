@@ -1,5 +1,5 @@
-import type { IInvestment } from '../models/Investment';
-import InvestmentModel from '../models/Investment';
+import type { IInvestment } from '../models/investment';
+import InvestmentModel from '../models/investment';
 
 export default class Investment {
     private readonly INVESTMENTS = new Map<string, IInvestment>();

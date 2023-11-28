@@ -1,8 +1,8 @@
 import process from 'node:process';
 import type { SelectMenuComponentOptionData } from 'discord.js';
 import { Collection } from 'discord.js';
-import type { IMember } from '../models/Member';
-import Member from '../models/Member';
+import type { IMember } from '../models/member';
+import Member from '../models/member';
 import logger from '../utils/logger';
 import type { InventoryItem, Item } from './types';
 

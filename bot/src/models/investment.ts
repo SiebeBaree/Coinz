@@ -11,7 +11,7 @@ export type IInvestment = {
     updatedAt: Date;
 };
 
-export const investmentSchema = new Schema<IInvestment>(
+export const investment = new Schema<IInvestment>(
     {
         ticker: {
             type: String,
@@ -42,4 +42,4 @@ export const investmentSchema = new Schema<IInvestment>(
     { timestamps: true },
 );
 
-export default model<IInvestment>('Investment', investmentSchema, 'Investment');
+export default model<IInvestment>('Investment', investment, 'Investment');

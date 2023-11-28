@@ -1,6 +1,6 @@
-import type { IMember } from '../models/Member';
-import Member from '../models/Member';
-import UserStats from '../models/UserStats';
+import type { IMember } from '../models/member';
+import Member from '../models/member';
+import UserStats from '../models/userStats';
 import { formatNumber, getRandomNumber, parseStrToNum } from './index';
 
 export async function addMoney(userId: string, amount: number): Promise<void> {

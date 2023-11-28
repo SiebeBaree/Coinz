@@ -30,14 +30,12 @@ const Factory = new Schema<IFactory>({
     produceOn: { type: Number, default: 0 },
 });
 
-export const businessSchema = new Schema<IBusiness>(
-    {
-        userId: { type: String, required: true, unique: true, index: true },
-        name: { type: String, required: true, unique: true, index: true },
-        employees: { type: Number, default: 0 },
-        inventory: [{ type: Item, default: [] }],
-        factories: [{ type: Factory, default: [] }],
-    },
-);
+export const businessSchema = new Schema<IBusiness>({
+    userId: { type: String, required: true, unique: true, index: true },
+    name: { type: String, required: true, unique: true, index: true },
+    employees: { type: Number, default: 0 },
+    inventory: [{ type: Item, default: [] }],
+    factories: [{ type: Factory, default: [] }],
+});
 
 export default model<IBusiness>('Business', businessSchema);

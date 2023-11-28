@@ -1,9 +1,9 @@
-import type { IBusiness } from '../models/Business';
-import Business from '../models/Business';
-import type { IMember } from '../models/Member';
-import Member from '../models/Member';
-import type { IUserStats } from '../models/UserStats';
-import UserStats from '../models/UserStats';
+import type { IBusiness } from '../models/business';
+import Business from '../models/business';
+import type { IMember } from '../models/member';
+import Member from '../models/member';
+import type { IUserStats } from '../models/userStats';
+import UserStats from '../models/userStats';
 
 export async function getMember(memberId: string, fetch = false): Promise<IMember> {
     let member = await Member.findOne({ id: memberId });

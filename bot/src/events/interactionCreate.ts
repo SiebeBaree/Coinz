@@ -2,7 +2,7 @@ import process from 'node:process';
 import { Events } from 'discord.js';
 import type { Event } from '../domain/Event';
 import { getMember } from '../lib/database';
-import UserStats from '../models/UserStats';
+import UserStats from '../models/userStats';
 import { msToTime } from '../utils';
 import logger from '../utils/logger';
 

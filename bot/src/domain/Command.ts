@@ -1,5 +1,5 @@
 import type { RESTPostAPIApplicationCommandsJSONBody, ChatInputCommandInteraction } from 'discord.js';
-import type { IMember } from '../models/Member';
+import type { IMember } from '../models/member';
 import type { StructurePredicate } from '../utils/loaders';
 import type Bot from './Bot';
 
