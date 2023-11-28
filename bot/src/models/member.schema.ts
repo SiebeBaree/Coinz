@@ -1,9 +1,9 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import type { InventoryItem } from '../lib/types';
 
 export type IInvestment = {
     ticker: string;
-    amount: Types.Decimal128;
+    amount: string;
     buyPrice: number;
 };
 
@@ -58,7 +58,7 @@ const Item = new Schema<InventoryItem>({
 
 const Investment = new Schema<IInvestment>({
     ticker: { type: String, required: true },
-    amount: { type: Types.Decimal128, required: true },
+    amount: { type: String, required: true },
     buyPrice: { type: Number, required: true },
 });
 
