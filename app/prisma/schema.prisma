@@ -10,6 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+type InventoryItem {
+  itemId String
+  amount Int
+}
+
+type MemberInvestment {
+  ticker   String
+  amount   String
+  buyPrice String
+}
+
 model Account {
   id                       String  @id @default(auto()) @map("_id") @db.ObjectId
   userId                   String  @db.ObjectId
@@ -60,11 +71,38 @@ model VerificationToken {
 }
 
 model Investment {
-  id            String @id @default(auto()) @map("_id") @db.ObjectId
-  ticker        String @unique
-  type          String
-  fullName      String
-  price         String
-  previousClose String
-  lastUpdated   Int
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  ticker    String
+  type      String
+  fullName  String
+  price     String
+  changed   String
+  updatedAt DateTime @updatedAt
+  expires   DateTime
+
+  @@unique([ticker, type])
+}
+
+model member {
+  id           String             @id @default(auto()) @map("_id") @db.ObjectId
+  banned       Boolean
+  votes        Int
+  wallet       Int
+  bank         Int
+  bankLimit    Int
+  experience   Int
+  inventory    InventoryItem[]
+  stocks       MemberInvestment[]
+  profileColor String
+  birthday     DateTime
+  bio          String
+}
+
+model BotStats {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  guilds      Int
+  users       Int
+  commands    Int
+  investments Int
+  updatedAt   DateTime @updatedAt
 }
