@@ -5,11 +5,12 @@
     "main": "dist/manager.js",
     "scripts": {
         "start": "pnpm run build && node --env-file .env ./dist/sharder.js",
-        "dev": "concurrently \"pnpm run build -- --watch\" \"nodemon --env-file .env ./dist/sharder.js\"",
+        "dev": "concurrently \"tsc --watch\" \"nodemon --env-file .env ./dist/sharder.js\"",
         "build": "tsc",
         "lint": "prettier --check . && eslint --ext .ts --format=pretty src",
         "format": "prettier --write . && eslint --ext .ts --fix --format=pretty src",
-        "register-commands": "pnpm run build && node --env-file .env ./dist/register.js"
+        "register-commands": "pnpm run build && node --env-file .env ./dist/register.js",
+        "item-balancer": "concurrently \"tsc --watch\" \"nodemon ./dist/item-balancer.js\""
     },
     "repository": {
         "type": "git",
@@ -49,6 +50,7 @@
     },
     "devDependencies": {
         "@types/node": "^20.9.3",
+        "concurrently": "^8.2.2",
         "eslint": "^8.54.0",
         "eslint-config-neon": "^0.1.57",
         "eslint-formatter-pretty": "^6.0.0",
