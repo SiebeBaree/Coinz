@@ -35,7 +35,6 @@ export type IMember = {
     bankLimit: number;
     experience: number;
     job: string;
-    business: string;
     streak: number;
     lastStreak: Date;
     passiveMode: boolean;
@@ -91,7 +90,6 @@ export const member = new Schema<IMember>(
         bankLimit: { type: Number, default: 7_500 },
         experience: { type: Number, default: 0 },
         job: { type: String, default: '' },
-        business: { type: String, default: '' },
         streak: { type: Number, default: 0 },
         lastStreak: { type: Date, default: new Date(0) },
         passiveMode: { type: Boolean, default: false },
