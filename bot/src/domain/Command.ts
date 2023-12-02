@@ -31,7 +31,7 @@ export type Command = {
      * @param interaction - The interaction of the command
      * @param member - The member who called the command
      */
-    execute(client: Bot, interaction: ChatInputCommandInteraction, member: IMember): Promise<void> | void;
+    execute(client: Bot, interaction: ChatInputCommandInteraction, member: IMember): Promise<void>;
 };
 
 // Defines the predicate to check if an object is a valid Command type
