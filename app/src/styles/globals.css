@@ -21,9 +21,6 @@
     --color-selected: #ffca21;
     --color-background-blur: rgba(255, 255, 255, 0.1);
     --color-discord-mention: #3d4276;
-    --color-shard-online: #4cab61;
-    --color-shard-offline: #dc3645;
-    --color-shard-slow: #ffc205;
 }
 
 *,
