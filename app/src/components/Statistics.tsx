@@ -3,39 +3,29 @@
 import { CandlestickChartIcon, LucideIcon, ServerIcon, TerminalSquareIcon, Users2Icon } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { BotStats } from '@prisma/client';
+import { formatNumber } from '@/lib/utils';
 
-function formatNumber(num: number): string {
-    // If the number is less than 20,000, return it as is
-    if (num < 20000) {
-        return num.toString();
+export default function Statistics({ botStats }: { botStats: BotStats | null }) {
+    if (!botStats) {
+        return (
+            <>
+                <Statistic Icon={ServerIcon} title="Servers" value={0} />
+                <Statistic Icon={Users2Icon} title="Users" value={0} />
+                <Statistic Icon={TerminalSquareIcon} title="Commands" value={0} />
+                <Statistic Icon={CandlestickChartIcon} title="Investments" value={0} />
+            </>
+        );
     }
 
-    // Round the number to the nearest 10,000
-    const rounded = Math.round(num / 10000) * 10000;
-
-    // Format the number in 'K' or 'M'
-    if (rounded < 1000000) {
-        return rounded / 1000 + 'K';
-    } else {
-        return (rounded / 1000000).toFixed(1) + 'M';
-    }
-}
-
-export default function Statistics({ botStats }: { botStats: BotStats }) {
     const serverCount = formatNumber(botStats.guilds);
     const userCount = formatNumber(botStats.users);
 
     return (
         <>
-            <Statistic
-                Icon={ServerIcon}
-                title="Servers"
-                value={serverCount.shortValue}
-                suffix={serverCount.suffix + '+'}
-            />
-            <Statistic Icon={Users2Icon} title="Users" value={userCount.shortValue} suffix={userCount.suffix + '+'} />
-            <Statistic Icon={TerminalSquareIcon} title="Commands" value={35} />
-            <Statistic Icon={CandlestickChartIcon} title="Investments" value={70} />
+            <Statistic Icon={ServerIcon} title="Servers" value={serverCount.value} suffix={serverCount.suffix + '+'} />
+            <Statistic Icon={Users2Icon} title="Users" value={userCount.value} suffix={userCount.suffix + '+'} />
+            <Statistic Icon={TerminalSquareIcon} title="Commands" value={botStats.commands} />
+            <Statistic Icon={CandlestickChartIcon} title="Investments" value={botStats.investments} />
         </>
     );
 }
@@ -68,7 +58,7 @@ export function Statistic({
     }, [state, value, incrementValue]);
 
     return (
-        <div className="flex justify-between items-center gap-4">
+        <div className="flex justify-center items-center gap-4">
             <Icon className="text-primary h-12 w-12" />
 
             <div>

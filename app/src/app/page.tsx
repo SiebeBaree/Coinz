@@ -5,12 +5,14 @@ import React from 'react';
 import Statistics from '@/components/Statistics';
 import heroImg from '@/lib/img/hero.png';
 import { IconProps } from '@/lib/interfaces';
-import { cn } from '@/lib/utils';
+import { cn, formatNumber } from '@/lib/utils';
 import InvestingIcon from '@/components/icons/Investing';
 import BusinessIcon from '@/components/icons/Business';
 import GamesIcon from '@/components/icons/Games';
 import FarmingIcon from '@/components/icons/Farming';
 import { db } from '@/server/db';
+
+export const revalidate = 3600;
 
 export default async function Home() {
     const botStats = await db.botStats.findFirst({
@@ -19,6 +21,7 @@ export default async function Home() {
         },
     });
 
+    const users = formatNumber(botStats?.users ?? 0);
     return (
         <main>
             <div
@@ -30,7 +33,7 @@ export default async function Home() {
                 <div className="container mx-auto px-5 flex flex-col-reverse md:flex-row justify-between items-center flex-grow">
                     <div>
                         <h2
-                            className="text-7xl sm:text-9xl md:text-8xl lg:text-9xl xl:text-[180px] font-bold absolute -top-[40%] sm:-top-[60%] md:-top-[20%] xl:-top-[30%] left-1/2 -translate-x-1/2 md:translate-x-0 md:-left-[5%] xl:-left-[15%]"
+                            className="text-7xl sm:text-9xl md:text-8xl lg:text-9xl xl:text-[180px] font-bold absolute -top-[40%] sm:-top-[60%] md:-top-[20%] xl:-top-[30%] left-1/2 -translate-x-1/2 md:translate-x-0 md:-left-[5%] xl:-left-[15%] select-none"
                             style={{
                                 fontFamily: 'Ginto Nord, Inter, Poppins, Roboto, sans-serif',
                                 color: 'var(--color-watermark)',
@@ -41,25 +44,26 @@ export default async function Home() {
                         <h1 className="text-center md:text-left text-3xl sm:text-5xl lg:text-6xl font-bold">
                             The Ultimate Economy Discord Bot
                         </h1>
-                        <p className="text-center md:text-left sm:text-xl md:text-base lg:text-xl mt-3">
-                            Join over 400,000 users and compete to be the wealthiest person on Coinz with our
-                            entertaining commands.
+                        <p className="text-center md:text-left sm:text-lg md:text-base mt-3 text-muted">
+                            Join over {users.value}
+                            {users.suffix}+ users and compete to be the wealthiest person on Coinz with our entertaining
+                            commands. You can buy stocks, start your own business, play fun minigames and much more!
                         </p>
 
-                        <div className="flex flex-col sm:flex-row justify-center md:justify-start items-center gap-3 my-8">
+                        <div className="flex flex-col sm:flex-row justify-center md:justify-start items-center gap-2 my-6">
                             <Link
                                 href={'/invite'}
                                 target="_blank"
-                                className="px-4 lg:px-6 py-2 lg:py-3 text-lg font-semibold rounded-md bg-primary text-primary-foreground relative z-10 mr-3 flex gap-2 items-center"
+                                className="px-3 lg:px-4 py-1 lg:py-2 lg:text-lg font-semibold rounded-md bg-primary text-primary-foreground relative z-10 mr-3 flex gap-2 items-center"
                             >
-                                <DiscordIcon className="text-primary-foreground" />
+                                <DiscordIcon className="text-primary-foreground h-4 w-4 lg:h-6 lg:w-6" />
                                 Add to Discord
                                 <div className="w-full h-full absolute border-[3px] border-primary rounded-md transition-all duration-150 ease-in-out top-2 left-2 hover:top-0 hover:left-0" />
                             </Link>
                             <p className="md:hidden lg:block">
                                 or{' '}
                                 <Link href={'/support'} target="_blank" className="underline text-primary">
-                                    get help using coinz
+                                    get help using Coinz
                                 </Link>
                             </p>
                         </div>
@@ -75,7 +79,9 @@ export default async function Home() {
                 </div>
 
                 <div id="statistics" className="bg-secondary py-8">
-                    <div className="flex flex-wrap gap-8 items-center justify-around container mx-auto px-5">
+                    <div className="grid gap-6 container mx-auto px-5" style={{
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                    }}>
                         <Statistics botStats={botStats} />
                     </div>
                 </div>
@@ -170,8 +176,8 @@ function FeatureCard({
                 <Image
                     src={imageSrcPath}
                     alt="A dotted line to go to the new feature."
-                    width={720}
-                    height={270}
+                    width={800}
+                    height={300}
                     className="absolute left-1/2 bottom-[80%] -translate-x-1/2 hidden lg:block h-[230px] xl:h-[270px]"
                 />
             )}
