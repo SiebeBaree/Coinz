@@ -19,7 +19,7 @@ import {
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import { Session } from 'next-auth';
-import { signIn } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 
 const routes = [
     {
@@ -84,7 +84,7 @@ export default function Sidebar({ session }: { session: Session | null }) {
                 <div className="flex flex-col gap-1">
                     {routes.map((route) => (
                         <Link
-                            href={'/dashboard' + route.href}
+                            href={route.href}
                             key={route.href}
                             className={cn(
                                 'text-sm group flex p-3 w-full justify-start cursor-pointer hover:bg-white/10 rounded-lg transition font-medium',
@@ -113,7 +113,7 @@ export default function Sidebar({ session }: { session: Session | null }) {
                     <>
                         <div className="flex flex-col gap-1 my-3">
                             <Link
-                                href={'/dashboard'}
+                                href={'/profile'}
                                 className={cn(
                                     'text-sm group flex p-3 w-full justify-start cursor-pointer hover:bg-white/10 rounded-lg transition font-medium',
                                     pathname === '/dashboard' ? 'text-accent-foreground bg-white/10' : 'text-muted',
@@ -124,8 +124,8 @@ export default function Sidebar({ session }: { session: Session | null }) {
                             </Link>
                             <p
                                 onClick={() =>
-                                    signIn('discord', {
-                                        callbackUrl: '/profile',
+                                    signOut({
+                                        callbackUrl: '/',
                                     })
                                 }
                                 className={

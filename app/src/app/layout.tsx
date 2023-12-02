@@ -24,7 +24,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     <div
                         className="pb-12"
                         style={{
-                            minHeight: 'calc(100vh - 60px - 100px)',
+                            minHeight: 'calc(100vh - 60px - 281px)',
                         }}
                     >
                         {children}
