@@ -16,7 +16,7 @@ export default function FaqPage() {
                 description="Find quick answers to your questions about Coinz. Your question might already be answered here! If you can't find what you're looking for, contact us. We're here to help!"
             />
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2 sm:gap-3">
                 {faqItems.map((item: FaqItem) => (
                     <FaqCard
                         key={item.title.toLowerCase().replace(' ', '_')}

@@ -63,9 +63,9 @@ export default function StatusClient({
             )}
             {!error && (
                 <div
-                    className="grid gap-4"
+                    className="grid gap-3"
                     style={{
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
                     }}
                 >
                     {status.map((cluster: Cluster) => (
@@ -86,10 +86,10 @@ function ClusterCard({ cluster }: { cluster: Cluster }) {
 
     return (
         <div className="bg-secondary rounded-md p-4">
-            <div className="flex justify-between gap-4 mb-8">
-                <h2 className="text-5xl font-bold">#{cluster.id}</h2>
+            <div className="flex justify-between gap-3 mb-8">
+                <h2 className="text-2xl font-semibold">Cluster {cluster.id}</h2>
 
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-wrap justify-end gap-1">
                     <Badge variant="secondary" className="bg-background">
                         {averagePing}ms Ping
                     </Badge>
@@ -99,7 +99,7 @@ function ClusterCard({ cluster }: { cluster: Cluster }) {
                 </div>
             </div>
 
-            <div className="flex flex-wrap gap-3 justify-center items-center">
+            <div className="flex flex-wrap gap-2 justify-center items-center">
                 {cluster.shards.map((shard: Shard) => (
                     <ShardCard key={`Shard#${shard.id}`} shard={shard} />
                 ))}
@@ -117,7 +117,7 @@ function ShardCard({ shard }: { shard: Shard }) {
                 <TooltipTrigger
                     className={cn(
                         status === 'offline' ? 'bg-red-700' : status === 'slow' ? 'bg-yellow-600' : 'bg-green-600',
-                        'text-2xl font-medium w-16 h-16 flex justify-center items-center rounded-md',
+                        'text-lg font-medium w-12 h-12 flex justify-center items-center rounded-md',
                     )}
                 >
                     #{shard.id}

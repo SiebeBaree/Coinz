@@ -81,8 +81,8 @@ export default function CommandSection() {
     }, []);
 
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex flex-col gap-3">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-3">
                 <div className="flex flex-wrap items-center gap-3">
                     {Object.keys(categories).map((name) => (
                         <CategoryCard
@@ -104,7 +104,7 @@ export default function CommandSection() {
                 />
             </div>
 
-            <div className="flex flex-col gap-4 mb-12">
+            <div className="flex flex-col gap-3 mb-12">
                 {getCommands(commands, category, searchTerm).map((command) => (
                     <CommandCard name={command} command={commands[command]} key={command} />
                 ))}
@@ -130,7 +130,7 @@ function CommandCard({ name, command }: { name: string; command: Command }) {
         <div
             className={cn(
                 isOpen ? 'border-highlight' : 'border-1 border-transparent',
-                'flex items-center gap-6 bg-secondary rounded-md px-5 py-2',
+                'flex items-center gap-4 bg-secondary rounded-md px-3 py-1',
             )}
         >
             <div
@@ -138,9 +138,9 @@ function CommandCard({ name, command }: { name: string; command: Command }) {
                 style={{ transform: `rotate(${isOpen ? '180deg' : '0'})` }}
             >
                 {isOpen ? (
-                    <MinusIcon className="fill-primary h-16 w-16" />
+                    <MinusIcon className="fill-primary h-12 w-12" />
                 ) : (
-                    <PlusIcon className="fill-primary h-16 w-16" />
+                    <PlusIcon className="fill-primary h-12 w-12" />
                 )}
             </div>
             <div className="flex flex-col justify-center flex-grow">
@@ -148,11 +148,11 @@ function CommandCard({ name, command }: { name: string; command: Command }) {
                     onClick={() => setIsOpen(!isOpen)}
                     className={cn(
                         isOpen && 'pb-1',
-                        'flex justify-between items-center gap-3 select-none cursor-pointer transition-transform duration-300 ease-in-out',
+                        'flex justify-between items-center gap-2 select-none cursor-pointer transition-transform duration-300 ease-in-out',
                     )}
                 >
                     <div className="py-2">
-                        <h4 className="font-semibold text-xl sm:text-2xl">/{name}</h4>
+                        <h4 className="font-semibold text-xl">/{name}</h4>
                         <p className="text-sm sm:text-base text-muted">{command.description}</p>
                     </div>
                     <ChevronDownIcon

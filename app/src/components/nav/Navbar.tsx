@@ -16,7 +16,7 @@ export default function Navbar({ session }: { session: Session | null }) {
 
     return (
         <nav className="container flex justify-between items-center p-4 h-[60px] z-50">
-            <div className="flex gap-6 lg:gap-12 items-center">
+            <div className="flex gap-6 lg:gap-10 items-center">
                 <Link
                     href="/"
                     className="font-bold text-2xl"
@@ -27,7 +27,7 @@ export default function Navbar({ session }: { session: Session | null }) {
                     Coinz
                 </Link>
 
-                <div className="hidden md:flex md:gap-4 lg:gap-6">
+                <div className="hidden md:flex md:gap-1">
                     <NavItem name="FAQ" href="/faq" pathname={pathname} />
                     <NavItem name="Commands" href="/commands" pathname={pathname} />
                     <NavItem name="Items" href="/items" pathname={pathname} />
@@ -37,7 +37,7 @@ export default function Navbar({ session }: { session: Session | null }) {
             </div>
 
             <div className="hidden md:block">
-                <div className="flex md:gap-3 lg:gap-6 justify-between items-center">
+                <div className="flex md:gap-3 justify-between items-center">
                     <NavItem name="Premium" href="/premium" pathname={pathname} />
 
                     {session ? (
@@ -54,8 +54,7 @@ export default function Navbar({ session }: { session: Session | null }) {
                     ) : (
                         <Button
                             onClick={() => signIn('discord', { callbackUrl: '/profile' })}
-                            size="sm"
-                            className="px-5"
+                            className="px-5 py-2 h-auto"
                         >
                             Login
                         </Button>
@@ -82,7 +81,7 @@ export function NavItem({ name, href, pathname }: { name: string; href: string; 
     return (
         <Link
             href={href}
-            className={cn(isSelected && 'transition-all duration-200 ease-in-out font-bold text-primary')}
+            className={cn('transition-all duration-200 ease-in-out hover:bg-white/10 px-3 lg:px-5 py-1 rounded-md', isSelected && 'bg-white/10')}
         >
             {name}
         </Link>

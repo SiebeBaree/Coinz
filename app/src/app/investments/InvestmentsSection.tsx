@@ -35,8 +35,8 @@ export default function InvestmentsSection({ data }: { data: Investment[] }) {
     const [searchTerm, setSearchTerm] = useState('');
 
     return (
-        <div className="flex flex-col gap-6 mb-12">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex flex-col gap-3">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-3">
                 <div className="flex flex-wrap items-center gap-3">
                     {Object.keys(categories).map((name) => (
                         <CategoryCard
@@ -59,7 +59,7 @@ export default function InvestmentsSection({ data }: { data: Investment[] }) {
             </div>
 
             <div
-                className="grid gap-4"
+                className="grid gap-3"
                 style={{
                     gridTemplateColumns: 'repeat(auto-fit, minmax(325px, 1fr))',
                 }}

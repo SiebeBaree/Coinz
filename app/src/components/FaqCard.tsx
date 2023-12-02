@@ -19,17 +19,16 @@ export default function FaqCard({ title, description }: { title: string; descrip
         <div
             className={cn(
                 isOpen ? 'border-highlight' : 'border-1 border-transparent',
-                'flex flex-col justify-center bg-secondary rounded-md px-5 py-2',
+                'flex flex-col justify-center bg-secondary rounded-md px-4 py-1',
             )}
         >
             <div
                 onClick={() => setIsOpen(!isOpen)}
-                className={cn(
-                    isOpen && 'pb-1',
-                    'flex justify-between items-center gap-3 select-none cursor-pointer transition-all duration-300 ease-in-out',
-                )}
+                className={
+                    'flex justify-between items-center gap-3 select-none cursor-pointer transition-all duration-300 ease-in-out'
+                }
             >
-                <h4 className="font-semibold sm:font-medium sm:text-xl md:text-2xl">{title}</h4>
+                <h4 className="font-semibold sm:font-medium sm:text-xl">{title}</h4>
                 <ChevronDownIcon
                     className="fill-primary h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 transition-all duration-300 ease-in-out"
                     style={{
@@ -42,7 +41,7 @@ export default function FaqCard({ title, description }: { title: string; descrip
                 ref={contentRef}
                 className={cn(
                     isOpen && 'mb-1',
-                    'max-h-0 overflow-hidden transition-all duration-300 ease-in-out formatted-text',
+                    'max-h-0 overflow-hidden transition-all duration-300 ease-in-out text-sm sm:text-base formatted-text',
                 )}
             >
                 <ReactMarkdown>{description}</ReactMarkdown>
