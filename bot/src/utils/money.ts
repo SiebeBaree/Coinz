@@ -71,12 +71,8 @@ export async function removeBetMoney(
     return bet;
 }
 
-export async function addExperience(userId: string, amount?: number): Promise<number> {
-    if (amount === undefined) {
-        amount = getRandomNumber(1, 4);
-    }
-
-    await Member.updateOne({ id: userId }, { $inc: { experience: amount } }, { upsert: true });
-
-    return amount;
+export async function addExperience(member: IMember, amount?: number): Promise<number> {
+    const xp = amount ?? getRandomNumber(1, 4);
+    await Member.updateOne({ id: member.id }, { $inc: { experience: xp } }, { upsert: true });
+    return xp;
 }
