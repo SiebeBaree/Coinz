@@ -2,8 +2,8 @@
     "coinz_plus": {
         "name": "Coinz Plus",
         "price": {
-            "month": 200,
-            "quarter": 500
+            "monthly": 200,
+            "quarterly": 500
         },
         "logo": "https://cdn.coinzbot.xyz/logo.png",
         "perks": [
@@ -19,8 +19,8 @@
     "coinz_pro": {
         "name": "Coinz Pro",
         "price": {
-            "month": 500,
-            "quarter": 1200
+            "monthly": 500,
+            "quarterly": 1200
         },
         "logo": "https://cdn.coinzbot.xyz/logo.png",
         "perks": [
