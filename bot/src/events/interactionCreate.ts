@@ -14,20 +14,21 @@ export default {
             if (!interaction.guild || !interaction.guild.available || interaction.user.bot) return;
 
             const command = client.commands.get(interaction.commandName);
-
             if (!command || command.data.enabled === false) {
                 throw new Error(`Command '${interaction.commandName}' not found.`);
             }
 
-            const cooldown = await client.cooldown.getCooldown(interaction.user.id, command.data.name);
-            if (cooldown) {
-                await interaction.reply({
-                    content: `Please wait ${msToTime(
-                        Math.abs(Number.parseInt(cooldown, 10) - Math.floor(Date.now() / 1_000)) * 1_000,
-                    )} seconds before using this command again.`,
-                    ephemeral: true,
-                });
-                return;
+            if (process.env.NODE_ENV === 'production') {
+                const cooldown = await client.cooldown.getCooldown(interaction.user.id, command.data.name);
+                if (cooldown) {
+                    await interaction.reply({
+                        content: `Please wait ${msToTime(
+                            Math.abs(Number.parseInt(cooldown, 10) - Math.floor(Date.now() / 1_000)) * 1_000,
+                        )} seconds before using this command again.`,
+                        ephemeral: true,
+                    });
+                    return;
+                }
             }
 
             if (command.data.deferReply === true) {
