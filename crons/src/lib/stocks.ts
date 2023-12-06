@@ -1,4 +1,4 @@
-import investments from "../lib/data/investments.json";
+import investments from "./data/investments.json";
 import moment from "moment-timezone";
 
 const timezone = "America/New_York";

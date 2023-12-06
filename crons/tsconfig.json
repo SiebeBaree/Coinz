@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2016",
     "module": "CommonJS",
-    "outDir": "dist",
+    "outDir": "../api/dist",
     "rootDir": "./src",
     "resolveJsonModule": true,
     "esModuleInterop": true,
@@ -13,7 +13,7 @@
     "sourceMap": true
   },
   "exclude": [
-    "node_modules",
+    "../api/node_modules",
     "dist"
   ]
 }
