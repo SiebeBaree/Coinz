@@ -6,10 +6,21 @@ import { cn } from '@/lib/utils';
 import { Session } from 'next-auth';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Sidebar from '@/components/nav/Sidebar';
-import { Menu } from 'lucide-react';
+import { LucideIcon, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { signIn } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Cloud, CreditCard, LifeBuoy, LogOut, Plus, User } from 'lucide-react';
 
 export default function Navbar({ session }: { session: Session | null }) {
     const pathname = usePathname();
@@ -41,16 +52,52 @@ export default function Navbar({ session }: { session: Session | null }) {
                     <NavItem name="Premium" href="/premium" pathname={pathname} />
 
                     {session ? (
-                        <div className="flex gap-2 items-center bg-secondary py-2 px-3 rounded-md select-none">
-                            <Image
-                                src={session?.user?.image || 'https://cdn.discordapp.com/embed/avatars/3.png'}
-                                alt="Profile picture"
-                                width={28}
-                                height={28}
-                                className="rounded-full"
-                            />
-                            <p className="font-medium">{session?.user?.name}</p>
-                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
+                                <div className="flex gap-2 items-center bg-secondary py-2 px-3 rounded-md select-none">
+                                    <Image
+                                        src={session?.user?.image || 'https://cdn.discordapp.com/embed/avatars/3.png'}
+                                        alt="Profile picture"
+                                        width={28}
+                                        height={28}
+                                        className="rounded-full"
+                                    />
+                                    <p className="font-medium">{session?.user?.name}</p>
+                                </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-48 mr-4">
+                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                    <DropdownItem name="Profile" href="/profile" Icon={User} />
+                                    <DropdownItem name="Billing" href="/billing" Icon={CreditCard} />
+                                </DropdownMenuGroup>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                    <DropdownItem name="Invite Coinz" href="/invite" Icon={Plus} />
+                                    <DropdownItem name="Support" href="/support" Icon={LifeBuoy} />
+                                    <DropdownItem
+                                        name="Statistics"
+                                        href="/"
+                                        Icon={Cloud}
+                                        shortcut="SOON"
+                                        disabled={true}
+                                    />
+                                </DropdownMenuGroup>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                    className="cursor-pointer transition-all duration-200 ease-in-out hover:bg-white/10"
+                                    onClick={() =>
+                                        signOut({
+                                            callbackUrl: '/',
+                                        })
+                                    }
+                                >
+                                    <LogOut className="mr-2 h-4 w-4" />
+                                    <span>Log out</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     ) : (
                         <Button
                             onClick={() => signIn('discord', { callbackUrl: '/profile' })}
@@ -76,14 +123,44 @@ export default function Navbar({ session }: { session: Session | null }) {
     );
 }
 
-export function NavItem({ name, href, pathname }: { name: string; href: string; pathname?: string }) {
+function NavItem({ name, href, pathname }: { name: string; href: string; pathname?: string }) {
     const isSelected = pathname ? pathname === href : false;
     return (
         <Link
             href={href}
-            className={cn('transition-all duration-200 ease-in-out hover:bg-white/10 px-3 lg:px-5 py-1 rounded-md', isSelected && 'bg-white/10')}
+            className={cn(
+                'transition-all duration-200 ease-in-out hover:bg-white/10 px-3 lg:px-5 py-1 rounded-md',
+                isSelected && 'bg-white/10',
+            )}
         >
             {name}
+        </Link>
+    );
+}
+
+function DropdownItem({
+    name,
+    href,
+    disabled = false,
+    Icon,
+    shortcut,
+}: {
+    name: string;
+    href: string;
+    disabled?: boolean;
+    Icon?: LucideIcon;
+    shortcut?: string;
+}) {
+    return (
+        <Link href={href}>
+            <DropdownMenuItem
+                disabled={disabled}
+                className="cursor-pointer transition-all duration-200 ease-in-out hover:bg-white/10"
+            >
+                {Icon && <Icon className="mr-2 h-4 w-4" />}
+                <span>{name}</span>
+                {shortcut && <DropdownMenuShortcut>{shortcut}</DropdownMenuShortcut>}
+            </DropdownMenuItem>
         </Link>
     );
 }

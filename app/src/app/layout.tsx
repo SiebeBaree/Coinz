@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import React from 'react';
 import Navbar from '@/components/nav/Navbar';
-import AuthProvider from '@/components/AuthProvider';
+import GlobalProviders from '@/components/GlobalProviders';
 import Footer from '@/components/Footer';
 import { getServerAuthSession } from '@/server/auth';
 
@@ -19,7 +19,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     return (
         <html lang="en">
             <body className={inter.className}>
-                <AuthProvider>
+                <GlobalProviders>
                     <Navbar session={session} />
                     <div
                         className="pb-12"
@@ -30,7 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                         {children}
                     </div>
                     <Footer />
-                </AuthProvider>
+                </GlobalProviders>
             </body>
         </html>
     );
