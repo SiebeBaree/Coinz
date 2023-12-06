@@ -1,54 +1,43 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Cluster, Shard } from '@/lib/interfaces';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
 
 export default function StatusClient({
-    clusters,
+    initialData,
+    initialDataUpdatedAt,
     statusUrl,
-    updateInterval,
+    interval,
 }: {
-    clusters: Cluster[];
+    initialData: Cluster[];
+    initialDataUpdatedAt: number;
     statusUrl: string;
-    updateInterval: number;
+    interval: number;
 }) {
-    const [status, setStatus] = useState(clusters);
-    const [tries, setTries] = useState(0);
-    const [error, setError] = useState(clusters.length === 0);
-
-    const updateData = setTimeout(async () => {
-        const response = await fetch(statusUrl);
-        if (!response.ok) {
-            setError(true);
-            return;
+    async function fetchStatus() {
+        const res = await fetch(statusUrl);
+        if (!res.ok) {
+            throw new Error('Could not fetch status');
         }
 
-        const data = await response.json();
-        if (data.length === 0) {
-            setError(true);
-            return;
-        }
+        return res.json();
+    }
 
-        setStatus(data);
-    }, updateInterval * 1000);
-
-    useEffect(() => {
-        if (error) {
-            if (tries < 5) {
-                setTries((prev) => prev + 1);
-            } else {
-                clearTimeout(updateData);
-            }
-        }
-    }, [error, tries]);
+    const clusters = useQuery({
+        queryKey: ['status'],
+        queryFn: fetchStatus,
+        initialData: initialData,
+        initialDataUpdatedAt: initialDataUpdatedAt,
+        refetchInterval: interval * 1000,
+    });
 
     return (
         <div>
-            {error && (
+            {clusters.error ? (
                 <div className="text-center my-24">
                     <h2 className="text-xl font-semibold">
                         Could not retrieve the status of Coinz, please refresh this page to try again.
@@ -60,15 +49,14 @@ export default function StatusClient({
                         </Link>
                     </h3>
                 </div>
-            )}
-            {!error && (
+            ) : (
                 <div
                     className="grid gap-3"
                     style={{
                         gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
                     }}
                 >
-                    {status.map((cluster: Cluster) => (
+                    {clusters.data.map((cluster: Cluster) => (
                         <ClusterCard key={`Cluster#${cluster.id}`} cluster={cluster} />
                     ))}
                 </div>

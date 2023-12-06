@@ -2,10 +2,13 @@ import StatusClient from '@/app/status/StatusClient';
 import { Cluster } from '@/lib/interfaces';
 import PageTitle from '@/components/PageTitle';
 
+const STATUS_URL = 'https://api.coinzbot.xyz/status';
+
 export default async function StatusPage() {
     const UPDATE_INTERVAL = 30;
-    const response = await fetch('https://api.coinzbot.xyz/status', {
-        next: { revalidate: 30 },
+    const initialDataUpdatedAt = Date.now();
+    const response = await fetch(STATUS_URL, {
+        next: { revalidate: UPDATE_INTERVAL },
     });
     const clusters = (await response.json()) as Cluster[];
 
@@ -15,7 +18,12 @@ export default async function StatusPage() {
                 title="Status"
                 description={`Here, you'll find all the information you need to stay up to date with the status of our bot. This page is updated every ${UPDATE_INTERVAL} seconds.`}
             />
-            <StatusClient clusters={clusters} statusUrl={''} updateInterval={UPDATE_INTERVAL} />
+            <StatusClient
+                initialData={clusters}
+                initialDataUpdatedAt={initialDataUpdatedAt}
+                statusUrl={STATUS_URL}
+                interval={UPDATE_INTERVAL}
+            />
         </main>
     );
 }
