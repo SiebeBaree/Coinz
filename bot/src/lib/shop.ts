@@ -1,10 +1,10 @@
-import process from 'node:process';
 import type { SelectMenuComponentOptionData } from 'discord.js';
 import { Collection } from 'discord.js';
+import ItemModel, { type Item } from '../models/item';
 import type { IMember } from '../models/member';
 import Member from '../models/member';
 import logger from '../utils/logger';
-import type { InventoryItem, Item } from './types';
+import type { InventoryItem } from './types';
 
 export default class Shop {
     private readonly _items: Collection<string, Item>;
@@ -14,13 +14,10 @@ export default class Shop {
     }
 
     public async fetchItems(): Promise<void> {
-        try {
-            const items = await fetch(`${process.env.API_URL}/items`).then(async (res) => res.json());
-            for (const item of items) {
-                this._items.set(item.itemId, item);
-            }
-        } catch {
-            logger.error('Failed to fetch items from the API.');
+        const items = await ItemModel.find({});
+
+        for (const item of items) {
+            this._items.set(item.itemId, item);
         }
     }
 
