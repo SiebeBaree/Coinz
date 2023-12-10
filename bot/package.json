@@ -10,7 +10,8 @@
         "lint": "prettier --check . && eslint --ext .ts --format stylish src",
         "format": "prettier --write . && eslint --ext .ts --fix --format stylish src",
         "register-commands": "pnpm run build && node --env-file .env ./dist/register.js",
-        "item-balancer": "concurrently \"tsc --watch\" \"nodemon ./dist/item-balancer.js\""
+        "script:balance-items": "concurrently \"tsc --watch\" \"nodemon ./dist/item-balancer.js\"",
+        "script:add-items": "pnpm run build && node --env-file .env ./dist/itemUploader.js"
     },
     "repository": {
         "type": "git",
