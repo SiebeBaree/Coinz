@@ -106,3 +106,17 @@ model BotStats {
   investments Int
   updatedAt   DateTime @updatedAt
 }
+
+model Item {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  itemId          String  @unique
+  category        String
+  name            String
+  emoteId         String
+  description     String
+  longDescription String?
+  buyPrice        Int?
+  sellPrice       Int?
+  multiplier      Int?
+  duration        Int?
+}
