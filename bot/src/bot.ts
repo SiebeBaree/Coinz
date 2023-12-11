@@ -32,10 +32,15 @@ import logger from './utils/logger';
     await bot.login(process.env.DISCORD_TOKEN!);
 })();
 
+const ignoredErrors = ["DiscordAPIError[10008]"];
 process.on('uncaughtException', (err: Error) => {
-    logger.error(err.stack);
+    if (!ignoredErrors.includes(`${err.name}`)) {
+        logger.error(err.stack);
+    }
 });
 
 process.on('unhandledRejection', (err: Error) => {
-    logger.error(err.stack);
+    if (!ignoredErrors.includes(`${err.name}`)) {
+        logger.error(err.stack);
+    }
 });
