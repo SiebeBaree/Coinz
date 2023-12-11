@@ -4,6 +4,7 @@ import type Bot from '../../domain/Bot';
 import type { Command } from '../../domain/Command';
 import { getMember } from '../../lib/database';
 import type { InventoryItem } from '../../lib/types';
+import { filter } from '../../utils';
 import { calculatePageNumber, getPageButtons, getSelectMenu } from '../../utils/embed';
 
 function getEmbed(
@@ -83,7 +84,7 @@ export default {
         });
 
         const collector = message.createMessageComponentCollector({
-            filter: (i) => i.user.id === interaction.user.id,
+            filter: (i) => filter(interaction, i),
             max: 20,
             idle: 20_000,
             time: 90_000,
