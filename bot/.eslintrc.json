@@ -11,6 +11,7 @@
         "typescript-sort-keys/interface": "off",
         "object-shorthand": "off",
         "@typescript-eslint/lines-between-class-members": "off",
-        "id-length": "off"
+        "id-length": "off",
+        "unicorn/consistent-function-scoping": "off"
     }
 }
