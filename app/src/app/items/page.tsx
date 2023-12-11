@@ -1,12 +1,11 @@
 import ItemsSection from '@/app/items/ItemsSection';
 import PageTitle from '@/components/PageTitle';
+import { db } from '@/server/db';
 
-export const dynamic = 'force-static';
-export const revalidate = 'force-cache';
+export const revalidate = '900';
 
 export default async function ItemsPage() {
-    const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL! + '/api/items');
-    const items = await response.json();
+    const items = await db.item.findMany({});
 
     return (
         <main className="container mx-auto px-5">

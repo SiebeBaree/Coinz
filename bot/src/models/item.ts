@@ -24,6 +24,8 @@ export const itemSchema = new Schema<Item>({
     sellPrice: { type: Number, required: false },
     multiplier: { type: Number, required: false },
     duration: { type: Number, required: false },
+}, {
+    collection: 'Item'
 });
 
 export default model<Item>('Item', itemSchema);

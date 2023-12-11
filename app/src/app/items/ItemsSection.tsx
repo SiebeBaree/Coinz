@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import CategoryCard from '@/components/CategoryCard';
-import { Item } from '@/lib/interfaces';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import Fuse from 'fuse.js';
 import Search from '@/components/Search';
+import { Item } from '@prisma/client';
 
 const categories: { [key: string]: string } = {
     all: 'All Items',
@@ -199,7 +199,7 @@ function ItemCard({ item, isSelected, setItem }: { item: Item; isSelected?: bool
                 priority={false}
                 loading="lazy"
                 quality={90}
-                onLoadingComplete={() => setIsLoaded(true)}
+                onLoad={() => setIsLoaded(true)}
                 className="w-10 h-10 md:w-[52px] md:h-[52px] transition-all duration-300 ease-in-out"
             />
         </div>
