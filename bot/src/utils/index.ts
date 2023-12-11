@@ -1,4 +1,13 @@
 import { setTimeout } from 'node:timers';
+import type {
+    ButtonInteraction,
+    ChannelSelectMenuInteraction,
+    ChatInputCommandInteraction,
+    MentionableSelectMenuInteraction,
+    RoleSelectMenuInteraction,
+    StringSelectMenuInteraction,
+    UserSelectMenuInteraction,
+} from 'discord.js';
 
 const FORMATTER = new Intl.NumberFormat('en-US', { notation: 'compact' });
 
@@ -99,4 +108,16 @@ export function getLevel(experience: number): number {
 
 export function getExperience(level: number): number {
     return level * 100;
+}
+
+type CollectorInteraction =
+    | ButtonInteraction
+    | ChannelSelectMenuInteraction
+    | MentionableSelectMenuInteraction
+    | RoleSelectMenuInteraction
+    | StringSelectMenuInteraction
+    | UserSelectMenuInteraction;
+
+export function filter(interaction: ChatInputCommandInteraction, collectorInteraction: CollectorInteraction) {
+    return collectorInteraction.user.id === interaction.user.id;
 }
