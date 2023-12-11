@@ -9,9 +9,7 @@ const queryClient = new QueryClient();
 export default function GlobalProviders({ children }: { children: React.ReactNode }) {
     return (
         <SessionProvider>
-            <QueryClientProvider client={queryClient}>
-                {children}
-            </QueryClientProvider>
+            <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
         </SessionProvider>
     );
 }

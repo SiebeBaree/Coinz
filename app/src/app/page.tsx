@@ -79,9 +79,12 @@ export default async function Home() {
                 </div>
 
                 <div id="statistics" className="bg-secondary py-8">
-                    <div className="grid gap-6 container mx-auto px-5" style={{
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                    }}>
+                    <div
+                        className="grid gap-6 container mx-auto px-5"
+                        style={{
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                        }}
+                    >
                         <Statistics botStats={botStats} />
                     </div>
                 </div>
