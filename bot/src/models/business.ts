@@ -10,7 +10,7 @@ export type IFactory = {
 };
 
 export type IBusiness = {
-    userId: string;
+    id: string;
     name: string;
     employees: number;
     inventory: InventoryItem[];
@@ -31,7 +31,7 @@ const Factory = new Schema<IFactory>({
 });
 
 export const businessSchema = new Schema<IBusiness>({
-    userId: { type: String, required: true, unique: true, index: true },
+    id: { type: String, required: true, unique: true, index: true },
     name: { type: String, required: true, unique: true, index: true },
     employees: { type: Number, default: 0 },
     inventory: [{ type: Item, default: [] }],
