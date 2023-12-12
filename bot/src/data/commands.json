@@ -1,0 +1,86 @@
+{
+    "business": {
+        "description": "Start your own business and earn the big bucks!",
+        "category": "business",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "balance": {
+        "description": "Get your balance or the balance of another user.",
+        "category": "general",
+        "cooldown": 0,
+        "usage": ["/balance [user]"],
+        "premium": 0
+    },
+    "beg": {
+        "description": "Do you really need to beg for money?",
+        "category": "general",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "deposit": {
+        "description": "Deposit money from your wallet to your bank account.",
+        "category": "general",
+        "cooldown": 0,
+        "usage": ["/deposit <amount>"],
+        "premium": 0
+    },
+    "inventory": {
+        "description": "View your or another user's inventory.",
+        "category": "general",
+        "cooldown": 0,
+        "usage": ["/inventory [user]"],
+        "premium": 0
+    },
+    "shop": {
+        "description": "Buy, sell or view items in the shop.",
+        "category": "general",
+        "cooldown": 0,
+        "usage": ["/shop info [item]", "/shop buy <item-id> [amount]", "/shop sell <item-id> [amount]"],
+        "premium": 0
+    },
+    "withdraw": {
+        "description": "Withdraw money from your bank to your wallet.",
+        "category": "general",
+        "cooldown": 0,
+        "usage": ["/withdraw <amount>"],
+        "premium": 0
+    },
+    "achievement": {
+        "description": "Get a list of all achievements or refresh your achievements.",
+        "category": "misc",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "info": {
+        "description": "Get some information about Coinz.",
+        "category": "misc",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "invite": {
+        "description": "Get a invite to invite the bot and to join our support server.",
+        "category": "misc",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    },
+    "reset": {
+        "description": "Reset your progress in every server.",
+        "category": "misc",
+        "cooldown": 86400,
+        "usage": [],
+        "premium": 0
+    },
+    "vote": {
+        "description": "Get all the links to the voting sites for rewards.",
+        "category": "misc",
+        "cooldown": 0,
+        "usage": [],
+        "premium": 0
+    }
+}
