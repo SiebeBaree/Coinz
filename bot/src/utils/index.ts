@@ -8,8 +8,14 @@ import type {
     StringSelectMenuInteraction,
     UserSelectMenuInteraction,
 } from 'discord.js';
+import countriesData from '../data/countries.json';
 
+const countries = new Map<string, string>(Object.entries(countriesData));
 const FORMATTER = new Intl.NumberFormat('en-US', { notation: 'compact' });
+
+export function feetToMeters(feet: number): number {
+    return Math.round(feet / 3.280_84);
+}
 
 export function getRandomNumber(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -120,4 +126,20 @@ type CollectorInteraction =
 
 export function filter(interaction: ChatInputCommandInteraction, collectorInteraction: CollectorInteraction) {
     return collectorInteraction.user.id === interaction.user.id;
+}
+
+export function isValidCountryCode(code: string): boolean {
+    return countries.has(code.toUpperCase());
+}
+
+export function getCountryEmote(code: string): string {
+    if (!isValidCountryCode(code)) return '';
+    return `:flag_${code.toLowerCase()}:`;
+}
+
+export function getCountryName(code: string): string {
+    if (!isValidCountryCode(code)) return '';
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    return countries.get(code.toUpperCase());
 }
