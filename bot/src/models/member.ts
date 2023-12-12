@@ -45,7 +45,7 @@ export type IMember = {
     profileColor: string;
     displayedBadge: string;
     birthday: Date;
-    bio: string;
+    country: string;
     badges: string[];
     tree: ITree;
 };
@@ -100,7 +100,7 @@ export const member = new Schema<IMember>(
         profileColor: { type: String, default: '' },
         displayedBadge: { type: String, default: '' },
         birthday: { type: Date, default: new Date(0) },
-        bio: { type: String, default: '', minlength: 0, maxlength: 100 },
+        country: { type: String, default: '' },
         badges: [{ type: String, default: [] }],
         tree: { type: Tree, default: {} },
     },
