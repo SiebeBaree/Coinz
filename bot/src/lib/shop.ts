@@ -33,8 +33,8 @@ export default class Shop {
         return Array.from(this._items.values()).find((a) => a.name.toLowerCase() === name.toLowerCase()) ?? null;
     }
 
-    public getAllByCategory(category: string): Item[] {
-        if (category === 'all') return Array.from(this._items.values());
+    public getAllByCategory(category?: string): Item[] {
+        if (category === undefined || category === 'all') return Array.from(this._items.values());
         return Array.from(this._items.values()).filter((a) => a.category === category);
     }
 
