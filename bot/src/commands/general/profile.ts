@@ -81,14 +81,19 @@ export default {
         const displayedBadge = client.achievement.getById(memberData.displayedBadge);
         const level = getLevel(memberData.experience);
         const xpUntilNextLevel = getExperience(level + 1) - memberData.experience;
-        const workJob = member.job === "" ? "Unemployed" : member.job;
+        const workJob = member.job === '' ? 'Unemployed' : member.job;
 
         const business = await Business.findOne({ id: memberData.id });
-        const businessJob = business ? business.name : "None";
+        const businessJob = business ? business.name : 'None';
 
-        let description = "";
-        description += member.birthday.getTime() > 0 ? `**Age:** ${getAge(member.birthday)} years old (Born on <t:${member.birthday.getTime() / 1_000}:D>)` : "";
-        description += member.country ? `\n**Country:** ${getCountryName(member.country)} ${getCountryEmote(member.country)}` : "";
+        let description = '';
+        description +=
+            member.birthday.getTime() > 0
+                ? `**Age:** ${getAge(member.birthday)} years old (Born on <t:${member.birthday.getTime() / 1_000}:D>)`
+                : '';
+        description += member.country
+            ? `\n**Country:** ${getCountryName(member.country)} ${getCountryEmote(member.country)}`
+            : '';
 
         const embed = new EmbedBuilder()
             .setTitle(
@@ -141,16 +146,14 @@ export default {
                     value: `${
                         member.badges.length <= 0
                             ? 'None'
-                            : member.badges
-                                  .map((id) => `<:${id}:${client.achievement.getById(id)?.emoji}>`)
-                                  .join(' ')
+                            : member.badges.map((id) => `<:${id}:${client.achievement.getById(id)?.emoji}>`).join(' ')
                     }`,
                     inline: false,
                 },
             ]);
         await interaction.editReply({ embeds: [embed] });
 
-        if (user.id === interaction.user.id && (memberData.country === "" || memberData.birthday.getTime() === 0)) {
+        if (user.id === interaction.user.id && (memberData.country === '' || memberData.birthday.getTime() === 0)) {
             await interaction.followUp({
                 content: `Hey <@${interaction.user.id}>, you don't have a country or birthday set! Please set these using the \`/settings profile\` command.`,
                 ephemeral: true,

@@ -150,9 +150,13 @@ async function getBuy(client: Bot, interaction: ChatInputCommandInteraction, mem
     });
     await removeMoney(member.id, totalPrice);
     await client.items.addItem(item.itemId, member, amount);
-    await UserStats.updateOne({ id: member.id }, {
-        $inc: { itemsBought: amount },
-    }, { upsert: true });
+    await UserStats.updateOne(
+        { id: member.id },
+        {
+            $inc: { itemsBought: amount },
+        },
+        { upsert: true },
+    );
 }
 
 async function getSell(client: Bot, interaction: ChatInputCommandInteraction, member: IMember) {
@@ -191,9 +195,13 @@ async function getSell(client: Bot, interaction: ChatInputCommandInteraction, me
     });
     await client.items.removeItem(item.itemId, member, amount);
     await addMoney(member.id, totalPrice);
-    await UserStats.updateOne({ id: member.id }, {
-        $inc: { itemsSold: amount },
-    }, { upsert: true });
+    await UserStats.updateOne(
+        { id: member.id },
+        {
+            $inc: { itemsSold: amount },
+        },
+        { upsert: true },
+    );
 }
 
 export default {
