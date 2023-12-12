@@ -58,7 +58,7 @@ export function calculatePageNumber(customId: string, page: number, maxPage: num
 export function getSelectMenu(
     options: SelectMenuComponentOptionData[],
     customId: string,
-    selected: string,
+    selected?: string,
     disabled = false,
 ): ActionRowBuilder<StringSelectMenuBuilder>[] {
     for (const option of options) {

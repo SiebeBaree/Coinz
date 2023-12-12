@@ -35,8 +35,8 @@ function getEmbed(
         .setColor(client.config.embed.color as ColorResolvable);
 }
 
-function getItemsByCategory(client: Bot, inventory: InventoryItem[], category: string) {
-    if (category === 'all') return inventory;
+function getItemsByCategory(client: Bot, inventory: InventoryItem[], category?: string) {
+    if (category === undefined || category === 'all') return inventory;
     return inventory.filter((item) => client.items.getById(item.itemId)?.category === category);
 }
 
@@ -70,7 +70,7 @@ export default {
 
         const options = client.items.getCategories();
         const ItemsPerPage = 7;
-        let defaultLabel = options[options.length - 1]?.value ?? 'all';
+        let defaultLabel = options[options.length - 1]?.value;
         let items = getItemsByCategory(client, memberData.inventory, defaultLabel);
         let page = 0;
         let maxPage = Math.ceil(items.length / ItemsPerPage);
@@ -94,7 +94,7 @@ export default {
             if (i.componentType === ComponentType.Button) {
                 page = calculatePageNumber(i.customId, page, maxPage);
             } else if (i.componentType === ComponentType.StringSelect) {
-                defaultLabel = i.values[0] ?? 'all';
+                defaultLabel = i.values[0];
                 items = getItemsByCategory(client, memberData.inventory, defaultLabel);
                 page = 0;
                 maxPage = Math.ceil(items.length / ItemsPerPage);
