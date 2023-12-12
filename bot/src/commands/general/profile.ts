@@ -6,7 +6,7 @@ import { getMember } from '../../lib/database';
 import type { InventoryItem } from '../../lib/types';
 import Business from '../../models/business';
 import type { IMember } from '../../models/member';
-import { feetToMeters, formatNumber, getExperience, getLevel } from '../../utils';
+import { feetToMeters, formatNumber, getCountryEmote, getCountryName, getExperience, getLevel } from '../../utils';
 
 function createProgressBar(xp: number): string {
     return `TODO-${xp}`;
@@ -87,8 +87,8 @@ export default {
         const businessJob = business ? business.name : "None";
 
         let description = "";
-        description += member.birthday.getTime() > 0 ? `**Age:** ${getAge(member.birthday)} years old (Born <t:${member.birthday.getTime() / 1_000}:R>)` : "";
-        description += member.country ? `\n**Country:** ${member.country}` : "";
+        description += member.birthday.getTime() > 0 ? `**Age:** ${getAge(member.birthday)} years old (Born on <t:${member.birthday.getTime() / 1_000}:D>)` : "";
+        description += member.country ? `\n**Country:** ${getCountryName(member.country)} ${getCountryEmote(member.country)}` : "";
 
         const embed = new EmbedBuilder()
             .setTitle(
@@ -149,5 +149,12 @@ export default {
                 },
             ]);
         await interaction.editReply({ embeds: [embed] });
+
+        if (user.id === interaction.user.id && (memberData.country === "" || memberData.birthday.getTime() === 0)) {
+            await interaction.followUp({
+                content: `Hey <@${interaction.user.id}>, you don't have a country or birthday set! Please set these using the \`/settings profile\` command.`,
+                ephemeral: true,
+            });
+        }
     },
 } satisfies Command;
