@@ -148,6 +148,7 @@ export default {
                 ],
             },
         ],
+        usage: ['list', 'refresh', 'display <achievement>'],
     },
     async execute(client, interaction, member) {
         switch (interaction.options.getSubcommand()) {

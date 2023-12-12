@@ -35,10 +35,8 @@ export async function removeBetMoney(
     member: IMember,
     removeMoneyFromPlayer = true,
     minBet = 50,
-    maxBet = -1,
+    maxBet = 10_000,
 ): Promise<number | string> {
-    if (maxBet < 0) maxBet = 10_000;
-
     let bet = 0;
     if (['all', 'max'].includes(formattedBet.toLowerCase())) {
         if (member.wallet < minBet) return "You don't have any money in your wallet.";
@@ -46,7 +44,7 @@ export async function removeBetMoney(
     } else {
         bet = parseStrToNum(formattedBet);
 
-        if (isNaN(bet)) return "That's not a valid number.";
+        if (Number.isNaN(bet)) return "That's not a valid number.";
         if (bet < minBet) return `You need to bet at least :coin: ${formatNumber(minBet)}.`;
         if (bet > maxBet) return `You can't bet more than :coin: ${formatNumber(maxBet)}.`;
         if (bet > member.wallet) return "You don't have that much money in your wallet.";

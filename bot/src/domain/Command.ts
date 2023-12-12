@@ -4,6 +4,7 @@ import type { StructurePredicate } from '../utils/loaders';
 import type Bot from './Bot';
 
 type CommandData = RESTPostAPIApplicationCommandsJSONBody & {
+    description: string;
     category: string;
     enabled?: boolean;
     deferReply?: boolean;
