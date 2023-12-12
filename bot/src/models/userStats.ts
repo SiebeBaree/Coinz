@@ -4,6 +4,8 @@ export type IUserStats = {
     id: string;
     totalEarned: number;
     totalSpend: number;
+    itemsBought: number;
+    itemsSold: number;
     games: {
         won: number;
         lost: number;
@@ -40,6 +42,8 @@ export const userStatsSchema = new Schema<IUserStats>(
         id: { type: String, required: true, unique: true, index: true },
         totalEarned: { type: Number, default: 0 },
         totalSpend: { type: Number, default: 0 },
+        itemsBought: { type: Number, default: 0 },
+        itemsSold: { type: Number, default: 0 },
         games: {
             won: { type: Number, default: 0 },
             lost: { type: Number, default: 0 },

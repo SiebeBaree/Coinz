@@ -4,6 +4,7 @@ import type Bot from '../../domain/Bot';
 import type { Command } from '../../domain/Command';
 import type { Item } from '../../models/item';
 import type { IMember } from '../../models/member';
+import UserStats from '../../models/userStats';
 import { calculatePageNumber, getPageButtons, getSelectMenu } from '../../utils/embed';
 import { addMoney, removeMoney } from '../../utils/money';
 
@@ -149,6 +150,9 @@ async function getBuy(client: Bot, interaction: ChatInputCommandInteraction, mem
     });
     await removeMoney(member.id, totalPrice);
     await client.items.addItem(item.itemId, member, amount);
+    await UserStats.updateOne({ id: member.id }, {
+        $inc: { itemsBought: amount },
+    }, { upsert: true });
 }
 
 async function getSell(client: Bot, interaction: ChatInputCommandInteraction, member: IMember) {
@@ -187,6 +191,9 @@ async function getSell(client: Bot, interaction: ChatInputCommandInteraction, me
     });
     await client.items.removeItem(item.itemId, member, amount);
     await addMoney(member.id, totalPrice);
+    await UserStats.updateOne({ id: member.id }, {
+        $inc: { itemsSold: amount },
+    }, { upsert: true });
 }
 
 export default {
