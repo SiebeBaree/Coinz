@@ -11,7 +11,8 @@
         "format": "prettier --write . && eslint --ext .ts --fix --format stylish src",
         "register-commands": "pnpm run build && node --env-file .env ./dist/register.js",
         "script:balance-items": "concurrently \"tsc --watch\" \"nodemon ./dist/item-balancer.js\"",
-        "script:add-items": "pnpm run build && node --env-file .env ./dist/itemUploader.js"
+        "script:add-items": "pnpm run build && node --env-file .env ./dist/itemUploader.js",
+        "script:convert-commands": "pnpm run build && node ./dist/commandsConverter.js"
     },
     "repository": {
         "type": "git",
