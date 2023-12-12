@@ -22,16 +22,16 @@ function getEmbed(
         const item = client.items.getById(invItem.itemId);
         if (!item) continue;
         descItems.push(
-            `<:${invItem.itemId}:${item.emoteId}> **${item.name}** ― ${invItem.amount}\n**ID:** \`${invItem.itemId}\``,
+            `<:${invItem.itemId}:${item.emoteId}> **${item.name}** (\`${invItem.itemId}\`) ― ${invItem.amount}`,
         );
     }
 
-    const desc = descItems.join('\n\n');
+    const desc = descItems.join('\n');
 
     return new EmbedBuilder()
         .setAuthor({ name: `${user.username}'s inventory`, iconURL: user.displayAvatarURL() })
         .setDescription(itemsOnPage.length > 0 ? desc : 'No items were found.')
-        .setFooter({ text: `Use /shop info [item-id] to view more info about an item. ─ Page ${page + 1}/${maxPage}` })
+        .setFooter({ text: `Use /shop info [item] to view more info about an item. ─ Page ${page + 1}/${maxPage}` })
         .setColor(client.config.embed.color as ColorResolvable);
 }
 
@@ -69,7 +69,7 @@ export default {
         }
 
         const options = client.items.getCategories();
-        const ItemsPerPage = 7;
+        const ItemsPerPage = 15;
         let defaultLabel = options[options.length - 1]?.value;
         let items = getItemsByCategory(client, memberData.inventory, defaultLabel);
         let page = 0;
