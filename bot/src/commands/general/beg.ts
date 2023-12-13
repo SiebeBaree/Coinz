@@ -8,6 +8,7 @@ export default {
         name: 'beg',
         description: 'Do you really need to beg for money?',
         category: 'general',
+        cooldown: 600,
     },
     async execute(_, interaction, member) {
         if (getLevel(member.experience) > 20) {
