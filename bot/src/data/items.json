@@ -243,6 +243,15 @@
         "sellPrice": 280
     },
     {
+        "itemId": "fertilizer",
+        "category": "tools",
+        "name": "Fertilizer",
+        "emoteId": "1184390232121028688",
+        "description": "Increase soil quality to 100%.",
+        "buyPrice": 90,
+        "sellPrice": 20
+    },
+    {
         "itemId": "wood",
         "category": "other",
         "name": "Wood",
