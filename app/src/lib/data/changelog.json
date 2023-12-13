@@ -1,12 +1,12 @@
 [
     {
         "version": "4.0.0",
-        "name": "Big Small Update",
-        "timestamp": 1697961600,
+        "name": "Premium & Quality of Life Update",
+        "timestamp": 1707382800,
         "content": [
             "#### Added",
             "- 4 new crops to use in `/farm`: *Chili Pepper*, *Blueberry*, *Raspberry* & *Beetroot*.",
-            "- Added a *Chainsaw* to cut down trees instantly (*Axe* takes 1 hour).",
+            "- Added new items in the shop: *Chainsaw*, *Fertilizer*",
             "- Added 13 new crypto currencies to invest in.",
             "- Added new [**investments page**](https://coinzbot.xyz/investments) to the website.",
             "- Added the premium subscriptions back in Coinz, click [**here**](https://coinzbot.xyz/premium) for more information.",
@@ -20,8 +20,9 @@
             "- Changed the AI generated images from Midjourney to Adobe Firefly in `/tree`.",
             "- *Chainsaw* cuts down trees instantly, *Axe* takes 1 hour.",
             "- Stocks are now updated every 10 minutes, crypto every minute.",
+            "- Crops now require enough soil quality to plant them. Use fertilizer to increase soil quality.",
             "#### Removed",
-            "- Removed bags from the shop, you can no longer use them in `/tree`.",
+            "- Removed *bag* from the shop, you can no longer use them in `/tree`.",
             "- Removed following achievements: *Going Places*, *Bug Hunter* & *Easy Blackjack!*.",
             "#### List of new crypto tickers",
             "- *ICP* - Internet Computer",
