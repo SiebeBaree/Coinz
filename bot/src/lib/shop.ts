@@ -57,6 +57,34 @@ export default class Shop {
         }
     }
 
+    public async addItemBulk(items: { [key: string]: number }, member: IMember): Promise<void> {
+        const bulkOps = [];
+
+        for (const [id, amount] of Object.entries(items)) {
+            if (this.hasInInventory(id, member)) {
+                // Increment amount for existing items
+                bulkOps.push({
+                    updateOne: {
+                        filter: { id: member.id, 'inventory.itemId': id },
+                        update: { $inc: { 'inventory.$.amount': amount } },
+                    },
+                });
+            } else {
+                // Add new item to inventory
+                bulkOps.push({
+                    updateOne: {
+                        filter: { id: member.id },
+                        update: { $push: { inventory: { itemId: id, amount: amount } } },
+                    },
+                });
+            }
+        }
+
+        if (bulkOps.length > 0) {
+            await Member.bulkWrite(bulkOps);
+        }
+    }
+
     public async removeItem(id: string, member: IMember, amount = 1): Promise<boolean> {
         if (!this.hasInInventory(id, member)) return false;
 
