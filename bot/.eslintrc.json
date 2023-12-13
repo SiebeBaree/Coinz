@@ -12,6 +12,8 @@
         "object-shorthand": "off",
         "@typescript-eslint/lines-between-class-members": "off",
         "id-length": "off",
-        "unicorn/consistent-function-scoping": "off"
+        "unicorn/consistent-function-scoping": "off",
+        "@typescript-eslint/prefer-nullish-coalescing": "off",
+        "unicorn/numeric-separators-style": "off"
     }
 }
