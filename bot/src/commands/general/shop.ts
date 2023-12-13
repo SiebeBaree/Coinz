@@ -154,7 +154,7 @@ async function getBuy(client: Bot, interaction: ChatInputCommandInteraction, mem
     await UserStats.updateOne(
         { id: member.id },
         {
-            $inc: { itemsBought: amount },
+            $inc: { itemsBought: amount, totalSpend: totalPrice },
         },
         { upsert: true },
     );
@@ -199,7 +199,7 @@ async function getSell(client: Bot, interaction: ChatInputCommandInteraction, me
     await UserStats.updateOne(
         { id: member.id },
         {
-            $inc: { itemsSold: amount },
+            $inc: { itemsSold: amount, totalSpend: totalPrice },
         },
         { upsert: true },
     );
