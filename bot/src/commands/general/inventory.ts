@@ -84,7 +84,7 @@ export default {
         });
 
         const collector = message.createMessageComponentCollector({
-            filter: (i) => filter(interaction, i),
+            filter: async (i) => filter(interaction, i),
             max: 20,
             idle: 20_000,
             time: 90_000,

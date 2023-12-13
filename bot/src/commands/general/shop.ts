@@ -5,6 +5,7 @@ import type { Command } from '../../domain/Command';
 import type { Item } from '../../models/item';
 import type { IMember } from '../../models/member';
 import UserStats from '../../models/userStats';
+import { filter } from '../../utils';
 import { calculatePageNumber, getPageButtons, getSelectMenu } from '../../utils/embed';
 import { addMoney, removeMoney } from '../../utils/money';
 
@@ -79,7 +80,7 @@ async function getInfo(client: Bot, interaction: ChatInputCommandInteraction) {
         });
 
         const collector = message.createMessageComponentCollector({
-            filter: (i) => i.user.id === interaction.user.id,
+            filter: async (i) => filter(interaction, i),
             max: 20,
             idle: 20_000,
             time: 90_000,

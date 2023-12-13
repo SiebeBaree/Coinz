@@ -45,7 +45,7 @@ async function getList(client: Bot, interaction: ChatInputCommandInteraction, me
     });
 
     const collector = message.createMessageComponentCollector({
-        filter: (i) => filter(interaction, i),
+        filter: async (i) => filter(interaction, i),
         max: maxPage > 10 ? maxPage : 10,
         time: 90_000,
         componentType: ComponentType.Button,

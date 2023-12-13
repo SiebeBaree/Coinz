@@ -124,7 +124,7 @@ type CollectorInteraction =
     | StringSelectMenuInteraction
     | UserSelectMenuInteraction;
 
-export function filter(interaction: ChatInputCommandInteraction, collectorInteraction: CollectorInteraction) {
+export async function filter(interaction: ChatInputCommandInteraction, collectorInteraction: CollectorInteraction) {
     return collectorInteraction.user.id === interaction.user.id;
 }
 
