@@ -21,8 +21,10 @@ export type IUserStats = {
     fishCaught: number;
     animalsKilled: number;
     timesRobbed: number;
+    timesPlotPlanted: number;
     timesPlotHarvested: number;
     timesPlotWatered: number;
+    timesPlotFertilized: number;
     moneyEarnedOnBusinesses: number;
     dailyActivity: {
         startDay: Date;
@@ -59,8 +61,10 @@ export const userStatsSchema = new Schema<IUserStats>(
         fishCaught: { type: Number, default: 0 },
         animalsKilled: { type: Number, default: 0 },
         timesRobbed: { type: Number, default: 0 },
+        timesPlotPlanted: { type: Number, default: 0 },
         timesPlotHarvested: { type: Number, default: 0 },
         timesPlotWatered: { type: Number, default: 0 },
+        timesPlotFertilized: { type: Number, default: 0 },
         moneyEarnedOnBusinesses: { type: Number, default: 0 },
         dailyActivity: {
             startDay: { type: Date, default: Date.now },
