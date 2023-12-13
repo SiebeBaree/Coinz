@@ -14,6 +14,8 @@
         "id-length": "off",
         "unicorn/consistent-function-scoping": "off",
         "@typescript-eslint/prefer-nullish-coalescing": "off",
-        "unicorn/numeric-separators-style": "off"
+        "unicorn/numeric-separators-style": "off",
+        "no-param-reassign": "off",
+        "require-atomic-updates": "off"
     }
 }
