@@ -20,6 +20,7 @@ export default function Footer() {
                             <Link href={'/invite'}>Invite Coinz</Link>
                             <Link href={'/support'}>Support Server</Link>
                             <Link href={'/status'}>Status</Link>
+                            <Link href={'/changelog'}>Changelog</Link>
                         </div>
                     </div>
 
