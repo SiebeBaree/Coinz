@@ -15,6 +15,9 @@ type CommandData = RESTPostAPIApplicationCommandsJSONBody & {
         inline?: boolean;
     }[];
     usage?: string[];
+    image?: string;
+    level?: number;
+    premium?: number;
 };
 
 /**
