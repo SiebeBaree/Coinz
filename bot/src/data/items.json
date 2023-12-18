@@ -185,24 +185,15 @@
         "name": "Fishing Rod",
         "emoteId": "956861323617107968",
         "description": "A tool that can be used to catch fish.",
-        "buyPrice": 250,
-        "sellPrice": 90
-    },
-    {
-        "itemId": "premium_fishing_rod",
-        "category": "tools",
-        "name": "Premium Fishing Rod",
-        "emoteId": "1060169660177334332",
-        "description": "A premium tool that can be used to catch better and more fish.",
-        "buyPrice": 460,
-        "sellPrice": 185
+        "buyPrice": 350,
+        "sellPrice": 130
     },
     {
         "itemId": "knife",
         "category": "tools",
         "name": "Knife",
         "emoteId": "1060169658063396914",
-        "description": "A knife is a very versatile tool. It can be used to cut down small trees, catch fish, and even skin animals.",
+        "description": "A knife can be used to kill animals, it's harder to do but it will earn you more profits.",
         "buyPrice": 190,
         "sellPrice": 40
     },
@@ -220,7 +211,7 @@
         "category": "tools",
         "name": "Hunting Rifle",
         "emoteId": "987701755770994718",
-        "description": "A hunting rifle is a tool that can be used to hunt animals.",
+        "description": "A hunting rifle is the easiest tool that can be used to hunt animals.",
         "buyPrice": 630,
         "sellPrice": 270
     },
