@@ -101,7 +101,7 @@ export default {
         const user = interaction.options.getUser('user', false) ?? interaction.user;
         const memberData = user.id === interaction.user.id ? member : (await getMember(user.id)) ?? member;
 
-        let category = options[0]?.value ?? "Stock";
+        let category = options[0]?.value ?? 'Stock';
         const allInvestments = await getInvestments(client, memberData);
         let selectedInvestments = selectInvestments(allInvestments, category);
         let maxPage = calculateMaxPages(selectedInvestments);
@@ -123,7 +123,7 @@ export default {
             if (i.componentType === ComponentType.Button) {
                 page = calculatePageNumber(i.customId, page, maxPage);
             } else if (i.componentType === ComponentType.StringSelect) {
-                category = i.values[0] ?? "Stock";
+                category = i.values[0] ?? 'Stock';
                 selectedInvestments = selectInvestments(allInvestments, category);
                 maxPage = calculateMaxPages(selectedInvestments);
                 page = 0;

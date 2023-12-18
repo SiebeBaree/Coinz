@@ -1,13 +1,5 @@
-import type {
-    ColorResolvable,
-    User} from 'discord.js';
-import {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    ComponentType,
-    EmbedBuilder
-} from 'discord.js';
+import type { ColorResolvable, User } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, EmbedBuilder } from 'discord.js';
 import type Bot from '../../domain/Bot';
 import type { Command } from '../../domain/Command';
 import { getMember, getUserStats } from '../../lib/database';
@@ -23,7 +15,7 @@ type Event = {
     chance: number;
 
     action(member: IMember): Promise<IMember>;
-}
+};
 
 const MAX_TREE_HEIGHT = 100;
 const WATER_COOLDOWN = 28800; // 8 hours
@@ -116,9 +108,9 @@ function getEmbed(client: Bot, user: User, member: IMember): EmbedBuilder {
     let description =
         member.tree.plantedAt === 0
             ? `:x: You haven't planted a tree yet.\n:seedling: To plant a tree you need a <:${shovel.itemId}:${shovel.emoteId}> **${shovel.name}**.`
-            : `:straight_ruler: **Height:** ${treeHeight}ft (${feetToMeters(treeHeight)}m)\n<:${
-                  wood.itemId
-              }:${wood.emoteId}> **Total Wood:** ${totalWood}\n:droplet: ${
+            : `:straight_ruler: **Height:** ${treeHeight}ft (${feetToMeters(treeHeight)}m)\n<:${wood.itemId}:${
+                  wood.emoteId
+              }> **Total Wood:** ${totalWood}\n:droplet: ${
                   member.tree.wateredAt + WATER_COOLDOWN <= Math.floor(Date.now() / 1000)
                       ? '**You can water your tree now**'
                       : `**You can water your tree** <t:${member.tree.wateredAt + WATER_COOLDOWN}:R>`
@@ -248,13 +240,10 @@ export default {
                 member = await event.action(member);
                 member.tree.nextEventAt = getNewEventTimestamp();
             } else if (treeHeight <= 10) {
-                    await Member.updateOne(
-                        { id: member.id },
-                        { $set: { 'tree.nextEventAt': getNewEventTimestamp() } },
-                    );
-                } else {
-                    await Member.updateOne({ id: member.id }, { $set: { 'tree.nextEventAt': 0 } });
-                }
+                await Member.updateOne({ id: member.id }, { $set: { 'tree.nextEventAt': getNewEventTimestamp() } });
+            } else {
+                await Member.updateOne({ id: member.id }, { $set: { 'tree.nextEventAt': 0 } });
+            }
         }
 
         member = await updateTreeStatus(member);
@@ -294,9 +283,7 @@ export default {
 
                 if (member.tree.wateredAt + WATER_COOLDOWN > now) {
                     await interaction.followUp({
-                        content: `:x: You can water your tree again in <t:${
-                            member.tree.wateredAt + WATER_COOLDOWN
-                        }:R>`,
+                        content: `:x: You can water your tree again in <t:${member.tree.wateredAt + WATER_COOLDOWN}:R>`,
                         ephemeral: true,
                     });
                     return;
