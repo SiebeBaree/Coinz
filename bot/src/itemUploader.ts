@@ -14,6 +14,11 @@ import logger from './utils/logger';
         process.exit(1);
     }
 
+    if (process.env.CLEAR_DATABASE === 'true') {
+        logger.info('Clearing the database.');
+        await ItemModel.deleteMany({});
+    }
+
     for (const item of items as Item[]) {
         const itemExists = await ItemModel.exists({ itemId: item.itemId });
         if (itemExists) {
