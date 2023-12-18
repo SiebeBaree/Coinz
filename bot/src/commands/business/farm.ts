@@ -681,6 +681,7 @@ export default {
                 options: [],
             },
         ],
+        usage: ['plots', 'plant'],
     },
     async execute(client, interaction, member) {
         switch (interaction.options.getSubcommand()) {
