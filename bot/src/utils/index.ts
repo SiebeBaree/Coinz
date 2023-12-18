@@ -9,6 +9,7 @@ import type {
     UserSelectMenuInteraction,
 } from 'discord.js';
 import countriesData from '../data/countries.json';
+import type { Loot } from '../lib/types';
 
 const countries = new Map<string, string>(Object.entries(countriesData));
 const FORMATTER = new Intl.NumberFormat('en-US', { notation: 'compact' });
@@ -157,4 +158,20 @@ export function getCountryName(code: string): string {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     return countries.get(code.toUpperCase());
+}
+
+export function getRandomItems(items: string[], quantity: number): Loot {
+    const loot: Loot = {};
+    for (let i = 0; i < quantity; i++) {
+        const item = items[getRandomNumber(0, items.length - 1)];
+        if (item === undefined) continue;
+
+        if (loot[item]) {
+            loot[item]++;
+        } else {
+            loot[item] = 1;
+        }
+    }
+
+    return loot;
 }
