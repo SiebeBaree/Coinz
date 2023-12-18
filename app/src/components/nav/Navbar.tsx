@@ -39,7 +39,7 @@ export default function Navbar({ session }: { session: Session | null }) {
                 </Link>
 
                 <div className="hidden md:flex md:gap-1">
-                    <NavItem name="FAQ" href="/faq" pathname={pathname} />
+                    <NavItem name="Guide" href="/guide" pathname={pathname} />
                     <NavItem name="Commands" href="/commands" pathname={pathname} />
                     <NavItem name="Items" href="/items" pathname={pathname} />
                     <NavItem name="Investments" href="/investments" pathname={pathname} />
