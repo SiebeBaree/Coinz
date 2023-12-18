@@ -28,9 +28,9 @@ const routes = [
         href: '/',
     },
     {
-        label: 'FAQ',
+        label: 'Guide',
         icon: HelpCircleIcon,
-        href: '/faq',
+        href: '/guide',
     },
     {
         label: 'Commands',
