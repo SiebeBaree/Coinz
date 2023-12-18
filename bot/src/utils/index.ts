@@ -109,11 +109,26 @@ export function parsePlots(str: string): number[] {
 }
 
 export function getLevel(experience: number): number {
-    return Math.floor(experience / 100);
+    let level = 0;
+    while (experience >= experienceToNextLevel(level, 0)) {
+        experience -= experienceToNextLevel(level, 0);
+        level++;
+    }
+
+    return level;
 }
 
-export function getExperience(level: number): number {
-    return level * 100;
+export function experienceToNextLevel(lvl: number, xp: number): number {
+    return Math.floor(3 * lvl ** 1.1 + 18 * lvl + 50 - xp);
+}
+
+export function getExperienceFromLevel(level: number): number {
+    let xp = 0;
+    for (let i = 0; i <= level; i++) {
+        xp += experienceToNextLevel(i, 0);
+    }
+
+    return xp;
 }
 
 type CollectorInteraction =

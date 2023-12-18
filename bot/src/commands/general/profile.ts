@@ -6,10 +6,29 @@ import { getMember } from '../../lib/database';
 import type { InventoryItem } from '../../lib/types';
 import Business from '../../models/business';
 import type { IMember } from '../../models/member';
-import { feetToMeters, formatNumber, getCountryEmote, getCountryName, getExperience, getLevel } from '../../utils';
+import {
+    experienceToNextLevel,
+    feetToMeters,
+    formatNumber,
+    getCountryEmote,
+    getCountryName,
+    getExperienceFromLevel,
+    getLevel,
+} from '../../utils';
 
-function createProgressBar(xp: number): string {
-    return `TODO-${xp}`;
+function createProgressBar(percentage: number): string {
+    const progress = Math.floor(percentage / 10);
+    const bar = [];
+
+    bar.push(progress === 0 ? '<:bar_start0:1054825378688020601>' : '<:bar_start1:1054825380055371866>');
+
+    for (let i = 2; i <= 9; i++) {
+        bar.push(progress < i ? '<:bar_mid0:1054825371146657903>' : '<:bar_mid1:1054825377157087254>');
+    }
+
+    bar.push(progress < 10 ? '<:bar_end0:1054825373801644093>' : '<:bar_end1:1054825376087547995>');
+
+    return bar.join('');
 }
 
 function getInventoryValue(client: Bot, inventory: InventoryItem[]) {
@@ -71,6 +90,7 @@ export default {
             },
         ],
         deferReply: true,
+        usage: ['[user]'],
     },
     async execute(client, interaction, member) {
         const user = interaction.options.getUser('user') ?? interaction.user;
@@ -79,12 +99,19 @@ export default {
         const inventory = getInventoryValue(client, memberData.inventory);
         const investments = await getInvestmentsValue(client, memberData.investments);
         const displayedBadge = client.achievement.getById(memberData.displayedBadge);
-        const level = getLevel(memberData.experience);
-        const xpUntilNextLevel = getExperience(level + 1) - memberData.experience;
         const workJob = member.job === '' ? 'Unemployed' : member.job;
 
         const business = await Business.findOne({ id: memberData.id });
         const businessJob = business ? business.name : 'None';
+
+        const level = getLevel(member.experience);
+        const xpToNextLevel = experienceToNextLevel(level, 0);
+        const totalXpToPreviousLevel = getExperienceFromLevel(level - 1);
+        const percentage = Math.floor(
+            ((xpToNextLevel - experienceToNextLevel(level, member.experience - totalXpToPreviousLevel)) /
+                xpToNextLevel) *
+                100,
+        );
 
         let description = '';
         description +=
@@ -105,8 +132,8 @@ export default {
             .addFields([
                 {
                     name: 'Experience',
-                    value: `:beginner: **Level:** \`${level}\`\n:game_die: **Next Level:** \`TODO%\`\n${createProgressBar(
-                        xpUntilNextLevel,
+                    value: `:beginner: **Level:** \`${level}\`\n:game_die: **Next Level:** \`${percentage}%\`\n${createProgressBar(
+                        percentage,
                     )}`,
                     inline: false,
                 },
