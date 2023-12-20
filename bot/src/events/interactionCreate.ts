@@ -53,6 +53,23 @@ export default {
                 return;
             }
 
+            if (member.premium > (command.data.premium ?? 0)) {
+                const premiumText = `This command is only for Coinz Plus or Pro subscribers. To gain access to this command, please visit the [**webshop**](${client.config.website}/premium).`;
+
+                if (command.data.deferReply === true) {
+                    await interaction.editReply({
+                        content: premiumText,
+                    });
+                } else {
+                    await interaction.reply({
+                        content: premiumText,
+                        ephemeral: true,
+                    });
+                }
+
+                return;
+            }
+
             if (process.env.NODE_ENV === 'production') {
                 const cooldownTime =
                     command.data.cooldown === undefined || command.data.cooldown === 0
