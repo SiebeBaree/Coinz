@@ -8,7 +8,6 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Sidebar from '@/components/nav/Sidebar';
 import { LucideIcon, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
 import { signIn, signOut } from 'next-auth/react';
 import {
     DropdownMenu,
