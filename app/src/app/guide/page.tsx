@@ -2,6 +2,7 @@ import PageTitle from '@/components/PageTitle';
 import { Button } from '@/components/ui/button';
 import { ChevronRightIcon, PlusIcon } from 'lucide-react';
 import Link from 'next/link';
+import guides from '@/lib/data/guides.json';
 
 export default function Guide() {
     return (
@@ -27,46 +28,14 @@ export default function Guide() {
             </div>
 
             <div className="grid grid-cols-3 gap-3 mt-8">
-                <GuideCard
-                    title="Getting Started"
-                    description="Discover the basics of Coinz and how to navigate its features. Ideal for new users starting their journey."
-                    href="/getting-started"
-                />
-                <GuideCard
-                    title="Installing Coinz"
-                    description="Step-by-step instructions to successfully install Coinz in your server."
-                    href="/installation"
-                />
-                <GuideCard
-                    title="Coinz Plus/Pro"
-                    description="Explore the advanced features and benefits of Coinz Plus and Pro, including premium features and benefits."
-                    href="/premium"
-                />
-                <GuideCard
-                    title="Leveling"
-                    description="Learn about the leveling system in Coinz, how to gain levels, and the perks associated with each level."
-                    href="/leveling"
-                />
-                <GuideCard
-                    title="Starting a business"
-                    description="Guidance on how to start and manage your business within Coinz."
-                    href="/starting-a-business"
-                />
-                <GuideCard
-                    title="Farming"
-                    description="Insights into farming mechanics in Coinz, techniques for efficient farming, and maximizing your farming outputs."
-                    href="/farming"
-                />
-                <GuideCard
-                    title="Investing"
-                    description="Advice on investment strategies within Coinz, understanding market trends, and managing your investment portfolio."
-                    href="/investing"
-                />
-                <GuideCard
-                    title="Frequently Asked Questions"
-                    description="Answers to common questions about Coinz, covering a range of topics from basic usage to more complex queries."
-                    href="/faq"
-                />
+                {guides.map((guide) => (
+                    <GuideCard
+                        key={guide.href}
+                        title={guide.name}
+                        description={guide.description}
+                        href={guide.href}
+                    />
+                ))}
             </div>
         </main>
     );
@@ -80,7 +49,7 @@ function GuideCard({ title, description, href }: { title: string; description: s
                 <p className="text-muted text-sm mt-1">{description}</p>
             </div>
             <Link
-                href={'/guide' + href ?? '/'}
+                href={'/guide/' + href ?? '/'}
                 className="flex items-center text-sm text-primary ml-auto border-b border-transparent hover:border-primary transition-all duration-100 ease-in-out"
             >
                 Visit the guide
