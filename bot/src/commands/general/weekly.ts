@@ -10,7 +10,7 @@ export default {
         cooldown: 604800,
     },
     async execute(_, interaction, member) {
-        await interaction.editReply({ content: "You have collected your weekly reward of :coin: 750." });
+        await interaction.editReply({ content: 'You have collected your weekly reward of :coin: 750.' });
         await addMoney(member.id, 750);
     },
 } satisfies Command;
