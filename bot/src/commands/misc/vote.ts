@@ -1,24 +1,7 @@
 import type { ColorResolvable } from 'discord.js';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import type { Command } from '../../domain/Command';
-
-const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder()
-        .setLabel('Top.gg')
-        .setStyle(ButtonStyle.Link)
-        .setEmoji('<:topgg:990540015853506590>')
-        .setURL('https://top.gg/bot/938771676433362955/vote'),
-    new ButtonBuilder()
-        .setLabel('Discordbotlist.com')
-        .setStyle(ButtonStyle.Link)
-        .setEmoji('<:dbl:990540323967103036>')
-        .setURL('https://discordbotlist.com/bots/coinz/upvote'),
-    new ButtonBuilder()
-        .setLabel('Discords.com')
-        .setStyle(ButtonStyle.Link)
-        .setEmoji('<:discords:1157587361069273119>')
-        .setURL('https://discords.com/bots/bot/938771676433362955/vote'),
-);
+import { getVotingRow } from '../../utils';
 
 export default {
     data: {
@@ -48,6 +31,6 @@ export default {
                 },
             ])
             .setFooter({ text: client.config.embed.footer });
-        await interaction.reply({ embeds: [embed], components: [row] });
+        await interaction.reply({ embeds: [embed], components: [getVotingRow()] });
     },
 } satisfies Command;
