@@ -21,6 +21,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Cloud, CreditCard, LifeBuoy, LogOut, Plus, User } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function Navbar({ session }: { session: Session | null }) {
     const pathname = usePathname();
@@ -55,13 +56,19 @@ export default function Navbar({ session }: { session: Session | null }) {
                         <DropdownMenu>
                             <DropdownMenuTrigger>
                                 <div className="flex gap-2 items-center bg-secondary py-2 px-3 rounded-md select-none">
-                                    <Image
-                                        src={session?.user?.image || 'https://cdn.discordapp.com/embed/avatars/3.png'}
-                                        alt="Profile picture"
-                                        width={28}
-                                        height={28}
-                                        className="rounded-full"
-                                    />
+                                    <Avatar className="w-7 h-7">
+                                        <AvatarImage
+                                            src={
+                                                session?.user?.image ?? 'https://cdn.discordapp.com/embed/avatars/3.png'
+                                            }
+                                        />
+                                        <AvatarFallback>
+                                            {session?.user?.name
+                                                ?.split(' ')
+                                                .map((name) => name[0])
+                                                .join('') ?? 'U'}
+                                        </AvatarFallback>
+                                    </Avatar>
                                     <p className="font-medium">{session?.user?.name}</p>
                                 </div>
                             </DropdownMenuTrigger>
