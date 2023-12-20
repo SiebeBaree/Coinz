@@ -49,6 +49,7 @@ export type IMember = {
     badges: string[];
     tree: ITree;
     premium: number;
+    notifications: string[];
 };
 
 const Item = new Schema<InventoryItem>({
@@ -105,6 +106,7 @@ export const member = new Schema<IMember>(
         badges: [{ type: String, default: [] }],
         tree: { type: Tree, default: {} },
         premium: { type: Number, default: 0 },
+        notifications: [{ type: String, default: [] }],
     },
     { timestamps: true },
 );

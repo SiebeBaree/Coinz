@@ -161,6 +161,14 @@ export function getCountryName(code: string): string {
     return countries.get(code.toUpperCase());
 }
 
+export function getCountryCode(name: string): string {
+    for (const [code, countryName] of countries) {
+        if (countryName.toLowerCase() === name.toLowerCase()) return code;
+    }
+
+    return '';
+}
+
 export function getRandomItems(items: string[], quantity: number): Loot {
     const loot: Loot = {};
     for (let i = 0; i < quantity; i++) {
