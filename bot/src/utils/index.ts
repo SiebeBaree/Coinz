@@ -8,6 +8,7 @@ import type {
     StringSelectMenuInteraction,
     UserSelectMenuInteraction,
 } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import countriesData from '../data/countries.json';
 import type { Loot } from '../lib/types';
 
@@ -174,4 +175,24 @@ export function getRandomItems(items: string[], quantity: number): Loot {
     }
 
     return loot;
+}
+
+export function getVotingRow() {
+    return new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+            .setLabel('Top.gg')
+            .setStyle(ButtonStyle.Link)
+            .setEmoji('<:topgg:990540015853506590>')
+            .setURL('https://top.gg/bot/938771676433362955/vote'),
+        new ButtonBuilder()
+            .setLabel('Discordbotlist.com')
+            .setStyle(ButtonStyle.Link)
+            .setEmoji('<:dbl:990540323967103036>')
+            .setURL('https://discordbotlist.com/bots/coinz/upvote'),
+        new ButtonBuilder()
+            .setLabel('Discords.com')
+            .setStyle(ButtonStyle.Link)
+            .setEmoji('<:discords:1157587361069273119>')
+            .setURL('https://discords.com/bots/bot/938771676433362955/vote'),
+    );
 }
