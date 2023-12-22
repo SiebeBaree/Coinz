@@ -1,10 +1,10 @@
 import type { ChatInputCommandInteraction, ColorResolvable } from 'discord.js';
 import { EmbedBuilder, ApplicationCommandOptionType } from 'discord.js';
+import moment from 'moment';
 import type Bot from '../../domain/Bot';
 import type { Command } from '../../domain/Command';
 import type { IMember } from '../../models/member';
 import Member from '../../models/member';
-import moment from 'moment';
 import { getCountryCode, getCountryEmote, getCountryName, isValidCountryCode, msToTime } from '../../utils';
 
 async function settingsNotification(interaction: ChatInputCommandInteraction, member: IMember) {
@@ -118,7 +118,7 @@ async function settingsPassiveMode(client: Bot, interaction: ChatInputCommandInt
     const value = interaction.options.getString('value', true);
 
     const cooldownStr = await client.cooldown.getCooldown(interaction.user.id, 'settings.passive-mode');
-    const cooldown = Number.parseInt(cooldownStr ?? "0");
+    const cooldown = Number.parseInt(cooldownStr ?? '0', 10);
     if (cooldown > 0) {
         await interaction.reply({
             content: `:x: You have to wait ${msToTime(cooldown * 1000)} toggle your passive mode again.`,
