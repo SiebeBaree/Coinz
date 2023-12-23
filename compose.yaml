@@ -15,12 +15,10 @@ services:
     depends_on:
       - cooldowns_db
     volumes:
-      - bot-logs:/app/src/logs
+      - ./logs/bot:/bot/src/logs
     environment:
       REDIS_URI: redis://cooldowns_db:6379
     networks:
       - redis-network
 networks:
   redis-network:
-volumes:
-  bot-logs:
