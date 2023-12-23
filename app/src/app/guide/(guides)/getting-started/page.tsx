@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Image from 'next/image';
 
 export default function GettingStartedGuide() {
     return (
@@ -82,22 +83,30 @@ export default function GettingStartedGuide() {
                         className="text-primary hover:underline font-bold transition-all duration-100 ease-in-out"
                     >
                         invite link
-                    </Link>
+                    </Link>{' '}
+                    or use the <code>/invite</code> command in a server where Coinz is already added.
                 </li>
                 <li className="mb-4">
                     Select the server you want to add Coinz to and click <em>continue</em>
-                    <img
-                        src="https://cdn.discordapp.com/attachments/829029210118291507/1186606471765557330/image.png?ex=6593dc64&is=65816764&hm=bbfb61ab0bcda666f5387be59aa9fe3013c9af1cdf0198b5425942b469ac848d&"
-                        className="max-h-[500px] ml-4"
+                    <Image
+                        src="https://cdn.coinzbot.xyz/guide/getting-started/invite-1.png"
+                        alt="Add Coinz to your server"
+                        className="h-[500px] ml-4 w-auto"
+                        width={300}
+                        height={500}
+                        quality={80}
                     />
                 </li>
                 <li className="mb-4">
                     Select the permissions you want to give to Coinz and click <em>authorize</em> (It&apos;s recommended
                     to give Coinz the permissions that are already selected)
-                    <img
-                        src="https://cdn.discordapp.com/attachments/829029210118291507/1186606555341271090/image.png?ex=6593dc78&is=65816778&hm=955148d2e68f50f2945aab643beb85e4f6fdebd3ca8abe98c84e76857d4559f6&"
-                        alt=""
-                        className="max-h-[500px] ml-4"
+                    <Image
+                        src="https://cdn.coinzbot.xyz/guide/getting-started/invite-2.png"
+                        alt="Select permissions for Coinz"
+                        className="h-[500px] ml-4 w-auto"
+                        width={300}
+                        height={500}
+                        quality={80}
                     />
                 </li>
                 <li>
@@ -106,16 +115,111 @@ export default function GettingStartedGuide() {
             </ol>
 
             <h2>How to setup Coinz?</h2>
-            <p></p>
+            <p>
+                Coinz is designed to be a plug-and-play bot. This means that you don&apos;t need to do any setup to use
+                Coinz. However, Coinz does need to have some permissions to function properly. When you invite Coinz to
+                your server, it will automatically ask for the permissions it needs. It&apos;s recommended to give Coinz
+                the permissions that are already selected. If you want to change the permissions later, you can always
+                change them in the server settings.
+            </p>
 
             <h2>Basic Commands to Get Started</h2>
-            <p></p>
+            <p>
+                Coinz has a lot of commands, but you don&apos;t need to know all of them to get started. Here are some
+                of the most important commands that you need to know:
+            </p>
+            <ol>
+                <li>
+                    <code>/help categories</code> - Get a list of all commands
+                </li>
+                <li>
+                    <code>/balance</code> - Check your balance
+                </li>
+                <li>
+                    <code>/beg</code> - Beg for money
+                </li>
+                <li>
+                    <code>/daily</code> - Claim your daily reward
+                </li>
+                <li>
+                    <code>/shop</code> - Buy items from the shop (Use <code>/inventory</code> to see your items)
+                </li>
+            </ol>
 
             <h2>Earning Money</h2>
-            <p></p>
+            <p>
+                There are a lot of ways to earn money in Coinz. You can play games, buy and sell items, invest in the
+                stock market, and so much more. Here are some of the ways to earn money in Coinz:
+            </p>
+            <ul>
+                <li>
+                    <strong>Begging, Working and Stealing</strong> - You can use the <code>/beg</code>,{' '}
+                    <code>/work</code> and <code>/steal</code> commands to earn money. You first need to apply for a job
+                    using the <code>/job apply</code> command. Use <code>/job list</code> to see all available jobs.
+                </li>
+                <li>
+                    <strong>Voting</strong> - The easiest and fastest way to earn money is by voting. You can vote for
+                    Coinz on{' '}
+                    <Link
+                        href="https://top.gg/bot/938771676433362955/vote"
+                        target="_blank"
+                        className="text-primary hover:underline font-bold transition-all duration-100 ease-in-out"
+                    >
+                        top.gg
+                    </Link>{' '}
+                    and{' '}
+                    <Link
+                        href="https://discordbotlist.com/bots/coinz/upvote"
+                        target="_blank"
+                        className="text-primary hover:underline font-bold transition-all duration-100 ease-in-out"
+                    >
+                        discordbotlist.com
+                    </Link>
+                    <Link
+                        href="https://discords.com/bots/bot/938771676433362955/vote"
+                        target="_blank"
+                        className="text-primary hover:underline font-bold transition-all duration-100 ease-in-out"
+                    >
+                        discords.com
+                    </Link>
+                    . You can vote every 12 hours and you will receive 1000 coins for every vote.
+                </li>
+                <li>
+                    <strong>Games</strong> - You can play games like blackjack, slots, roulette, higher-lower, and so
+                    much more... (Use <code>/help categories</code> to see all games)
+                </li>
+                <li>
+                    <strong>Stock Market</strong> - You can invest in the stock market and crypto market. You can buy
+                    and sell stocks and crypto and earn money by doing so. (Use <code>/invest info</code> to see all
+                    investments)
+                </li>
+                <li>
+                    <strong>Start a business</strong> - Coinz offers a lot of ways to start your own business. You can
+                    become a farmer and grow crops (<code>/farm plots</code>). You can plant a tree and watch it grow (
+                    <code>/tree</code>). You start a business and buy factories where you can produce items (
+                    <code>/business</code> and <code>/factory list</code>).
+                </li>
+            </ul>
 
             <h2>Asking for Help</h2>
-            <p></p>
+            <p>
+                If this guide didn&apos;t answer your question, please check the other{' '}
+                <Link
+                    href={'/guide'}
+                    className="text-primary hover:underline font-bold transition-all duration-100 ease-in-out"
+                >
+                    guides
+                </Link>{' '}
+                or join the{' '}
+                <Link
+                    href={'https://discord.gg/4xqpqSQ9d5'}
+                    target="_blank"
+                    className="text-primary hover:underline font-bold transition-all duration-100 ease-in-out"
+                >
+                    support server
+                </Link>{' '}
+                and ask your question there.
+            </p>
         </>
     );
 }
