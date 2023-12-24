@@ -1,5 +1,4 @@
-import type {
-    ColorResolvable} from 'discord.js';
+import type { ColorResolvable } from 'discord.js';
 import {
     ActionRowBuilder,
     ApplicationCommandOptionType,
@@ -20,7 +19,7 @@ type GameData = {
     currentNumber: number;
     timesCorrect: number;
     color: ColorResolvable;
-}
+};
 
 function getEmbed(gameData: GameData): EmbedBuilder {
     return new EmbedBuilder()
@@ -31,11 +30,9 @@ function getEmbed(gameData: GameData): EmbedBuilder {
                 ':point_down: `Lower` ― **The next number is lower.**\n:boom: `Jackpot` ― **The next number is the same.**\n' +
                 ':negative_squared_cross_mark: `Stop` ― **Stop the game an claim your money.**' +
                 `\n\n**Current Number:** \`${gameData.currentNumber}\` *(Between 1-99)*\n**Correct Guesses:** \`${gameData.timesCorrect}\`` +
-                `\n\n:money_with_wings: **Profit:** :coin: ${getPrice(
-                    gameData.bet,
-                    gameData.timesCorrect,
-                    gameData.playerHasWon,
-                ) - gameData.bet}`,
+                `\n\n:money_with_wings: **Profit:** :coin: ${
+                    getPrice(gameData.bet, gameData.timesCorrect, gameData.playerHasWon) - gameData.bet
+                }`,
         );
 }
 
