@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [api, bot, app, crons, support]
+        project: [api, bot, crons, support]
 
     steps:
       - uses: actions/checkout@v3
