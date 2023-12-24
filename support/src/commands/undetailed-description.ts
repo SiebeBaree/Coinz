@@ -7,9 +7,9 @@ export default {
         description: '',
         options: [
             {
-                name: "user",
+                name: 'user',
                 type: ApplicationCommandOptionType.User,
-                description: "Get the balance of another user.",
+                description: 'Get the balance of another user.',
                 required: false,
             },
         ],

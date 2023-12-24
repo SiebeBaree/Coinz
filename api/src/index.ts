@@ -1,5 +1,7 @@
 import process from 'node:process';
 import express from 'express';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import Stats from 'sharding-stats';
 import cors from 'cors';
 

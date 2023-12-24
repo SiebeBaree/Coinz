@@ -5,34 +5,34 @@ import Bot from './domain/Bot';
 import logger from './utils/logger';
 
 (async () => {
-  const bot = new Bot({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
-    partials: [Partials.GuildMember],
-    presence: {
-      activities: [
-        {
-          name: 'coinzbot.xyz',
-          type: ActivityType.Playing,
+    const bot = new Bot({
+        intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+        partials: [Partials.GuildMember],
+        presence: {
+            activities: [
+                {
+                    name: 'coinzbot.xyz',
+                    type: ActivityType.Playing,
+                },
+            ],
         },
-      ],
-    },
-  });
+    });
 
-  try {
-    await connect(process.env.DATABASE_URI!);
-    logger.info('Connected to the database.');
-  } catch (error) {
-    logger.error(error);
-    process.exit(1);
-  }
+    try {
+        await connect(process.env.DATABASE_URI!);
+        logger.info('Connected to the database.');
+    } catch (error) {
+        logger.error(error);
+        process.exit(1);
+    }
 
-  await bot.login(process.env.DISCORD_TOKEN!);
+    await bot.login(process.env.DISCORD_TOKEN!);
 })();
 
 process.on('uncaughtException', (err: Error) => {
-  logger.error(err.stack);
+    logger.error(err.stack);
 });
 
 process.on('unhandledRejection', (err: Error) => {
-  logger.error(err.stack);
+    logger.error(err.stack);
 });

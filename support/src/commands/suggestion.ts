@@ -7,22 +7,22 @@ export default {
         description: '',
         options: [
             {
-                name: "status",
+                name: 'status',
                 type: ApplicationCommandOptionType.String,
-                description: "",
+                description: '',
                 required: true,
                 choices: [
                     {
-                        name: "Planned",
-                        value: "planned",
+                        name: 'Planned',
+                        value: 'planned',
                     },
                     {
-                        name: "Deny",
-                        value: "deny",
+                        name: 'Deny',
+                        value: 'deny',
                     },
                     {
-                        name: "Released",
-                        value: "released",
+                        name: 'Released',
+                        value: 'released',
                     },
                 ],
             },

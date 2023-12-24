@@ -1,3 +1,4 @@
+/* eslint-disable */
 declare module "bitvavo" {
     import { EventEmitter } from "events";
 
