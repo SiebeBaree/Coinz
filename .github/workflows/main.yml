@@ -1,0 +1,43 @@
+name: Lint and Build
+
+on:
+  push:
+    branches:
+      - main
+      - development
+  pull_request:
+    branches:
+      - main
+      - development
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [api, bot, app, crons, support]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21'
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install Dependencies
+        run: cd ${{ matrix.project }} && pnpm install
+
+      - name: Lint
+        run: cd ${{ matrix.project }} && pnpm run lint
+
+      - name: Build
+        run: cd ${{ matrix.project }} && pnpm run build
