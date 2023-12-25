@@ -2,6 +2,8 @@ import { join } from 'node:path';
 import type { ClientOptions } from 'discord.js';
 import { Client, Collection } from 'discord.js';
 import config from '../data/config.json';
+import type { ISettings } from '../models/settings';
+import Settings from '../models/settings';
 import { loadCommands, loadEvents } from '../utils/loaders';
 import logger from '../utils/logger';
 import { registerEvents } from '../utils/registerEvents';
@@ -12,6 +14,7 @@ export default class Bot extends Client {
     public commands: Collection<string, Command>;
     public events: Collection<string, Event>;
     public readonly config: typeof config;
+    private _settings: ISettings;
 
     public constructor(options: ClientOptions) {
         super(options);
@@ -20,6 +23,17 @@ export default class Bot extends Client {
         this.events = new Collection();
 
         this.config = config;
+        this._settings = new Settings({
+            ticketCategory: '1188856897688846346',
+        });
+    }
+
+    public get settings(): ISettings {
+        return this._settings;
+    }
+
+    public set settings(value: ISettings) {
+        this._settings = value;
     }
 
     public override async login(token: string): Promise<string> {
