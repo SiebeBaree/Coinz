@@ -3,8 +3,8 @@ import type { Command } from '../domain/Command';
 
 export default {
     data: {
-        name: '',
-        description: '',
+        name: 'read-faq',
+        description: 'Sends a message to the user with a link to the FAQ.',
         options: [
             {
                 name: 'user',

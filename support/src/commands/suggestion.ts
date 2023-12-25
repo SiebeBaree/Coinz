@@ -3,13 +3,13 @@ import type { Command } from '../domain/Command';
 
 export default {
     data: {
-        name: '',
-        description: '',
+        name: 'suggestion',
+        description: 'Manage suggestions.',
         options: [
             {
                 name: 'status',
                 type: ApplicationCommandOptionType.String,
-                description: '',
+                description: 'Change the status of a suggestion.',
                 required: true,
                 choices: [
                     {

@@ -3,8 +3,8 @@ import type { Command } from '../domain/Command';
 
 export default {
     data: {
-        name: '',
-        description: '',
+        name: 'undetailed-description',
+        description: 'Sends a message to the user that the description is not detailed enough.',
         options: [
             {
                 name: 'user',
