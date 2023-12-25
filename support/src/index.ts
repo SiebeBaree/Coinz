@@ -1,5 +1,5 @@
 import process from 'node:process';
-import { ActivityType, GatewayIntentBits, Partials } from 'discord.js';
+import { GatewayIntentBits, Partials } from 'discord.js';
 import { connect } from 'mongoose';
 import Bot from './domain/Bot';
 import logger from './utils/logger';
@@ -8,14 +8,6 @@ import logger from './utils/logger';
     const bot = new Bot({
         intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
         partials: [Partials.GuildMember],
-        presence: {
-            activities: [
-                {
-                    name: 'coinzbot.xyz',
-                    type: ActivityType.Playing,
-                },
-            ],
-        },
     });
 
     try {
