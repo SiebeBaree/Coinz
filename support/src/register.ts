@@ -1,6 +1,7 @@
 import { join } from 'node:path';
 import process from 'node:process';
 import { REST, Routes } from 'discord.js';
+import config from './data/config.json';
 import { loadCommands } from './utils/loaders';
 
 (async () => {
@@ -9,13 +10,9 @@ import { loadCommands } from './utils/loaders';
 
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN!);
 
-    if (process.env.NODE_ENV === 'production') {
-        await rest.put(Routes.applicationCommands(process.env.APPLICATION_ID!), { body: commandData });
-    } else {
-        await rest.put(Routes.applicationGuildCommands(process.env.APPLICATION_ID!, process.env.GUILD_ID!), {
-            body: commandData,
-        });
-    }
+    await rest.put(Routes.applicationGuildCommands(process.env.APPLICATION_ID!, config.guildId), {
+        body: commandData,
+    });
 
     console.log(`Successfully registered ${commandData.length} commands.`);
 })();
