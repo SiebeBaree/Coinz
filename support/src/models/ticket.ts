@@ -17,11 +17,14 @@ type IUser = {
 };
 
 export type ITicket = {
+    initialMessageId: string;
     channelId: string;
     userId: string;
     category: string;
+    reason: string;
     status: string;
     claimedBy: string;
+    ticketNumber: string;
     createdAt: Date;
     updatedAt: Date;
     messages: IMessage[];
@@ -47,11 +50,14 @@ const User = new Schema<IUser>({
 
 const ticket = new Schema<ITicket>(
     {
+        initialMessageId: { type: String, required: true },
         channelId: { type: String, required: true, index: true, unique: true },
         userId: { type: String, required: true, index: true },
         category: { type: String, required: true },
+        reason: { type: String, default: '' },
         status: { type: String, required: true },
         claimedBy: { type: String, required: false },
+        ticketNumber: { type: String, required: true },
         messages: [{ type: Message, default: [] }],
         users: [{ type: User, default: [] }],
     },
