@@ -1,6 +1,8 @@
+import type { GuildMember } from 'discord.js';
 import { Events } from 'discord.js';
 import type { Event } from '../domain/Event';
 import logger from '../utils/logger';
+import { claimTicket } from '../utils/ticket';
 
 export default {
     name: Events.InteractionCreate,
@@ -30,6 +32,24 @@ export default {
                 } else {
                     await interaction.reply({ content: errorMsg, ephemeral: true });
                 }
+            }
+        } else if (interaction.isButton() && interaction.customId.startsWith('ticket_')) {
+            const action = interaction.customId.split('_')[1];
+
+            if (action === 'claim') {
+                const claim = await claimTicket(client, interaction.member as GuildMember, interaction.channelId);
+
+                if (!claim.isClaimed) {
+                    await interaction.reply({ content: claim.reason ?? 'Unable to claim ticket.', ephemeral: true });
+                    return;
+                }
+
+                await interaction.reply({
+                    content: 'You have successfully claimed this ticket.',
+                    ephemeral: true,
+                });
+            } else if (action === 'edit') {
+            } else {
             }
         }
     },
