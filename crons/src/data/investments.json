@@ -1,0 +1,289 @@
+{
+    "stocks": [
+        {
+            "ticker": "AAPL",
+            "name": "Apple Inc."
+        },
+        {
+            "ticker": "MSFT",
+            "name": "Microsoft Corporation"
+        },
+        {
+            "ticker": "AMZN",
+            "name": "Amazon.com, Inc."
+        },
+        {
+            "ticker": "NVDA",
+            "name": "NVIDIA Corporation"
+        },
+        {
+            "ticker": "TSLA",
+            "name": "Tesla, Inc."
+        },
+        {
+            "ticker": "GOOG",
+            "name": "Alphabet Inc. (Google)"
+        },
+        {
+            "ticker": "META",
+            "name": "Meta Platforms, Inc."
+        },
+        {
+            "ticker": "V",
+            "name": "Visa Inc."
+        },
+        {
+            "ticker": "MA",
+            "name": "Mastercard Incorporated"
+        },
+        {
+            "ticker": "HD",
+            "name": "The Home Depot, Inc."
+        },
+        {
+            "ticker": "PFE",
+            "name": "Pfizer Inc."
+        },
+        {
+            "ticker": "KO",
+            "name": "The Coca-Cola Company"
+        },
+        {
+            "ticker": "DIS",
+            "name": "The Walt Disney Company"
+        },
+        {
+            "ticker": "ADBE",
+            "name": "Adobe Inc."
+        },
+        {
+            "ticker": "WMT",
+            "name": "Walmart Inc."
+        },
+        {
+            "ticker": "INTC",
+            "name": "Intel Corporation"
+        },
+        {
+            "ticker": "MCD",
+            "name": "McDonald's Corporation"
+        },
+        {
+            "ticker": "NKE",
+            "name": "NIKE, Inc."
+        },
+        {
+            "ticker": "DHR",
+            "name": "Danaher Corporation"
+        },
+        {
+            "ticker": "NFLX",
+            "name": "Netflix, Inc."
+        },
+        {
+            "ticker": "BA",
+            "name": "The Boeing Company"
+        },
+        {
+            "ticker": "BLK",
+            "name": "BlackRock, Inc."
+        },
+        {
+            "ticker": "GM",
+            "name": "General Motors Company"
+        },
+        {
+            "ticker": "FDX",
+            "name": "FedEx Corporation"
+        },
+        {
+            "ticker": "QCOM",
+            "name": "QUALCOMM Incorporated"
+        },
+        {
+            "ticker": "AMD",
+            "name": "Advanced Micro Devices, Inc."
+        },
+        {
+            "ticker": "ORCL",
+            "name": "Oracle Corporation"
+        },
+        {
+            "ticker": "PYPL",
+            "name": "PayPal Holdings, Inc."
+        },
+        {
+            "ticker": "SBUX",
+            "name": "Starbucks Corporation"
+        },
+        {
+            "ticker": "GE",
+            "name": "General Electric Company"
+        }
+    ],
+    "marketCloseDays": [16, 51, 97, 149, 170, 185, 247, 327, 359],
+    "openingTime": "9:30",
+    "closeTime": "16:00",
+    "crypto": [
+        {
+            "ticker": "BTC",
+            "name": "Bitcoin"
+        },
+        {
+            "ticker": "ETH",
+            "name": "Ethereum"
+        },
+        {
+            "ticker": "BNB",
+            "name": "Binance Coin"
+        },
+        {
+            "ticker": "XRP",
+            "name": "XRP"
+        },
+        {
+            "ticker": "ADA",
+            "name": "Cardano"
+        },
+        {
+            "ticker": "SOL",
+            "name": "Solana"
+        },
+        {
+            "ticker": "DOGE",
+            "name": "Dogecoin"
+        },
+        {
+            "ticker": "TRX",
+            "name": "TRON"
+        },
+        {
+            "ticker": "ICP",
+            "name": "Internet Computer"
+        },
+        {
+            "ticker": "DOT",
+            "name": "Polkadot"
+        },
+        {
+            "ticker": "LTC",
+            "name": "Litecoin"
+        },
+        {
+            "ticker": "MATIC",
+            "name": "Polygon"
+        },
+        {
+            "ticker": "LINK",
+            "name": "Chainlink"
+        },
+        {
+            "ticker": "SHIB",
+            "name": "Shiba Inu"
+        },
+        {
+            "ticker": "APT",
+            "name": "Aptos"
+        },
+        {
+            "ticker": "AVAX",
+            "name": "Avalanche"
+        },
+        {
+            "ticker": "XLM",
+            "name": "Stellar"
+        },
+        {
+            "ticker": "QNT",
+            "name": "Quant"
+        },
+        {
+            "ticker": "ATOM",
+            "name": "Cosmos"
+        },
+        {
+            "ticker": "STX",
+            "name": "Stacks"
+        },
+        {
+            "ticker": "HBAR",
+            "name": "Hedera"
+        },
+        {
+            "ticker": "FIL",
+            "name": "Filecoin"
+        },
+        {
+            "ticker": "MKR",
+            "name": "Maker"
+        },
+        {
+            "ticker": "EOS",
+            "name": "EOS"
+        },
+        {
+            "ticker": "CRO",
+            "name": "Cronos"
+        },
+        {
+            "ticker": "AAVE",
+            "name": "Aave"
+        },
+        {
+            "ticker": "ALGO",
+            "name": "Algorand"
+        },
+        {
+            "ticker": "XTZ",
+            "name": "Tezos"
+        },
+        {
+            "ticker": "SAND",
+            "name": "The Sandbox"
+        },
+        {
+            "ticker": "AXS",
+            "name": "Axie Infinity"
+        },
+        {
+            "ticker": "MANA",
+            "name": "Decentraland"
+        },
+        {
+            "ticker": "LUNA",
+            "name": "Terra Classic"
+        },
+        {
+            "ticker": "ENJ",
+            "name": "Enjin Coin"
+        },
+        {
+            "ticker": "BAT",
+            "name": "Basic Attention Token"
+        },
+        {
+            "ticker": "APE",
+            "name": "ApeCoin"
+        },
+        {
+            "ticker": "EGLD",
+            "name": "MultiversX"
+        },
+        {
+            "ticker": "ANKR",
+            "name": "Ankr"
+        },
+        {
+            "ticker": "CHZ",
+            "name": "Chiliz"
+        },
+        {
+            "ticker": "MIOTA",
+            "name": "IOTA"
+        },
+        {
+            "ticker": "LUNA2",
+            "name": "Terra 2.0"
+        }
+    ]
+}
