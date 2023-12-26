@@ -1,3 +1,9 @@
 {
-  "guildId": "938177962698735616"
+  "guildId": "938177962698735616",
+  "website": "https://coinzbot.xyz",
+  "embed": {
+    "color": "#DBA514",
+    "footer": "Coinz | coinzbot.xyz",
+    "icon": "https://cdn.discordapp.com/embed/avatars/1.png"
+  }
 }
