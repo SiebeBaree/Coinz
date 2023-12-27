@@ -1,8 +1,17 @@
-import type { ChatInputCommandInteraction, GuildMember } from 'discord.js';
+import {
+    ActionRowBuilder,
+    ChatInputCommandInteraction,
+    GuildMember,
+    ModalBuilder,
+    ModalSubmitInteraction,
+    TextInputBuilder,
+    TextInputStyle,
+} from 'discord.js';
 import { ApplicationCommandOptionType } from 'discord.js';
 import type Bot from '../domain/Bot';
 import type { Command } from '../domain/Command';
-import { createTicket } from '../utils/ticket';
+import { claimTicket, closeTicket, createTicket, getReopenMessage } from '../utils/ticket';
+import Ticket from '../models/ticket';
 
 async function getCreateTicket(client: Bot, interaction: ChatInputCommandInteraction) {
     if (interaction.member === null || interaction.guild === null || interaction.member.user.bot) {
@@ -13,15 +22,100 @@ async function getCreateTicket(client: Bot, interaction: ChatInputCommandInterac
         return;
     }
 
-    const response = await createTicket(
-        client,
-        interaction.guild,
-        interaction.member as GuildMember,
-        'default',
-        'test',
-    );
+    const ticketReasonInput = new TextInputBuilder()
+        .setCustomId('ticket_reason')
+        .setLabel('What is the reason for this ticket?')
+        .setStyle(TextInputStyle.Paragraph)
+        .setRequired(true);
 
-    if (!response.isCreated) {
+    const modal = new ModalBuilder()
+        .setTitle('Creating a ticket.')
+        .setCustomId(`ticket_reason-${interaction.user.id}`)
+        .addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(ticketReasonInput));
+    await interaction.showModal(modal);
+
+    const filter = (i: ModalSubmitInteraction) =>
+        i.customId === `ticket_reason-${interaction.user.id}` && i.user.id === interaction.user.id;
+
+    try {
+        const modalInteraction = await interaction.awaitModalSubmit({ filter, time: 300_000 });
+
+        const ticketReason = modalInteraction.fields.getTextInputValue('ticket_reason');
+        if (ticketReason === '') {
+            await modalInteraction.reply({
+                content: 'You must provide a reason for this ticket.',
+                components: [],
+                ephemeral: true,
+            });
+            return;
+        }
+
+        const response = await createTicket(client, interaction.guild, interaction.member as GuildMember, ticketReason);
+
+        if (!response.isCreated) {
+            await modalInteraction.reply({
+                content: `:x: ${response.reason}`,
+                ephemeral: true,
+            });
+            return;
+        }
+
+        await modalInteraction.reply({
+            content: `:white_check_mark: Your ticket has been created. You can find it at <#${response.ticketId}>.`,
+            ephemeral: true,
+        });
+    } catch (error) {
+        return;
+    }
+}
+
+async function getCloseTicket(client: Bot, interaction: ChatInputCommandInteraction) {
+    if (interaction.member === null || interaction.guild === null || interaction.member.user.bot) {
+        await interaction.reply({
+            content: 'An error occurred while trying to close this ticket. Please try again later.',
+            ephemeral: true,
+        });
+        return;
+    }
+
+    const response = await closeTicket(client, interaction.member as GuildMember, interaction.channelId);
+    if (!response.isClosed || response.ticket === undefined) {
+        await interaction.reply({
+            content: `:x: ${response.reason}`,
+            ephemeral: true,
+        });
+        return;
+    }
+
+    const { embed, components } = getReopenMessage(client, response.ticket);
+    const message = await interaction.reply({
+        content: `<@${interaction.user.id}>`,
+        embeds: [embed],
+        components: [components],
+        fetchReply: true,
+    });
+
+    await Ticket.updateOne(
+        { channelId: interaction.channelId },
+        {
+            $set: {
+                responseMessageId: message.id,
+            },
+        },
+    );
+}
+
+async function getClaimTicket(client: Bot, interaction: ChatInputCommandInteraction) {
+    if (interaction.member === null || interaction.guild === null || interaction.member.user.bot) {
+        await interaction.reply({
+            content: 'An error occurred while trying to claim this ticket. Please try again later.',
+            ephemeral: true,
+        });
+        return;
+    }
+
+    const response = await claimTicket(client, interaction.member as GuildMember, interaction.channelId);
+    if (!response.isClaimed) {
         await interaction.reply({
             content: `:x: ${response.reason}`,
             ephemeral: true,
@@ -30,7 +124,7 @@ async function getCreateTicket(client: Bot, interaction: ChatInputCommandInterac
     }
 
     await interaction.reply({
-        content: `:white_check_mark: Your ticket has been created. You can find it at <#${response.ticketId}>.`,
+        content: `:white_check_mark: This ticket has been claimed.`,
         ephemeral: true,
     });
 }
@@ -45,16 +139,16 @@ export default {
                 type: ApplicationCommandOptionType.Subcommand,
                 description: 'Create a ticket.',
             },
-            // {
-            //     name: 'close',
-            //     type: ApplicationCommandOptionType.Subcommand,
-            //     description: '',
-            // },
-            // {
-            //     name: 'claim',
-            //     type: ApplicationCommandOptionType.Subcommand,
-            //     description: '',
-            // },
+            {
+                name: 'close',
+                type: ApplicationCommandOptionType.Subcommand,
+                description: 'Close this ticket.',
+            },
+            {
+                name: 'claim',
+                type: ApplicationCommandOptionType.Subcommand,
+                description: 'Claim this ticket.',
+            },
             // {
             //     name: 'edit',
             //     type: ApplicationCommandOptionType.Subcommand,
@@ -67,12 +161,12 @@ export default {
             case 'create':
                 await getCreateTicket(client, interaction);
                 break;
-            // case 'close':
-            //     await closeTicket(client, interaction);
-            //     break;
-            // case 'claim':
-            //     await claimTicket(client, interaction);
-            //     break;
+            case 'close':
+                await getCloseTicket(client, interaction);
+                break;
+            case 'claim':
+                await getClaimTicket(client, interaction);
+                break;
             // case 'edit':
             //     await editTicket(client, interaction);
             //     break;

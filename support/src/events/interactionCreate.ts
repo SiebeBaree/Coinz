@@ -1,8 +1,9 @@
-import type { GuildMember } from 'discord.js';
+import { ColorResolvable, EmbedBuilder, GuildMember, Snowflake } from 'discord.js';
 import { Events } from 'discord.js';
 import type { Event } from '../domain/Event';
 import logger from '../utils/logger';
-import { claimTicket } from '../utils/ticket';
+import { claimTicket, closeTicket, deleteTicket, getReopenMessage, reopenTicket } from '../utils/ticket';
+import Ticket from '../models/ticket';
 
 export default {
     name: Events.InteractionCreate,
@@ -37,10 +38,9 @@ export default {
             const action = interaction.customId.split('_')[1];
 
             if (action === 'claim') {
-                const claim = await claimTicket(client, interaction.member as GuildMember, interaction.channelId);
-
-                if (!claim.isClaimed) {
-                    await interaction.reply({ content: claim.reason ?? 'Unable to claim ticket.', ephemeral: true });
+                const response = await claimTicket(client, interaction.member as GuildMember, interaction.channelId);
+                if (!response.isClaimed) {
+                    await interaction.reply({ content: response.reason ?? 'Unable to claim ticket.', ephemeral: true });
                     return;
                 }
 
@@ -49,7 +49,66 @@ export default {
                     ephemeral: true,
                 });
             } else if (action === 'edit') {
-            } else {
+            } else if (action === 'close') {
+                const response = await closeTicket(client, interaction.member as GuildMember, interaction.channelId);
+                if (!response.isClosed || response.ticket === undefined) {
+                    await interaction.reply({ content: response.reason ?? 'Unable to close ticket.', ephemeral: true });
+                    return;
+                }
+
+                const { embed, components } = getReopenMessage(client, response.ticket);
+                const message = await interaction.reply({
+                    content: `<@${interaction.user.id}>`,
+                    embeds: [embed],
+                    components: [components],
+                    fetchReply: true,
+                });
+
+                await Ticket.updateOne(
+                    { channelId: interaction.channelId },
+                    {
+                        $set: {
+                            responseMessageId: message.id,
+                        },
+                    },
+                );
+            } else if (action === 'reopen') {
+                const response = await reopenTicket(client, interaction.member as GuildMember, interaction.channelId);
+                if (!response.isReopened || response.ticket === undefined) {
+                    await interaction.reply({
+                        content: response.reason ?? 'Unable to reopen ticket.',
+                        ephemeral: true,
+                    });
+                    return;
+                }
+
+                if (interaction.message.id === response.ticket.initialMessageId) {
+                    const message = await interaction.channel?.messages.fetch(
+                        response.ticket.responseMessageId as Snowflake,
+                    );
+
+                    if (message) {
+                        await message.delete();
+                    }
+                } else {
+                    await interaction.message.delete();
+                }
+
+                const embed = new EmbedBuilder()
+                    .setTitle('Ticket Reopened')
+                    .setDescription(`Ticket has been reopened by <@${interaction.user.id}>.`)
+                    .setColor(client.config.embed.color as ColorResolvable)
+                    .setTimestamp();
+                await interaction.reply({ content: `<@${response.ticket.userId}>`, embeds: [embed] });
+            } else if (action === 'delete') {
+                const response = await deleteTicket(client, interaction.member as GuildMember, interaction.channelId);
+                if (!response.isDeleted) {
+                    await interaction.reply({
+                        content: response.reason ?? 'Unable to delete ticket.',
+                        ephemeral: true,
+                    });
+                    return;
+                }
             }
         }
     },
