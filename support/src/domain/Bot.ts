@@ -26,6 +26,7 @@ export default class Bot extends Client {
         this._settings = new Settings({
             ticketCategory: '1188856897688846346',
             ticketSupportRole: '1188875038305296445',
+            modLogChannel: '939870751744462868',
         });
     }
 
