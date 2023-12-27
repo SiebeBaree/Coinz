@@ -1,4 +1,4 @@
-import { RESTPostAPIApplicationCommandsJSONBody, ChatInputCommandInteraction } from 'discord.js';
+import type { RESTPostAPIApplicationCommandsJSONBody, ChatInputCommandInteraction } from 'discord.js';
 import type { StructurePredicate } from '../utils/loaders';
 import type Bot from './Bot';
 
