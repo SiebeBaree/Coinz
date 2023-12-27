@@ -1,5 +1,6 @@
-import { GuildMember, Guild, Snowflake, ColorResolvable, Message, TextChannel, WebhookClient } from 'discord.js';
+import type { GuildMember, Guild, Snowflake, ColorResolvable, Message, TextChannel } from 'discord.js';
 import {
+    WebhookClient,
     ChannelType,
     PermissionsBitField,
     EmbedBuilder,
@@ -11,6 +12,7 @@ import type Bot from '../domain/Bot';
 import type { ITicket } from '../models/ticket';
 import Ticket from '../models/ticket';
 import { TicketStatus } from './enums';
+import { createLogEmbed, sendLog } from './log';
 
 type TicketCreation = {
     isCreated: boolean;
@@ -18,11 +20,6 @@ type TicketCreation = {
     reason?: string;
 };
 
-/*
-
-    TODO: Send message in logs channel to let staff know that a ticket has been created and who created it.
-
- */
 export async function createTicket(
     client: Bot,
     guild: Guild,
@@ -54,14 +51,14 @@ export async function createTicket(
         };
     }
 
-    if (client.settings.ticketCategory === undefined || client.settings.ticketCategory.length === 0) {
+    if (client.config.ticketCategory === undefined || client.config.ticketCategory.length === 0) {
         return {
             isCreated: false,
             reason: 'Could not find ticket category, unable to create a ticket.',
         };
     }
 
-    const ticketCategory = await guild.channels.fetch(client.settings.ticketCategory as Snowflake);
+    const ticketCategory = await guild.channels.fetch(client.config.ticketCategory as Snowflake);
     if (!ticketCategory) {
         return {
             isCreated: false,
@@ -91,7 +88,7 @@ export async function createTicket(
                 allow: [PermissionsBitField.Flags.ViewChannel],
             },
             {
-                id: client.settings.ticketSupportRole,
+                id: client.config.ticketSupportRole,
                 allow: [PermissionsBitField.Flags.ViewChannel],
             },
         ],
@@ -126,6 +123,14 @@ export async function createTicket(
 
         await webhook.delete();
     }
+
+    const logEmbed = createLogEmbed({
+        client,
+        title: 'Ticket Created',
+        description: `Ticket #${formatNumber(ticketNumber)} has been created by <@${member.id}>.`,
+    });
+
+    await sendLog(client, logEmbed);
 
     return {
         isCreated: true,
@@ -205,9 +210,7 @@ type CloseTicket = {
             - to let them know that their ticket has been closed.
             - to rate their experience.
             - to export the ticket transcript.
-        - send message in logs channel
-            - to let staff know that a ticket has been closed and who closed it.
-            - to export the ticket transcript.
+        - send message in logs channel to export the ticket transcript.
 
  */
 export async function closeTicket(client: Bot, member: GuildMember, channelId: string): Promise<CloseTicket> {
@@ -221,7 +224,7 @@ export async function closeTicket(client: Bot, member: GuildMember, channelId: s
             };
         }
 
-        if (!member.roles.cache.has(client.settings.ticketSupportRole) && member.id !== ticket.userId) {
+        if (!member.roles.cache.has(client.config.ticketSupportRole) && member.id !== ticket.userId) {
             return {
                 isClosed: false,
                 reason: 'You have to be the ticket owner or have the required role to close this ticket.',
@@ -266,11 +269,6 @@ type ReopenTicket = {
     ticket?: ITicket;
 };
 
-/*
-
-    TODO: After reopening ticket send message in logs channel to let staff know that a ticket has been reopened and who reopened it.
-
- */
 export async function reopenTicket(client: Bot, member: GuildMember, channelId: string): Promise<ReopenTicket> {
     try {
         const { ticket, message, channel } = await fetchTicketDetails(client, channelId, member, true);
@@ -304,6 +302,18 @@ export async function reopenTicket(client: Bot, member: GuildMember, channelId: 
         await channel.permissionOverwrites.edit(member.id, {
             ViewChannel: true,
         });
+
+        const logEmbed = createLogEmbed({
+            client,
+            title: 'Ticket Reopened',
+            description: `Ticket #${formatNumber(ticket.ticketNumber)} owned by <@${ticket.userId}> has been reopened.`,
+            details: {
+                moderator: member.id,
+                reason: 'Ticket reopened by staff member.',
+            },
+        });
+
+        await sendLog(client, logEmbed);
 
         return {
             isReopened: true,
@@ -352,6 +362,19 @@ export async function deleteTicket(client: Bot, member: GuildMember, channelId: 
         );
 
         await channel.delete('Ticket deleted by staff member.');
+
+        const logEmbed = createLogEmbed({
+            client,
+            title: 'Ticket Deleted',
+            description: `Ticket #${formatNumber(ticket.ticketNumber)} owned by <@${ticket.userId}> has been deleted.`,
+            details: {
+                moderator: member.id,
+                reason: 'Ticket deleted by staff member.',
+            },
+        });
+
+        await sendLog(client, logEmbed);
+
         return {
             isDeleted: true,
         };
@@ -456,10 +479,8 @@ async function fetchTicketDetails(
     const ticket = await Ticket.findOne({ channelId: channelId });
     if (!ticket) throw new Error("You're not in a ticket channel.");
 
-    if (needAdmin) {
-        if (!member.roles.cache.has(client.settings.ticketSupportRole)) {
-            throw new Error('You do not have the required role use this feature.');
-        }
+    if (needAdmin && !member.roles.cache.has(client.config.ticketSupportRole)) {
+        throw new Error('You do not have the required role use this feature.');
     }
 
     const channel = await member.guild.channels.fetch(channelId);

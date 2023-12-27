@@ -1,17 +1,15 @@
+import type { ChatInputCommandInteraction, GuildMember, ModalSubmitInteraction } from 'discord.js';
 import {
     ActionRowBuilder,
-    ChatInputCommandInteraction,
-    GuildMember,
     ModalBuilder,
-    ModalSubmitInteraction,
     TextInputBuilder,
     TextInputStyle,
+    ApplicationCommandOptionType,
 } from 'discord.js';
-import { ApplicationCommandOptionType } from 'discord.js';
 import type Bot from '../domain/Bot';
 import type { Command } from '../domain/Command';
-import { claimTicket, closeTicket, createTicket, getReopenMessage } from '../utils/ticket';
 import Ticket from '../models/ticket';
+import { claimTicket, closeTicket, createTicket, getReopenMessage } from '../utils/ticket';
 
 async function getCreateTicket(client: Bot, interaction: ChatInputCommandInteraction) {
     if (interaction.member === null || interaction.guild === null || interaction.member.user.bot) {
@@ -64,9 +62,7 @@ async function getCreateTicket(client: Bot, interaction: ChatInputCommandInterac
             content: `:white_check_mark: Your ticket has been created. You can find it at <#${response.ticketId}>.`,
             ephemeral: true,
         });
-    } catch (error) {
-        return;
-    }
+    } catch {}
 }
 
 async function getCloseTicket(client: Bot, interaction: ChatInputCommandInteraction) {
