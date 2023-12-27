@@ -37,13 +37,13 @@ async function getCreateTicket(client: Bot, interaction: ChatInputCommandInterac
 
     try {
         const modalInteraction = await interaction.awaitModalSubmit({ filter, time: 300_000 });
+        await modalInteraction.deferReply({ ephemeral: true });
 
         const ticketReason = modalInteraction.fields.getTextInputValue('ticket_reason');
         if (ticketReason === '') {
-            await modalInteraction.reply({
+            await modalInteraction.editReply({
                 content: 'You must provide a reason for this ticket.',
                 components: [],
-                ephemeral: true,
             });
             return;
         }
@@ -51,16 +51,14 @@ async function getCreateTicket(client: Bot, interaction: ChatInputCommandInterac
         const response = await createTicket(client, interaction.guild, interaction.member as GuildMember, ticketReason);
 
         if (!response.isCreated) {
-            await modalInteraction.reply({
+            await modalInteraction.editReply({
                 content: `:x: ${response.reason}`,
-                ephemeral: true,
             });
             return;
         }
 
-        await modalInteraction.reply({
+        await modalInteraction.editReply({
             content: `:white_check_mark: Your ticket has been created. You can find it at <#${response.ticketId}>.`,
-            ephemeral: true,
         });
     } catch {}
 }

@@ -373,7 +373,15 @@ export async function deleteTicket(client: Bot, member: GuildMember, channelId: 
             },
         });
 
-        await sendLog(client, logEmbed);
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+            new ButtonBuilder()
+                .setStyle(ButtonStyle.Link)
+                .setEmoji('📄')
+                .setLabel('View Transcript')
+                .setURL(`https://coinzbot.xyz/ticket/${ticket.channelId}`),
+        );
+
+        await sendLog(client, logEmbed, [row]);
 
         return {
             isDeleted: true,
