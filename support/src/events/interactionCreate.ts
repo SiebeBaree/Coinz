@@ -1,9 +1,9 @@
-import { ColorResolvable, EmbedBuilder, GuildMember, Snowflake } from 'discord.js';
-import { Events } from 'discord.js';
+import type { ColorResolvable, GuildMember, Snowflake } from 'discord.js';
+import { EmbedBuilder, Events } from 'discord.js';
 import type { Event } from '../domain/Event';
+import Ticket from '../models/ticket';
 import logger from '../utils/logger';
 import { claimTicket, closeTicket, deleteTicket, getReopenMessage, reopenTicket } from '../utils/ticket';
-import Ticket from '../models/ticket';
 
 export default {
     name: Events.InteractionCreate,
@@ -107,7 +107,6 @@ export default {
                         content: response.reason ?? 'Unable to delete ticket.',
                         ephemeral: true,
                     });
-                    return;
                 }
             }
         }
