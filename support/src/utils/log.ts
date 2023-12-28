@@ -28,7 +28,7 @@ export function createLogEmbed({
         embed.addFields([
             {
                 name: 'Information',
-                value: `:hammer: **Moderator** <@${details.moderator}>\n:scroll: **Reason** ${details.reason}`,
+                value: `:hammer: **Moderator:** <@${details.moderator}>\n:scroll: **Reason:** ${details.reason}`,
                 inline: false,
             },
         ]);
