@@ -11,8 +11,9 @@ import logger from './utils/logger';
         presence: {
             activities: [
                 {
-                    name: 'coinzbot.xyz',
-                    type: ActivityType.Playing,
+                    name: 'customstatus',
+                    state: 'Visit coinzbot.xyz for more info!',
+                    type: ActivityType.Custom,
                 },
             ],
         },

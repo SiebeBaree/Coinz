@@ -1,1 +1,14 @@
-{}
+{
+    "guildId": "938177962698735616",
+    "website": "https://coinzbot.xyz",
+    "embed": {
+        "color": "#DBA514",
+        "footer": "Coinz | coinzbot.xyz",
+        "icon": "https://cdn.discordapp.com/embed/avatars/1.png"
+    },
+    "welcomeChannel": "939824122240839720",
+    "modLogChannel": "939870751744462868",
+    "logChannel": "939824122240839720",
+    "ticketSupportRole": "1188875038305296445",
+    "ticketCategory": "1188856897688846346"
+}
