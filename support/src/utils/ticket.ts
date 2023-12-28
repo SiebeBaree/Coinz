@@ -1,4 +1,14 @@
-import type { GuildMember, Guild, Snowflake, ColorResolvable, Message, TextChannel } from 'discord.js';
+import type {
+    GuildMember,
+    Guild,
+    Snowflake,
+    ColorResolvable,
+    Message,
+    TextChannel,
+    ModalSubmitInteraction,
+    ChatInputCommandInteraction,
+    ButtonInteraction,
+} from 'discord.js';
 import {
     WebhookClient,
     ChannelType,
@@ -7,12 +17,16 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
+    TextInputBuilder,
+    TextInputStyle,
+    ModalBuilder,
 } from 'discord.js';
 import type Bot from '../domain/Bot';
 import type { ITicket } from '../models/ticket';
 import Ticket from '../models/ticket';
 import { TicketStatus } from './enums';
 import { createLogEmbed, sendLog } from './log';
+import logger from './logger';
 
 type TicketCreation = {
     isCreated: boolean;
@@ -24,7 +38,7 @@ export async function createTicket(
     client: Bot,
     guild: Guild,
     member: GuildMember,
-    reason: string,
+    reason?: string,
 ): Promise<TicketCreation> {
     const numberOfTickets = await Ticket.countDocuments({
         userId: member.id,
@@ -205,12 +219,7 @@ type CloseTicket = {
 
 /*
 
-    TODO: After closing ticket
-        - send message to user
-            - to let them know that their ticket has been closed.
-            - to rate their experience.
-            - to export the ticket transcript.
-        - send message in logs channel to export the ticket transcript.
+    TODO: After closing ticket send message to user to rate their experience.
 
  */
 export async function closeTicket(client: Bot, member: GuildMember, channelId: string): Promise<CloseTicket> {
@@ -250,6 +259,35 @@ export async function closeTicket(client: Bot, member: GuildMember, channelId: s
         await channel.permissionOverwrites.edit(member.id, {
             ViewChannel: false,
         });
+
+        const embed = new EmbedBuilder()
+            .setTitle(`Ticket #${formatNumber(ticket.ticketNumber)} was closed`)
+            .setColor(client.config.embed.color as ColorResolvable)
+            .setDescription(
+                `Your ticket has been closed by <@${member.id}>. You can view the transcript by clicking the button below.`,
+            )
+            .setFooter({ text: client.config.embed.footer })
+            .setTimestamp();
+
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+            new ButtonBuilder()
+                .setStyle(ButtonStyle.Link)
+                .setEmoji('📄')
+                .setLabel('View Transcript')
+                .setURL(`https://coinzbot.xyz/ticket/${ticket.channelId}`),
+        );
+
+        try {
+            const ticketMember = await member.guild.members.fetch(ticket.userId);
+            const dmChannel = await ticketMember.createDM();
+            await dmChannel.send({
+                embeds: [embed],
+                components: [row],
+            });
+            await dmChannel.delete();
+        } catch {
+            logger.error(`Could not send message to user ${ticket.userId}.`);
+        }
 
         return {
             isClosed: true,
@@ -534,4 +572,58 @@ export function getReopenMessage(client: Bot, ticket: ITicket): ReopenMessage {
         embed: embed,
         components: row,
     };
+}
+
+export async function sendReasonModal(client: Bot, interaction: ButtonInteraction | ChatInputCommandInteraction) {
+    if (interaction.member === null || interaction.guild === null || interaction.member.user.bot) {
+        await interaction.reply({
+            content: 'An error occurred while trying to create a ticket. Please try again later.',
+            ephemeral: true,
+        });
+        return;
+    }
+
+    const ticketReasonInput = new TextInputBuilder()
+        .setCustomId('ticket_reason')
+        .setLabel('What is the reason for this ticket?')
+        .setStyle(TextInputStyle.Paragraph)
+        .setRequired(true)
+        .setMinLength(20)
+        .setMaxLength(1000);
+
+    const modal = new ModalBuilder()
+        .setTitle('Creating a ticket.')
+        .setCustomId(`ticket_reason-${interaction.user.id}`)
+        .addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(ticketReasonInput));
+
+    await interaction.showModal(modal);
+
+    const filter = (i: ModalSubmitInteraction) =>
+        i.customId === `ticket_reason-${interaction.user.id}` && i.user.id === interaction.user.id;
+
+    try {
+        const modalInteraction = await interaction.awaitModalSubmit({ filter, time: 300_000 });
+        await modalInteraction.deferReply({ ephemeral: true });
+
+        const ticketReason = modalInteraction.fields.getTextInputValue('ticket_reason');
+        if (ticketReason === '') {
+            await modalInteraction.editReply({
+                content: ':x: You must provide a reason for this ticket.',
+                components: [],
+            });
+            return;
+        }
+
+        const response = await createTicket(client, interaction.guild, interaction.member as GuildMember, ticketReason);
+        if (!response.isCreated) {
+            await modalInteraction.editReply({
+                content: `:x: ${response.reason}`,
+            });
+            return;
+        }
+
+        await modalInteraction.editReply({
+            content: `:white_check_mark: Your ticket has been created. You can find it at <#${response.ticketId}>.`,
+        });
+    } catch {}
 }
