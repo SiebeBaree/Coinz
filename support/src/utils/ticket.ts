@@ -217,11 +217,6 @@ type CloseTicket = {
     ticket?: ITicket;
 };
 
-/*
-
-    TODO: After closing ticket send message to user to rate their experience.
-
- */
 export async function closeTicket(client: Bot, member: GuildMember, channelId: string): Promise<CloseTicket> {
     try {
         const { ticket, message, channel } = await fetchTicketDetails(client, channelId, member, false);
@@ -269,20 +264,12 @@ export async function closeTicket(client: Bot, member: GuildMember, channelId: s
             .setFooter({ text: client.config.embed.footer })
             .setTimestamp();
 
-        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-            new ButtonBuilder()
-                .setStyle(ButtonStyle.Link)
-                .setEmoji('📄')
-                .setLabel('View Transcript')
-                .setURL(`https://coinzbot.xyz/ticket/${ticket.channelId}`),
-        );
-
         try {
             const ticketMember = await member.guild.members.fetch(ticket.userId);
             const dmChannel = await ticketMember.createDM();
             await dmChannel.send({
                 embeds: [embed],
-                components: [row],
+                components: [getRatingRow(ticket._id), getTranscriptRow(ticket.channelId)],
             });
             await dmChannel.delete();
         } catch {
@@ -411,15 +398,7 @@ export async function deleteTicket(client: Bot, member: GuildMember, channelId: 
             },
         });
 
-        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-            new ButtonBuilder()
-                .setStyle(ButtonStyle.Link)
-                .setEmoji('📄')
-                .setLabel('View Transcript')
-                .setURL(`https://coinzbot.xyz/ticket/${ticket.channelId}`),
-        );
-
-        await sendLog(client, logEmbed, [row]);
+        await sendLog(client, logEmbed, [getTranscriptRow(ticket.channelId)]);
 
         return {
             isDeleted: true,
@@ -459,12 +438,6 @@ function createTicketComponents(ticket?: ITicket, isDisabled = false): ActionRow
             .setEmoji('🎟')
             .setLabel('Claim')
             .setDisabled(isClaimDisabled || isDisabled),
-        new ButtonBuilder()
-            .setCustomId('ticket_edit')
-            .setStyle(ButtonStyle.Primary)
-            .setEmoji('📝')
-            .setLabel('Edit')
-            .setDisabled(isCloseDisabled || isDisabled),
     );
 
     if (ticket?.status === TicketStatus.Closed) {
@@ -626,4 +599,31 @@ export async function sendReasonModal(client: Bot, interaction: ButtonInteractio
             content: `:white_check_mark: Your ticket has been created. You can find it at <#${response.ticketId}>.`,
         });
     } catch {}
+}
+
+export function getRatingRow(ticketId: string, rating: number = 0): ActionRowBuilder<ButtonBuilder> {
+    const row = new ActionRowBuilder<ButtonBuilder>();
+
+    for (let i = 1; i <= 5; i++) {
+        row.addComponents(
+            new ButtonBuilder()
+                .setCustomId(`ticket_rating-${i}-${ticketId}`)
+                .setStyle(i <= rating ? ButtonStyle.Success : ButtonStyle.Secondary)
+                .setEmoji('⭐')
+                .setLabel(`${i}`)
+                .setDisabled(rating > 0),
+        );
+    }
+
+    return row;
+}
+
+export function getTranscriptRow(channelId: string): ActionRowBuilder<ButtonBuilder> {
+    return new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+            .setStyle(ButtonStyle.Link)
+            .setEmoji('📄')
+            .setLabel('View Transcript')
+            .setURL(`https://coinzbot.xyz/ticket/${channelId}`),
+    );
 }
