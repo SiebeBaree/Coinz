@@ -49,16 +49,17 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  name          String?
-  email         String?   @unique
-  password      String?
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  Account       Account[]
+  id               String            @id @default(auto()) @map("_id") @db.ObjectId
+  name             String?
+  email            String?           @unique
+  password         String?
+  emailVerified    DateTime?
+  image            String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  sessions         Session[]
+  Account          Account[]
+  UserSubscription UserSubscription?
 }
 
 model VerificationToken {
@@ -119,4 +120,14 @@ model Item {
   sellPrice       Int?
   multiplier      Int?
   duration        Int?
+}
+
+model UserSubscription {
+  id                     String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId                 String    @unique @db.ObjectId
+  User                   User      @relation(fields: [userId], references: [id])
+  stripeCustomerId       String?   @unique @map("stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map("stripe_subscription_id")
+  stripePriceId          String?   @map("stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map("stripe_current_period_end")
 }
