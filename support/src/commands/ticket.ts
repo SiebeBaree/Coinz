@@ -1,67 +1,9 @@
-import type { ChatInputCommandInteraction, GuildMember, ModalSubmitInteraction } from 'discord.js';
-import {
-    ActionRowBuilder,
-    ModalBuilder,
-    TextInputBuilder,
-    TextInputStyle,
-    ApplicationCommandOptionType,
-} from 'discord.js';
+import type { ChatInputCommandInteraction, ColorResolvable, GuildMember } from 'discord.js';
+import { ButtonBuilder, ButtonStyle, EmbedBuilder, ActionRowBuilder, ApplicationCommandOptionType } from 'discord.js';
 import type Bot from '../domain/Bot';
 import type { Command } from '../domain/Command';
 import Ticket from '../models/ticket';
-import { claimTicket, closeTicket, createTicket, getReopenMessage } from '../utils/ticket';
-
-async function getCreateTicket(client: Bot, interaction: ChatInputCommandInteraction) {
-    if (interaction.member === null || interaction.guild === null || interaction.member.user.bot) {
-        await interaction.reply({
-            content: 'An error occurred while trying to create a ticket. Please try again later.',
-            ephemeral: true,
-        });
-        return;
-    }
-
-    const ticketReasonInput = new TextInputBuilder()
-        .setCustomId('ticket_reason')
-        .setLabel('What is the reason for this ticket?')
-        .setStyle(TextInputStyle.Paragraph)
-        .setRequired(true);
-
-    const modal = new ModalBuilder()
-        .setTitle('Creating a ticket.')
-        .setCustomId(`ticket_reason-${interaction.user.id}`)
-        .addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(ticketReasonInput));
-    await interaction.showModal(modal);
-
-    const filter = (i: ModalSubmitInteraction) =>
-        i.customId === `ticket_reason-${interaction.user.id}` && i.user.id === interaction.user.id;
-
-    try {
-        const modalInteraction = await interaction.awaitModalSubmit({ filter, time: 300_000 });
-        await modalInteraction.deferReply({ ephemeral: true });
-
-        const ticketReason = modalInteraction.fields.getTextInputValue('ticket_reason');
-        if (ticketReason === '') {
-            await modalInteraction.editReply({
-                content: 'You must provide a reason for this ticket.',
-                components: [],
-            });
-            return;
-        }
-
-        const response = await createTicket(client, interaction.guild, interaction.member as GuildMember, ticketReason);
-
-        if (!response.isCreated) {
-            await modalInteraction.editReply({
-                content: `:x: ${response.reason}`,
-            });
-            return;
-        }
-
-        await modalInteraction.editReply({
-            content: `:white_check_mark: Your ticket has been created. You can find it at <#${response.ticketId}>.`,
-        });
-    } catch {}
-}
+import { claimTicket, closeTicket, getReopenMessage, sendReasonModal } from '../utils/ticket';
 
 async function getCloseTicket(client: Bot, interaction: ChatInputCommandInteraction) {
     if (interaction.member === null || interaction.guild === null || interaction.member.user.bot) {
@@ -123,6 +65,38 @@ async function getClaimTicket(client: Bot, interaction: ChatInputCommandInteract
     });
 }
 
+async function getSendMessage(client: Bot, interaction: ChatInputCommandInteraction) {
+    const embed = new EmbedBuilder()
+        .setTitle('Tickets')
+        .setDescription(
+            'To create a ticket, please click the button below. A staff member will be with you shortly.\n\n' +
+                '**Before creating a ticket:**\n' +
+                '1. Make sure you have searched in <#1019848559962624020>, maybe someone already asked your question.\n' +
+                '2. Read [**our guide**](<https://coinzbot.xyz/guide>) on how Coinz works before asking a question.\n' +
+                "3. If it isn't a personal question, please ask it in <#1019848559962624020> instead of creating a ticket.",
+        )
+        .setThumbnail(client.user?.displayAvatarURL() as string)
+        .setColor(client.config.embed.color as ColorResolvable);
+
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+            .setCustomId('ticket_create')
+            .setLabel('Create a ticket')
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji('💬'),
+    );
+
+    await interaction.reply({
+        content: 'Ticket creation message sent.',
+        ephemeral: true,
+    });
+
+    await interaction.channel?.send({
+        embeds: [embed],
+        components: [row],
+    });
+}
+
 export default {
     data: {
         name: 'ticket',
@@ -143,17 +117,17 @@ export default {
                 type: ApplicationCommandOptionType.Subcommand,
                 description: 'Claim this ticket.',
             },
-            // {
-            //     name: 'edit',
-            //     type: ApplicationCommandOptionType.Subcommand,
-            //     description: '',
-            // },
+            {
+                name: 'send-message',
+                type: ApplicationCommandOptionType.Subcommand,
+                description: 'Send a message to this channel to create tickets.',
+            },
         ],
     },
     async execute(client, interaction) {
         switch (interaction.options.getSubcommand()) {
             case 'create':
-                await getCreateTicket(client, interaction);
+                await sendReasonModal(client, interaction);
                 break;
             case 'close':
                 await getCloseTicket(client, interaction);
@@ -161,9 +135,9 @@ export default {
             case 'claim':
                 await getClaimTicket(client, interaction);
                 break;
-            // case 'edit':
-            //     await editTicket(client, interaction);
-            //     break;
+            case 'send-message':
+                await getSendMessage(client, interaction);
+                break;
             default:
                 await interaction.reply({
                     content:
