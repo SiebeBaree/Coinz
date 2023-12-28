@@ -17,6 +17,7 @@ type IUser = {
 };
 
 export type ITicket = {
+    _id: string;
     initialMessageId: string;
     channelId: string;
     userId: string;
@@ -26,6 +27,7 @@ export type ITicket = {
     deletedBy: string;
     ticketNumber: number;
     rating: number;
+    ratingReason: string;
     responseMessageId: string;
     createdAt: Date;
     updatedAt: Date;
@@ -60,6 +62,7 @@ const ticket = new Schema<ITicket>(
         closedBy: { type: String, required: false },
         deletedBy: { type: String, required: false },
         rating: { type: Number, default: 0 },
+        ratingReason: { type: String, default: '' },
         responseMessageId: { type: String, required: false },
         ticketNumber: { type: Number, required: true },
         messages: [{ type: Message, default: [] }],
