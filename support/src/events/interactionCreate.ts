@@ -3,7 +3,14 @@ import { EmbedBuilder, Events } from 'discord.js';
 import type { Event } from '../domain/Event';
 import Ticket from '../models/ticket';
 import logger from '../utils/logger';
-import { claimTicket, closeTicket, deleteTicket, getReopenMessage, reopenTicket } from '../utils/ticket';
+import {
+    claimTicket,
+    closeTicket,
+    deleteTicket,
+    getReopenMessage,
+    reopenTicket,
+    sendReasonModal,
+} from '../utils/ticket';
 
 export default {
     name: Events.InteractionCreate,
@@ -27,7 +34,7 @@ export default {
             } catch (error) {
                 logger.error((error as Error).stack ?? (error as Error).message);
 
-                const errorMsg = 'There was an error while executing this command! Please try again.';
+                const errorMsg = ':x: There was an error while executing this command! Please try again.';
                 if (interaction.deferred || interaction.replied) {
                     await interaction.editReply({ content: errorMsg });
                 } else {
@@ -37,10 +44,15 @@ export default {
         } else if (interaction.isButton() && interaction.customId.startsWith('ticket_')) {
             const action = interaction.customId.split('_')[1];
 
-            if (action === 'claim') {
+            if (action === 'create') {
+                await sendReasonModal(client, interaction);
+            } else if (action === 'claim') {
                 const response = await claimTicket(client, interaction.member as GuildMember, interaction.channelId);
                 if (!response.isClaimed) {
-                    await interaction.reply({ content: response.reason ?? 'Unable to claim ticket.', ephemeral: true });
+                    await interaction.reply({
+                        content: response.reason ? `:x: ${response.reason}` : 'Unable to claim ticket.',
+                        ephemeral: true,
+                    });
                     return;
                 }
 
@@ -48,11 +60,13 @@ export default {
                     content: 'You have successfully claimed this ticket.',
                     ephemeral: true,
                 });
-            } else if (action === 'edit') {
             } else if (action === 'close') {
                 const response = await closeTicket(client, interaction.member as GuildMember, interaction.channelId);
                 if (!response.isClosed || response.ticket === undefined) {
-                    await interaction.reply({ content: response.reason ?? 'Unable to close ticket.', ephemeral: true });
+                    await interaction.reply({
+                        content: response.reason ? `:x: ${response.reason}` : 'Unable to close ticket.',
+                        ephemeral: true,
+                    });
                     return;
                 }
 
@@ -76,7 +90,7 @@ export default {
                 const response = await reopenTicket(client, interaction.member as GuildMember, interaction.channelId);
                 if (!response.isReopened || response.ticket === undefined) {
                     await interaction.reply({
-                        content: response.reason ?? 'Unable to reopen ticket.',
+                        content: response.reason ? `:x: ${response.reason}` : 'Unable to reopen ticket.',
                         ephemeral: true,
                     });
                     return;
@@ -104,7 +118,7 @@ export default {
                 const response = await deleteTicket(client, interaction.member as GuildMember, interaction.channelId);
                 if (!response.isDeleted) {
                     await interaction.reply({
-                        content: response.reason ?? 'Unable to delete ticket.',
+                        content: response.reason ? `:x: ${response.reason}` : 'Unable to delete ticket.',
                         ephemeral: true,
                     });
                 }
