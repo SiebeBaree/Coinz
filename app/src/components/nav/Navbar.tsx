@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { Session } from 'next-auth';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Sidebar from '@/components/nav/Sidebar';
-import { LucideIcon, Menu } from 'lucide-react';
+import { ChevronDown, LucideIcon, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signIn, signOut } from 'next-auth/react';
 import {
@@ -19,7 +19,7 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Cloud, CreditCard, LifeBuoy, LogOut, Plus, User } from 'lucide-react';
+import { Cloud, CreditCard, LifeBuoy, LogOut, Plus, LayoutDashboard } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function Navbar({ session }: { session: Session | null }) {
@@ -53,8 +53,8 @@ export default function Navbar({ session }: { session: Session | null }) {
 
                     {session ? (
                         <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                <div className="flex gap-2 items-center bg-secondary py-2 px-3 rounded-md select-none">
+                            <DropdownMenuTrigger className="outline-none group">
+                                <div className="flex gap-2 items-center bg-secondary py-2 px-3 rounded-md select-none border-highlight">
                                     <Avatar className="w-7 h-7">
                                         <AvatarImage
                                             src={
@@ -69,13 +69,14 @@ export default function Navbar({ session }: { session: Session | null }) {
                                         </AvatarFallback>
                                     </Avatar>
                                     <p className="font-medium">{session?.user?.name}</p>
+                                    <ChevronDown className="h-4 w-4 text-muted transition-all duration-300 ease-in-out group-data-[state=open]:rotate-180" />
                                 </div>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-48 mr-4">
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
-                                    <DropdownItem name="Profile" href="/profile" Icon={User} />
+                                    <DropdownItem name="Dashboard" href="/dashboard" Icon={LayoutDashboard} />
                                     <DropdownItem name="Billing" href="/billing" Icon={CreditCard} />
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
