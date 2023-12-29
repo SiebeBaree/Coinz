@@ -1,6 +1,6 @@
 'use client';
 
-import premium from '@/lib/data/premium.json';
+import premium from '../../../lib/data/premium.json';
 import Image from 'next/image';
 import { Check } from 'lucide-react';
 import { useState } from 'react';

@@ -1,4 +1,4 @@
-import ItemsSection from '@/app/items/ItemsSection';
+import ItemsSection from '@/app/(main)/items/ItemsSection';
 import PageTitle from '@/components/PageTitle';
 import { db } from '@/server/db';
 

@@ -1,7 +1,12 @@
-import PageTitle from '@/components/PageTitle';
-import PremiumClient from '@/app/premium/PremiumClient';
+import PageTitle from '../../../components/PageTitle';
+import PremiumClient from './PremiumClient';
+import { getServerAuthSession } from '@/server/auth';
+import { redirect } from 'next/navigation';
 
-export default function PremiumPage() {
+export default async function PremiumPage() {
+    const session = await getServerAuthSession();
+    if (!session) redirect('/login?url=/premium');
+
     return (
         <main className="container mx-auto px-5">
             <PageTitle
