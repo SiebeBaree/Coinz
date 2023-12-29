@@ -74,9 +74,7 @@ export default function DashboardSidebar({ session }: { session: Session }) {
                             key={route.href}
                             className={cn(
                                 'text-sm group flex p-3 w-full justify-start cursor-pointer hover:bg-white/10 rounded-lg transition font-medium',
-                                pathname === route.href
-                                    ? 'text-accent-foreground bg-white/10'
-                                    : 'text-muted',
+                                pathname === route.href ? 'text-accent-foreground bg-white/10' : 'text-muted',
                             )}
                         >
                             <route.icon className="h-5 w-5 mr-3" />
