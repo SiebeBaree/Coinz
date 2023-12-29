@@ -83,13 +83,7 @@ export default function Navbar({ session }: { session: Session | null }) {
                                 <DropdownMenuGroup>
                                     <DropdownItem name="Invite Coinz" href="/invite" Icon={Plus} />
                                     <DropdownItem name="Support" href="/support" Icon={LifeBuoy} />
-                                    <DropdownItem
-                                        name="Statistics"
-                                        href="/"
-                                        Icon={Cloud}
-                                        shortcut="SOON"
-                                        disabled={true}
-                                    />
+                                    <DropdownItem name="Statistics" Icon={Cloud} shortcut="SOON" disabled={true} />
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
@@ -107,7 +101,7 @@ export default function Navbar({ session }: { session: Session | null }) {
                         </DropdownMenu>
                     ) : (
                         <Button
-                            onClick={() => signIn('discord', { callbackUrl: '/profile' })}
+                            onClick={() => signIn('discord', { callbackUrl: '/dashboard' })}
                             className="px-5 py-2 h-auto"
                         >
                             Login
@@ -153,13 +147,13 @@ function DropdownItem({
     shortcut,
 }: {
     name: string;
-    href: string;
+    href?: string;
     disabled?: boolean;
     Icon?: LucideIcon;
     shortcut?: string;
 }) {
     return (
-        <Link href={href}>
+        <Link href={href ?? '#'}>
             <DropdownMenuItem
                 disabled={disabled}
                 className="cursor-pointer transition-all duration-200 ease-in-out hover:bg-white/10"

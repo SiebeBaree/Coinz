@@ -4,7 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {
     CandlestickChartIcon,
-    CommandIcon, CreditCard,
+    CommandIcon,
+    CreditCard,
     ExternalLinkIcon,
     HelpCircleIcon,
     HomeIcon,
@@ -53,7 +54,7 @@ const routes = [
     {
         label: 'Support',
         icon: InfoIcon,
-        href: '/settings',
+        href: '/support',
     },
 ];
 
@@ -63,9 +64,9 @@ export default function Sidebar({ session }: { session: Session | null }) {
     return (
         <div className="py-4 flex flex-col h-full bg-accent text-accent-foreground">
             <div className="px-3 py-2 flex-1">
-                <Link href={'/dashboard'} className="flex items-center pl-3 mb-12">
+                <Link href={'/'} className="flex items-center pl-3 mb-12">
                     <div className="relative w-8 h-8 mr-3">
-                        <Image height={32} width={32} src="/logo192.png" alt="The logo of SiebeGPT" />
+                        <Image height={32} width={32} src="/logo192.png" alt="The logo of Coinz" />
                     </div>
                     <h1 className="text-2xl font-bold">Coinz</h1>
                 </Link>
@@ -85,7 +86,7 @@ export default function Sidebar({ session }: { session: Session | null }) {
                     ))}
                     {!session && (
                         <p
-                            onClick={() => signIn('discord', { callbackUrl: '/profile' })}
+                            onClick={() => signIn('discord', { callbackUrl: '/dashboard' })}
                             className={
                                 'text-sm group flex p-3 w-full justify-start cursor-pointer hover:bg-white/10 rounded-lg transition font-medium text-primary'
                             }
@@ -104,7 +105,9 @@ export default function Sidebar({ session }: { session: Session | null }) {
                                 href={'/dashboard'}
                                 className={cn(
                                     'text-sm group flex p-3 w-full justify-start cursor-pointer hover:bg-white/10 rounded-lg transition font-medium',
-                                    pathname.startsWith('/dashboard') ? 'text-accent-foreground bg-white/10' : 'text-muted',
+                                    pathname.startsWith('/dashboard')
+                                        ? 'text-accent-foreground bg-white/10'
+                                        : 'text-muted',
                                 )}
                             >
                                 <LayoutDashboardIcon className="h-5 w-5 mr-3" />
