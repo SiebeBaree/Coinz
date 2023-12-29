@@ -22,20 +22,20 @@ type MemberInvestment {
 }
 
 model Account {
-  id                       String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId                   String  @db.ObjectId
-  type                     String
-  provider                 String
-  providerAccountId        String
-  refresh_token            String?
-  access_token             String?
-  expires_at               Int?
-  token_type               String?
-  scope                    String?
-  id_token                 String?
-  session_state            String?
-  refresh_token_expires_in Int?
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -52,13 +52,12 @@ model User {
   id               String            @id @default(auto()) @map("_id") @db.ObjectId
   name             String?
   email            String?           @unique
-  password         String?
   emailVerified    DateTime?
   image            String?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   sessions         Session[]
-  Account          Account[]
+  accounts         Account[]
   UserSubscription UserSubscription?
 }
 
@@ -84,7 +83,7 @@ model Investment {
   @@unique([ticker, type])
 }
 
-model member {
+model members {
   id           String             @id @default(auto()) @map("_id") @db.ObjectId
   banned       Boolean
   votes        Int
@@ -95,8 +94,6 @@ model member {
   inventory    InventoryItem[]
   stocks       MemberInvestment[]
   profileColor String
-  birthday     DateTime
-  bio          String
 }
 
 model BotStats {
