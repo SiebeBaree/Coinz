@@ -4,6 +4,8 @@ import { getServerAuthSession } from '@/server/auth';
 import { db } from '@/server/db';
 import { stripe } from '@/lib/stripe';
 
+export const dynamic = 'force-dynamic';
+
 const settingsUrl = absoluteUrl('/dashboard/settings');
 
 export async function GET() {

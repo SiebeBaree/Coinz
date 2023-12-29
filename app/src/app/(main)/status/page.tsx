@@ -1,4 +1,4 @@
-import StatusClient from '@/app/status/StatusClient';
+import StatusClient from '@/app/(main)/status/StatusClient';
 import { Cluster } from '@/lib/interfaces';
 import PageTitle from '@/components/PageTitle';
 

@@ -4,6 +4,8 @@ import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { db } from '@/server/db';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
     const body = await req.text();
     const signature = headers().get('Stripe-Signature') as string;

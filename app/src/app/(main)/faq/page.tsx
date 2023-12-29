@@ -1,4 +1,4 @@
-import faqItems from '../../lib/data/faq.json';
+import faqItems from '@/lib/data/faq.json';
 import FaqCard from '@/components/FaqCard';
 import PageTitle from '@/components/PageTitle';
 
