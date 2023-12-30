@@ -14,7 +14,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
             </div>
             <main className="md:pl-72">
                 <DashboardNavbar session={session} />
-                {children}
+                <div className="p-4">
+                    {children}
+                </div>
             </main>
         </div>
     );
