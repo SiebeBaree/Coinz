@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import { Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
+import { Badge } from '@/components/ui/badge';
 
 const routes = [
     {
@@ -27,11 +28,13 @@ const routes = [
         label: 'Buy Investments',
         icon: CandlestickChartIcon,
         href: '/dashboard/investments',
+        comingSoon: true,
     },
     {
         label: 'Shop',
         icon: ShoppingCartIcon,
         href: '/dashboard/shop',
+        comingSoon: true,
     },
     {
         label: 'Billing',
@@ -69,17 +72,30 @@ export default function DashboardSidebar({ session }: { session: Session }) {
                 </Link>
                 <div className="flex flex-col gap-1">
                     {routes.map((route) => (
-                        <Link
-                            href={route.href}
-                            key={route.href}
-                            className={cn(
-                                'text-sm group flex p-3 w-full justify-start cursor-pointer hover:bg-white/10 rounded-lg transition font-medium',
-                                pathname === route.href ? 'text-accent-foreground bg-white/10' : 'text-muted',
+                        <div key={route.href}>
+                            {route.comingSoon ? (
+                                <button
+                                    className="text-sm group flex p-3 w-full justify-start cursor-pointer font-medium text-muted"
+                                >
+                                    <route.icon className="h-5 w-5 mr-3" />
+                                    {route.label}
+                                    <Badge className="ml-auto text-muted" variant="secondary">
+                                        SOON
+                                    </Badge>
+                                </button>
+                            ) : (
+                                <Link
+                                    href={route.href}
+                                    className={cn(
+                                        'text-sm group flex p-3 w-full justify-start cursor-pointer hover:bg-white/10 rounded-lg transition font-medium',
+                                        pathname === route.href ? 'text-accent-foreground bg-white/10' : 'text-muted',
+                                    )}
+                                >
+                                    <route.icon className="h-5 w-5 mr-3" />
+                                    {route.label}
+                                </Link>
                             )}
-                        >
-                            <route.icon className="h-5 w-5 mr-3" />
-                            {route.label}
-                        </Link>
+                        </div>
                     ))}
                 </div>
             </div>

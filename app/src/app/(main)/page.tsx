@@ -96,7 +96,7 @@ export default async function Home() {
                         imagePath="/investing.webp"
                         Icon={InvestingIcon}
                         title="Buy, hold and sell stocks"
-                        description="Enhance your knowledge of the stock and crypto market by buying, holding and selling stocks and crypto within Coinz. All prices are updated regularly. Coinz currently has 30 stocks and 27 crypto currencies."
+                        description="Enhance your knowledge of the stock and crypto market by buying, holding and selling stocks and crypto within Coinz. All prices are updated regularly. Coinz currently has 30 stocks and 40 crypto currencies."
                     />
                     <FeatureCard
                         imagePath="/business.webp"

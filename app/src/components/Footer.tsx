@@ -20,7 +20,6 @@ export default function Footer() {
                             <Link href={'/invite'}>Invite Coinz</Link>
                             <Link href={'/support'}>Support Server</Link>
                             <Link href={'/status'}>Status</Link>
-                            <Link href={'/changelog'}>Changelog</Link>
                         </div>
                     </div>
 
@@ -43,9 +42,6 @@ export default function Footer() {
                             <Link href={'https://discordbotlist.com/bots/coinz'} target="_blank">
                                 Discordbotlist
                             </Link>
-                            <Link href={'https://discords.com/bots/bot/938771676433362955'} target="_blank">
-                                Discords
-                            </Link>
                         </div>
                     </div>
 
@@ -53,7 +49,7 @@ export default function Footer() {
                         <h1 className="font-semibold uppercase text-muted text-lg text-center">COMPANY</h1>
 
                         <div className="flex flex-col gap-1 text-center">
-                            <Link href={'/careers'}>Careers</Link>
+                            <Link href={'/changelog'}>Changelog</Link>
                             <Link href={'/privacy-policy'}>Privacy Policy</Link>
                             <Link href={'/terms-of-use'}>Terms Of Use</Link>
                         </div>

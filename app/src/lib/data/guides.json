@@ -11,27 +11,24 @@
     },
     {
         "name": "Leveling",
-        "description": "Learn about the leveling system in Coinz, how to gain levels, and the perks associated with each level.",
-        "href": "leveling"
+        "description": "Learn about the leveling system in Coinz, how to gain levels, and the perks associated with each level."
     },
     {
         "name": "Starting a business",
-        "description": "Guidance on how to start and manage your business within Coinz.",
-        "href": "starting-a-business"
+        "description": "Guidance on how to start and manage your business within Coinz."
     },
     {
         "name": "Farming",
-        "description": "Insights into farming mechanics in Coinz, techniques for efficient farming, and maximizing your farming outputs.",
-        "href": "farming"
+        "description": "Insights into farming mechanics in Coinz, techniques for efficient farming, and maximizing your farming outputs."
     },
     {
         "name": "Investing",
-        "description": "Advice on investment strategies within Coinz, understanding market trends, and managing your investment portfolio.",
-        "href": "investing"
+        "description": "Advice on investment strategies within Coinz, understanding market trends, and managing your investment portfolio."
     },
     {
         "name": "Frequently Asked Questions",
         "description": "Answers to common questions about Coinz, covering a range of topics from basic usage to more complex queries.",
-        "href": "faq"
+        "href": "faq",
+        "watermark": "Questions"
     }
 ]

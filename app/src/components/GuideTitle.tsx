@@ -11,5 +11,5 @@ export default function GuideTitle() {
     const guide = guides.find((g) => g.href === guidePath);
     if (!guide) return notFound();
 
-    return <PageTitle title={guide.name} description={guide.description} />;
+    return <PageTitle title={guide.name} description={guide.description} watermark={guide.watermark} />;
 }
