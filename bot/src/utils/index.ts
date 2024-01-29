@@ -10,7 +10,10 @@ import type {
 } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import countriesData from '../data/countries.json';
+import type Bot from '../domain/Bot';
 import type { Loot } from '../lib/types';
+import type { IMember } from '../models/member';
+import { removeBetMoney } from './money';
 
 const countries = new Map<string, string>(Object.entries(countriesData));
 const FORMATTER = new Intl.NumberFormat('en-US', { notation: 'compact' });
@@ -203,4 +206,41 @@ export function getVotingRow() {
             .setEmoji('<:discords:1157587361069273119>')
             .setURL('https://discords.com/bots/bot/938771676433362955/vote'),
     );
+}
+
+export async function getBet(client: Bot, interaction: ChatInputCommandInteraction, member: IMember): Promise<{
+    bet: number,
+    error: string | null,
+}> {
+    const betStr = interaction.options.getString('bet', true);
+
+    let bet = 50;
+    if (betStr.toLowerCase() === 'all' || betStr.toLowerCase() === 'max') {
+        if (member.wallet <= bet) {
+            await client.cooldown.deleteCooldown(interaction.user.id, interaction.commandName);
+            return {
+                bet: 0,
+                error: "You don't have any money in your wallet to bet!",
+            };
+        }
+
+        bet = Math.min(member.wallet, client.config.bets.free.max);
+    } else {
+        const newBet = await removeBetMoney(betStr, member);
+
+        if (typeof newBet === 'string') {
+            await client.cooldown.deleteCooldown(interaction.user.id, interaction.commandName);
+            return {
+                bet: 0,
+                error: newBet,
+            }
+        }
+
+        bet = newBet;
+    }
+
+    return {
+        bet,
+        error: null,
+    };
 }
