@@ -59,6 +59,7 @@ export async function removeBetMoney(
             },
             {
                 $inc: {
+                    totalSpend: bet,
                     'games.moneySpent': bet,
                 },
             },
