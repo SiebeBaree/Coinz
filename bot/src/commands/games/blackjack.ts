@@ -1,5 +1,13 @@
-import type { ColorResolvable} from 'discord.js';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, Colors, EmbedBuilder, ApplicationCommandOptionType } from 'discord.js';
+import type { ColorResolvable } from 'discord.js';
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ComponentType,
+    Colors,
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+} from 'discord.js';
 import { deck, hiddenCard } from '../../data/cards.json';
 import type { Command } from '../../domain/Command';
 import type { IMember } from '../../models/member';
@@ -162,7 +170,7 @@ async function finishGame(gameData: GameData, member: IMember) {
     gameData.color = gameData.userWon ? Colors.Green : Colors.Red;
 
     if (gameData.userWon) {
-        const money = getReward(gameData.bet)
+        const money = getReward(gameData.bet);
         await addExperience(member);
         await addMoney(member.id, money);
 

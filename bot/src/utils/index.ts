@@ -208,9 +208,13 @@ export function getVotingRow() {
     );
 }
 
-export async function getBet(client: Bot, interaction: ChatInputCommandInteraction, member: IMember): Promise<{
-    bet: number,
-    error: string | null,
+export async function getBet(
+    client: Bot,
+    interaction: ChatInputCommandInteraction,
+    member: IMember,
+): Promise<{
+    bet: number;
+    error: string | null;
 }> {
     const betStr = interaction.options.getString('bet', true);
 
@@ -233,7 +237,7 @@ export async function getBet(client: Bot, interaction: ChatInputCommandInteracti
             return {
                 bet: 0,
                 error: newBet,
-            }
+            };
         }
 
         bet = newBet;

@@ -86,7 +86,7 @@ function getButtons(isDisabled = false, disableStop = false): ActionRowBuilder<B
 
 function getChoice(): Choice {
     const choices = ['rock', 'paper', 'scissors'] as Choice[];
-    return choices[getRandomNumber(0, choices.length - 1)];
+    return choices[getRandomNumber(0, choices.length - 1)]!;
 }
 
 function getWinner(playerChoice: string, botChoice: string) {
@@ -165,7 +165,7 @@ export default {
                     gameData.bet * gameData.multiplier - gameData.bet,
                 )}!`;
             } else if (i.customId.startsWith('rps_')) {
-                gameData.playerChoice = i.customId.split('_')[1].toLowerCase() as Choice;
+                gameData.playerChoice = i.customId.split('_')[1]!.toLowerCase() as Choice;
                 gameData.botChoice = getChoice();
 
                 const winner = getWinner(gameData.playerChoice, gameData.botChoice);

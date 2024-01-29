@@ -14,15 +14,19 @@ type GameData = {
     horses: number[];
     status: string;
     color: ColorResolvable;
-}
+};
 
 function getEmbed(gameData: GameData): EmbedBuilder {
-    const horseStr = gameData.horses.map((horse, index) => `**${index + 1}.** ${"-".repeat(horse)}:horse_racing:`).join("\n");
+    const horseStr = gameData.horses
+        .map((horse, index) => `**${index + 1}.** ${'-'.repeat(horse)}:horse_racing:`)
+        .join('\n');
 
     return new EmbedBuilder()
-        .setTitle("Horse Race")
+        .setTitle('Horse Race')
         .setColor(gameData.color)
-        .setDescription(`:moneybag: **Bet:** :coin: ${gameData.bet}\n:1234: **Your Horse:** \`${gameData.horse}\`\n:hourglass: **Status:** ${gameData.status}\n\n${horseStr}`);
+        .setDescription(
+            `:moneybag: **Bet:** :coin: ${gameData.bet}\n:1234: **Your Horse:** \`${gameData.horse}\`\n:hourglass: **Status:** ${gameData.status}\n\n${horseStr}`,
+        );
 }
 
 export default {
@@ -40,9 +44,9 @@ export default {
                 max_length: 6,
             },
             {
-                name: "horse",
+                name: 'horse',
                 type: ApplicationCommandOptionType.Integer,
-                description: "The horse (1-5) you want to bet on.",
+                description: 'The horse (1-5) you want to bet on.',
                 required: true,
                 min_value: 1,
                 max_value: 5,
@@ -64,14 +68,14 @@ export default {
             return;
         }
 
-        const horse = interaction.options.getInteger("horse", true);
+        const horse = interaction.options.getInteger('horse', true);
         const gameData = {
             bet,
             horse,
             userWon: false,
             finishedCommand: false,
-            horses: Array.from({length: 5}).fill(10),
-            status: ":checkered_flag: Racing...",
+            horses: Array.from({ length: 5 }).fill(10),
+            status: ':checkered_flag: Racing...',
             color: client.config.embed.color as ColorResolvable,
         } as GameData;
 
@@ -92,7 +96,7 @@ export default {
 
             if (horseWon !== -1) {
                 gameData.finishedCommand = true;
-                gameData.status = ":trophy: Race has ended!";
+                gameData.status = ':trophy: Race has ended!';
 
                 if (horseWon + 1 === gameData.horse) {
                     gameData.userWon = true;
@@ -142,7 +146,7 @@ export default {
             if (gameData.finishedCommand) return;
 
             gameData.finishedCommand = true;
-            gameData.status = ":x: The horses took too long to finish!";
+            gameData.status = ':x: The horses took too long to finish!';
             gameData.color = Colors.Red;
 
             await interaction.editReply({ embeds: [getEmbed(gameData)] });
