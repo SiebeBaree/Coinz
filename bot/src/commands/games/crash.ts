@@ -10,7 +10,9 @@ import {
     EmbedBuilder,
 } from 'discord.js';
 import type { Command } from '../../domain/Command';
-import { addExperience, addMoney, removeBetMoney } from '../../utils/money';
+import UserStats from '../../models/userStats';
+import { getBet } from '../../utils';
+import { addExperience, addMoney } from '../../utils/money';
 
 type GameData = {
     profit: number;
@@ -77,30 +79,10 @@ export default {
         ],
     },
     async execute(client, interaction, member) {
-        const betStr = interaction.options.getString('bet', true);
-
-        let bet = 50;
-        if (betStr.toLowerCase() === 'all' || betStr.toLowerCase() === 'max') {
-            if (member.wallet <= bet) {
-                await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
-                await interaction.reply({
-                    content: "You don't have any money in your wallet to bet!",
-                    ephemeral: true,
-                });
-                return;
-            }
-
-            bet = Math.min(member.wallet, 10_000);
-        } else {
-            const newBet = await removeBetMoney(betStr, member);
-
-            if (typeof newBet === 'string') {
-                await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
-                await interaction.reply({ content: newBet, ephemeral: true });
-                return;
-            }
-
-            bet = newBet;
+        const { bet, error } = await getBet(client, interaction, member);
+        if (error) {
+            await interaction.reply({ content: error, ephemeral: true });
+            return;
         }
 
         // setup
@@ -117,6 +99,7 @@ export default {
             components: [getButton(gameData.finishedCommand)],
             fetchReply: true,
         });
+
         const collector = message.createMessageComponentCollector({
             filter: (i) => i.user.id === interaction.user.id,
             componentType: ComponentType.Button,
@@ -131,12 +114,24 @@ export default {
                 gameData.color = Colors.Green;
                 collector.stop();
 
-                await addMoney(interaction.user.id, gameData.profit + bet);
-                await addExperience(member);
                 await interaction.editReply({
                     embeds: [getEmbed(gameData)],
                     components: [getButton(gameData.finishedCommand)],
                 });
+                await addMoney(interaction.user.id, gameData.profit + bet);
+                await addExperience(member);
+
+                await UserStats.updateOne(
+                    { id: interaction.user.id },
+                    {
+                        $inc: {
+                            totalEarned: gameData.profit + bet,
+                            'games.won': 1,
+                            'games.moneyEarned': gameData.profit + bet,
+                        },
+                    },
+                    { upsert: true },
+                );
             }
 
             await i.deferUpdate();
@@ -166,6 +161,17 @@ export default {
 
                 clearInterval(interval);
                 collector.stop();
+
+                await UserStats.updateOne(
+                    { id: interaction.user.id },
+                    {
+                        $inc: {
+                            'games.lost': 1,
+                            'games.moneyLost': bet,
+                        },
+                    },
+                    { upsert: true },
+                );
             }
 
             await interaction.editReply({
