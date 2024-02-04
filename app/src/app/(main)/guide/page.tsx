@@ -28,8 +28,8 @@ export default function Guide() {
             </div>
 
             <div className="grid grid-cols-3 gap-3 mt-8">
-                {guides.map((guide) => (
-                    <GuideCard key={guide.href} title={guide.name} description={guide.description} href={guide.href} />
+                {guides.map((guide, index) => (
+                    <GuideCard key={index} title={guide.name} description={guide.description} href={guide.href} />
                 ))}
             </div>
         </main>
