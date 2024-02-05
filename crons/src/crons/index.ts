@@ -7,6 +7,7 @@ import ApiController from '../lib/bot-listings';
 import crypto from '../lib/crypto';
 import { getExpireTime, isMarketOpen } from '../lib/stocks';
 import type { BotListing } from '../lib/types';
+import BotStats from '../models/BotStats';
 import Investment from '../models/Investment';
 
 type InvestmentResponse = {
@@ -86,7 +87,7 @@ schedule(
         }
     },
     {
-        scheduled: true,
+        scheduled: false,
         timezone: 'America/New_York',
     },
 );
@@ -133,16 +134,22 @@ schedule(
         }
     },
     {
-        scheduled: true,
+        scheduled: false,
         timezone: 'America/New_York',
     },
 );
 
 // Run every 2 hours
 schedule('0 */2 * * *', async () => {
-    const sendApi = new ApiController(0, 0, 0);
+    const stats = await BotStats.findOne({}, {}, { sort: { updatedAt: -1 } });
+    if (stats === null) return;
 
-    for (const botListing of botListings as BotListing[]) {
-        await sendApi.sendApiCall(botListing);
+    const sendApi = new ApiController(stats.guilds, stats.shards, stats.users);
+
+    for (const botListing of botListings as unknown as BotListing[]) {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        sendApi.sendApiCall(botListing).then((response) => {
+            if (!response) console.log(`API call for ${botListing.name} failed`);
+        });
     }
 });

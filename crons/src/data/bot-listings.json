@@ -24,15 +24,6 @@
         }
     },
     {
-        "name": "BHLIST",
-        "api": "https://api.bhlist.co.in/bots/stats",
-        "headers": {
-            "ServerCount": "$SERVER_COUNT",
-            "ShardCount": "$SHARD_COUNT",
-            "Authorization": "$TOKEN"
-        }
-    },
-    {
         "name": "DISCORD_BOTS_GG",
         "api": "https://discord.bots.gg/api/v1/bots/$ID/stats",
         "body": {
@@ -51,9 +42,8 @@
     {
         "name": "DISCORDLIST",
         "api": "https://api.discordlist.gg/v0/bots/$ID/stats",
-        "method": "PUT",
         "body": {
-            "count": "$SERVER_COUNT"
+            "server_count": "$SERVER_COUNT"
         },
         "headers": {
             "Authorization": "Bearer $TOKEN"

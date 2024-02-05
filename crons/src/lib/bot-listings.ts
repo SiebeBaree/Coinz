@@ -13,6 +13,7 @@ export default class ApiController {
 
     public async sendApiCall(listing: BotListing): Promise<boolean> {
         try {
+            if (listing.api.length <= 0) return false;
             const API_URL = listing.api.replace('$ID', process.env.BOT_ID!);
 
             if (!listing.body) listing.body = {};
@@ -31,18 +32,15 @@ export default class ApiController {
                 body: JSON.stringify(body),
             });
 
-            console.log(response.status);
             if (response.status !== 200 && response.status !== 204) {
-                console.log(`ERROR: ${listing.name} STATS SEND FAILED...`);
+                try {
+                    console.log('ERROR:', listing.name, response.status, await response.json());
+                } catch {
+                    console.log(`ERROR: ${listing.name} ${response.status} BODY FAILED...`);
+                }
             }
 
-            try {
-                console.log(await response.json());
-            } catch {
-                console.log(`ERROR: ${listing.name} BODY FAILED...`);
-            }
-
-            return response.status === 200;
+            return response.status === 200 || response.status === 204;
         } catch (error) {
             console.log(error);
             return false;
@@ -71,6 +69,7 @@ export default class ApiController {
             newHeaders.set(key, value.toString());
         }
 
+        newHeaders.set('Content-Type', 'application/json');
         return newHeaders;
     }
 
