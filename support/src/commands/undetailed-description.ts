@@ -1,18 +1,16 @@
-import { ApplicationCommandOptionType } from 'discord.js';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { ApplicationCommandType } from 'discord-api-types/v10';
+import type { MessageContextMenuCommandInteraction } from 'discord.js';
 import type { Command } from '../domain/Command';
 
 export default {
     data: {
-        name: 'undetailed-description',
-        description: 'Sends a message to the user that the description is not detailed enough.',
-        options: [
-            {
-                name: 'user',
-                type: ApplicationCommandOptionType.User,
-                description: 'Get the balance of another user.',
-                required: false,
-            },
-        ],
+        name: 'Undetailed Description',
+        type: ApplicationCommandType.Message
     },
-    async execute() {},
+    async execute(_, interaction: MessageContextMenuCommandInteraction) {
+        await interaction.reply({
+            content: `${interaction.targetMessage.author}, if you want that we seriously look at your post, please provide a detailed description.`,
+        });
+    },
 } satisfies Command;
