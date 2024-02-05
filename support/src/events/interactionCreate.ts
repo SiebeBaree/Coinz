@@ -11,7 +11,6 @@ import {
     formatNumber,
     getRatingRow,
     getReopenMessage,
-    getTranscriptRow,
     reopenTicket,
     sendReasonModal,
 } from '../utils/ticket';
@@ -165,7 +164,6 @@ export default {
                             await modalInteraction.update({
                                 components: [
                                     getRatingRow(ticketId ?? '', ratingInt),
-                                    getTranscriptRow(ticket.channelId),
                                 ],
                             });
                         }
