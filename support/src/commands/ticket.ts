@@ -124,7 +124,7 @@ export default {
             },
         ],
     },
-    async execute(client, interaction) {
+    async execute(client, interaction: ChatInputCommandInteraction) {
         switch (interaction.options.getSubcommand()) {
             case 'create':
                 await sendReasonModal(client, interaction);

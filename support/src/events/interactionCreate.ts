@@ -20,7 +20,7 @@ export default {
     name: Events.InteractionCreate,
     once: false,
     async execute(client, interaction) {
-        if (interaction.isChatInputCommand()) {
+        if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) {
             if (!interaction.guild || !interaction.guild.available || interaction.user.bot) return;
 
             const command = client.commands.get(interaction.commandName);
