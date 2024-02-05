@@ -6,4 +6,3 @@ logs
 node_modules/
 .env
 .next
-tokens.json

@@ -1,6 +1,17 @@
 import process from 'node:process';
-import tokens from '../data/tokens.json';
 import type { BotListing } from './types';
+
+const tokens = {
+    "TOP_GG_TOKEN": process.env.TOP_GG_TOKEN!,
+    "DISCORD_BOT_LIST_TOKEN": process.env.DISCORD_BOT_LIST_TOKEN!,
+    "BOTLIST_ME_TOKEN": process.env.BOTLIST_ME_TOKEN!,
+    "DISCORD_BOTS_GG_TOKEN": process.env.DISCORD_BOTS_GG_TOKEN!,
+    "DISCORD_EXTREME_LIST_TOKEN": process.env.DISCORD_EXTREME_LIST_TOKEN!,
+    "DISCORDLIST_TOKEN": process.env.DISCORDLIST_TOKEN!,
+    "INFINITY_BOTS_TOKEN": process.env.INFINITY_BOTS_TOKEN!,
+    "DISFORGE_TOKEN": process.env.DISFORGE_TOKEN!,
+    "VOIDBOTS_TOKEN": process.env.VOIDBOTS_TOKEN!,
+}
 
 export default class ApiController {
     private readonly variables: Map<string, number | string> = new Map();
