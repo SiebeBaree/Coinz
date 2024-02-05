@@ -1,6 +1,6 @@
 /* eslint-disable */
-declare module "bitvavo" {
-    import { EventEmitter } from "events";
+declare module 'bitvavo' {
+    import { EventEmitter } from 'events';
 
     export interface BitvavoOptions {
         APIKEY: string;
