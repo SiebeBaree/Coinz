@@ -259,7 +259,7 @@ export async function closeTicket(client: Bot, member: GuildMember, channelId: s
             .setTitle(`Ticket #${formatNumber(ticket.ticketNumber)} was closed`)
             .setColor(client.config.embed.color as ColorResolvable)
             .setDescription(
-                `Your ticket has been closed by <@${member.id}>. You can view the transcript by clicking the button below.`,
+                `Your ticket has been closed by <@${member.id}>. Please let us know how we did by clicking on the buttons below.`,
             )
             .setFooter({ text: client.config.embed.footer })
             .setTimestamp();
@@ -269,7 +269,7 @@ export async function closeTicket(client: Bot, member: GuildMember, channelId: s
             const dmChannel = await ticketMember.createDM();
             await dmChannel.send({
                 embeds: [embed],
-                components: [getRatingRow(ticket._id), getTranscriptRow(ticket.channelId)],
+                components: [getRatingRow(ticket._id)],
             });
             await dmChannel.delete();
         } catch {
@@ -398,7 +398,7 @@ export async function deleteTicket(client: Bot, member: GuildMember, channelId: 
             },
         });
 
-        await sendLog(client, logEmbed, [getTranscriptRow(ticket.channelId)]);
+        await sendLog(client, logEmbed);
 
         return {
             isDeleted: true,
@@ -616,14 +616,4 @@ export function getRatingRow(ticketId: string, rating: number = 0): ActionRowBui
     }
 
     return row;
-}
-
-export function getTranscriptRow(channelId: string): ActionRowBuilder<ButtonBuilder> {
-    return new ActionRowBuilder<ButtonBuilder>().addComponents(
-        new ButtonBuilder()
-            .setStyle(ButtonStyle.Link)
-            .setEmoji('📄')
-            .setLabel('View Transcript')
-            .setURL(`https://coinzbot.xyz/ticket/${channelId}`),
-    );
 }
