@@ -6,7 +6,7 @@ import type { Command } from '../domain/Command';
 export default {
     data: {
         name: 'Undetailed Description',
-        type: ApplicationCommandType.Message
+        type: ApplicationCommandType.Message,
     },
     async execute(_, interaction: MessageContextMenuCommandInteraction) {
         await interaction.reply({

@@ -162,9 +162,7 @@ export default {
 
                         if (modalInteraction.isFromMessage()) {
                             await modalInteraction.update({
-                                components: [
-                                    getRatingRow(ticketId ?? '', ratingInt),
-                                ],
+                                components: [getRatingRow(ticketId ?? '', ratingInt)],
                             });
                         }
 
