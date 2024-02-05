@@ -3,7 +3,7 @@ import axios from 'axios';
 import { schedule } from 'node-cron';
 import botListings from '../data/bot-listings.json';
 import investments from '../data/investments.json';
-import sendApiCall from '../lib/bot-listings';
+import ApiController from '../lib/bot-listings';
 import crypto from '../lib/crypto';
 import { getExpireTime, isMarketOpen } from '../lib/stocks';
 import type { BotListing } from '../lib/types';
@@ -140,7 +140,9 @@ schedule(
 
 // Run every 2 hours
 schedule('0 */2 * * *', async () => {
+    const sendApi = new ApiController(0, 0, 0);
+
     for (const botListing of botListings as BotListing[]) {
-        await sendApiCall(botListing);
+        await sendApi.sendApiCall(botListing);
     }
 });
