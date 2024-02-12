@@ -6,3 +6,11 @@ export type InventoryItem = {
 export type Loot = {
     [key: string]: number;
 };
+
+export type Job = {
+    name: string;
+    salary: number;
+    minLvl: number;
+    requiredItems: string[];
+    workPerWeek: number;
+};
