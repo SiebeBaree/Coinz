@@ -1,15 +1,15 @@
 import process from 'node:process';
 import { setInterval } from 'node:timers';
 import { getInfo } from 'discord-hybrid-sharding';
-import { ActivityType, GatewayIntentBits, Guild, Partials } from 'discord.js';
+import { ActivityType, GatewayIntentBits, type Guild, Partials } from 'discord.js';
 import { connect } from 'mongoose';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Stats from 'sharding-stats';
 import Bot from './domain/Bot';
-import logger from './utils/logger';
 import BotStats from './models/botStats';
+import logger from './utils/logger';
 
 (async () => {
     const bot = new Bot({
@@ -87,6 +87,8 @@ import BotStats from './models/botStats';
 
             // Update stats in the database every 2 hours
             setInterval(updateStatsInDb, 1000 * 60 * 120);
+
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
             updateStatsInDb();
         }
     });
