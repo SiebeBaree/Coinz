@@ -1,7 +1,7 @@
 import process from 'node:process';
 import { setInterval } from 'node:timers';
 import { getInfo } from 'discord-hybrid-sharding';
-import { ActivityType, GatewayIntentBits, Partials } from 'discord.js';
+import { ActivityType, GatewayIntentBits, Guild, Partials } from 'discord.js';
 import { connect } from 'mongoose';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
@@ -9,6 +9,7 @@ import { connect } from 'mongoose';
 import Stats from 'sharding-stats';
 import Bot from './domain/Bot';
 import logger from './utils/logger';
+import BotStats from './models/botStats';
 
 (async () => {
     const bot = new Bot({
@@ -61,6 +62,32 @@ import logger from './utils/logger';
             };
 
             setInterval(postStats, 1000 * 15);
+        }
+
+        if (bot.cluster.id === bot.cluster.info.CLUSTER_COUNT - 1) {
+            const updateStatsInDb = async () => {
+                const guilds = await bot.cluster
+                    .broadcastEval((c) => c.guilds.cache.size)
+                    .then((results) => results.reduce((prev, val) => prev + val, 0));
+                const users = await bot.cluster
+                    .broadcastEval((c) =>
+                        c.guilds.cache.reduce((acc: number, guild: Guild) => acc + guild.memberCount, 0),
+                    )
+                    .then((results) => results.reduce((acc, memberCount) => acc + memberCount, 0));
+                const shards = bot.cluster.info.TOTAL_SHARDS;
+
+                const botStat = new BotStats({
+                    guilds: guilds,
+                    users: users,
+                    shards: shards,
+                    updatedAt: new Date(),
+                });
+                await botStat.save();
+            };
+
+            // Update stats in the database every 2 hours
+            setInterval(updateStatsInDb, 1000 * 60 * 120);
+            updateStatsInDb();
         }
     });
 
