@@ -13,4 +13,4 @@ export type Job = {
     minLvl: number;
     requiredItems: string[];
     workPerWeek: number;
-}
+};

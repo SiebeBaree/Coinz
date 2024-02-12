@@ -20,7 +20,8 @@ export default async function jobApply(client: Bot, interaction: ChatInputComman
     if (cooldown) {
         await interaction.reply({
             content: `You can apply for a job again in ${msToTime(
-                Math.abs(Number.parseInt(cooldown, 10) - Math.floor(Date.now() / 1_000)) * 1_000)}.`,
+                Math.abs(Number.parseInt(cooldown, 10) - Math.floor(Date.now() / 1_000)) * 1_000,
+            )}.`,
             ephemeral: true,
         });
         return;
