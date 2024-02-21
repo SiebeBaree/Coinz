@@ -1,0 +1,9 @@
+{
+  "eslint.workingDirectories": [
+    "./api",
+    "./app",
+    "./bot",
+    "./support",
+    "./crons"
+  ]
+}
