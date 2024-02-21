@@ -11,6 +11,7 @@ import type {
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import countriesData from '../data/countries.json';
 import type { Loot } from '../lib/types';
+import Business from '../models/business';
 
 const countries = new Map<string, string>(Object.entries(countriesData));
 const FORMATTER = new Intl.NumberFormat('en-US', { notation: 'compact' });
@@ -203,4 +204,21 @@ export function getVotingRow() {
             .setEmoji('<:discords:1157587361069273119>')
             .setURL('https://discords.com/bots/bot/938771676433362955/vote'),
     );
+}
+
+export async function getBusiness(memberId: string) {
+    const business = await Business.findOne({ 'employees.userId': memberId });
+    if (!business) return null;
+
+    const employee = business.employees.find((e) => e.userId === memberId);
+    if (!employee) return null;
+
+    return {
+        business,
+        employee,
+    };
+}
+
+export function generateRandomString(length: number = 6): string {
+    return Array.from({ length }, () => Math.random().toString(36)[2]).join('');
 }

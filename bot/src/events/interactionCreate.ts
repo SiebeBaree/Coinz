@@ -24,7 +24,7 @@ export default {
                     await interaction.reply({
                         content: `Please wait ${msToTime(
                             Math.abs(Number.parseInt(cooldown, 10) - Math.floor(Date.now() / 1_000)) * 1_000,
-                        )} seconds before using this command again.`,
+                        )} before using this command again.`,
                         ephemeral: true,
                     });
                     return;

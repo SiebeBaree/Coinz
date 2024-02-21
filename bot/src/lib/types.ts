@@ -1,3 +1,5 @@
+import type { IBusiness, IEmployee } from '../models/business';
+
 export type InventoryItem = {
     itemId: string;
     amount: number;
@@ -14,3 +16,19 @@ export type Job = {
     requiredItems: string[];
     workPerWeek: number;
 };
+
+export type BusinessData = {
+    business: IBusiness;
+    employee: IEmployee;
+};
+
+export enum Positions {
+    Employee,
+    Manager,
+    CEO,
+}
+
+export enum MarketStatus {
+    Listed,
+    Sold,
+}
