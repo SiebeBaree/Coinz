@@ -1,0 +1,16 @@
+{
+    "Kitchen": ["knife", "lettuce", "carrot", "baguette", "egg", "cookie", "cupcake", "alcohol"],
+    "Bedroom": ["tv", "hunting_rifle", "lamp", "doll", "book", "socks", "ring", "shirt", "wallet"],
+    "Bathroom": ["mirror", "soap", "lamp", "socks", "shirt", "rubber_duck"],
+    "Living Room": ["tv", "lamp", "book", "sofa", "playstation", "socks", "shoe", "book", "alcohol"],
+    "Garage": ["soccer_ball", "hunting_rifle", "knife", "shoe", "chair"],
+    "Attic": ["pocket_watch", "doll", "computer_mouse", "book", "lamp", "helmet", "broom"],
+    "Basement": ["broom", "helmet", "book", "trash", "lamp", "chair"],
+    "Dining Room": ["knife", "glass", "plate", "fork", "chair", "book"],
+    "Office": ["computer_mouse", "pocket_watch", "book", "lamp", "desktop", "lawbook", "fidget_spinner", "pen"],
+    "Laundry Room": ["socks", "shirt", "shoe", "trash", "lamp", "broom"],
+    "Closet": ["socks", "shirt", "shoe", "helmet", "suit"],
+    "Hallway": ["shoe", "broom", "trash", "lamp"],
+    "Staircase": ["shoe", "broom", "trash", "lamp"],
+    "Garden": ["shoe", "trash", "potato", "lettuce", "carrot", "tomato", "shovel", "axe", "chair", "binoculars"]
+}
