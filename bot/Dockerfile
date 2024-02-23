@@ -7,16 +7,19 @@ WORKDIR /bot
 
 COPY .env /bot
 COPY package.json /bot
+COPY pnpm-lock.yaml /bot
 COPY tsconfig.json /bot
+COPY tsconfig.eslint.json /bot
 COPY src/ /bot/src
 
-RUN npm install
-RUN npm run build
-RUN npm run register-commands
-RUN npm run script:add-items
+RUN npm install -g pnpm
+RUN pnpm install --frozen-lockfile
+RUN pnpm build
+RUN pnpm run register-commands
+RUN pnpm run script:add-items
 
 ENV NODE_ENV=production
 ENV REDIS_PORT=6379
 ENV REDIS_HOST=cooldowns_db
 
-CMD ["npm", "run", "start"]
+CMD ["pnpm", "start"]
