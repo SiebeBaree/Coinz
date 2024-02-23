@@ -279,6 +279,12 @@ export default {
                         { $inc: { animalsKilled: totalAnimals } },
                         { upsert: true },
                     );
+
+                    await client.achievement.sendAchievementMessage(
+                        interaction,
+                        interaction.user.id,
+                        client.achievement.getById('animal_hunter'),
+                    );
                 }
             });
 

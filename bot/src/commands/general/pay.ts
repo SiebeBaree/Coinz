@@ -2,10 +2,11 @@ import { ApplicationCommandOptionType } from 'discord.js';
 import type { Command } from '../../domain/Command';
 import Member from '../../models/member';
 import UserStats from '../../models/userStats';
-import { getLevel } from '../../utils';
+import { getLevel, parseStrToNum } from '../../utils';
 import logger from '../../utils/logger';
-import { addMoney, removeBetMoney, removeMoney } from '../../utils/money';
+import { addMoney, removeMoney } from '../../utils/money';
 
+const LOWER_LIMIT = 30;
 const START_LIMIT = 1000;
 const MAX_LIMIT = 15_000;
 const PREMIUM_LIMIT = 25_000;
@@ -53,38 +54,41 @@ export default {
         const level = getLevel(member.experience);
         const limit = getLimit(level, member.premium);
 
-        let amount = 1;
+        let amount = 0;
         if (amountStr.toLowerCase() === 'all' || amountStr.toLowerCase() === 'max') {
-            if (member.wallet <= 0) {
-                await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
-                await interaction.reply({
-                    content: "You don't have any money in your wallet to give to someone!",
-                    ephemeral: true,
-                });
-                return;
-            }
-
             amount = Math.min(member.wallet, limit);
         } else {
-            const newAmount = await removeBetMoney(amountStr, member, false, 50, limit);
+            amount = parseStrToNum(amountStr);
 
-            if (typeof newAmount === 'string') {
+            if (Number.isNaN(amount) || amount <= 0) {
                 await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
-                await interaction.reply({ content: newAmount, ephemeral: true });
+                await interaction.reply({ content: ':x: The amount must be a valid number.', ephemeral: true });
                 return;
             }
-
-            amount = newAmount;
         }
 
         if (user.id === interaction.user.id || user.bot) {
             await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
             await interaction.reply({ content: ":x: You can't give money to yourself or a bot.", ephemeral: true });
             return;
-        } else if (member.wallet < amount) {
+        } else if (amount > member.wallet) {
             await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
             await interaction.reply({
                 content: ":x: You don't have that much money in your wallet.",
+                ephemeral: true,
+            });
+            return;
+        } else if (amount > limit) {
+            await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
+            await interaction.reply({
+                content: `:x: You can't donate more than :coin: ${limit} at your current level.`,
+                ephemeral: true,
+            });
+            return;
+        } else if (amount < LOWER_LIMIT) {
+            await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
+            await interaction.reply({
+                content: `:x: You can't donate less than :coin: ${LOWER_LIMIT}.`,
                 ephemeral: true,
             });
             return;
