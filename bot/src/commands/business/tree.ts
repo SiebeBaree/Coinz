@@ -101,7 +101,7 @@ const events: Event[] = [
 function getEmbed(client: Bot, user: User, member: IMember): EmbedBuilder {
     const shovel = client.items.getById('shovel')!;
     const wood = client.items.getById('wood')!;
-    const imageURL = `https://cdn.coinzbot.xyz/tree/new/${Math.floor(member.tree.height / 10)}.jpg`;
+    const imageURL = `https://cdn.coinzbot.xyz/tree/new/${Math.floor(member.tree.height / 10)}.png`;
     const totalWood = Math.floor(member.tree.height / 2);
 
     const treeHeight = getTreeHeight(member);
