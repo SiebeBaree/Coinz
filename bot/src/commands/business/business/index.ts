@@ -2,12 +2,12 @@ import { ApplicationCommandOptionType } from 'discord.js';
 import type { Command } from '../../../domain/Command';
 import { Positions } from '../../../lib/types';
 import { getBusiness } from '../../../utils';
-import buy from './buy';
+// import buy from './buy';
 import employee from './employee';
 import info from './info';
 import invest from './invest';
 import pay from './pay';
-import sell from './sell';
+// import sell from './sell';
 
 export default {
     data: {
@@ -196,12 +196,12 @@ export default {
         }
 
         switch (interaction.options.getSubcommand()) {
-            case 'buy':
-                await buy(client, interaction, member, data);
-                break;
-            case 'sell':
-                await sell(client, interaction, member, data);
-                break;
+            // case 'buy':
+            //     await buy(client, interaction, member, data);
+            //     break;
+            // case 'sell':
+            //     await sell(client, interaction, member, data);
+            //     break;
             case 'pay':
                 await pay(client, interaction, data);
                 break;

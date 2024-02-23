@@ -12,13 +12,13 @@ import {
 import type { ColorResolvable, ChatInputCommandInteraction, ModalSubmitInteraction } from 'discord.js';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { RegExpMatcher, englishDataset, englishRecommendedTransformers } from 'obscenity';
-import { removeMoney } from 'src/utils/money';
 import type Bot from '../../../domain/Bot';
 import { Positions, type BusinessData } from '../../../lib/types';
 import type { IBusiness } from '../../../models/business';
 import Business from '../../../models/business';
 import type { IMember } from '../../../models/member';
 import { generateRandomString } from '../../../utils';
+import { removeMoney } from '../../../utils/money';
 
 enum Category {
     Employees = 'employees',
