@@ -3,10 +3,6 @@ import { setInterval } from 'node:timers';
 import { getInfo } from 'discord-hybrid-sharding';
 import { ActivityType, GatewayIntentBits, type Guild, Partials } from 'discord.js';
 import { connect } from 'mongoose';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-// eslint-disable-next-line import/no-extraneous-dependencies
-import Stats from 'sharding-stats';
 import Bot from './domain/Bot';
 import BotStats from './models/botStats';
 import logger from './utils/logger';
@@ -37,34 +33,6 @@ import logger from './utils/logger';
     }
 
     bot.once('ready', () => {
-        if (process.env.NODE_ENV === 'production') {
-            const statsClient = new Stats.Client(bot, {
-                customPoster: true,
-                authorizationkey: process.env.API_SHARDINGSTATS,
-                stats_uri: process.env.WEBSERVER_URL,
-            });
-
-            const postStats = async () => {
-                const shards = [...bot.ws.shards.values()];
-                const guilds = [...bot.guilds.cache.values()];
-                for (const shard of shards) {
-                    const filteredGuilds = guilds ? guilds.filter((x) => x.shardId === shard.id).filter(Boolean) : [];
-
-                    const body = {
-                        id: shard ? shard.id : -1,
-                        cluster: bot.cluster?.id,
-                        ping: shard ? shard.ping : -1,
-                        guildCount: filteredGuilds.length,
-                        memberCount: filteredGuilds.reduce((a, b) => a + b.memberCount, 0),
-                    };
-
-                    await statsClient.sendPostData(body);
-                }
-            };
-
-            setInterval(postStats, 1000 * 15);
-        }
-
         if (bot.cluster.id === bot.cluster.info.CLUSTER_COUNT - 1) {
             const updateStatsInDb = async () => {
                 const guilds = await bot.cluster
