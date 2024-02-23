@@ -4,15 +4,15 @@
     "description": "A feature rich discord bot with an entire economic system.",
     "main": "dist/manager.js",
     "scripts": {
-        "start": "pnpm run build && node --env-file .env ./dist/sharder.js",
+        "start": "tsc && node --env-file .env ./dist/sharder.js",
         "dev": "concurrently \"tsc --watch\" \"nodemon --env-file .env ./dist/sharder.js\"",
         "build": "tsc",
         "lint": "prettier --check . && eslint --ext .ts --format stylish src",
         "format": "prettier --write . && eslint --ext .ts --fix --format stylish src",
-        "register-commands": "pnpm run build && node --env-file .env ./dist/register.js",
+        "register-commands": "tsc && node --env-file .env ./dist/register.js",
         "script:balance-items": "concurrently \"tsc --watch\" \"nodemon ./dist/item-balancer.js\"",
-        "script:add-items": "pnpm run build && node --env-file .env ./dist/itemUploader.js",
-        "script:convert-commands": "pnpm run build && node ./dist/commandsConverter.js"
+        "script:add-items": "tsc && node --env-file .env ./dist/itemUploader.js",
+        "script:convert-commands": "tsc && node ./dist/commandsConverter.js"
     },
     "repository": {
         "type": "git",
