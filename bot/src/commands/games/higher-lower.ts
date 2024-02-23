@@ -9,8 +9,9 @@ import {
     EmbedBuilder,
 } from 'discord.js';
 import type { Command } from '../../domain/Command';
-import { filter, getRandomNumber } from '../../utils';
-import { addExperience, addMoney, removeBetMoney } from '../../utils/money';
+import UserStats from '../../models/userStats';
+import { filter, getBet, getRandomNumber } from '../../utils';
+import { addExperience, addMoney } from '../../utils/money';
 
 type GameData = {
     bet: number;
@@ -95,30 +96,10 @@ export default {
         ],
     },
     async execute(client, interaction, member) {
-        const betStr = interaction.options.getString('bet', true);
-
-        let bet = 50;
-        if (betStr.toLowerCase() === 'all' || betStr.toLowerCase() === 'max') {
-            if (member.wallet <= bet) {
-                await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
-                await interaction.reply({
-                    content: "You don't have any money in your wallet to bet!",
-                    ephemeral: true,
-                });
-                return;
-            }
-
-            bet = Math.min(member.wallet, client.config.bets.free.max);
-        } else {
-            const newBet = await removeBetMoney(betStr, member);
-
-            if (typeof newBet === 'string') {
-                await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
-                await interaction.reply({ content: newBet, ephemeral: true });
-                return;
-            }
-
-            bet = newBet;
+        const { bet, error } = await getBet(client, interaction, member);
+        if (error) {
+            await interaction.reply({ content: error, ephemeral: true });
+            return;
         }
 
         const gameData: GameData = {
@@ -166,6 +147,17 @@ export default {
                     gameData.playerHasWon = false;
                     gameData.color = Colors.Red;
                     collector.stop();
+
+                    await UserStats.updateOne(
+                        { id: interaction.user.id },
+                        {
+                            $inc: {
+                                'games.lost': 1,
+                                'games.moneyLost': gameData.bet,
+                            },
+                        },
+                        { upsert: true },
+                    );
                 }
 
                 if (gameData.timesCorrect >= 5) {
@@ -184,8 +176,21 @@ export default {
             });
 
             if (gameData.commandIsFinished && gameData.playerHasWon) {
-                await addMoney(interaction.user.id, getPrice(gameData.bet, gameData.timesCorrect));
+                const money = getPrice(gameData.bet, gameData.timesCorrect);
+                await addMoney(interaction.user.id, money);
                 await addExperience(member);
+
+                await UserStats.updateOne(
+                    { id: interaction.user.id },
+                    {
+                        $inc: {
+                            totalEarned: money,
+                            'games.won': 1,
+                            'games.moneyEarned': money,
+                        },
+                    },
+                    { upsert: true },
+                );
             }
         });
 
