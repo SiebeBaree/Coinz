@@ -255,14 +255,12 @@ export default {
                     const item = client.items.getById(itemId);
                     if (!item?.sellPrice) continue;
 
-                    lootText += `${amount}x ${item.name} <:${item.itemId}:${item.emoteId}> ― :coin: ${Math.floor(
-                        item.sellPrice * amount,
-                    )}\n`;
-                    totalPrice += Math.floor(item.sellPrice * amount);
+                    const price = Math.floor(item.sellPrice * amount * extraMoney);
+                    lootText += `${amount}x ${item.name} <:${item.itemId}:${item.emoteId}> ― :coin: ${price}\n`;
+                    totalPrice += price;
                     totalAnimals += amount;
                 }
 
-                totalPrice = Math.floor(totalPrice * extraMoney);
                 if (lootText.length > 0 && totalPrice > 0) {
                     embed.addFields({ name: 'Animals Hunted', value: lootText, inline: false });
                     embed.setDescription('>>> ' + category.success.message.replace('%AMOUNT%', `${totalPrice}`));
