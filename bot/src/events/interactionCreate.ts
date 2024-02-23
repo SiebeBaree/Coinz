@@ -53,7 +53,7 @@ export default {
                 return;
             }
 
-            if ((command.data.premium ?? 0) < member.premium) {
+            if ((command.data.premium ?? 0) > member.premium) {
                 const premiumText = `This command is only for Coinz Plus or Pro subscribers. To gain access to this command, please visit the [**webshop**](${client.config.website}/premium).`;
 
                 if (command.data.deferReply === true) {
