@@ -12,9 +12,9 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import countriesData from '../data/countries.json';
 import type Bot from '../domain/Bot';
 import type { Loot } from '../lib/types';
+import Business from '../models/business';
 import type { IMember } from '../models/member';
 import { removeBetMoney } from './money';
-import Business from '../models/business';
 
 const countries = new Map<string, string>(Object.entries(countriesData));
 const FORMATTER = new Intl.NumberFormat('en-US', { notation: 'compact' });
