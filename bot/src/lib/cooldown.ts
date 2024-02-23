@@ -7,6 +7,8 @@ export default class Cooldown {
     public constructor() {
         if (process.env.NODE_ENV === 'production') {
             this.redis = new Redis({
+                port: Number(process.env.REDIS_PORT),
+                host: process.env.REDIS_HOST,
                 maxRetriesPerRequest: 3,
             });
         }
