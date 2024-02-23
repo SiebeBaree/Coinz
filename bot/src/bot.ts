@@ -49,6 +49,7 @@ import logger from './utils/logger';
                     guilds: guilds,
                     users: users,
                     shards: shards,
+                    commands: bot.commands.size,
                     updatedAt: new Date(),
                 });
                 await botStat.save();
