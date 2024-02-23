@@ -28,7 +28,6 @@ export default {
     },
     async execute(client, interaction, member) {
         const amountStr = interaction.options.getString('amount', true);
-        await interaction.reply({ content: amountStr });
 
         let amount = 0;
         if (amountStr.toLowerCase() === 'all' || amountStr.toLowerCase() === 'max') {
