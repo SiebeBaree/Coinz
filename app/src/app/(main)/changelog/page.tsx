@@ -1,5 +1,5 @@
 import changelog from '@/lib/data/changelog.json';
-import ChangelogSection from '@/app/changelog/ChangelogSection';
+import ChangelogSection from '@/app/(main)/changelog/ChangelogSection';
 import { Changelog } from '@/lib/interfaces';
 import PageTitle from '@/components/PageTitle';
 

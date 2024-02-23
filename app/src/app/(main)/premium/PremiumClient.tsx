@@ -1,10 +1,11 @@
 'use client';
 
-import premium from '@/lib/data/premium.json';
+import premium from '../../../lib/data/premium.json';
 import Image from 'next/image';
 import { Check } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 interface Subscription {
     name: string;
@@ -69,6 +70,26 @@ export default function PremiumClient() {
 }
 
 function SubscriptionCard({ subscription, price }: { subscription: Subscription; price: 'monthly' | 'quarterly' }) {
+    const [loading, setLoading] = useState<boolean>(false);
+
+    async function onSubscribe() {
+        try {
+            setLoading(true);
+            const response = await fetch('/api/stripe');
+
+            if (!response.ok) {
+                console.error('[STRIPE_CLIENT_ERROR]', response);
+            }
+
+            const data = await response.json();
+            window.location.href = data.url;
+        } catch (error) {
+            console.error('[STRIPE_CLIENT_ERROR]', error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <div className="flex flex-col items-center bg-secondary rounded-md px-8 mt-12">
             <Image
@@ -79,7 +100,7 @@ function SubscriptionCard({ subscription, price }: { subscription: Subscription;
                 className="select-none absolute -top-[60px] border-[10px] rounded-full border-background"
             />
             <h2 className="text-4xl font-bold mt-20">{subscription.name}</h2>
-            <h3 className="text-4xl text-primary font-bold my-6">
+            <h3 className="text-4xl text-primary font-bold mt-3 mb-6">
                 ${subscription.price[price] / 100}{' '}
                 <span className="text-muted text-base">/{price === 'quarterly' ? '3 months' : 'month'}</span>
             </h3>
@@ -93,6 +114,12 @@ function SubscriptionCard({ subscription, price }: { subscription: Subscription;
                         </p>
                     </div>
                 ))}
+            </div>
+
+            <div className="flex-grow flex flex-col justify-end mb-6">
+                <Button className="h-auto py-3 px-8" onClick={onSubscribe} disabled={loading}>
+                    Subscribe Now
+                </Button>
             </div>
         </div>
     );

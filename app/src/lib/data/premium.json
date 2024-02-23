@@ -7,13 +7,14 @@
         },
         "logo": "https://cdn.coinzbot.xyz/logo.png",
         "perks": [
-            "Able to buy up to 12 farming plots",
             "All 5s cooldowns reduced to 1s",
+            "Able to buy up to 12 farming plots",
             "Unlock /weekly",
             "Unlock an exclusive Coinz Plus badge",
+            "Gamble limit increased to 🪙 10.000",
+            "Earn up to 🪙 300/day with /daily (Free tier: 🪙 150/day)",
             "Change your profile color",
-            "Earn up to 🪙 250/day with /daily (Free tier: 🪙 125/day)",
-            "Gamble limit increased to 🪙 10.000"
+            "Get faster ticket support"
         ]
     },
     "coinz_pro": {
@@ -30,9 +31,10 @@
             "Unlock an exclusive Coinz Pro badge",
             "Gamble limit increased to 🪙 20.000",
             "Get 2 lucky wheel spins for every vote",
-            "Get a lucky when spin with /daily",
+            "Get a lucky wheel spin with /daily",
             "Earn double XP",
-            "Gamble cooldowns reduced to 4 minutes"
+            "Gamble cooldowns reduced from 10 to 4 minutes",
+            "Hire a 6th employee for your business"
         ]
     }
 }

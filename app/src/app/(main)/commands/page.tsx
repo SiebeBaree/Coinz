@@ -1,4 +1,4 @@
-import CommandSection from '@/app/commands/CommandSection';
+import CommandSection from '@/app/(main)/commands/CommandSection';
 import PageTitle from '@/components/PageTitle';
 
 export default function CommandsPage() {

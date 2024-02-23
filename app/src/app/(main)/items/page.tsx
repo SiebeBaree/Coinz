@@ -1,8 +1,8 @@
-import ItemsSection from '@/app/items/ItemsSection';
+import ItemsSection from '@/app/(main)/items/ItemsSection';
 import PageTitle from '@/components/PageTitle';
 import { db } from '@/server/db';
 
-export const revalidate = '900';
+export const revalidate = 900;
 
 export default async function ItemsPage() {
     const items = await db.item.findMany({});

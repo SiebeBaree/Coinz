@@ -28,28 +28,35 @@ export default function Guide() {
             </div>
 
             <div className="grid grid-cols-3 gap-3 mt-8">
-                {guides.map((guide) => (
-                    <GuideCard key={guide.href} title={guide.name} description={guide.description} href={guide.href} />
+                {guides.map((guide, index) => (
+                    <GuideCard key={index} title={guide.name} description={guide.description} href={guide.href} />
                 ))}
             </div>
         </main>
     );
 }
 
-function GuideCard({ title, description, href }: { title: string; description: string; href: string }) {
+function GuideCard({ title, description, href }: { title: string; description: string; href?: string }) {
     return (
         <div className="flex flex-col gap-3 bg-secondary rounded-md p-4">
             <div>
                 <h2 className="text-lg font-semibold">{title}</h2>
                 <p className="text-muted text-sm mt-1">{description}</p>
             </div>
-            <Link
-                href={'/guide/' + href ?? '/'}
-                className="flex items-center text-sm text-primary ml-auto border-b border-transparent hover:border-primary transition-all duration-100 ease-in-out"
-            >
-                Visit the guide
-                <ChevronRightIcon className="ml-1 h-4 w-4" />
-            </Link>
+            {href ? (
+                <Link
+                    href={'/guide/' + href ?? '/'}
+                    className="flex items-center text-sm text-primary ml-auto mt-auto border-b border-transparent hover:border-primary transition-all duration-100 ease-in-out"
+                >
+                    Visit the guide
+                    <ChevronRightIcon className="ml-1 h-4 w-4" />
+                </Link>
+            ) : (
+                <button className="flex items-center text-sm text-muted ml-auto mt-auto">
+                    Coming Soon
+                    <ChevronRightIcon className="ml-1 h-4 w-4" />
+                </button>
+            )}
         </div>
     );
 }
