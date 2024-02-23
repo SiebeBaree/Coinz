@@ -56,7 +56,7 @@ async function settingsProfileColor(client: Bot, interaction: ChatInputCommandIn
 async function settingsProfileBirthday(client: Bot, interaction: ChatInputCommandInteraction) {
     const birthday = interaction.options.getString('birthday', true);
 
-    const date = moment(birthday, 'DD/MM/YYYY');
+    const date = moment(birthday, 'DD/MM/YYYY').add(12, 'hours');
     if (!date.isValid()) {
         await interaction.reply({ content: 'Invalid birthday format, please use DD/MM/YYYY.', ephemeral: true });
         return;
