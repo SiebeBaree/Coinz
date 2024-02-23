@@ -1,0 +1,76 @@
+[
+    {
+        "name": "TOP_GG",
+        "api": "https://top.gg/api/bots/$ID/stats",
+        "body": {
+            "server_count": "$SERVER_COUNT",
+            "shard_count": "$SHARD_COUNT"
+        }
+    },
+    {
+        "name": "BOTLIST_ME",
+        "api": "https://api.botlist.me/api/v1/bots/$ID/stats",
+        "body": {
+            "server_count": "$SERVER_COUNT",
+            "shard_count": "$SHARD_COUNT"
+        }
+    },
+    {
+        "name": "DISCORD_BOT_LIST",
+        "api": "https://discordbotlist.com/api/v1/bots/$ID/stats",
+        "body": {
+            "guilds": "$SERVER_COUNT",
+            "users": "$MEMBER_COUNT"
+        }
+    },
+    {
+        "name": "DISCORD_BOTS_GG",
+        "api": "https://discord.bots.gg/api/v1/bots/$ID/stats",
+        "body": {
+            "guildCount": "$SERVER_COUNT",
+            "shardCount": "$SHARD_COUNT"
+        }
+    },
+    {
+        "name": "DISCORD_EXTREME_LIST",
+        "api": "https://api.discordextremelist.xyz/v2/bot/$ID/stats",
+        "body": {
+            "guildCount": "$SERVER_COUNT",
+            "shardCount": "$SHARD_COUNT"
+        }
+    },
+    {
+        "name": "DISCORDLIST",
+        "api": "https://api.discordlist.gg/v0/bots/$ID/stats",
+        "body": {
+            "server_count": "$SERVER_COUNT"
+        },
+        "headers": {
+            "Authorization": "Bearer $TOKEN"
+        }
+    },
+    {
+        "name": "INFINITY_BOTS",
+        "api": "https://spider.infinitybots.gg/bots/stats",
+        "body": {
+            "servers": "$SERVER_COUNT",
+            "shards": "$SHARD_COUNT",
+            "users": "$MEMBER_COUNT"
+        }
+    },
+    {
+        "name": "DISFORGE",
+        "api": "https://disforge.com/api/botstats/$ID",
+        "body": {
+            "servers": "$SERVER_COUNT"
+        }
+    },
+    {
+        "name": "VOIDBOTS",
+        "api": "https://api.voidbots.net/bot/stats/$ID",
+        "body": {
+            "server_count": "$SERVER_COUNT",
+            "shard_count": "$SHARD_COUNT"
+        }
+    }
+]

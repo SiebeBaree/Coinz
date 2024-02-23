@@ -11,7 +11,6 @@ import {
     formatNumber,
     getRatingRow,
     getReopenMessage,
-    getTranscriptRow,
     reopenTicket,
     sendReasonModal,
 } from '../utils/ticket';
@@ -20,7 +19,7 @@ export default {
     name: Events.InteractionCreate,
     once: false,
     async execute(client, interaction) {
-        if (interaction.isChatInputCommand()) {
+        if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) {
             if (!interaction.guild || !interaction.guild.available || interaction.user.bot) return;
 
             const command = client.commands.get(interaction.commandName);
@@ -163,10 +162,7 @@ export default {
 
                         if (modalInteraction.isFromMessage()) {
                             await modalInteraction.update({
-                                components: [
-                                    getRatingRow(ticketId ?? '', ratingInt),
-                                    getTranscriptRow(ticket.channelId),
-                                ],
+                                components: [getRatingRow(ticketId ?? '', ratingInt)],
                             });
                         }
 

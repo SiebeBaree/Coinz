@@ -1,0 +1,114 @@
+[
+    {
+        "name": "Cashier",
+        "salary": 20,
+        "minLvl": 0,
+        "requiredItems": [],
+        "workPerWeek": 0
+    },
+    {
+        "name": "Janitor",
+        "salary": 40,
+        "minLvl": 1,
+        "requiredItems": ["broom"],
+        "workPerWeek": 2
+    },
+    {
+        "name": "Baker",
+        "salary": 60,
+        "minLvl": 3,
+        "requiredItems": [],
+        "workPerWeek": 4
+    },
+    {
+        "name": "Security Guard",
+        "salary": 55,
+        "minLvl": 5,
+        "requiredItems": [],
+        "workPerWeek": 3
+    },
+    {
+        "name": "Taxi Driver",
+        "salary": 50,
+        "minLvl": 6,
+        "requiredItems": ["driver_license", "car"],
+        "workPerWeek": 2
+    },
+    {
+        "name": "Office Clerck",
+        "salary": 50,
+        "minLvl": 7,
+        "requiredItems": [],
+        "workPerWeek": 1
+    },
+    {
+        "name": "Truck Driver",
+        "salary": 60,
+        "minLvl": 7,
+        "requiredItems": ["driver_license"],
+        "workPerWeek": 0
+    },
+    {
+        "name": "Construction Worker",
+        "salary": 35,
+        "minLvl": 8,
+        "requiredItems": ["helmet"],
+        "workPerWeek": 0
+    },
+    {
+        "name": "Police Officer",
+        "salary": 80,
+        "minLvl": 8,
+        "requiredItems": [],
+        "workPerWeek": 4
+    },
+    {
+        "name": "Graphic Designer",
+        "salary": 65,
+        "minLvl": 9,
+        "requiredItems": ["laptop"],
+        "workPerWeek": 2
+    },
+    {
+        "name": "Lawyer",
+        "salary": 150,
+        "minLvl": 10,
+        "requiredItems": ["lawbook", "suit"],
+        "workPerWeek": 5
+    },
+    {
+        "name": "Developer",
+        "salary": 130,
+        "minLvl": 13,
+        "requiredItems": ["laptop"],
+        "workPerWeek": 3
+    },
+    {
+        "name": "Doctor",
+        "salary": 165,
+        "minLvl": 15,
+        "requiredItems": ["stethoscope", "thermometer"],
+        "workPerWeek": 4
+    },
+    {
+        "name": "Pilot",
+        "salary": 185,
+        "minLvl": 20,
+        "requiredItems": [],
+        "workPerWeek": 5
+    },
+    {
+        "name": "Politician",
+        "salary": 250,
+        "minLvl": 30,
+        "requiredItems": ["pen", "suit"],
+        "workPerWeek": 0
+    },
+    {
+        "name": "Discord Moderator",
+        "salary": 320,
+        "minLvl": 50,
+        "requiredItems": ["laptop"],
+        "workPerWeek": 10
+    }
+]

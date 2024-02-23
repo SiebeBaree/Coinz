@@ -1,5 +1,13 @@
 import { Schema, model } from 'mongoose';
-import type { InventoryItem } from '../lib/types';
+import { Positions, type InventoryItem } from '../lib/types';
+
+export type IEmployee = {
+    employeeId: string;
+    userId: string;
+    position: number;
+    hiredOn: number;
+    moneyEarned: number;
+};
 
 export type IFactory = {
     factoryId: number;
@@ -10,12 +18,21 @@ export type IFactory = {
 };
 
 export type IBusiness = {
-    id: string;
     name: string;
-    employees: number;
+    balance: number;
+    taxRate: number;
+    employees: IEmployee[];
     inventory: InventoryItem[];
     factories: IFactory[];
 };
+
+const Employee = new Schema<IEmployee>({
+    employeeId: { type: String, required: true },
+    userId: { type: String, required: true, index: true, unique: true },
+    position: { type: Number, default: Positions.Employee },
+    hiredOn: { type: Number, default: Date.now() },
+    moneyEarned: { type: Number, default: 0 },
+});
 
 const Item = new Schema<InventoryItem>({
     itemId: { type: String, required: true },
@@ -31,11 +48,12 @@ const Factory = new Schema<IFactory>({
 });
 
 export const businessSchema = new Schema<IBusiness>({
-    id: { type: String, required: true, unique: true, index: true },
     name: { type: String, required: true, unique: true, index: true },
-    employees: { type: Number, default: 0 },
-    inventory: [{ type: Item, default: [] }],
-    factories: [{ type: Factory, default: [] }],
+    balance: { type: Number, default: 0 },
+    taxRate: { type: Number, default: 5 },
+    employees: [{ type: Employee }],
+    inventory: [{ type: Item }],
+    factories: [{ type: Factory }],
 });
 
 export default model<IBusiness>('Business', businessSchema);

@@ -1,4 +1,4 @@
-import type { ActionRowBuilder, ButtonBuilder, ColorResolvable } from 'discord.js';
+import type { ColorResolvable } from 'discord.js';
 import { EmbedBuilder } from 'discord.js';
 import type Bot from '../domain/Bot';
 import logger from './logger';
@@ -37,12 +37,7 @@ export function createLogEmbed({
     return embed;
 }
 
-export async function sendLog(
-    client: Bot,
-    embed: EmbedBuilder,
-    components?: ActionRowBuilder<ButtonBuilder>[],
-    isPublic: boolean = false,
-): Promise<void> {
+export async function sendLog(client: Bot, embed: EmbedBuilder, isPublic: boolean = false): Promise<void> {
     const logChannel = await client.channels.fetch(isPublic ? client.config.logChannel : client.config.modLogChannel);
 
     if (!logChannel || !logChannel.isTextBased()) {
@@ -50,8 +45,5 @@ export async function sendLog(
         return;
     }
 
-    await logChannel.send({
-        embeds: [embed],
-        components: components,
-    });
+    await logChannel.send({ embeds: [embed] });
 }

@@ -16,6 +16,8 @@
         "@typescript-eslint/prefer-nullish-coalescing": "off",
         "unicorn/numeric-separators-style": "off",
         "no-param-reassign": "off",
-        "require-atomic-updates": "off"
+        "require-atomic-updates": "off",
+        "unicorn/prefer-string-replace-all": "off",
+        "@typescript-eslint/no-loop-func": "off"
     }
 }

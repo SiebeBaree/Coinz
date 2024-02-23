@@ -34,8 +34,9 @@ export default {
                     name: 'Statistics',
                     value:
                         `:video_game: **Commands:** \`${client.commands.size}\`\n` +
-                        `:spider_web: **Shard:** \`${(interaction.guild?.shardId ?? 0) + 1}/${client.cluster?.info
-                            .TOTAL_SHARDS}\`\n` +
+                        `:spider_web: **Shard:** \`${(interaction.guild?.shardId ?? 0) + 1}/${
+                            client.cluster?.info.TOTAL_SHARDS
+                        }\`\n` +
                         `:ping_pong: **Ping:** \`${client.ws.ping} ms\`\n:speech_balloon: **Responds Time:** \`${
                             now - interaction.createdTimestamp
                         } ms\`\n` +

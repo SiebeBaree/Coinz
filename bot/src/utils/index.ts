@@ -14,6 +14,7 @@ import type Bot from '../domain/Bot';
 import type { Loot } from '../lib/types';
 import type { IMember } from '../models/member';
 import { removeBetMoney } from './money';
+import Business from '../models/business';
 
 const countries = new Map<string, string>(Object.entries(countriesData));
 const FORMATTER = new Intl.NumberFormat('en-US', { notation: 'compact' });
@@ -247,4 +248,21 @@ export async function getBet(
         bet,
         error: null,
     };
+}
+
+export async function getBusiness(memberId: string) {
+    const business = await Business.findOne({ 'employees.userId': memberId });
+    if (!business) return null;
+
+    const employee = business.employees.find((e) => e.userId === memberId);
+    if (!employee) return null;
+
+    return {
+        business,
+        employee,
+    };
+}
+
+export function generateRandomString(length: number = 6): string {
+    return Array.from({ length }, () => Math.random().toString(36)[2]).join('');
 }
