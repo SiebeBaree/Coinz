@@ -53,7 +53,7 @@ export default {
                 return;
             }
 
-            if (member.premium > (command.data.premium ?? 0)) {
+            if ((command.data.premium ?? 0) < member.premium) {
                 const premiumText = `This command is only for Coinz Plus or Pro subscribers. To gain access to this command, please visit the [**webshop**](${client.config.website}/premium).`;
 
                 if (command.data.deferReply === true) {
@@ -81,10 +81,11 @@ export default {
             try {
                 await command.execute(client, interaction, member);
 
-                let userStats = await UserStats.findOne({ id: interaction.user.id });
-                if (!userStats) userStats = new UserStats({ id: interaction.user.id });
-                userStats.dailyActivity.totalCommands++;
-                await userStats.save();
+                await UserStats.updateOne(
+                    { id: interaction.user.id },
+                    { $inc: { 'dailyActivity.totalCommands': 1 } },
+                    { upsert: true },
+                );
 
                 await client.achievement.sendAchievementMessage(
                     interaction,
