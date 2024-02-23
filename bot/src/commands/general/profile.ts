@@ -99,27 +99,27 @@ export default {
         const inventory = getInventoryValue(client, memberData.inventory);
         const investments = await getInvestmentsValue(client, memberData.investments);
         const displayedBadge = client.achievement.getById(memberData.displayedBadge);
-        const workJob = member.job === '' ? 'Unemployed' : member.job;
+        const workJob = memberData.job === '' ? 'Unemployed' : memberData.job;
 
         const business = await Business.findOne({ id: memberData.id });
         const businessJob = business ? business.name : 'None';
 
-        const level = getLevel(member.experience);
+        const level = getLevel(memberData.experience);
         const xpToNextLevel = experienceToNextLevel(level, 0);
         const totalXpToPreviousLevel = getExperienceFromLevel(level - 1);
         const percentage = Math.floor(
-            ((xpToNextLevel - experienceToNextLevel(level, member.experience - totalXpToPreviousLevel)) /
+            ((xpToNextLevel - experienceToNextLevel(level, memberData.experience - totalXpToPreviousLevel)) /
                 xpToNextLevel) *
                 100,
         );
 
         let description = '';
         description +=
-            member.birthday.getTime() > 0
-                ? `**Age:** ${getAge(member.birthday)} years old (Born on <t:${member.birthday.getTime() / 1_000}:D>)`
+            memberData.birthday.getTime() > 0
+                ? `**Age:** ${getAge(memberData.birthday)} years old (Born on <t:${memberData.birthday.getTime() / 1_000}:D>)`
                 : '';
-        description += member.country
-            ? `\n**Country:** ${getCountryName(member.country)} ${getCountryEmote(member.country)}`
+        description += memberData.country
+            ? `\n**Country:** ${getCountryName(memberData.country)} ${getCountryEmote(memberData.country)}`
             : '';
 
         const embed = new EmbedBuilder()
@@ -127,7 +127,7 @@ export default {
                 `${user.username}'s Profile${displayedBadge ? ` <:${displayedBadge.id}:${displayedBadge.emoji}>` : ''}`,
             )
             .setThumbnail(user.displayAvatarURL())
-            .setColor((member.profileColor || client.config.embed.color) as ColorResolvable)
+            .setColor((memberData.profileColor || client.config.embed.color) as ColorResolvable)
             .setDescription(description.length > 0 ? description : null)
             .addFields([
                 {
@@ -139,13 +139,13 @@ export default {
                 },
                 {
                     name: 'Balance',
-                    value: `:dollar: **Wallet:** :coin: ${member.wallet} (\`${formatNumber(
-                        member.wallet,
-                    )}\`)\n:bank: **Bank:** :coin: ${member.bank} / ${member.bankLimit} (\`${formatNumber(
-                        member.bank,
-                    )}/${formatNumber(member.bankLimit)}\`)\n:moneybag: **Net Worth:** :coin: ${
-                        member.wallet + member.bank
-                    } (\`${formatNumber(member.wallet + member.bank)}\`)\n:gem: **Inventory Worth:** \`${
+                    value: `:dollar: **Wallet:** :coin: ${memberData.wallet} (\`${formatNumber(
+                        memberData.wallet,
+                    )}\`)\n:bank: **Bank:** :coin: ${memberData.bank} / ${memberData.bankLimit} (\`${formatNumber(
+                        memberData.bank,
+                    )}/${formatNumber(memberData.bankLimit)}\`)\n:moneybag: **Net Worth:** :coin: ${
+                        memberData.wallet + memberData.bank
+                    } (\`${formatNumber(memberData.wallet + memberData.bank)}\`)\n:gem: **Inventory Worth:** \`${
                         inventory.items
                     } items\` valued at :coin: ${inventory.value}`,
                     inline: false,
@@ -162,18 +162,20 @@ export default {
                 {
                     name: 'Misc',
                     value: `:briefcase: **Current Job:** ${workJob}\n:office: **Business:** ${businessJob}\n:sparkles: **Daily Streak:** ${
-                        member.streak - 1 > 0 ? member.streak - 1 : 0
-                    } days\n:seedling: **Farm:** ${member.plots.length} plots\n:evergreen_tree: **Tree Height:** ${
-                        member.tree.height ?? 0
-                    }ft (${feetToMeters(member.tree.height)}m)`,
+                        memberData.streak - 1 > 0 ? memberData.streak - 1 : 0
+                    } days\n:seedling: **Farm:** ${memberData.plots.length} plots\n:evergreen_tree: **Tree Height:** ${
+                        memberData.tree.height ?? 0
+                    }ft (${feetToMeters(memberData.tree.height)}m)`,
                     inline: false,
                 },
                 {
                     name: 'Badges (Achievements)',
                     value: `${
-                        member.badges.length <= 0
+                        memberData.badges.length <= 0
                             ? 'None'
-                            : member.badges.map((id) => `<:${id}:${client.achievement.getById(id)?.emoji}>`).join(' ')
+                            : memberData.badges
+                                  .map((id) => `<:${id}:${client.achievement.getById(id)?.emoji}>`)
+                                  .join(' ')
                     }`,
                     inline: false,
                 },
