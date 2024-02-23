@@ -11,6 +11,7 @@ import huntData from '../../data/hunt.json';
 import type Bot from '../../domain/Bot';
 import type { Command } from '../../domain/Command';
 import type { Item } from '../../models/item';
+import UserStats from '../../models/userStats';
 import { filter, getRandomItems, getRandomNumber } from '../../utils';
 import { addExperience, addMoney, removeMoney } from '../../utils/money';
 
@@ -248,6 +249,7 @@ export default {
 
                 let lootText = '';
                 let totalPrice = 0;
+                let totalAnimals = 0;
 
                 for (const [itemId, amount] of Object.entries(reward)) {
                     const item = client.items.getById(itemId);
@@ -257,12 +259,11 @@ export default {
                         item.sellPrice * amount,
                     )}\n`;
                     totalPrice += Math.floor(item.sellPrice * amount);
+                    totalAnimals += amount;
                 }
 
                 totalPrice = Math.floor(totalPrice * extraMoney);
                 if (lootText.length > 0 && totalPrice > 0) {
-                    await addExperience(member);
-                    await addMoney(interaction.user.id, totalPrice);
                     embed.addFields({ name: 'Animals Hunted', value: lootText, inline: false });
                     embed.setDescription('>>> ' + category.success.message.replace('%AMOUNT%', `${totalPrice}`));
                 } else {
@@ -270,6 +271,15 @@ export default {
                 }
 
                 await interaction.editReply({ embeds: [embed], components: [] });
+                if (lootText.length > 0 && totalPrice > 0) {
+                    await addExperience(member);
+                    await addMoney(interaction.user.id, totalPrice);
+                    await UserStats.updateOne(
+                        { id: interaction.user.id },
+                        { $inc: { animalsKilled: totalAnimals } },
+                        { upsert: true },
+                    );
+                }
             });
 
             collector.on('end', async () => {
