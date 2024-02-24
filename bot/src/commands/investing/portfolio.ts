@@ -37,7 +37,7 @@ function createEmbed(
             name: `${investment.amount}x ${investment.name} (${investment.ticker})`,
             value: `:money_with_wings: **Total Buy Price:** :coin: ${
                 investment.buyPrice
-            }\n:moneybag: **Currently Worth:** :coin: ${investment.worth}\n${
+            }\n:moneybag: **Currently Worth:** :coin: ${roundNumber(investment.worth, 2)}\n${
                 investment.changePercentage >= 0 ? ':chart_with_upwards_trend:' : ':chart_with_downwards_trend:'
             } **Total Change:** :coin: ${investment.change} (${investment.changePercentage}%)`,
             inline: false,
