@@ -12,7 +12,10 @@
         "register-commands": "tsc && node --env-file .env ./dist/register.js",
         "script:balance-items": "concurrently \"tsc --watch\" \"nodemon ./dist/item-balancer.js\"",
         "script:add-items": "tsc && node --env-file .env ./dist/itemUploader.js",
-        "script:convert-commands": "tsc && node ./dist/commandsConverter.js"
+        "script:convert-commands": "tsc && node ./dist/commandsConverter.js",
+        "deploy:start": "node --env-file .env ./dist/sharder.js",
+        "deploy:register-commands": "node --env-file .env ./dist/register.js",
+        "deploy:add-items": "node --env-file .env ./dist/itemUploader.js"
     },
     "repository": {
         "type": "git",

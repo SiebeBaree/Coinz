@@ -15,11 +15,11 @@ COPY src/ /bot/src
 RUN npm install -g pnpm
 RUN pnpm install --frozen-lockfile
 RUN pnpm build
-RUN pnpm run register-commands
-RUN pnpm run script:add-items
+RUN pnpm run deploy:register-commands
+RUN pnpm run deploy:add-items
 
 ENV NODE_ENV=production
 ENV REDIS_PORT=6379
 ENV REDIS_HOST=cooldowns_db
 
-CMD ["pnpm", "start"]
+CMD ["pnpm", "deploy:start"]
