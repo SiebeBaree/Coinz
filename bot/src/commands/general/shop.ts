@@ -10,7 +10,7 @@ import { calculatePageNumber, getPageButtons, getSelectMenu } from '../../utils/
 import { addMoney, removeMoney } from '../../utils/money';
 
 async function getInfo(client: Bot, interaction: ChatInputCommandInteraction) {
-    const itemId = interaction.options.getString('item-id')?.toLowerCase();
+    const itemId = interaction.options.getString('item')?.toLowerCase();
 
     if (itemId) {
         const item = client.items.getById(itemId) ?? client.items.getByName(itemId);
