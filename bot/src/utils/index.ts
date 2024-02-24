@@ -201,11 +201,6 @@ export function getVotingRow() {
             .setStyle(ButtonStyle.Link)
             .setEmoji('<:dbl:990540323967103036>')
             .setURL('https://discordbotlist.com/bots/coinz/upvote'),
-        new ButtonBuilder()
-            .setLabel('Discords.com')
-            .setStyle(ButtonStyle.Link)
-            .setEmoji('<:discords:1157587361069273119>')
-            .setURL('https://discords.com/bots/bot/938771676433362955/vote'),
     );
 }
 
