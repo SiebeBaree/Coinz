@@ -125,7 +125,6 @@ export default {
                     { id: interaction.user.id },
                     {
                         $inc: {
-                            totalEarned: gameData.profit + bet,
                             'games.won': 1,
                             'games.moneyEarned': gameData.profit + bet,
                         },

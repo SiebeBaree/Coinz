@@ -89,7 +89,6 @@ async function endGame(member: IMember, gameData: GameData): Promise<void> {
                 { id: member.id },
                 {
                     $inc: {
-                        totalEarned: money,
                         'games.won': 1,
                         'games.moneyEarned': money,
                     },

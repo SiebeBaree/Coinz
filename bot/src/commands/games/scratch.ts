@@ -219,7 +219,6 @@ export default {
                         { id: interaction.user.id },
                         {
                             $inc: {
-                                totalEarned: money,
                                 'games.moneyEarned': money,
                             },
                         },
@@ -242,7 +241,6 @@ export default {
                     { id: interaction.user.id },
                     {
                         $inc: {
-                            totalEarned: money,
                             'games.moneyEarned': money,
                         },
                     },

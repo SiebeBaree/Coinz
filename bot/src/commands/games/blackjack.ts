@@ -178,7 +178,6 @@ async function finishGame(gameData: GameData, member: IMember) {
             { id: member.id },
             {
                 $inc: {
-                    totalEarned: money,
                     'games.won': 1,
                     'games.moneyEarned': money,
                 },
@@ -267,7 +266,6 @@ export default {
                     { id: member.id },
                     {
                         $inc: {
-                            totalEarned: money,
                             'games.won': 1,
                             'games.moneyEarned': money,
                         },
