@@ -179,6 +179,7 @@ export default {
                 inline: false,
             },
         ],
+        usage: ['<bet> <user>'],
     },
     async execute(client, interaction, member) {
         const secondUser = interaction.options.getUser('user', true);

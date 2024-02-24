@@ -135,6 +135,7 @@ export default {
                 inline: false,
             },
         ],
+        usage: ['<bet>'],
     },
     async execute(client, interaction, member) {
         const { bet, error } = await getBet(client, interaction, member);

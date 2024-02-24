@@ -50,6 +50,7 @@ export default {
                 required: false,
             },
         ],
+        usage: ['[sell]'],
     },
     async execute(client, interaction, member) {
         const sellItems = interaction.options.getBoolean('sell') ?? false;

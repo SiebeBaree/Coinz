@@ -20,6 +20,7 @@ export default {
                 options: [],
             },
         ],
+        usage: ['view', 'list-items'],
     },
     async execute(_, interaction) {
         await interaction.reply({

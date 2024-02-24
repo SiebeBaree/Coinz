@@ -173,6 +173,16 @@ export default {
                 ],
             },
         ],
+        usage: [
+            'info [name]',
+            'invest <amount>',
+            'pay <amount>',
+            'employee hire <user>',
+            'employee fire <user | employee-id | username>',
+            'employee promote <user> <position>',
+            'buy <item-id> <quantity>',
+            'sell <item-id> <quantity> <price>',
+        ],
     },
     async execute(client, interaction, member) {
         const data = await getBusiness(interaction.user.id);

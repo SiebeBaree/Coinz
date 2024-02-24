@@ -118,6 +118,7 @@ export default {
             },
         ],
         image: 'https://cdn.coinzbot.xyz/games/table.png',
+        usage: ['<bet> <space>'],
     },
     async execute(client, interaction, member) {
         const space = interaction.options.getString('space', true).toLowerCase();

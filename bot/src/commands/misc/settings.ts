@@ -308,6 +308,13 @@ export default {
                 ],
             },
         ],
+        usage: [
+            'notification <notification> <value>',
+            'profile profile-color <color>',
+            'profile set-birthday <birthday>',
+            'profile set-country <country>',
+            'passive-mode <value>',
+        ],
     },
     async execute(client, interaction, member) {
         switch (interaction.options.getSubcommand()) {

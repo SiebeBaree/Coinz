@@ -163,6 +163,7 @@ export default {
                 ],
             },
         ],
+        usage: ['info', 'spin [amount]'],
     },
     async execute(client, interaction, member) {
         switch (interaction.options.getSubcommand()) {

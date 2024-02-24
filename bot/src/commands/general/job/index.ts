@@ -45,6 +45,7 @@ export default {
                 ],
             },
         ],
+        usage: ['work', 'list', 'leave', 'apply <job-name>'],
     },
     async execute(client, interaction, member) {
         switch (interaction.options.getSubcommand()) {

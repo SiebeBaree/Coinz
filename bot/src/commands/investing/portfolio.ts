@@ -96,6 +96,7 @@ export default {
                 required: false,
             },
         ],
+        usage: ['[user]'],
     },
     async execute(client, interaction, member) {
         const user = interaction.options.getUser('user', false) ?? interaction.user;

@@ -25,6 +25,7 @@ export default {
                 inline: false,
             },
         ],
+        usage: ['<user>'],
     },
     async execute(client, interaction, member) {
         if (getLevel(member.experience) < 12) {

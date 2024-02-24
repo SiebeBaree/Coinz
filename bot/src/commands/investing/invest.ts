@@ -451,6 +451,7 @@ export default {
                 ],
             },
         ],
+        usage: ['info [ticker]', 'buy <ticker> [amount | price]', 'sell <ticker> <amount>'],
     },
     async execute(client, interaction, member) {
         switch (interaction.options.getSubcommand()) {

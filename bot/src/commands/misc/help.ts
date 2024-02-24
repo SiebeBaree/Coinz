@@ -169,6 +169,7 @@ export default {
                 options: [],
             },
         ],
+        usage: ['command <command>', 'categories'],
     },
     async execute(client, interaction) {
         switch (interaction.options.getSubcommand()) {
