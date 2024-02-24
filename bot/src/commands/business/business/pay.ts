@@ -58,8 +58,8 @@ export default async function pay(client: Bot, interaction: ChatInputCommandInte
         .setFooter({ text: client.config.embed.footer })
         .setTimestamp()
         .setFields([
-            { name: 'Total Amount', value: `:coin: ${totalAmount}` },
-            { name: 'Amount per Employee', value: `:coin: ${moneyPerEmployee}` },
+            { name: 'Total Amount', value: `:coin: ${totalAmount}`, inline: true },
+            { name: 'Amount per Employee', value: `:coin: ${moneyPerEmployee}`, inline: true },
         ]);
 
     await client.cooldown.setCooldown(interaction.user.id, COMMAND_NAME, COOLDOWN_TIME);

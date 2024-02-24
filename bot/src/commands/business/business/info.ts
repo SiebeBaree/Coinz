@@ -84,9 +84,9 @@ function getEmbed(client: Bot, member: IMember, business: IBusiness | null, cate
         const employees = [];
         for (const employee of business.employees) {
             employees.push(
-                `[**${employee.employeeId}**] <@${employee.userId}> (**${
+                `(\`${employee.employeeId}\`) <@${employee.userId}> - **${
                     Positions[employee.position]
-                }**)\n> **Money Earned:** :coin: ${employee.moneyEarned}`,
+                }**\n> **Money Earned:** :coin: ${employee.moneyEarned}`,
             );
         }
 
@@ -209,8 +209,9 @@ async function getComponents(
 
     const selectMenu = getSelectMenu(business, category, disableInventorySelect, disabled);
     const buttons = await getButtons(client, category, member, business, disabled);
-    if (selectMenu) components.push(selectMenu);
-    if (buttons) components.push(buttons);
+    if (selectMenu && selectMenu.components.length >= 1 && selectMenu.components.length <= 5)
+        components.push(selectMenu);
+    if (buttons && buttons.components.length >= 1 && buttons.components.length <= 5) components.push(buttons);
 
     return components;
 }
@@ -296,13 +297,14 @@ export default async function info(
                     .setCustomId(`business-create-${interaction.user.id}`)
                     .addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(createNameInput));
 
-                await interaction.showModal(modal);
+                await i.showModal(modal);
 
-                const filter = (i: ModalSubmitInteraction) =>
-                    i.customId === `business-create-${interaction.user.id}` && i.user.id === interaction.user.id;
+                const filter = (modalInteraction: ModalSubmitInteraction) =>
+                    modalInteraction.customId === `business-create-${interaction.user.id}` &&
+                    modalInteraction.user.id === interaction.user.id;
 
                 try {
-                    const modalInteraction = await interaction.awaitModalSubmit({ filter, time: 180_000 });
+                    const modalInteraction = await i.awaitModalSubmit({ filter, time: 180_000 });
 
                     const businessName = modalInteraction.fields.getTextInputValue('business-create-name').trim();
 
@@ -334,6 +336,7 @@ export default async function info(
                             ],
                         });
                         await newBusiness.save();
+                        business = newBusiness;
                     } catch (error) {
                         await modalInteraction.reply({
                             content: (error as Error).message,
@@ -360,13 +363,14 @@ export default async function info(
                     .setCustomId(`business-rename-${interaction.user.id}`)
                     .addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(renameInput));
 
-                await interaction.showModal(modal);
+                await i.showModal(modal);
 
-                const filter = (i: ModalSubmitInteraction) =>
-                    i.customId === `business-rename-${interaction.user.id}` && i.user.id === interaction.user.id;
+                const filter = (modalInteraction: ModalSubmitInteraction) =>
+                    modalInteraction.customId === `business-rename-${interaction.user.id}` &&
+                    modalInteraction.user.id === interaction.user.id;
 
                 try {
-                    const modalInteraction = await interaction.awaitModalSubmit({ filter, time: 180_000 });
+                    const modalInteraction = await i.awaitModalSubmit({ filter, time: 180_000 });
 
                     const businessName = modalInteraction.fields.getTextInputValue('business-rename');
                     try {
@@ -394,6 +398,9 @@ export default async function info(
                                 },
                             },
                         );
+
+                        business.name = validName;
+                        business.balance -= 4000;
                     } catch (error) {
                         await modalInteraction.reply({
                             content: (error as Error).message,
@@ -420,15 +427,16 @@ export default async function info(
                     .setCustomId(`business-sell-${interaction.user.id}`)
                     .addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(confirmInput));
 
-                await interaction.showModal(modal);
+                await i.showModal(modal);
 
-                const filter = (i: ModalSubmitInteraction) =>
-                    i.customId === `business-sell-${interaction.user.id}` && i.user.id === interaction.user.id;
+                const filter = (modalInteraction: ModalSubmitInteraction) =>
+                    modalInteraction.customId === `business-sell-${interaction.user.id}` &&
+                    modalInteraction.user.id === interaction.user.id;
 
                 try {
-                    const modalInteraction = await interaction.awaitModalSubmit({ filter, time: 60_000 });
+                    const modalInteraction = await i.awaitModalSubmit({ filter, time: 60_000 });
 
-                    const businessName = modalInteraction.fields.getTextInputValue('business-create-name');
+                    const businessName = modalInteraction.fields.getTextInputValue('business-sell');
                     if (businessName !== business.name) {
                         await modalInteraction.reply({
                             content: 'Business name is incorrect. Canceling the sale.',
@@ -443,16 +451,18 @@ export default async function info(
                     });
 
                     await Business.deleteOne({ name: business.name });
+                    business = null;
                 } catch (error) {
                     if ((error as Error).name.includes('InteractionCollectorError')) return;
                     throw error;
                 }
             }
         } else if (i.componentType === ComponentType.StringSelect && i.customId === 'business_info_select') {
+            await i.deferUpdate();
             category = i.values[0]!;
         }
 
-        await i.update({
+        await interaction.editReply({
             embeds: [getEmbed(client, member, business, category)],
             components: await getComponents(client, business, member, category, !ownBusiness, false),
         });

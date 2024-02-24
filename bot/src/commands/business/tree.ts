@@ -299,13 +299,14 @@ export default {
                 });
             } else if (i.customId === 'tree_plant') {
                 member = await getMember(member.id);
+                const shovel = client.items.getById('shovel')!;
 
                 if (member.tree.plantedAt !== 0) {
                     await interaction.followUp({ content: ':x: You already have a tree planted.', ephemeral: true });
                     return;
                 } else if (!client.items.hasInInventory('shovel', member)) {
                     await interaction.followUp({
-                        content: `:x: You need a **${client.items.getById('shovel')!.name}** to plant a tree.`,
+                        content: `:x: You need a <:${shovel.itemId}:${shovel.emoteId}> **${shovel.name}** to plant a tree.`,
                         ephemeral: true,
                     });
                     return;
@@ -314,9 +315,10 @@ export default {
                 if (getRandomNumber(1, 100) <= 30) {
                     await client.items.removeItem('shovel', member);
                     await interaction.followUp({
-                        content: ':x: You broke your shovel while planting the tree.',
+                        content: `:x: You broke your <:${shovel.itemId}:${shovel.emoteId}> **${shovel.name}** while planting the tree, you need to buy a new one!`,
                         ephemeral: true,
                     });
+                    return;
                 }
 
                 member.tree.plantedAt = now;
