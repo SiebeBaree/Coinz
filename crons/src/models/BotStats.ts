@@ -5,6 +5,7 @@ export type IBotStats = {
     users: number;
     shards: number;
     commands: number;
+    investments: number;
     updatedAt: Date;
 };
 
@@ -14,6 +15,7 @@ export const botStatsSchema = new Schema<IBotStats>(
         users: { type: Number, required: true },
         shards: { type: Number, required: true },
         commands: { type: Number, required: true },
+        investments: { type: Number, required: true },
     },
     { timestamps: true },
 );

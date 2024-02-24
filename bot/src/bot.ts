@@ -5,6 +5,7 @@ import { ActivityType, GatewayIntentBits, type Guild, Partials } from 'discord.j
 import { connect } from 'mongoose';
 import Bot from './domain/Bot';
 import BotStats from './models/botStats';
+import Investment from './models/investment';
 import logger from './utils/logger';
 
 (async () => {
@@ -45,11 +46,13 @@ import logger from './utils/logger';
                     .then((results) => results.reduce((acc, memberCount) => acc + memberCount, 0));
                 const shards = bot.cluster.info.TOTAL_SHARDS;
 
+                const investmentsCount = await Investment.countDocuments();
                 const botStat = new BotStats({
                     guilds: guilds,
                     users: users,
                     shards: shards,
                     commands: bot.commands.size,
+                    investments: investmentsCount,
                     updatedAt: new Date(),
                 });
                 await botStat.save();
