@@ -31,19 +31,13 @@ const logger = winston.createLogger({
             dirname: './logs',
             format: fileFormat,
         }),
-    ],
-    exceptionHandlers: [
         new winston.transports.File({
-            filename: './logs/exception.log',
+            filename: './logs/exceptions.log',
             format: fileFormat,
+            level: 'error',
         }),
     ],
-    rejectionHandlers: [
-        new winston.transports.File({
-            filename: './logs/rejections.log',
-            format: fileFormat,
-        }),
-    ],
+    exitOnError: false,
 });
 
 export default logger;
