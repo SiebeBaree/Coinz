@@ -337,6 +337,7 @@ export default async function info(
                         });
                         await newBusiness.save();
                         business = newBusiness;
+                        ownBusiness = true;
                     } catch (error) {
                         await modalInteraction.reply({
                             content: (error as Error).message,
