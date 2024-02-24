@@ -42,7 +42,11 @@ export default {
         }
 
         const victimMember = await getMember(victim.id);
-        if (victimMember.wallet < 1) {
+        if (member.passiveMode || victimMember.passiveMode) {
+            await interaction.reply('You or the victim are in passive mode and cannot be stolen from.');
+            await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
+            return;
+        } else if (victimMember.wallet < 1) {
             await interaction.reply('You cannot steal from someone who has no money.');
             await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
             return;
@@ -60,11 +64,10 @@ export default {
             .setAuthor({ name: `Steal from ${victim.tag}`, iconURL: victim.displayAvatarURL() })
             .setColor(memberWon ? Colors.Green : Colors.Red)
             .setDescription(
-                `You ${memberWon ? 'stole' : 'tried to steal, but failed and lost'} :coin: **${amount}** from **${
-                    victim.tag
-                }**.`,
-            )
-            .setFooter({ text: client.config.embed.footer });
+                `You ${memberWon ? 'stole' : 'tried to steal, but failed and lost'} :coin: **${amount}**${
+                    memberWon ? `from **${victim.tag}**.` : '.'
+                }`,
+            );
         await interaction.reply({ embeds: [embed] });
 
         if (victimHasPadlock && Math.random() <= 0.2) {
