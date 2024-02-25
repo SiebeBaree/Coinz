@@ -162,9 +162,6 @@ export default {
 
             if (i.customId === 'rps_stop') {
                 gameData.finishedCommand = true;
-                gameData.desc = `You stopped the game. You won :coin: ${Math.floor(
-                    gameData.bet * gameData.multiplier - gameData.bet,
-                )}!`;
             } else if (i.customId.startsWith('rps_')) {
                 gameData.playerChoice = i.customId.split('_')[1]!.toLowerCase() as Choice;
                 gameData.botChoice = getChoice();
@@ -204,7 +201,11 @@ export default {
                         { upsert: true },
                     );
                 } else {
-                    const money = Math.floor(gameData.bet * gameData.multiplier - gameData.bet);
+                    gameData.desc = `You stopped the game. You won :coin: ${Math.floor(
+                        gameData.bet * gameData.multiplier - gameData.bet,
+                    )}!`;
+
+                    const money = Math.floor(gameData.bet * gameData.multiplier);
                     await addMoney(interaction.user.id, money);
                     await addExperience(member);
 

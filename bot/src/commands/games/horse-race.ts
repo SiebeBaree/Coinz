@@ -104,7 +104,7 @@ export default {
                     gameData.status += `\n:money_with_wings: **Profit:** :coin: ${Math.floor(gameData.bet * 3)}`;
                     gameData.color = Colors.Green;
 
-                    const money = Math.floor(gameData.bet * 3);
+                    const money = Math.floor(gameData.bet * 3) + gameData.bet;
                     await addMoney(interaction.user.id, money);
                     await addExperience(member);
 

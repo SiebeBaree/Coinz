@@ -258,10 +258,16 @@ export default {
                 await removeMoney(secondUser.id, bet);
             } else if (i.customId === 'ttt_decline') {
                 gameData.finishedCommand = true;
+                collector.stop();
                 await i.deferUpdate();
+
+                await interaction.editReply({
+                    content: `**${secondUser.tag}** has declined the game. Send another tic-tac-toe invite to play again.`,
+                    components: [],
+                });
+
                 await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
                 await addMoney(interaction.user.id, bet);
-                collector.stop();
             } else if (i.customId.startsWith('ttt_board')) {
                 const [row, column] = i.customId
                     .replace('ttt_board', '')
@@ -308,6 +314,25 @@ export default {
                 } else if (gameData.finishedCommand && gameData.hostWon === null) {
                     await addMoney(interaction.user.id, bet);
                     await addMoney(gameData.secondUser.id, bet);
+
+                    await UserStats.updateOne(
+                        { id: member.id },
+                        {
+                            $inc: {
+                                'games.tie': 1,
+                            },
+                        },
+                        { upsert: true },
+                    );
+                    await UserStats.updateOne(
+                        { id: secondMember.id },
+                        {
+                            $inc: {
+                                'games.tie': 1,
+                            },
+                        },
+                        { upsert: true },
+                    );
                 }
 
                 if (gameData.finishedCommand) {

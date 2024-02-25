@@ -191,6 +191,16 @@ async function finishGame(gameData: GameData, member: IMember) {
             { id: member.id },
             {
                 $inc: {
+                    'games.tie': 1,
+                },
+            },
+            { upsert: true },
+        );
+    } else {
+        await UserStats.updateOne(
+            { id: member.id },
+            {
+                $inc: {
                     'games.lost': 1,
                     'games.moneyLost': gameData.bet,
                 },
@@ -275,6 +285,16 @@ export default {
                 );
             } else if (gameData.tie) {
                 await addMoney(interaction.user.id, gameData.bet);
+
+                await UserStats.updateOne(
+                    { id: interaction.user.id },
+                    {
+                        $inc: {
+                            'games.tie': 1,
+                        },
+                    },
+                    { upsert: true },
+                );
             }
         }
 

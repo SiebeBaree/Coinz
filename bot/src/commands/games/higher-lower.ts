@@ -32,7 +32,8 @@ function getEmbed(gameData: GameData): EmbedBuilder {
                 ':negative_squared_cross_mark: `Stop` ― **Stop the game an claim your money.**' +
                 `\n\n**Current Number:** \`${gameData.currentNumber}\` *(Between 1-99)*\n**Correct Guesses:** \`${gameData.timesCorrect}\`` +
                 `\n\n:money_with_wings: **Profit:** :coin: ${
-                    getPrice(gameData.bet, gameData.timesCorrect, gameData.playerHasWon) - gameData.bet
+                    getPrice(gameData.bet, gameData.timesCorrect, gameData.playerHasWon) -
+                    (gameData.playerHasWon ? gameData.bet : 0)
                 }`,
         );
 }
@@ -201,7 +202,20 @@ export default {
                 gameData.color = Colors.Green;
 
                 await interaction.editReply({ embeds: [getEmbed(gameData)], components: [getButtons(true)] });
-                await addMoney(interaction.user.id, getPrice(gameData.bet, gameData.timesCorrect));
+                const money = getPrice(gameData.bet, gameData.timesCorrect);
+                await addMoney(interaction.user.id, money);
+                await addExperience(member);
+
+                await UserStats.updateOne(
+                    { id: interaction.user.id },
+                    {
+                        $inc: {
+                            'games.won': 1,
+                            'games.moneyEarned': money,
+                        },
+                    },
+                    { upsert: true },
+                );
             }
         });
     },

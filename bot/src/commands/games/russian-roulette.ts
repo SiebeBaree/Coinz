@@ -11,7 +11,7 @@ import type { Command } from '../../domain/Command';
 import type { IMember } from '../../models/member';
 import UserStats from '../../models/userStats';
 import { filter, getBet, wait } from '../../utils';
-import { addExperience, addMoney, removeMoney } from '../../utils/money';
+import { addExperience, addMoney } from '../../utils/money';
 
 const TOTAL_SLOTS = 6;
 const DELAY = 2500;
@@ -27,6 +27,11 @@ type GameData = {
 };
 
 function getEmbed(gameData: GameData): EmbedBuilder {
+    const profit =
+        gameData.finishedCommand && !gameData.userWon
+            ? -gameData.bet
+            : Math.floor(gameData.multiplier * gameData.bet - gameData.bet);
+
     return new EmbedBuilder()
         .setTitle('Russian Roulette')
         .setDescription(
@@ -37,7 +42,7 @@ function getEmbed(gameData: GameData): EmbedBuilder {
             { name: 'Bet Mulitplier', value: `${gameData.multiplier}x`, inline: true },
             {
                 name: 'Profit',
-                value: `:coin: ${Math.floor(gameData.multiplier * gameData.bet - gameData.bet)}`,
+                value: `:coin: ${profit}`,
                 inline: true,
             },
         );
@@ -96,8 +101,6 @@ async function endGame(member: IMember, gameData: GameData): Promise<void> {
                 { upsert: true },
             );
         } else {
-            await removeMoney(member.id, gameData.bet);
-
             await UserStats.updateOne(
                 { id: member.id },
                 {
@@ -214,7 +217,7 @@ export default {
         collector.on('end', async () => {
             if (!gameData.finishedCommand) {
                 gameData.finishedCommand = true;
-                if (gameData.userWon === null) gameData.userWon = false;
+                if (gameData.userWon === null) gameData.userWon = true;
 
                 await interaction.editReply({ components: [getButtons(gameData.finishedCommand)] });
                 await endGame(member, gameData);
