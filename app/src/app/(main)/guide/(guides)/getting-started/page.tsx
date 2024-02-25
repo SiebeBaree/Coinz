@@ -175,14 +175,8 @@ export default function GettingStartedGuide() {
                     >
                         discordbotlist.com
                     </Link>
-                    <Link
-                        href="https://discords.com/bots/bot/938771676433362955/vote"
-                        target="_blank"
-                        className="text-primary hover:underline font-bold transition-all duration-100 ease-in-out"
-                    >
-                        discords.com
-                    </Link>
-                    . You can vote every 12 hours and you will receive 1000 coins for every vote.
+                    . You can vote every 12 hours and you will receive a lucky wheel spin for every vote. You can win
+                    money or items by spinning the lucky wheel.
                 </li>
                 <li>
                     <strong>Games</strong> - You can play games like blackjack, slots, roulette, higher-lower, and so
