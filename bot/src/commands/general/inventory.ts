@@ -112,8 +112,8 @@ export default {
         collector.on('end', async () => {
             await interaction.editReply({
                 components: [
-                    ...getPageButtons(page, maxPage),
-                    ...getSelectMenu(options, 'inventory_selectCategory', defaultLabel),
+                    ...getPageButtons(page, maxPage, true),
+                    ...getSelectMenu(options, 'inventory_selectCategory', defaultLabel, true),
                 ],
             });
         });
