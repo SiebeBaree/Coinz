@@ -594,10 +594,10 @@ async function getPlant(client: Bot, interaction: ChatInputCommandInteraction, m
 
             const cropInInventory = client.items.getInventoryItem(crop.itemId, member);
             if (!cropInInventory || cropInInventory.amount < plots.length) {
-                await interaction.reply({
+                await modalInteraction.reply({
                     content: `You don't have enough <:${crop.itemId}:${crop.emoteId}> **${
                         crop.name
-                    }** in your inventory.\nUse \`/shop buy item-id: ${crop.itemId} amount: ${
+                    }** in your inventory.\nUse \`/shop buy item-id:${crop.itemId} amount:${
                         plots.length - (cropInInventory?.amount ?? 0)
                     }\``,
                     ephemeral: true,
