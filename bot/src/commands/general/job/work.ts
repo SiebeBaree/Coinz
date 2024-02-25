@@ -5,9 +5,9 @@ import words from '../../../data/words.json';
 import type Bot from '../../../domain/Bot';
 import type { Job } from '../../../lib/types';
 import type { IMember } from '../../../models/member';
-import Member from '../../../models/member';
+import UserStats from '../../../models/userStats';
 import { filter, getRandomNumber, msToTime, wait } from '../../../utils';
-import { addExperience } from '../../../utils/money';
+import { addExperience, addMoney } from '../../../utils/money';
 
 type Button = {
     label: number | string;
@@ -108,15 +108,8 @@ async function workOrder(client: Bot, interaction: ChatInputCommandInteraction, 
                     content: `Correct answer! You earned :coin: ${job.salary} and gained ${exp} experience.`,
                 });
 
-                await Member.updateOne(
-                    { id: interaction.user.id },
-                    {
-                        $inc: {
-                            wallet: job.salary,
-                            'stats.timesWorked': 1,
-                        },
-                    },
-                );
+                await addMoney(interaction.user.id, job.salary);
+                await UserStats.updateOne({ id: interaction.user.id }, { $inc: { timesWorked: 1 } }, { upsert: true });
 
                 await client.achievement.sendAchievementMessage(
                     interaction,
@@ -247,15 +240,8 @@ async function collector(
                 content: `Correct answer! You earned :coin: ${job.salary} and gained ${exp} experience.`,
             });
 
-            await Member.updateOne(
-                { id: interaction.user.id },
-                {
-                    $inc: {
-                        wallet: job.salary,
-                        'stats.timesWorked': 1,
-                    },
-                },
-            );
+            await addMoney(interaction.user.id, job.salary);
+            await UserStats.updateOne({ id: interaction.user.id }, { $inc: { timesWorked: 1 } }, { upsert: true });
 
             await client.achievement.sendAchievementMessage(
                 interaction,
