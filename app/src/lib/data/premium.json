@@ -34,7 +34,8 @@
             "Get a lucky wheel spin with /daily",
             "Earn double XP",
             "Gamble cooldowns reduced from 10 to 4 minutes",
-            "Hire a 6th employee for your business"
+            "Hire a 6th employee for your business",
+            "Donate someone up to 🪙 25.000 using /pay"
         ]
     }
 }
