@@ -1,9 +1,17 @@
 [
     {
-        "version": "4.0.0",
+        "version": "4.0",
         "name": "Premium & Quality of Life Update",
         "timestamp": 1707382800,
         "content": [
+            "#### Premium",
+            "- We've decided to bring back the premium subscription in Coinz. We try to also keep it as fair as possible.",
+            "- More information about premium can be found [**here**](https://coinzbot.xyz/premium).",
+            "#### Business Overhaul",
+            "- Reworked the business feature and made some major changes to the buying and selling of products. Businesses will buy and sell products from a global market that is driven by other businesses. So prices of products may vary.",
+            "- Removed the `/business supply` command in favor of the new market system.",
+            "- Employees will now receive an equal share of the profits of the business.",
+            "- In the future we will add more features to the business system, like a dedicated market command (and page on the website) to view the current prices of products, a leaderboard of all businesses on the website and more!",
             "#### Added",
             "- 4 new crops to use in `/farm`: *Chili Pepper*, *Blueberry*, *Raspberry* & *Beetroot*.",
             "- Added new items in the shop: *Chainsaw*, *Fertilizer*",
@@ -32,6 +40,7 @@
             "- Removed *Premium Fishing Rod* from the shop, the fish command doesn't give you better fish with this fishing rod.",
             "- Removed following achievements: *Going Places*, *Bug Hunter* & *Easy Blackjack!*.",
             "- Fixed a bug in `/daily` where your daily streak wouldn't reset after missing more than 3 days.",
+            "- We temporarily removed the `/connect4` command because it was not up to our standards. We will bring this feature back in a future update.",
             "#### List of new crypto tickers",
             "- *ICP* - Internet Computer",
             "- *LINK* - ChainLink",
@@ -67,7 +76,7 @@
         ]
     },
     {
-        "version": "3.0.0",
+        "version": "3.0",
         "name": "Rewrite Update",
         "timestamp": 1675940400,
         "content": [
@@ -136,7 +145,7 @@
         ]
     },
     {
-        "version": "2.4.0",
+        "version": "2.4",
         "name": "Quality of Life Update",
         "timestamp": 1669971600,
         "content": [
@@ -166,7 +175,7 @@
         ]
     },
     {
-        "version": "2.3.0",
+        "version": "2.3",
         "name": "Airdrops & Achievements Update",
         "timestamp": 1662186600,
         "content": [
@@ -225,7 +234,7 @@
         ]
     },
     {
-        "version": "2.0.0",
+        "version": "2.0",
         "name": "Coinz v2",
         "timestamp": 1659772800,
         "content": [
@@ -247,7 +256,7 @@
         ]
     },
     {
-        "version": "1.1.0",
+        "version": "1.1",
         "name": "First Big Update",
         "timestamp": 1656835200,
         "content": [
