@@ -6,6 +6,8 @@ import { Check } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Session } from 'next-auth';
+import { useRouter } from 'next/router';
 
 interface Subscription {
     name: string;
@@ -17,7 +19,7 @@ interface Subscription {
     perks: string[];
 }
 
-export default function PremiumClient() {
+export default function PremiumClient({ session }: { session: Session | null }) {
     const [priceDuration, setPriceDuration] = useState<'monthly' | 'quarterly'>('monthly');
     const subscriptions = Object.keys(premium) as Array<keyof typeof premium>;
 
@@ -62,17 +64,31 @@ export default function PremiumClient() {
                 }}
             >
                 {subscriptions.map((key) => (
-                    <SubscriptionCard key={key} subscription={premium[key]} price={priceDuration} />
+                    <SubscriptionCard key={key} session={session} subscription={premium[key]} price={priceDuration} />
                 ))}
             </div>
         </div>
     );
 }
 
-function SubscriptionCard({ subscription, price }: { subscription: Subscription; price: 'monthly' | 'quarterly' }) {
+function SubscriptionCard({
+    session,
+    subscription,
+    price,
+}: {
+    session: Session | null;
+    subscription: Subscription;
+    price: 'monthly' | 'quarterly';
+}) {
+    const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
 
     async function onSubscribe() {
+        if (!session) {
+            router.push('/login?url=/premium');
+            return;
+        }
+
         try {
             setLoading(true);
             const response = await fetch('/api/stripe');
