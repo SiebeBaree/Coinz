@@ -74,9 +74,7 @@ export default function DashboardSidebar({ session }: { session: Session }) {
                     {routes.map((route) => (
                         <div key={route.href}>
                             {route.comingSoon ? (
-                                <button
-                                    className="text-sm group flex p-3 w-full justify-start cursor-pointer font-medium text-muted"
-                                >
+                                <button className="text-sm group flex p-3 w-full justify-start cursor-pointer font-medium text-muted">
                                     <route.icon className="h-5 w-5 mr-3" />
                                     {route.label}
                                     <Badge className="ml-auto text-muted" variant="secondary">
