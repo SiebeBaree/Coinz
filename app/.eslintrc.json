@@ -59,12 +59,7 @@
                 "maxBOF": 0
             }
         ],
-        "no-shadow": [
-            "error",
-            {
-                "allow": ["err", "resolve", "reject"]
-            }
-        ],
+        "no-shadow": "off",
         "no-trailing-spaces": ["error"],
         "no-var": "error",
         "object-curly-spacing": ["error", "always"],
@@ -84,7 +79,8 @@
         "space-infix-ops": "error",
         "space-unary-ops": "error",
         "spaced-comment": "error",
-        "yoda": "error"
+        "yoda": "error",
+        "@typescript-eslint/no-shadow": "warn"
     },
     "ignorePatterns": ["node_modules/", "dist/", "build/"]
 }
