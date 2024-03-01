@@ -71,10 +71,14 @@ export default {
             }
 
             if (process.env.NODE_ENV === 'production') {
-                const cooldownTime =
+                let cooldownTime =
                     command.data.cooldown === undefined || command.data.cooldown === 0
-                        ? client.config.cooldown.default
+                        ? member.premium > 0
+                            ? client.config.cooldown.premium
+                            : client.config.cooldown.default
                         : command.data.cooldown;
+
+                if (member.premium >= 2 && command.data.category === 'games') cooldownTime = 240;
                 await client.cooldown.setCooldown(interaction.user.id, command.data.name, cooldownTime);
             }
 

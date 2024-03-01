@@ -201,7 +201,7 @@ export default {
         }
 
         if (interaction.options.getSubcommandGroup() === 'employee') {
-            await employee(client, interaction, data);
+            await employee(client, interaction, member, data);
             return;
         }
 

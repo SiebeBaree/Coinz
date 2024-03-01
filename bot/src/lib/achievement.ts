@@ -1,4 +1,5 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
+import config from '../data/config.json';
 import type { IMember } from '../models/member';
 import Member from '../models/member';
 import type { IUserStats } from '../models/userStats';
@@ -15,6 +16,22 @@ export type IAchievement = {
 };
 
 const achievements: IAchievement[] = [
+    {
+        id: 'coinz_plus',
+        name: 'Coinz Plus',
+        description: `Become a [Coinz Plus](${config.website}/premium) subscriber.`,
+        emoji: '1213188487428186142',
+        hasAchieved: (member: IMember, _: IUserStats) => member.premium >= 1,
+        progress: (member: IMember, _: IUserStats) => `${member.premium >= 1}/1`,
+    },
+    {
+        id: 'coinz_pro',
+        name: 'Coinz Pro',
+        description: `Become a [Coinz Pro](${config.website}/premium) subscriber.`,
+        emoji: '1213188489311551498',
+        hasAchieved: (member: IMember, _: IUserStats) => member.premium >= 2,
+        progress: (member: IMember, _: IUserStats) => `${member.premium >= 2}/1`,
+    },
     {
         id: 'hard_work',
         name: 'Work Hard, Become Rich',

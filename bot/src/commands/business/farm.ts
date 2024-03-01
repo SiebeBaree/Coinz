@@ -141,12 +141,13 @@ function getPlotPrice(plotNumber: number): number {
 
 function getButtons(member: IMember, disabled = false): ActionRowBuilder<ButtonBuilder> {
     const getButtonStatus = (member: IMember): boolean[] => {
+        const maxPlots = member.premium === 2 ? 15 : member.premium === 1 ? 12 : 9;
         return [
             member.plots.filter((plot) => plot.status === 'harvest' || plot.status === 'rotten').length === 0,
             member.plots.filter((plot) => plot.status === 'growing').length === 0 ||
                 member.lastWatered + WATER_COOLDOWN > Math.floor(Date.now() / 1_000),
             member.plots.filter((plot) => plot.soilQuality <= 80).length === 0,
-            member.plots.length >= 15 || member.wallet < getPlotPrice(member.plots.length),
+            member.plots.length >= maxPlots || member.wallet < getPlotPrice(member.plots.length),
         ];
     };
 

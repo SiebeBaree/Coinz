@@ -71,7 +71,8 @@ export async function removeBetMoney(
 }
 
 export async function addExperience(member: IMember, amount?: number): Promise<number> {
-    const xp = amount ?? getRandomNumber(1, 4);
+    let xp = amount ?? getRandomNumber(1, 4);
+    if (member.premium >= 2) xp *= 2;
     await Member.updateOne({ id: member.id }, { $inc: { experience: xp } }, { upsert: true });
     return xp;
 }

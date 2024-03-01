@@ -5,6 +5,7 @@ import { Positions, type BusinessData } from '../../../lib/types';
 import type { IEmployee } from '../../../models/business';
 import Business from '../../../models/business';
 import Member from '../../../models/member';
+import type { IMember } from '../../../models/member';
 import UserStats from '../../../models/userStats';
 import { generateRandomString, msToTime } from '../../../utils';
 
@@ -26,10 +27,15 @@ function getConfirmHireActionRow(disabled = true): ActionRowBuilder<ButtonBuilde
     );
 }
 
-export default async function employee(client: Bot, interaction: ChatInputCommandInteraction, data: BusinessData) {
+export default async function employee(
+    client: Bot,
+    interaction: ChatInputCommandInteraction,
+    member: IMember,
+    data: BusinessData,
+) {
     switch (interaction.options.getSubcommand()) {
         case 'hire':
-            return hire(client, interaction, data);
+            return hire(client, interaction, member, data);
         case 'fire':
             return fire(client, interaction, data);
         case 'promote':
@@ -39,16 +45,17 @@ export default async function employee(client: Bot, interaction: ChatInputComman
     }
 }
 
-async function hire(client: Bot, interaction: ChatInputCommandInteraction, data: BusinessData) {
+async function hire(client: Bot, interaction: ChatInputCommandInteraction, member: IMember, data: BusinessData) {
+    const MAX_EMPLOYEES = member.premium >= 2 ? 6 : 5;
     if (data.employee.position < Positions.Manager) {
         await interaction.reply({
             content: 'You need to be a manager or higher to hire employees.',
             ephemeral: true,
         });
         return;
-    } else if (data.business.employees.length >= 5) {
+    } else if (data.business.employees.length >= MAX_EMPLOYEES) {
         await interaction.reply({
-            content: 'You can only have 5 employees at a time. You need to fire someone before hiring a new employee.',
+            content: `You can only have ${MAX_EMPLOYEES} employees at a time. You need to fire someone before hiring a new employee.`,
             ephemeral: true,
         });
         return;
