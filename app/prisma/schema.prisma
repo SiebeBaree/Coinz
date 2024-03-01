@@ -84,7 +84,8 @@ model Investment {
 }
 
 model members {
-  id           String             @id @default(auto()) @map("_id") @db.ObjectId
+  pk           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           String
   banned       Boolean
   votes        Int
   wallet       Int
@@ -119,6 +120,51 @@ model Item {
   duration        Int?
 }
 
+type GameStats {
+  won         Int
+  lost        Int
+  tied        Int
+  moneySpent  Int
+  moneyEarned Int
+}
+
+type DailyActivity {
+  startDay      DateTime
+  totalCommands Int
+}
+
+type InvestmentStats {
+  amountOfTimesBought Int
+  amountOfTimesSold   Int
+  totalBuyPrice       Int
+}
+
+model userstats {
+  pk          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String
+  totalEarned Int
+  totalSpend  Int
+  itemsBought Int
+  itemsSold   Int
+  games       GameStats
+  treesCutDown Int
+  totalTreeHeight Int
+  luckyWheelSpins Int
+  timesWorked Int
+  fishCaught Int
+  animalsKilled Int
+  timesRobbed Int
+  timesPlotPlanted Int
+  timesPlotHarvested Int
+  timesPlotWatered Int
+  timesPlotFertilized Int
+  moneyEarnedOnBusinesses Int
+  dailyActivity DailyActivity
+  moneyDonated Int
+  moneyReceived Int
+  investments InvestmentStats
+}
+
 model UserSubscription {
   id                     String    @id @default(auto()) @map("_id") @db.ObjectId
   userId                 String    @unique @db.ObjectId
@@ -127,4 +173,51 @@ model UserSubscription {
   stripeSubscriptionId   String?   @unique @map("stripe_subscription_id")
   stripePriceId          String?   @map("stripe_price_id")
   stripeCurrentPeriodEnd DateTime? @map("stripe_current_period_end")
+}
+
+model Plan {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  productId     Int            @unique
+  variantId     Int            @unique
+  name          String?
+  description   String?        @default("")
+  variantName   String
+  sort          Int            @default(100)
+  status        String         @default("published")
+  price         Int
+  interval      String         @default("month")
+  intervalCount Int            @default(1)
+  subscriptions Subscription[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model WebhookEvent {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime  @default(now())
+  eventName       String
+  processed       Boolean   @default(false)
+  body            Json
+  processingError String?
+}
+
+model Subscription {
+  id                 String    @id @default(auto()) @map("_id") @db.ObjectId
+  lemonSqueezyId     Int       @unique
+  orderId            Int       @unique
+  name               String
+  email              String
+  status             String
+  renewsAt           DateTime?
+  endsAt             DateTime?
+  trialEndsAt        DateTime?
+  resumesAt          DateTime?
+  price              Int
+  plan               Plan      @relation(fields: [planId], references: [id])
+  planId             String    @db.ObjectId
+  memberId           String
+  isUsageBased       Boolean   @default(false)
+  subscriptionItemId Int?      @unique
+
+  @@index([planId, lemonSqueezyId])
 }
