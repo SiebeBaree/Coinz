@@ -5,6 +5,9 @@ settings:
     excludeLinksFromLockfile: false
 
 dependencies:
+    '@hookform/resolvers':
+        specifier: ^3.3.4
+        version: 3.3.4(react-hook-form@7.50.1)
     '@lemonsqueezy/lemonsqueezy.js':
         specifier: ^2.1.0
         version: 2.1.0
@@ -15,6 +18,9 @@ dependencies:
         specifier: ^5.10.2
         version: 5.10.2(prisma@5.10.2)
     '@radix-ui/react-avatar':
+        specifier: ^1.0.4
+        version: 1.0.4(@types/react-dom@18.2.19)(@types/react@18.2.58)(react-dom@18.2.0)(react@18.2.0)
+    '@radix-ui/react-checkbox':
         specifier: ^1.0.4
         version: 1.0.4(@types/react-dom@18.2.19)(@types/react@18.2.58)(react-dom@18.2.0)(react@18.2.0)
     '@radix-ui/react-dialog':
@@ -68,6 +74,9 @@ dependencies:
     react-dom:
         specifier: latest
         version: 18.2.0(react@18.2.0)
+    react-hook-form:
+        specifier: ^7.50.1
+        version: 7.50.1(react@18.2.0)
     react-markdown:
         specifier: ^9.0.1
         version: 9.0.1(@types/react@18.2.58)(react@18.2.0)
@@ -80,6 +89,9 @@ dependencies:
     tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.1)
+    zod:
+        specifier: ^3.22.4
+        version: 3.22.4
 
 devDependencies:
     '@tanstack/eslint-plugin-query':
@@ -265,6 +277,17 @@ packages:
             {
                 integrity: sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==,
             }
+        dev: false
+
+    /@hookform/resolvers@3.3.4(react-hook-form@7.50.1):
+        resolution:
+            {
+                integrity: sha512-o5cgpGOuJYrd+iMKvkttOclgwRW86EsWJZZRC23prf0uU2i48Htq4PuT73AVb9ionFyZrwYEITuOFGF+BydEtQ==,
+            }
+        peerDependencies:
+            react-hook-form: ^7.0.0
+        dependencies:
+            react-hook-form: 7.50.1(react@18.2.0)
         dev: false
 
     /@humanwhocodes/config-array@0.11.14:
@@ -905,6 +928,37 @@ packages:
             '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.58)(react-dom@18.2.0)(react@18.2.0)
             '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.58)(react@18.2.0)
             '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.2.58)(react@18.2.0)
+            '@types/react': 18.2.58
+            '@types/react-dom': 18.2.19
+            react: 18.2.0
+            react-dom: 18.2.0(react@18.2.0)
+        dev: false
+
+    /@radix-ui/react-checkbox@1.0.4(@types/react-dom@18.2.19)(@types/react@18.2.58)(react-dom@18.2.0)(react@18.2.0):
+        resolution:
+            {
+                integrity: sha512-CBuGQa52aAYnADZVt/KBQzXrwx6TqnlwtcIPGtVt5JkkzQwMOLJjPukimhfKEr4GQNd43C+djUh5Ikopj8pSLg==,
+            }
+        peerDependencies:
+            '@types/react': '*'
+            '@types/react-dom': '*'
+            react: ^16.8 || ^17.0 || ^18.0
+            react-dom: ^16.8 || ^17.0 || ^18.0
+        peerDependenciesMeta:
+            '@types/react':
+                optional: true
+            '@types/react-dom':
+                optional: true
+        dependencies:
+            '@babel/runtime': 7.23.9
+            '@radix-ui/primitive': 1.0.1
+            '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.58)(react@18.2.0)
+            '@radix-ui/react-context': 1.0.1(@types/react@18.2.58)(react@18.2.0)
+            '@radix-ui/react-presence': 1.0.1(@types/react-dom@18.2.19)(@types/react@18.2.58)(react-dom@18.2.0)(react@18.2.0)
+            '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.58)(react-dom@18.2.0)(react@18.2.0)
+            '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@18.2.58)(react@18.2.0)
+            '@radix-ui/react-use-previous': 1.0.1(@types/react@18.2.58)(react@18.2.0)
+            '@radix-ui/react-use-size': 1.0.1(@types/react@18.2.58)(react@18.2.0)
             '@types/react': 18.2.58
             '@types/react-dom': 18.2.19
             react: 18.2.0
@@ -5265,6 +5319,18 @@ packages:
             scheduler: 0.23.0
         dev: false
 
+    /react-hook-form@7.50.1(react@18.2.0):
+        resolution:
+            {
+                integrity: sha512-3PCY82oE0WgeOgUtIr3nYNNtNvqtJ7BZjsbxh6TnYNbXButaD5WpjOmTjdxZfheuHKR68qfeFnEDVYoSSFPMTQ==,
+            }
+        engines: { node: '>=12.22.0' }
+        peerDependencies:
+            react: ^16.8.0 || ^17 || ^18
+        dependencies:
+            react: 18.2.0
+        dev: false
+
     /react-is@16.13.1:
         resolution:
             {
@@ -6411,3 +6477,10 @@ packages:
             }
         engines: { node: '>=10' }
         dev: true
+
+    /zod@3.22.4:
+        resolution:
+            {
+                integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==,
+            }
+        dev: false
