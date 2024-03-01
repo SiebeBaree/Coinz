@@ -59,7 +59,9 @@ export default {
         if (victimHasPadlock) chance -= 0.1;
 
         const memberWon = Math.random() < chance;
-        const amount = Math.floor(Math.random() * (Math.floor(member.wallet * (memberWon ? 0.5 : 0.4)) - 0 + 1) + 0);
+        const amount = Math.floor(
+            Math.random() * (Math.floor(victimMember.wallet * (memberWon ? 0.5 : 0.4)) - 0 + 1) + 0,
+        );
 
         const embed = new EmbedBuilder()
             .setAuthor({ name: `Steal from ${victim.tag}`, iconURL: victim.displayAvatarURL() })
