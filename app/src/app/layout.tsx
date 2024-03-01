@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import React from 'react';
 import GlobalProviders from '@/components/GlobalProviders';
+import '@/lib/lemonsqueezy';
 
 const inter = Inter({ subsets: ['latin'] });
 

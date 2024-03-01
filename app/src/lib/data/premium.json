@@ -1,10 +1,5 @@
 {
-    "coinz_plus": {
-        "name": "Coinz Plus",
-        "price": {
-            "monthly": 200,
-            "quarterly": 500
-        },
+    "118335": {
         "logo": "https://cdn.coinzbot.xyz/logo.png",
         "perks": [
             "All 5s cooldowns reduced to 1s",
@@ -12,17 +7,12 @@
             "Unlock /weekly",
             "Unlock an exclusive Coinz Plus badge",
             "Gamble limit increased to 🪙 10.000",
-            "Earn up to 🪙 300/day with /daily (Free tier: 🪙 150/day)",
+            "Earn up to 🪙 320/day with /daily (Free tier: 🪙 160/day)",
             "Change your profile color",
             "Get faster ticket support"
         ]
     },
-    "coinz_pro": {
-        "name": "Coinz Pro",
-        "price": {
-            "monthly": 500,
-            "quarterly": 1200
-        },
+    "118336": {
         "logo": "https://cdn.coinzbot.xyz/logo.png",
         "perks": [
             "All perks from Coinz Plus",
