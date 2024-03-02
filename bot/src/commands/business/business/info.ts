@@ -236,7 +236,7 @@ async function checkBusinessName(name: string): Promise<string> {
         throw new Error('Your business name contains inappropriate language.');
     }
 
-    const currentBusiness = await Business.findOne({ name: name });
+    const currentBusiness = await Business.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
     if (currentBusiness) {
         throw new Error(`A business with the name **${name}** already exists.`);
     }
@@ -339,6 +339,7 @@ export default async function info(
                         business = newBusiness;
                         ownBusiness = true;
                     } catch (error) {
+                        console.log(error);
                         await modalInteraction.reply({
                             content: (error as Error).message,
                             ephemeral: true,
