@@ -58,7 +58,6 @@ model User {
   updatedAt        DateTime          @updatedAt
   sessions         Session[]
   accounts         Account[]
-  UserSubscription UserSubscription?
 }
 
 model VerificationToken {
@@ -165,16 +164,6 @@ model userstats {
   investments InvestmentStats
 }
 
-model UserSubscription {
-  id                     String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId                 String    @unique @db.ObjectId
-  User                   User      @relation(fields: [userId], references: [id])
-  stripeCustomerId       String?   @unique @map("stripe_customer_id")
-  stripeSubscriptionId   String?   @unique @map("stripe_subscription_id")
-  stripePriceId          String?   @map("stripe_price_id")
-  stripeCurrentPeriodEnd DateTime? @map("stripe_current_period_end")
-}
-
 model Plan {
   id            String         @id @default(auto()) @map("_id") @db.ObjectId
   productId     Int            @unique
@@ -208,11 +197,12 @@ model Subscription {
   name               String
   email              String
   status             String
+  statusFormatted    String
   renewsAt           DateTime?
   endsAt             DateTime?
   trialEndsAt        DateTime?
-  resumesAt          DateTime?
   price              Int
+  isPaused           Boolean   @default(false)
   plan               Plan      @relation(fields: [planId], references: [id])
   planId             String    @db.ObjectId
   memberId           String
