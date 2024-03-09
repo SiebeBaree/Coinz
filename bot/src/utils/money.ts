@@ -35,7 +35,7 @@ export async function removeBetMoney(
     member: IMember,
     removeMoneyFromPlayer = true,
     minBet = 50,
-    maxBet = 10_000,
+    maxBet = 5_000,
 ): Promise<number | string> {
     let bet = 0;
     if (['all', 'max'].includes(formattedBet.toLowerCase())) {
