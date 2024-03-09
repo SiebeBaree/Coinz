@@ -1,5 +1,6 @@
 {
     "118335": {
+        "checkout": "https://store.coinzbot.xyz/checkout/buy/8a064612-10e1-4d0b-a93f-d42bdb7a0e2e?media=0&checkout[custom][user_id]=",
         "logo": "https://cdn.coinzbot.xyz/logo.png",
         "perks": [
             "All 5s cooldowns reduced to 1s",
@@ -13,6 +14,7 @@
         ]
     },
     "118336": {
+        "checkout": "https://store.coinzbot.xyz/checkout/buy/dbd6a6f5-93cd-4370-806a-cb47f9f6e847?media=0&checkout[custom][user_id]=",
         "logo": "https://cdn.coinzbot.xyz/logo.png",
         "perks": [
             "All perks from Coinz Plus",

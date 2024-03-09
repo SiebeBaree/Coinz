@@ -1,74 +1,20 @@
-import { listProducts } from '@lemonsqueezy/lemonsqueezy.js';
 import PageTitle from '../../../components/PageTitle';
 import { getServerAuthSession } from '@/server/auth';
-import { db } from '@/server/db';
-import PlanButton from '@/components/store/PlanButton';
 import { Session } from 'next-auth';
 import { Plan } from '@prisma/client';
 import Image from 'next/image';
 import premiumJson from '@/lib/data/premium.json';
 import { Check } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { getProducts } from '@/server/payment';
 
-const MAX_UPDATE_TIME = 1000 * 60 * 60 * 24;
-
-type PremiumSubscription = { [key: string]: { logo: string; perks: string[] } };
+type PremiumSubscription = { [key: string]: { checkout: string; logo: string; perks: string[] } };
 const premium = premiumJson as PremiumSubscription;
 
 export default async function PremiumPage() {
     const session = await getServerAuthSession();
-
-    let products = await db.plan.findMany();
-    const updateTreshold = new Date(Date.now() - MAX_UPDATE_TIME);
-
-    const lastUpdated: Date | undefined =
-        products.length === 0
-            ? undefined
-            : products
-                  .map((product) => product.updatedAt)
-                  .sort((a, b) => b.getTime() - a.getTime())
-                  .reverse()[0];
-
-    if (!lastUpdated || lastUpdated.getTime() < updateTreshold.getTime()) {
-        const fetchedProducts = await listProducts();
-
-        if (fetchedProducts.statusCode !== 200 || !fetchedProducts.data || fetchedProducts.error) {
-            console.log('Error fetching products:', fetchedProducts.error);
-        } else {
-            for (const newProduct of fetchedProducts.data.data) {
-                const existingProduct = await db.plan.findFirst({
-                    where: { productId: Number.parseInt(newProduct.id, 10) },
-                });
-                if (existingProduct) {
-                    await db.plan.update({
-                        where: {
-                            productId: Number.parseInt(newProduct.id, 10),
-                        },
-                        data: {
-                            name: newProduct.attributes.name,
-                            variantName: newProduct.attributes.name,
-                            description: newProduct.attributes.description,
-                            price: newProduct.attributes.price,
-                            status: newProduct.attributes.status,
-                        },
-                    });
-                } else {
-                    await db.plan.create({
-                        data: {
-                            productId: Number.parseInt(newProduct.id, 10),
-                            variantId: -1,
-                            name: newProduct.attributes.name,
-                            variantName: newProduct.attributes.name,
-                            description: newProduct.attributes.description,
-                            price: newProduct.attributes.price,
-                            status: newProduct.attributes.status,
-                        },
-                    });
-                }
-            }
-
-            products = await db.plan.findMany();
-        }
-    }
+    const products = await getProducts();
 
     return (
         <main className="container mx-auto px-5">
@@ -123,7 +69,15 @@ function SubscriptionCard({ session, plan }: { session: Session | null; plan: Pl
             </div>
 
             <div className="flex-grow flex flex-col justify-end mb-6">
-                <PlanButton plan={plan} session={session} />
+                {session ? (
+                    <Link href={premiumData.checkout + session.user.discordId}>
+                        <Button className="h-auto py-3 px-8">Subscribe Now</Button>
+                    </Link>
+                ) : (
+                    <Link href={'/login'}>
+                        <Button className="h-auto py-3 px-8">Login</Button>
+                    </Link>
+                )}
             </div>
         </div>
     );
