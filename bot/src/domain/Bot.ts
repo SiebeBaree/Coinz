@@ -7,6 +7,7 @@ import Achievement from '../lib/achievement';
 import Cooldown from '../lib/cooldown';
 import Investment from '../lib/investment';
 import Shop from '../lib/shop';
+import Business from '../utils/business';
 import { loadCommands, loadEvents } from '../utils/loaders';
 import logger from '../utils/logger';
 import { registerEvents } from '../utils/registerEvents';
@@ -22,6 +23,7 @@ export default class Bot extends Client {
     public readonly items: Shop;
     public readonly investment: Investment;
     public readonly config: typeof config;
+    public readonly business: Business;
 
     public constructor(options: ClientOptions) {
         super(options);
@@ -37,6 +39,7 @@ export default class Bot extends Client {
         this.achievement = new Achievement();
         this.items = new Shop();
         this.investment = new Investment();
+        this.business = new Business();
     }
 
     public override async login(token: string): Promise<string> {

@@ -539,15 +539,6 @@
         "sellPrice": 120
     },
     {
-        "itemId": "smartphone",
-        "category": "other",
-        "name": "Smartphone",
-        "emoteId": "1013474375275663530",
-        "description": "Can be collected or sold.",
-        "longDescription": "This item has no purpose other than to be sold or collected.",
-        "sellPrice": 470
-    },
-    {
         "itemId": "wallet",
         "category": "other",
         "name": "Wallet",
@@ -575,15 +566,6 @@
         "sellPrice": 5
     },
     {
-        "itemId": "glass",
-        "category": "other",
-        "name": "Glass",
-        "emoteId": "1071812521960423616",
-        "description": "Can be collected or sold.",
-        "longDescription": "This item has no purpose other than to be sold or collected.",
-        "sellPrice": 18
-    },
-    {
         "itemId": "plate",
         "category": "other",
         "name": "Plate",
@@ -609,110 +591,6 @@
         "description": "Can be collected or sold.",
         "longDescription": "This item has no purpose other than to be sold or collected.",
         "sellPrice": 10
-    },
-    {
-        "itemId": "plastic",
-        "category": "factory",
-        "name": "Plastic",
-        "emoteId": "1046874601646477353",
-        "description": "Used to produce other items in a factory.",
-        "buyPrice": 20,
-        "sellPrice": 8
-    },
-    {
-        "itemId": "cloth",
-        "category": "factory",
-        "name": "Cloth",
-        "emoteId": "1046874600362999868",
-        "description": "Used to produce other items in a factory.",
-        "buyPrice": 30,
-        "sellPrice": 18
-    },
-    {
-        "itemId": "silicon",
-        "category": "factory",
-        "name": "Silicon",
-        "emoteId": "1046874604184031252",
-        "description": "Used to produce other items in a factory.",
-        "buyPrice": 90,
-        "sellPrice": 60
-    },
-    {
-        "itemId": "soccer_ball",
-        "category": "factory",
-        "name": "Soccer Ball",
-        "emoteId": "991232154321305680",
-        "description": "An item used for production in a factory.",
-        "buyPrice": 25,
-        "sellPrice": 10,
-        "multiplier": 3.0,
-        "duration": 14400
-    },
-    {
-        "itemId": "shirt",
-        "category": "factory",
-        "name": "Shirt",
-        "emoteId": "1046874602632138764",
-        "description": "An item used for production in a factory.",
-        "buyPrice": 40,
-        "sellPrice": 20,
-        "multiplier": 5.0,
-        "duration": 21600
-    },
-    {
-        "itemId": "earbuds",
-        "category": "factory",
-        "name": "Earbuds",
-        "emoteId": "1013473901499650159",
-        "description": "An item used for production in a factory.",
-        "buyPrice": 85,
-        "sellPrice": 40,
-        "multiplier": 3.0,
-        "duration": 43200
-    },
-    {
-        "itemId": "processor",
-        "category": "factory",
-        "name": "Processor",
-        "emoteId": "991232152060563486",
-        "description": "An item used for production in a factory.",
-        "buyPrice": 260,
-        "sellPrice": 140,
-        "multiplier": 2.0,
-        "duration": 86400
-    },
-    {
-        "itemId": "graphics_card",
-        "category": "factory",
-        "name": "Graphics Card",
-        "emoteId": "991232150961659974",
-        "description": "An item used for production in a factory.",
-        "buyPrice": 550,
-        "sellPrice": 320,
-        "multiplier": 2.0,
-        "duration": 172800
-    },
-    {
-        "itemId": "desktop",
-        "category": "factory",
-        "name": "Desktop",
-        "emoteId": "991232149896298546",
-        "description": "An item used for production in a factory.",
-        "buyPrice": 1100,
-        "sellPrice": 750,
-        "multiplier": 2.0,
-        "duration": 432000
-    },
-    {
-        "itemId": "server",
-        "category": "factory",
-        "name": "Server",
-        "emoteId": "991232153188847626",
-        "description": "An item used for production in a factory.",
-        "buyPrice": 3500,
-        "sellPrice": 1900,
-        "multiplier": 2.0,
-        "duration": 604800
     },
     {
         "itemId": "crown",

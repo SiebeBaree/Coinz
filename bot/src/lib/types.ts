@@ -29,6 +29,6 @@ export enum Positions {
 }
 
 export enum MarketStatus {
-    Listed,
-    Sold,
+    Listed = 'listed',
+    Sold = 'sold',
 }

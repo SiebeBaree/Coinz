@@ -16,7 +16,7 @@ export default {
             {
                 name: 'list-items',
                 type: ApplicationCommandOptionType.Subcommand,
-                description: 'et a list of all the items your factories can produce.',
+                description: 'Get a list of all the items your factories can produce.',
                 options: [],
             },
         ],

@@ -2,12 +2,11 @@ import { ApplicationCommandOptionType } from 'discord.js';
 import type { Command } from '../../../domain/Command';
 import { Positions } from '../../../lib/types';
 import { getBusiness } from '../../../utils';
-// import buy from './buy';
 import employee from './employee';
 import info from './info';
 import invest from './invest';
 import pay from './pay';
-// import sell from './sell';
+import supply from './supply';
 
 export default {
     data: {
@@ -51,6 +50,26 @@ export default {
                         type: ApplicationCommandOptionType.String,
                         description: 'The amount of money you want to pay each of your employees.',
                         required: true,
+                    },
+                ],
+            },
+            {
+                name: 'supply',
+                type: ApplicationCommandOptionType.Subcommand,
+                description: 'Pay you and your employees an equal amount of money.',
+                options: [
+                    {
+                        name: 'item',
+                        type: ApplicationCommandOptionType.String,
+                        description: 'The item id or name you want to supply to your business.',
+                        required: true,
+                    },
+                    {
+                        name: 'amount',
+                        type: ApplicationCommandOptionType.Number,
+                        description: 'The amount of the item you want to supply to your business.',
+                        min_value: 1,
+                        max_value: 1000,
                     },
                 ],
             },
@@ -128,60 +147,15 @@ export default {
                     },
                 ],
             },
-            {
-                name: 'buy',
-                type: ApplicationCommandOptionType.Subcommand,
-                description: 'Buy items for your business from the global market.',
-                options: [
-                    {
-                        name: 'item-id',
-                        type: ApplicationCommandOptionType.String,
-                        description: 'The id of the item you want to buy.',
-                        required: true,
-                    },
-                    {
-                        name: 'quantity',
-                        type: ApplicationCommandOptionType.Number,
-                        description: 'The amount of the item you want to buy.',
-                        required: true,
-                    },
-                ],
-            },
-            {
-                name: 'sell',
-                type: ApplicationCommandOptionType.Subcommand,
-                description: 'Sell items from your business to the global market.',
-                options: [
-                    {
-                        name: 'item-id',
-                        type: ApplicationCommandOptionType.String,
-                        description: 'The id of the item you want to sell.',
-                        required: true,
-                    },
-                    {
-                        name: 'quantity',
-                        type: ApplicationCommandOptionType.Number,
-                        description: 'The amount of the item you want to sell.',
-                        required: true,
-                    },
-                    {
-                        name: 'price',
-                        type: ApplicationCommandOptionType.Number,
-                        description: 'The price you want to sell the item for.',
-                        required: true,
-                    },
-                ],
-            },
         ],
         usage: [
             'info [name]',
             'invest <amount>',
             'pay <amount>',
+            'supply <item> [amount]',
             'employee hire <user>',
             'employee fire <user | employee-id | username>',
             'employee promote <user> <position>',
-            'buy <item-id> <quantity>',
-            'sell <item-id> <quantity> <price>',
         ],
     },
     async execute(client, interaction, member) {
@@ -206,12 +180,9 @@ export default {
         }
 
         switch (interaction.options.getSubcommand()) {
-            // case 'buy':
-            //     await buy(client, interaction, member, data);
-            //     break;
-            // case 'sell':
-            //     await sell(client, interaction, member, data);
-            //     break;
+            case 'supply':
+                await supply(client, interaction, data);
+                break;
             case 'pay':
                 await pay(client, interaction, data);
                 break;
