@@ -50,6 +50,7 @@ export type IMember = {
     tree: ITree;
     premium: number;
     notifications: string[];
+    version: number;
 };
 
 const Item = new Schema<InventoryItem>({
@@ -107,6 +108,7 @@ export const member = new Schema<IMember>(
         tree: { type: Tree, default: {} },
         premium: { type: Number, default: 0 },
         notifications: [{ type: String, default: [] }],
+        version: { type: Number, default: 1 },
     },
     { timestamps: true },
 );
