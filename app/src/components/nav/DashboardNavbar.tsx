@@ -24,7 +24,7 @@ export default function DashboardNavbar({ session }: { session: Session }) {
         <div className="flex justify-between items-center p-4 h-16">
             <div className="flex items-center gap-3">
                 <MobileSideBar session={session} />
-                <h2 className="text-2xl font-bold capitalize">{pathname.replace(/\//g, ' ').trim()}</h2>
+                <h2 className="text-2xl font-bold capitalize">{pathname.trim().split('/').pop()}</h2>
             </div>
 
             <div>

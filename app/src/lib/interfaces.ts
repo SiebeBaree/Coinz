@@ -36,3 +36,10 @@ export interface Shard {
     ping: number;
     guildcount: number;
 }
+
+export enum Notifications {
+    VoteNotifications = 'vote',
+    VoteReminders = 'vote-reminder',
+    StealNotifications = 'steal',
+    UpdateNotifications = 'update',
+}

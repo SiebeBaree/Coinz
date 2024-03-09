@@ -2,10 +2,11 @@ import React from 'react';
 import { getServerAuthSession } from '@/server/auth';
 import DashboardSidebar from '@/components/nav/DashboardSidebar';
 import DashboardNavbar from '@/components/nav/DashboardNavbar';
+import { redirect } from 'next/navigation';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
     const session = await getServerAuthSession();
-    if (!session) return null;
+    if (!session) return redirect('/login?url=/dashboard');
 
     return (
         <div className="h-full relative">
