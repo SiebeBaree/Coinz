@@ -219,13 +219,14 @@ export async function getBet(
             : member.premium === 1
               ? client.config.bets.plus.max
               : client.config.bets.free.max;
-    let bet =
+    const minBet =
         member.premium === 2
             ? client.config.bets.pro.min
             : member.premium === 1
               ? client.config.bets.plus.min
               : client.config.bets.free.min;
 
+    let bet = minBet;
     if (betStr.toLowerCase() === 'all' || betStr.toLowerCase() === 'max') {
         if (member.wallet <= bet) {
             await client.cooldown.deleteCooldown(interaction.user.id, interaction.commandName);
@@ -237,7 +238,7 @@ export async function getBet(
 
         bet = Math.min(member.wallet, maxBet);
     } else {
-        const newBet = await removeBetMoney(betStr, member);
+        const newBet = await removeBetMoney(betStr, member, true, minBet, maxBet);
 
         if (typeof newBet === 'string') {
             await client.cooldown.deleteCooldown(interaction.user.id, interaction.commandName);
