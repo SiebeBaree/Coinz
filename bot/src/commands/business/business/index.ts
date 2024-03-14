@@ -56,7 +56,7 @@ export default {
             {
                 name: 'supply',
                 type: ApplicationCommandOptionType.Subcommand,
-                description: 'Pay you and your employees an equal amount of money.',
+                description: 'Buy non-producable items for your business.',
                 options: [
                     {
                         name: 'item',
