@@ -2,20 +2,15 @@
     "name": "bot",
     "version": "4.0.0",
     "description": "A feature rich discord bot with an entire economic system.",
-    "main": "dist/manager.js",
+    "main": "src/sharder.ts",
     "scripts": {
-        "start": "tsc && node --env-file .env ./dist/sharder.js",
-        "dev": "concurrently \"tsc --watch\" \"nodemon --env-file .env ./dist/sharder.js\"",
-        "build": "tsc",
+        "start": "bun run ./src/sharder.ts",
         "lint": "prettier --check . && eslint --ext .ts --format stylish src",
         "format": "prettier --write . && eslint --ext .ts --fix --format stylish src",
-        "register-commands": "tsc && node --env-file .env ./dist/register.js",
-        "script:balance-items": "concurrently \"tsc --watch\" \"nodemon ./dist/item-balancer.js\"",
-        "script:add-items": "tsc && node --env-file .env ./dist/itemUploader.js",
-        "script:convert-commands": "tsc && node ./dist/commandsConverter.js",
-        "deploy:start": "node --env-file .env ./dist/sharder.js",
-        "deploy:register-commands": "node --env-file .env ./dist/register.js",
-        "deploy:add-items": "node --env-file .env ./dist/itemUploader.js"
+        "register-commands": "bun run ./src/register.ts",
+        "script:balance-items": "nodemon --watch src --exec bun ./src/item-balancer.ts",
+        "script:add-items": "bun run ./src/itemUploader.ts",
+        "script:convert-commands": "bun run ./src/commandsConverter.ts"
     },
     "repository": {
         "type": "git",
@@ -57,7 +52,6 @@
     },
     "devDependencies": {
         "@types/node": "^20.11.25",
-        "concurrently": "^8.2.2",
         "eslint": "^8.57.0",
         "eslint-config-neon": "^0.1.59",
         "eslint-formatter-pretty": "^6.0.1",

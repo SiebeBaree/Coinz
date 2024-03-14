@@ -3,7 +3,7 @@ import process from 'node:process';
 import { ClusterManager } from 'discord-hybrid-sharding';
 import logger from './utils/logger';
 
-const manager = new ClusterManager(join(__dirname, 'bot.js'), {
+const manager = new ClusterManager(join(__dirname, 'bot.ts'), {
     totalShards:
         Number.parseInt(process.env.SHARDS_PER_CLUSTER!, 10) * Number.parseInt(process.env.TOTAL_CLUSTERS!, 10),
     shardsPerClusters: Number.parseInt(process.env.SHARDS_PER_CLUSTER!, 10),
