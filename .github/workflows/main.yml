@@ -15,15 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [api, bot, crons, support]
+        project: [api, crons, support]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '21'
+          node-version: "21"
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
@@ -52,3 +52,26 @@ jobs:
 
       - name: Build
         run: cd ${{ matrix.project }} && pnpm run build
+  build-bot:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [bot]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "21"
+
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: "latest"
+
+      - name: Install Dependencies
+        run: cd ${{ matrix.project }} && bun install --frozen-lockfile
+
+      - name: Lint
+        run: cd ${{ matrix.project }} && bun run lint
