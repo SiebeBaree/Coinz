@@ -4,5 +4,6 @@ logs
 *.log
 node_modules/
 .env
+.env.*
 .next
 .DS_Store
