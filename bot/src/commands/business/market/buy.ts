@@ -69,4 +69,11 @@ export default async function buy(client: Bot, interaction: ChatInputCommandInte
             },
         );
     }
+
+    await Business.updateOne(
+        { name: listing.businessName },
+        {
+            $inc: { balance: listing.pricePerUnit * listing.quantity },
+        },
+    );
 }

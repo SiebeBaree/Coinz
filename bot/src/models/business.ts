@@ -42,7 +42,7 @@ const Item = new Schema<InventoryItem>({
 const Factory = new Schema<IFactory>({
     factoryId: { type: Number, required: true },
     level: { type: Number, default: 0 },
-    production: { type: String, default: 'none' },
+    production: { type: String, default: '' },
     status: { type: String, default: 'standby' },
     produceOn: { type: Number, default: 0 },
 });

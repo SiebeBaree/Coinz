@@ -62,7 +62,7 @@ export default async function list(client: Bot, interaction: ChatInputCommandInt
     if (itemIdOrName) {
         item = client.business.getById(itemIdOrName) ?? client.business.getByName(itemIdOrName);
 
-        if (!item) {
+        if (!item || !item.sellable) {
             await interaction.reply({
                 content: `Item \`${itemIdOrName.toLowerCase()}\` doesn't exist.`,
                 ephemeral: true,

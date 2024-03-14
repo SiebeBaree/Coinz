@@ -290,7 +290,9 @@ export default async function info(
                     .setLabel('Business Name')
                     .setPlaceholder(`Type the name of your business.`)
                     .setStyle(TextInputStyle.Short)
-                    .setRequired(true);
+                    .setRequired(true)
+                    .setMinLength(3)
+                    .setMaxLength(24);
 
                 const modal = new ModalBuilder()
                     .setTitle('Creating a Business')
@@ -358,7 +360,9 @@ export default async function info(
                     .setLabel('Business Name')
                     .setPlaceholder(`Type the name of your business.`)
                     .setStyle(TextInputStyle.Short)
-                    .setRequired(true);
+                    .setRequired(true)
+                    .setMinLength(3)
+                    .setMaxLength(24);
 
                 const modal = new ModalBuilder()
                     .setTitle('Rename your Business')
@@ -422,7 +426,8 @@ export default async function info(
                     .setLabel('Confirmation')
                     .setPlaceholder(`Type "${business.name}" to confirm`)
                     .setStyle(TextInputStyle.Short)
-                    .setRequired(true);
+                    .setRequired(true)
+                    .setMaxLength(24);
 
                 const modal = new ModalBuilder()
                     .setTitle('Are you sure you want to sell your business?')
