@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   cooldowns_db:
@@ -14,8 +14,6 @@ services:
     restart: always
     depends_on:
       - cooldowns_db
-    volumes:
-      - ./logs/bot:/bot/src/logs
     environment:
       REDIS_URI: redis://cooldowns_db:6379
     networks:

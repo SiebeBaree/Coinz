@@ -1,25 +1,40 @@
-FROM node:21-alpine
+FROM oven/bun:latest as base
 
-RUN apk add --update python3 make g++ && ln -sf python3 /usr/bin/python
+WORKDIR /usr/src/app
 
-RUN mkdir -p /bot
-WORKDIR /bot
+# install dependencies into temp directory
+# this will cache them and speed up future builds
+FROM base AS install
 
-COPY .env /bot
-COPY package.json /bot
-COPY pnpm-lock.yaml /bot
-COPY tsconfig.json /bot
-COPY tsconfig.eslint.json /bot
-COPY src/ /bot/src
+RUN mkdir -p /temp/dev
 
-RUN npm install -g pnpm
-RUN pnpm install --frozen-lockfile
-RUN pnpm build
-RUN pnpm run deploy:register-commands
-RUN pnpm run deploy:add-items
+COPY package.json bun.lockb /temp/dev/
 
-ENV NODE_ENV=production
-ENV REDIS_PORT=6379
-ENV REDIS_HOST=cooldowns_db
+RUN cd /temp/dev && bun install --frozen-lockfile
 
-CMD ["pnpm", "deploy:start"]
+# install with --production (exclude devDependencies)
+RUN mkdir -p /temp/prod
+
+COPY package.json bun.lockb /temp/prod/
+
+RUN cd /temp/prod && bun install --frozen-lockfile --production
+
+# copy node_modules from temp directory
+# then copy all (non-ignored) project files into the image
+FROM base AS prerelease
+COPY --from=install /temp/dev/node_modules node_modules
+COPY . .
+# ENV NODE_ENV=production
+
+# copy production dependencies and source code into final image
+FROM base AS release
+COPY --from=install /temp/prod/node_modules node_modules
+COPY --from=prerelease /usr/src/app/src ./src
+COPY --from=prerelease /usr/src/app/.env.* .
+COPY --from=prerelease /usr/src/app/package.json .
+
+RUN bun --bun run register-commands
+RUN bun --bun run script:add-items
+
+# run the app
+ENTRYPOINT [ "bun", "--bun", "run", "./src/sharder.ts" ]
