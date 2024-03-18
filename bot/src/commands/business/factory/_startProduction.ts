@@ -127,8 +127,9 @@ export default async function startProduction(
                 const reqItem = client.business.getById(requirement.itemId);
                 if (!reqItem) continue;
 
+                const totalAmount = requirement.amount * factories.length;
                 const stock = client.business.getInventoryItem(reqItem.itemId, data.business.inventory);
-                if (!stock || stock.amount < requirement.amount) {
+                if (!stock || stock.amount < totalAmount) {
                     await modalInteraction.reply({
                         content: `You don't have enough ${client.business.getItemString(reqItem)} in your business inventory.`,
                         ephemeral: true,
@@ -136,7 +137,7 @@ export default async function startProduction(
                     return true;
                 }
 
-                if (stock.amount <= requirement.amount) {
+                if (stock.amount <= totalAmount) {
                     bulkOps.push({
                         updateOne: {
                             filter: { name: data.business.name },
@@ -158,7 +159,7 @@ export default async function startProduction(
                             },
                             update: {
                                 $inc: {
-                                    'inventory.$.amount': -requirement.amount,
+                                    'inventory.$.amount': -totalAmount,
                                 },
                             },
                         },
