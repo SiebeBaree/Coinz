@@ -133,7 +133,7 @@ export default async function sell(client: Bot, interaction: ChatInputCommandInt
         return;
     }
 
-    if (inventoryItem.amount >= amount) {
+    if (inventoryItem.amount > amount) {
         await Business.updateOne(
             { name: data.business.name, 'inventory.itemId': itemId },
             {
