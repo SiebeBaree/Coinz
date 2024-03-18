@@ -59,9 +59,9 @@ export default async function levelUp(
             }
 
             for (const factory of data.business.factories) {
-                if (factories.includes(factory.factoryId) && factory.level >= 5) {
+                if (factories.includes(factory.factoryId + 1) && factory.level >= 5) {
                     await modalInteraction.reply({
-                        content: `You can't level up factory ${factory.factoryId} anymore.`,
+                        content: `You can't level up factory ${factory.factoryId + 1} anymore.`,
                         ephemeral: true,
                     });
                     return true;
