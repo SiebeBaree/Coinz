@@ -341,7 +341,6 @@ export default async function info(
                         business = newBusiness;
                         ownBusiness = true;
                     } catch (error) {
-                        console.log(error);
                         await modalInteraction.reply({
                             content: (error as Error).message,
                             ephemeral: true,
