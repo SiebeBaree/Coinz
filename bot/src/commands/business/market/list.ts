@@ -21,26 +21,24 @@ function createEmbed(
     const listItems: string[] = [];
 
     for (const marketItem of itemsOnPage) {
+        const item = client.business.getById(marketItem.itemId);
+        if (!item) continue;
+
         listItems.push(
-            `(ID: \`${marketItem.listingId}\`) ― ${marketItem.quantity}x sold by \`${marketItem.businessName}\`\n> **Unit Price:** :coin: ${marketItem.pricePerUnit} | **Total Price:** :coin: ${marketItem.pricePerUnit * marketItem.quantity}`,
+            `(ID: \`${marketItem.listingId}\`) ― ${client.business.getItemString(item, marketItem.quantity)} sold by \`${marketItem.businessName}\`\n> **Unit Price:** :coin: ${marketItem.pricePerUnit} | **Total Price:** :coin: ${marketItem.pricePerUnit * marketItem.quantity}`,
         );
     }
 
     const embed = new EmbedBuilder()
         .setTitle(`Global market${item ? ` for ${client.business.getItemString(item)}` : ''}`)
         .setColor(client.config.embed.color as ColorResolvable)
-        .setDescription(':moneybag: **To buy a listing, use** `/market buy <listing-id>`')
+        .setDescription(
+            ':moneybag: **To buy a listing, use** `/market buy <listing-id>`' +
+                (item && inventoryItem
+                    ? `\n:pouch: **Your business owns** ${client.business.getItemString(item, inventoryItem.amount)}`
+                    : ''),
+        )
         .setFooter({ text: `Page ${page + 1}/${maxPage}` });
-
-    if (item && inventoryItem) {
-        embed.addFields([
-            {
-                name: 'Information',
-                value: `:package: ${client.business.getItemString(item)} (\`${item.itemId}\`)\n:pouch: **Your business owns** ${client.business.getItemString(item, inventoryItem.amount)}`,
-                inline: false,
-            },
-        ]);
-    }
 
     embed.addFields([
         {
