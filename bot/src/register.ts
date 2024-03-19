@@ -11,6 +11,9 @@ import { loadCommands } from './utils/loaders';
 
     if (process.env.NODE_ENV === 'production') {
         await rest.put(Routes.applicationCommands(process.env.APPLICATION_ID!), { body: commandData });
+        await rest.put(Routes.applicationGuildCommands(process.env.APPLICATION_ID!, process.env.GUILD_ID!), {
+            body: [],
+        });
     } else {
         await rest.put(Routes.applicationGuildCommands(process.env.APPLICATION_ID!, process.env.GUILD_ID!), {
             body: commandData,
