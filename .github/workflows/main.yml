@@ -1,4 +1,4 @@
-name: Lint and Build
+name: CI
 
 on:
     push:
@@ -6,17 +6,13 @@ on:
             - main
             - development
     pull_request:
-        branches:
-            - main
-            - development
+        types: [opened, synchronize]
 
 jobs:
     build:
+        name: Build and Lint
+        timeout-minutes: 5
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                project: [bot, crons, support]
-
         steps:
             - uses: actions/checkout@v4
 
@@ -24,13 +20,17 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: '21'
+                  cache: 'bun'
 
             - uses: oven-sh/setup-bun@v1
               with:
                   bun-version: 'latest'
 
             - name: Install Dependencies
-              run: cd ${{ matrix.project }} && bun install --frozen-lockfile
+              run: bun install --frozen-lockfile
+
+            - name: Build
+              run: bun run build
 
             - name: Lint
-              run: cd ${{ matrix.project }} && bun run lint
+              run: bun run lint
