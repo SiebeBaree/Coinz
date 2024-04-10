@@ -45,6 +45,7 @@ const routes = [
         label: 'Settings',
         icon: SettingsIcon,
         href: '/dashboard/settings',
+        comingSoon: true,
     },
     {
         label: 'Support',
