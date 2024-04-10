@@ -29,11 +29,12 @@
     ],
     "prettier": "@repo/config/prettier/base.js",
     "devDependencies": {
+        "@repo/eslint-config": "*",
         "@repo/config": "*",
         "@types/node": "^20.12.7",
         "@types/node-cron": "^3.0.11",
         "@typescript-eslint/eslint-plugin": "^7.6.0",
-        "eslint": "^9.0.0",
+        "eslint": "^8.57.0",
         "eslint-config-neon": "^0.1.62",
         "eslint-formatter-pretty": "^6.0.1",
         "prettier": "^3.2.5",

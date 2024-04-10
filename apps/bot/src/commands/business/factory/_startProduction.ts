@@ -67,7 +67,7 @@ export default async function startProduction(
         const forceProduction = modalInteraction.fields.getTextInputValue('force-production');
 
         const item = client.business.getById(itemType) ?? client.business.getByName(itemType);
-        if (!item || !item.producable) {
+        if (!item?.producable) {
             await modalInteraction.reply({
                 content: 'The item you selected is not producable.',
                 ephemeral: true,

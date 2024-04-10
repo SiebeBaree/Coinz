@@ -11,9 +11,6 @@
         "noEmit": true,
         "target": "es5",
         "lib": ["dom", "dom.iterable", "esnext"],
-        "incremental": true,
-        "paths": {
-            "@/*": ["./src/*"]
-        }
+        "incremental": true
     }
 }

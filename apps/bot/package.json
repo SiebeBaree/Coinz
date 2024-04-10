@@ -5,8 +5,8 @@
     "main": "src/sharder.ts",
     "scripts": {
         "start": "bun run ./src/sharder.ts",
-        "lint": "prettier --check . && eslint --ext .ts --format stylish src",
-        "format": "prettier --write . && eslint --ext .ts --fix --format stylish src",
+        "lint": "prettier --check . && eslint src --ext .ts --format stylish src",
+        "format": "prettier --write . && eslint src --ext .ts --fix --format stylish src",
         "register-commands": "bun run ./src/register.ts",
         "script:balance-items": "nodemon --watch src --exec bun ./src/item-balancer.ts",
         "script:add-items": "bun run ./src/itemUploader.ts",
@@ -53,8 +53,9 @@
     },
     "devDependencies": {
         "@repo/config": "*",
+        "@repo/eslint-config": "*",
         "@types/node": "^20.12.7",
-        "eslint": "^9.0.0",
+        "eslint": "^8.57.0",
         "eslint-config-neon": "^0.1.62",
         "eslint-formatter-pretty": "^6.0.1",
         "prettier": "^3.2.5",

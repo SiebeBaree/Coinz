@@ -240,7 +240,7 @@ function DiscordServerCard({
             >
                 <Avatar>
                     <AvatarImage src={image} />
-                    <AvatarFallback className="bg-background">{name[0].toUpperCase()}</AvatarFallback>
+                    <AvatarFallback className="bg-background">{name[0]?.toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div>
                     <h6>{name}</h6>

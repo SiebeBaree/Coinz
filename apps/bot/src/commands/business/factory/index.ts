@@ -104,7 +104,7 @@ async function createEmbed(client: Bot, data: BusinessData): Promise<EmbedBuilde
         }
 
         const item = client.business.getById(factory.production);
-        if (!item || !item.producable) {
+        if (!item?.producable) {
             factory.status = 'standby';
             hasChanged = true;
         } else if (factory.status === 'producing') {

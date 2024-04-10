@@ -41,7 +41,7 @@ function getCommands(commandsList: CommandList, category: string, searchTerm: st
     } else if (category === 'all') {
         return Object.keys(commandsList);
     } else {
-        return Object.keys(commandsList).filter((command) => commandsList[command].category === category);
+        return Object.keys(commandsList).filter((command) => commandsList[command]?.category === category);
     }
 }
 
@@ -87,9 +87,9 @@ export default function CommandSection() {
                     {Object.keys(categories).map((name) => (
                         <CategoryCard
                             key={name}
-                            name={categories[name]}
+                            name={categories[name]!}
                             value={name}
-                            selectedCategory={category}
+                            selectedCategory={category!}
                             setCategory={setCategory}
                         />
                     ))}
@@ -105,8 +105,8 @@ export default function CommandSection() {
             </div>
 
             <div className="flex flex-col gap-3 mb-12">
-                {getCommands(commands, category, searchTerm).map((command) => (
-                    <CommandCard name={command} command={commands[command]} key={command} />
+                {getCommands(commands, category!, searchTerm).map((command) => (
+                    <CommandCard name={command} command={commands[command]!} key={command} />
                 ))}
             </div>
         </div>

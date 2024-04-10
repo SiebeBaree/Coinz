@@ -4,9 +4,9 @@ const config = {
     useTabs: false,
     tabWidth: 4,
     singleQuote: true,
-    quoteProps: "as-needed",
-    trailingComma: "all",
-    endOfLine: "lf"
+    quoteProps: 'as-needed',
+    trailingComma: 'all',
+    endOfLine: 'lf',
 };
 
 module.exports = config;

@@ -1,5 +1,5 @@
 {
-    "name": "test-turbo",
+    "name": "coinz",
     "private": true,
     "scripts": {
         "build": "turbo build",
@@ -10,6 +10,7 @@
     },
     "devDependencies": {
         "@repo/config": "*",
+        "@repo/eslint-config": "*",
         "prettier": "^3.2.5",
         "turbo": "latest"
     },
@@ -21,8 +22,5 @@
         "apps/*",
         "packages/*"
     ],
-    "prettier": "@repo/config/prettier/base.js",
-    "dependencies": {
-        "@prisma/client": "^5.12.1"
-    }
+    "prettier": "@repo/config/prettier/base.js"
 }

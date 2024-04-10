@@ -1,34 +1,25 @@
 {
-    "name": "@repo/config",
-    "version": "0.0.0",
-    "private": true,
-    "license": "MIT",
-    "publishConfig": {
-        "access": "public"
-    },
-    "files": [
-        "eslint/bot.js",
-        "eslint/next.js",
-        "tailwind/postcss.config.js",
-        "tailwind/tailwind.config.js",
-        "tsconfig/base.json",
-        "tsconfig/next.json",
-        "tsconfig/bot.json"
-    ],
-    "devDependencies": {
-        "autoprefixer": "^10.4.19",
-        "eslint": "^9.0.0",
-        "@vercel/style-guide": "^6.0.0",
-        "eslint-config-turbo": "^1.13.2",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-only-warn": "^1.1.0",
-        "@typescript-eslint/parser": "^7.6.0",
-        "@typescript-eslint/eslint-plugin": "^7.6.0",
-        "postcss": "^8.4.38",
-        "typescript": "^5.4.4",
-        "prettier": "^3.2.5",
-        "tailwindcss": "^3.4.3",
-        "tailwindcss-animate": "^1.0.7",
-        "prettier-plugin-tailwindcss": "^0.5.12"
-    }
+  "name": "@repo/config",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "tailwind/postcss.config.js",
+    "tailwind/tailwind.config.js",
+    "tsconfig/base.json",
+    "tsconfig/next.json",
+    "tsconfig/bot.json"
+  ],
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "@vercel/style-guide": "^6.0.0",
+    "@typescript-eslint/parser": "^7.6.0",
+    "@typescript-eslint/eslint-plugin": "^7.6.0",
+    "postcss": "^8.4.38",
+    "typescript": "^5.4.4",
+    "prettier": "^3.2.5",
+    "tailwindcss": "^3.4.3",
+    "tailwindcss-animate": "^1.0.7",
+    "prettier-plugin-tailwindcss": "^0.5.12",
+    "eslint-config-neon": "^0.1.62"
+  }
 }

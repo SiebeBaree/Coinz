@@ -25,7 +25,7 @@ export default function ItemsSection({ items }: { items: Item[] }) {
     const [category, setCategory] = useState(Object.keys(categories)[0]);
     const [searchTerm, setSearchTerm] = useState('');
     const [visibleItems, setVisibleItems] = useState(items);
-    const [selectedItem, setSelectedItem] = useState(items[0]);
+    const [selectedItem, setSelectedItem] = useState(items[0]!);
 
     const fuse = new Fuse(items, {
         keys: ['name', 'itemId'],
@@ -50,12 +50,12 @@ export default function ItemsSection({ items }: { items: Item[] }) {
         setVisibleItems(newItems);
 
         if (newItems.length === 0) {
-            setSelectedItem(items[0]);
+            setSelectedItem(items[0]!);
             return;
         }
 
         if (selectedItem !== newItems[0]) {
-            setSelectedItem(() => newItems[0]);
+            setSelectedItem(() => newItems[0]!);
         }
     };
 
@@ -66,9 +66,9 @@ export default function ItemsSection({ items }: { items: Item[] }) {
                     {Object.keys(categories).map((name) => (
                         <CategoryCard
                             key={name}
-                            name={categories[name]}
+                            name={categories[name]!}
                             value={name}
-                            selectedCategory={category}
+                            selectedCategory={category!}
                             setCategory={updateCategory}
                         />
                     ))}
@@ -79,7 +79,7 @@ export default function ItemsSection({ items }: { items: Item[] }) {
                     searchTerm={searchTerm}
                     onChangeHandler={(e) => {
                         setSearchTerm(e.target.value);
-                        updateVisibleItems(category, e.target.value);
+                        updateVisibleItems(category!, e.target.value);
                     }}
                 />
             </div>
@@ -91,7 +91,7 @@ export default function ItemsSection({ items }: { items: Item[] }) {
                             key={item.itemId}
                             item={item}
                             setItem={setSelectedItem}
-                            isSelected={selectedItem.itemId === item.itemId}
+                            isSelected={selectedItem?.itemId === item.itemId}
                         />
                     ))}
                 </div>
@@ -173,7 +173,8 @@ export default function ItemsSection({ items }: { items: Item[] }) {
     );
 }
 
-function ItemCard({ item, isSelected, setItem }: { item: Item; isSelected?: boolean; setItem: (i: Item) => void }) {
+// eslint-disable-next-line no-unused-vars
+function ItemCard({ item, isSelected, setItem }: { item: Item; isSelected?: boolean; setItem: (_: Item) => void }) {
     const [isLoaded, setIsLoaded] = useState(false);
 
     return (

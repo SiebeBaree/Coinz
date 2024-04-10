@@ -40,8 +40,8 @@ schedule(
                         return {
                             ticker: stock.ticker,
                             name: stock.name,
-                            price: response.data['price'].toString(),
-                            changed: response.data['change_percentage'].toString(),
+                            price: response.data.price.toString(),
+                            changed: response.data.change_percentage.toString(),
                             expires: getExpireTime(),
                         } as InvestmentResponse;
                     })

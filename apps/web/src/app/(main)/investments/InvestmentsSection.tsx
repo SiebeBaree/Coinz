@@ -41,9 +41,9 @@ export default function InvestmentsSection({ data }: { data: Investment[] }) {
                     {Object.keys(categories).map((name) => (
                         <CategoryCard
                             key={name}
-                            name={categories[name]}
+                            name={categories[name]!}
                             value={name}
-                            selectedCategory={category}
+                            selectedCategory={category!}
                             setCategory={setCategory}
                         />
                     ))}
@@ -64,7 +64,7 @@ export default function InvestmentsSection({ data }: { data: Investment[] }) {
                     gridTemplateColumns: 'repeat(auto-fit, minmax(325px, 1fr))',
                 }}
             >
-                {getInvestments(data, category, searchTerm).map((dataObj: Investment) => (
+                {getInvestments(data, category!, searchTerm).map((dataObj: Investment) => (
                     <InvestmentCard key={dataObj.ticker} investment={dataObj} />
                 ))}
             </div>

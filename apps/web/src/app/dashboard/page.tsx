@@ -175,7 +175,6 @@ export default async function DashboardPage() {
     const statsKeys = Object.keys(stats);
     const userStatsKeys = Object.keys(userStats === null ? {} : userStats) as (keyof typeof stats)[];
     for (const key of statsKeys) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         stats[key].value = userStatsKeys.includes(key) ? userStats[key] : 0;
     }
@@ -189,7 +188,7 @@ export default async function DashboardPage() {
                 }}
             >
                 {statsKeys.map((statKey, i) => (
-                    <StatisticCard key={i} statistic={stats[statKey]} />
+                    <StatisticCard key={i} statistic={stats[statKey]!} />
                 ))}
             </div>
         </main>

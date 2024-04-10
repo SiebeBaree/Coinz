@@ -40,7 +40,7 @@ export function createLogEmbed({
 export async function sendLog(client: Bot, embed: EmbedBuilder, isPublic: boolean = false): Promise<void> {
     const logChannel = await client.channels.fetch(isPublic ? client.config.logChannel : client.config.modLogChannel);
 
-    if (!logChannel || !logChannel.isTextBased()) {
+    if (!logChannel?.isTextBased()) {
         logger.error('Log channel not found');
         return;
     }
