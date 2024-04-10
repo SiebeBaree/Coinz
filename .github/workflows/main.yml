@@ -1,77 +1,35 @@
-name: Lint and Build
+name: CI
 
 on:
-  push:
-    branches:
-      - main
-      - development
-  pull_request:
-    branches:
-      - main
-      - development
+    push:
+        branches:
+            - main
+            - development
+    pull_request:
+        types: [opened, synchronize]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project: [api, crons, support]
+    build:
+        name: Build and Lint
+        timeout-minutes: 5
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
 
-    steps:
-      - uses: actions/checkout@v4
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '21'
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "21"
+            - uses: oven-sh/setup-bun@v1
+              with:
+                  bun-version: 'latest'
 
-      - uses: pnpm/action-setup@v3
-        name: Install pnpm
-        with:
-          version: 8
-          run_install: false
+            - name: Install Dependencies
+              run: bun install
 
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+            - name: Build
+              run: bun run build
 
-      - uses: actions/cache@v4
-        name: Setup pnpm cache
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install Dependencies
-        run: cd ${{ matrix.project }} && pnpm install
-
-      - name: Lint
-        run: cd ${{ matrix.project }} && pnpm run lint
-
-      - name: Build
-        run: cd ${{ matrix.project }} && pnpm run build
-  build-bot:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project: [bot]
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "21"
-
-      - uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: "latest"
-
-      - name: Install Dependencies
-        run: cd ${{ matrix.project }} && bun install --frozen-lockfile
-
-      - name: Lint
-        run: cd ${{ matrix.project }} && bun run lint
+            - name: Lint
+              run: bun run lint

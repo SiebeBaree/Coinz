@@ -1,0 +1,26 @@
+{
+    "name": "coinz",
+    "private": true,
+    "scripts": {
+        "build": "turbo build",
+        "dev": "turbo dev",
+        "lint": "turbo lint",
+        "start": "turbo start",
+        "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    },
+    "devDependencies": {
+        "@repo/config": "*",
+        "@repo/eslint-config": "*",
+        "prettier": "^3.2.5",
+        "turbo": "latest"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "packageManager": "bun@1.1.3",
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "prettier": "@repo/config/prettier/base.js"
+}
