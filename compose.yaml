@@ -1,22 +1,22 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  cooldowns_db:
-    image: redis:alpine
-    restart: always
-    networks:
-      - redis-network
-    ports:
-      - "6379:6379"
-  bot:
-    build:
-      context: bot
-    restart: always
-    depends_on:
-      - cooldowns_db
-    environment:
-      REDIS_URI: redis://cooldowns_db:6379
-    networks:
-      - redis-network
+    cooldowns_db:
+        image: redis:alpine
+        restart: always
+        networks:
+            - redis-network
+        ports:
+            - '6379:6379'
+    bot:
+        build:
+            context: bot
+        restart: always
+        depends_on:
+            - cooldowns_db
+        environment:
+            REDIS_URI: redis://cooldowns_db:6379
+        networks:
+            - redis-network
 networks:
-  redis-network:
+    redis-network:
