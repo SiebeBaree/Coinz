@@ -41,7 +41,7 @@ export async function loadStructures<T>(
 
     // Loop through all the files in the directory
     for (const file of files) {
-        if (files.includes('index.js') && file !== 'index.js') {
+        if (files.includes('index.ts') && file !== 'index.ts') {
             continue;
         }
 
@@ -54,8 +54,8 @@ export async function loadStructures<T>(
             continue;
         }
 
-        // If the does not end with .js, skip the file
-        if (!file.endsWith('.js')) {
+        // If the does not end with .ts, skip the file
+        if (!file.endsWith('.ts')) {
             continue;
         }
 

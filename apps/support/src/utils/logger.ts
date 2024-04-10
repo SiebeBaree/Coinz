@@ -25,6 +25,7 @@ const logger = winston.createLogger({
             format: combine(timestamp(), json()),
         }),
     ],
+    exitOnError: false,
 });
 
 export default logger;
