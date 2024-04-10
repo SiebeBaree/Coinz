@@ -37,6 +37,7 @@
         "shard",
         "coinz"
     ],
+    "prettier": "@repo/config/prettier/base.js",
     "dependencies": {
         "bufferutil": "^4.0.8",
         "discord-hybrid-sharding": "^2.1.9",
@@ -51,6 +52,7 @@
         "zlib-sync": "^0.1.9"
     },
     "devDependencies": {
+        "@repo/config": "*",
         "@types/node": "^20.12.7",
         "eslint": "^9.0.0",
         "eslint-config-neon": "^0.1.62",

@@ -2,14 +2,12 @@
     "name": "support",
     "version": "2.0.0",
     "description": "The official support bot for the Coinz bot.",
-    "main": "dist/index.js",
+    "main": "src/index.ts",
     "scripts": {
-        "start": "pnpm run build && node --env-file .env ./dist/index.js",
-        "dev": "concurrently \"pnpm run build -- --watch\" \"nodemon --env-file .env ./dist/index.js\"",
-        "build": "tsc",
+        "start": "bun run ./src/index.ts",
         "lint": "prettier --check . && eslint --ext .ts --format stylish src",
         "format": "prettier --write . && eslint --ext .ts --fix --format stylish src",
-        "register-commands": "pnpm run build && node --env-file .env ./dist/register.js"
+        "register-commands": "bun run ./src/register.ts"
     },
     "repository": {
         "type": "git",
@@ -31,6 +29,7 @@
         "support",
         "helper"
     ],
+    "prettier": "@repo/config/prettier/base.js",
     "dependencies": {
         "bufferutil": "^4.0.8",
         "discord-api-types": "^0.37.79",
@@ -41,6 +40,7 @@
         "zlib-sync": "^0.1.9"
     },
     "devDependencies": {
+        "@repo/config": "*",
         "@types/node": "^20.12.7",
         "eslint": "^9.0.0",
         "eslint-config-neon": "^0.1.62",

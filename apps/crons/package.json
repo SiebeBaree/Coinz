@@ -2,11 +2,9 @@
     "name": "crons",
     "version": "4.0.0",
     "description": "",
-    "main": "dist/index.js",
+    "main": "src/index.ts",
     "scripts": {
-        "start": "tsc && node --env-file .env ./dist/index.js",
-        "dev": "concurrently \"tsc -w\" \"nodemon --env-file .env ./dist/index.js\"",
-        "build": "tsc",
+        "start": "bun run --env-file .env ./src/index.ts",
         "lint": "prettier --check . && eslint --ext .ts --format stylish src",
         "format": "prettier --write . && eslint --ext .ts --fix --format stylish src"
     },
@@ -29,15 +27,15 @@
         "market",
         "coinz"
     ],
+    "prettier": "@repo/config/prettier/base.js",
     "devDependencies": {
+        "@repo/config": "*",
         "@types/node": "^20.12.7",
         "@types/node-cron": "^3.0.11",
         "@typescript-eslint/eslint-plugin": "^7.6.0",
-        "concurrently": "^8.2.2",
         "eslint": "^9.0.0",
         "eslint-config-neon": "^0.1.62",
         "eslint-formatter-pretty": "^6.0.1",
-        "nodemon": "^3.1.0",
         "prettier": "^3.2.5",
         "typescript": "^5.4.4"
     },
