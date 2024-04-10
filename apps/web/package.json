@@ -8,7 +8,8 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint && prettier --check . && eslint --ext .ts --format stylish src",
-        "format": "prettier --write . && eslint --ext .ts --fix --format stylish src"
+        "format": "prettier --write . && eslint --ext .ts --fix --format stylish src",
+        "postinstall": "bunx prisma generate"
     },
     "dependencies": {
         "@hookform/resolvers": "^3.3.4",
@@ -42,6 +43,7 @@
         "zod": "^3.22.4"
     },
     "devDependencies": {
+        "@repo/config": "*",
         "@tanstack/eslint-plugin-query": "^5.28.11",
         "@types/node": "^20.12.7",
         "@types/react": "^18.2.75",
