@@ -1,14 +1,21 @@
-import CommandSection from '@/app/(main)/commands/CommandSection';
-import PageTitle from '@/components/PageTitle';
+import CommandSection from './command-section';
+import PageTitle from '@/components/page-title';
+import SectionWrapper from '@/components/section-wrapper';
+import { db } from '@/server/db';
 
-export default function CommandsPage() {
+export const revalidate = 3600;
+
+export default async function CommandsPage() {
+    const commands = await db.commands.findMany({});
+
     return (
-        <main className="container mx-auto px-5">
+        <SectionWrapper>
             <PageTitle
                 title="Commands"
                 description="You'll find a comprehensive list of all the available commands for Coinz. We've compiled this list to help you quickly and easily access the commands in Coinz effectively."
             />
-            <CommandSection />
-        </main>
+
+            <CommandSection commands={commands} />
+        </SectionWrapper>
     );
 }

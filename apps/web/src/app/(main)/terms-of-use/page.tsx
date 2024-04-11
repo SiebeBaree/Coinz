@@ -1,17 +1,10 @@
+import PageTitle from '@/components/page-title';
+import SectionWrapper from '@/components/section-wrapper';
+
 export default function TermsOfUsePage() {
     return (
-        <main className="container mx-auto px-5">
-            <div className="page-title">
-                <h2
-                    className="watermark"
-                    style={{
-                        fontSize: '5rem',
-                    }}
-                >
-                    Terms Of Use
-                </h2>
-                <h1>Terms Of Use</h1>
-            </div>
+        <SectionWrapper>
+            <PageTitle title="Terms Of Use" />
 
             <div className="mb-12">
                 <p>
@@ -114,6 +107,6 @@ export default function TermsOfUsePage() {
                     you reside, the laws of your country shall prevail to the extent required by local law.
                 </p>
             </div>
-        </main>
+        </SectionWrapper>
     );
 }

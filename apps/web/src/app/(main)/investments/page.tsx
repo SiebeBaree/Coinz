@@ -1,6 +1,6 @@
-import InvestmentsSection from '@/app/(main)/investments/InvestmentsSection';
+import InvestmentsSection from './investments-section';
 import { db } from '@/server/db';
-import PageTitle from '@/components/PageTitle';
+import PageTitle from '@/components/page-title';
 
 export const revalidate = 60;
 

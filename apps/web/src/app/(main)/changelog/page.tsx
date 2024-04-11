@@ -1,7 +1,7 @@
 import changelog from '@/lib/data/changelog.json';
 import ChangelogSection from '@/app/(main)/changelog/ChangelogSection';
-import { Changelog } from '@/lib/interfaces';
-import PageTitle from '@/components/PageTitle';
+import { Changelog } from '@/lib/types';
+import PageTitle from '@/components/page-title';
 
 export default function ChangelogPage() {
     changelog.sort((a: Changelog, b: Changelog) => b.timestamp - a.timestamp);

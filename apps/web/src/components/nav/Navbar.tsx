@@ -5,10 +5,9 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Session } from 'next-auth';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import Sidebar from '@/components/nav/Sidebar';
+import Sidebar from '@/components/nav/sidebar';
 import { ChevronDown, LucideIcon, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { signIn, signOut } from 'next-auth/react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,8 +18,10 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Cloud, CreditCard, LifeBuoy, LogOut, Plus, LayoutDashboard } from 'lucide-react';
+import { CreditCard, LifeBuoy, LogOut, Plus, LayoutDashboard } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { login } from '@/actions/login';
+import { logout } from '@/actions/logout';
 
 export default function Navbar({ session }: { session: Session | null }) {
     const pathname = usePathname();
@@ -51,24 +52,20 @@ export default function Navbar({ session }: { session: Session | null }) {
                 <div className="flex md:gap-3 justify-between items-center">
                     <NavItem name="Premium" href="/premium" pathname={pathname} />
 
-                    {session ? (
+                    {session && session.user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger className="outline-none group">
                                 <div className="flex gap-2 items-center bg-secondary py-2 px-3 rounded-md select-none border-highlight">
                                     <Avatar className="w-7 h-7">
-                                        <AvatarImage
-                                            src={
-                                                session?.user?.image ?? 'https://cdn.discordapp.com/embed/avatars/3.png'
-                                            }
-                                        />
+                                        <AvatarImage src={session.user.image ?? '/logo.png'} />
                                         <AvatarFallback>
-                                            {session?.user?.name
+                                            {session.user.name
                                                 ?.split(' ')
                                                 .map((name) => name[0])
                                                 .join('') ?? 'U'}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <p className="font-medium">{session?.user?.name}</p>
+                                    <p className="font-medium">{session.user.name}</p>
                                     <ChevronDown className="h-4 w-4 text-muted transition-all duration-300 ease-in-out group-data-[state=open]:rotate-180" />
                                 </div>
                             </DropdownMenuTrigger>
@@ -83,16 +80,11 @@ export default function Navbar({ session }: { session: Session | null }) {
                                 <DropdownMenuGroup>
                                     <DropdownItem name="Invite Coinz" href="/invite" Icon={Plus} />
                                     <DropdownItem name="Support" href="/support" Icon={LifeBuoy} />
-                                    <DropdownItem name="Statistics" Icon={Cloud} shortcut="SOON" disabled={true} />
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                    className="cursor-pointer transition-all duration-200 ease-in-out hover:bg-white/10"
-                                    onClick={() =>
-                                        signOut({
-                                            callbackUrl: '/',
-                                        })
-                                    }
+                                    className="cursor-pointer transition-all duration-200 ease-in-out hover:bg-white/10 text-red-400"
+                                    onClick={logout}
                                 >
                                     <LogOut className="mr-2 h-4 w-4" />
                                     <span>Log out</span>
@@ -100,10 +92,7 @@ export default function Navbar({ session }: { session: Session | null }) {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     ) : (
-                        <Button
-                            onClick={() => signIn('discord', { callbackUrl: '/dashboard' })}
-                            className="px-5 py-2 h-auto"
-                        >
+                        <Button className="px-5 py-2 h-auto" onClick={() => login()}>
                             Login
                         </Button>
                     )}
@@ -153,7 +142,7 @@ function DropdownItem({
     shortcut?: string;
 }) {
     return (
-        <Link href={href ?? '#'}>
+        <Link href={href ?? ''} className={cn(!href && 'pointer-events-none')}>
             <DropdownMenuItem
                 disabled={disabled}
                 className="cursor-pointer transition-all duration-200 ease-in-out hover:bg-white/10"

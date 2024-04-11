@@ -236,7 +236,7 @@ function DiscordServerCard({
             <Link
                 href={href}
                 target={href === '' ? '_self' : '_blank'}
-                className="px-3 py-2 hover:bg-white/10 hover:font-semibold transition-all duration-100 ease-in-out flex items-center gap-3"
+                className="px-3 py-2 hover:bg-white/10 transition-all duration-100 ease-in-out flex items-center gap-3"
             >
                 <Avatar>
                     <AvatarImage src={image} />

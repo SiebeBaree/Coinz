@@ -1,4 +1,4 @@
-import SearchIcon from '@/components/icons/Search';
+import { SearchIcon } from 'lucide-react';
 import React from 'react';
 
 export default function Search({
@@ -12,7 +12,7 @@ export default function Search({
 }) {
     return (
         <div className="flex items-center rounded overflow-hidden bg-secondary px-3 py-2 min-w-full md:min-w-[250px]">
-            <SearchIcon className="fill-primary" />
+            <SearchIcon className="text-primary" />
             <input
                 type="text"
                 placeholder={placeholder || 'Search...'}

@@ -11,15 +11,40 @@ module.exports = {
         },
         extend: {
             colors: {
-                background: 'var(--color-background)',
-                foreground: 'var(--color-text)',
+                border: 'hsl(var(--border))',
+                input: 'hsl(var(--input))',
+                ring: 'hsl(var(--ring))',
+                background: 'hsl(var(--background) / <alpha-value>)',
+                foreground: 'hsl(var(--foreground) / <alpha-value>)',
                 primary: {
-                    DEFAULT: 'var(--color-selected)',
-                    foreground: 'var(--color-text-dark)',
+                    DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
+                    foreground: 'hsl(var(--primary-foreground) / <alpha-value>)',
                 },
-                secondary: 'var(--color-background-soft)',
-                muted: 'var(--color-text-soft)',
-                highlight: 'var(--color-highlight)',
+                secondary: {
+                    DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
+                    foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)',
+                },
+                destructive: {
+                    DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
+                    foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)',
+                },
+                muted: {
+                    DEFAULT: 'hsl(var(--muted))',
+                    foreground: 'hsl(var(--muted-foreground))',
+                },
+                accent: {
+                    DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
+                    foreground: 'hsl(var(--accent-foreground) / <alpha-value>)',
+                },
+                popover: {
+                    DEFAULT: 'hsl(var(--popover) / <alpha-value>)',
+                    foreground: 'hsl(var(--popover-foreground) / <alpha-value>)',
+                },
+                card: {
+                    DEFAULT: 'hsl(var(--card) / <alpha-value>)',
+                    foreground: 'hsl(var(--card-foreground) / <alpha-value>)',
+                },
+                highlight: 'hsl(var(--highlight))',
             },
             borderWidth: {
                 highlight: '1px',
@@ -34,10 +59,6 @@ module.exports = {
                     to: { height: 0 },
                 },
             },
-            borderColor: (theme) => ({
-                ...theme('colors'),
-                highlight: theme('colors.highlight'),
-            }),
             animation: {
                 'accordion-down': 'accordion-down 0.2s ease-out',
                 'accordion-up': 'accordion-up 0.2s ease-out',

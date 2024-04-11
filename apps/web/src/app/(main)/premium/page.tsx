@@ -1,20 +1,33 @@
-import PageTitle from '../../../components/PageTitle';
-import { getServerAuthSession } from '@/server/auth';
+import PageTitle from '@/components/page-title';
+import { auth } from '@/server/auth';
 import { Session } from 'next-auth';
-import { Plan } from '@prisma/client';
 import Image from 'next/image';
-import premiumJson from '@/lib/data/premium.json';
+import products from '@/lib/data/products.json';
 import { Check } from 'lucide-react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { getProducts } from '@/server/payment';
+import type { Product } from '@/lib/types';
+import { login } from '@/actions/login';
+import { db } from '@/server/db';
+import Link from 'next/link';
+import CheckoutButton from './checkout-button';
 
-type PremiumSubscription = { [key: string]: { checkout: string; logo: string; perks: string[] } };
-const premium = premiumJson as PremiumSubscription;
+export const dynamic = 'force-dynamic';
 
 export default async function PremiumPage() {
-    const session = await getServerAuthSession();
-    const products = await getProducts();
+    const session = await auth();
+
+    let hasAccount = false;
+    let alreadySubscribed = false;
+    if (session) {
+        const member = await db.member.findFirst({
+            where: {
+                id: session.user.discordId,
+            },
+        });
+
+        alreadySubscribed = (member?.premium ?? 0) > 0;
+        hasAccount = member !== null;
+    }
 
     return (
         <main className="container mx-auto px-5">
@@ -30,35 +43,46 @@ export default async function PremiumPage() {
                 }}
             >
                 {products.map((product) => (
-                    <SubscriptionCard key={product.id} session={session} plan={product} />
+                    <SubscriptionCard
+                        key={product.variantId}
+                        session={session}
+                        product={product}
+                        hasAccount={hasAccount}
+                        alreadySubscribed={alreadySubscribed}
+                    />
                 ))}
             </div>
         </main>
     );
 }
 
-function SubscriptionCard({ session, plan }: { session: Session | null; plan: Plan }) {
-    const premiumData = premium[plan.productId.toString()];
-    if (!premiumData) {
-        return null;
-    }
-
+function SubscriptionCard({
+    session,
+    product,
+    hasAccount,
+    alreadySubscribed,
+}: {
+    session: Session | null;
+    product: Product;
+    hasAccount: boolean;
+    alreadySubscribed: boolean;
+}) {
     return (
-        <div className="flex flex-col items-center bg-secondary rounded-md px-8 mt-12">
+        <div className="flex flex-col items-center bg-secondary rounded-md px-8 mt-12 relative">
             <Image
-                src={premiumData.logo}
-                alt={`${plan.variantName} image`}
+                src={product.logo}
+                alt={`${product.name} image`}
                 width={120}
                 height={120}
-                className="select-none absolute -top-[60px] border-[10px] rounded-full border-background"
+                className="select-none absolute -translate-y-1/2 border-[10px] rounded-full border-background"
             />
-            <h2 className="text-4xl font-bold mt-20">{plan.variantName}</h2>
-            <h3 className="text-4xl text-primary font-bold mt-3 mb-6">
-                ${plan.price / 100} <span className="text-muted text-base">/month</span>
+            <h2 className="text-4xl font-bold mt-20">{product.name}</h2>
+            <h3 className="text-4xl text-primary font-bold mt-3 mb-12">
+                ${product.price.monthly} <span className="text-muted text-base">/month</span>
             </h3>
 
-            <div className="flex flex-col items-start gap-2 mb-8 w-full">
-                {premiumData.perks.map((perk: string, index: number) => (
+            <div className="flex flex-col items-start gap-3 mb-12 w-full">
+                {product.features.map((perk: string, index: number) => (
                     <div key={index} className="flex gap-2 items-center">
                         <Check className="text-primary h-5" />
                         <p key={perk} className="">
@@ -70,13 +94,21 @@ function SubscriptionCard({ session, plan }: { session: Session | null; plan: Pl
 
             <div className="flex-grow flex flex-col justify-end mb-6">
                 {session ? (
-                    <Link href={premiumData.checkout + session.user.discordId}>
-                        <Button className="h-auto py-3 px-8">Subscribe Now</Button>
-                    </Link>
+                    hasAccount ? (
+                        alreadySubscribed ? (
+                            <Link href="/billing">
+                                <Button className="h-auto py-3 px-8">Go to Billing</Button>
+                            </Link>
+                        ) : (
+                            <CheckoutButton variantId={product.variantId} />
+                        )
+                    ) : (
+                        <p className="text-red-400 font-medium">You need to have used Coinz before!</p>
+                    )
                 ) : (
-                    <Link href={'/login'}>
-                        <Button className="h-auto py-3 px-8">Login</Button>
-                    </Link>
+                    <Button className="h-auto py-3 px-8" onClick={() => login()}>
+                        Subscribe Now
+                    </Button>
                 )}
             </div>
         </div>

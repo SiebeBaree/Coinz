@@ -1,5 +1,8 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+await import('./src/env.js');
+import { withPlausibleProxy } from 'next-plausible';
+
+/** @type {import("next").NextConfig} */
+const config = {
     images: {
         remotePatterns: [
             {
@@ -28,4 +31,6 @@ const nextConfig = {
     },
 };
 
-module.exports = nextConfig;
+export default withPlausibleProxy({
+    customDomain: 'https://plausible.siebebaree.com',
+})(config);

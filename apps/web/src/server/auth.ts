@@ -1,8 +1,7 @@
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { getServerSession, type DefaultSession, type NextAuthOptions } from 'next-auth';
-import { db } from '@/server/db';
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import NextAuth, { type DefaultSession } from 'next-auth';
 import Discord from 'next-auth/providers/discord';
-import { User } from '@prisma/client';
+import { db } from '@/server/db';
 
 declare module 'next-auth' {
     interface Session extends DefaultSession {
@@ -13,46 +12,27 @@ declare module 'next-auth' {
     }
 }
 
-export const authOptions: NextAuthOptions = {
-    session: {
-        strategy: 'jwt',
-    },
-    secret: process.env.NEXTAUTH_SECRET!,
+export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks: {
-        session: async ({ session, token }) => {
-            return {
-                ...session,
-                user: {
-                    ...session.user,
-                    id: token.id,
-                    discordId: token.discordId,
-                },
-            };
-        },
-        jwt: async ({ token, user }) => {
-            if (user) {
-                const u = user as unknown as User;
-                const account = await db.account.findFirst({
-                    where: { userId: u.id },
-                });
+        session: ({ session, token }) => ({
+            ...session,
+            user: {
+                ...session.user,
+                id: token.sub,
+                discordId: token.discordId,
+            },
+        }),
+        jwt: ({ token, account }) => {
+            if (!token.sub) return token;
 
-                return {
-                    ...token,
-                    id: u.id,
-                    discordId: account?.providerAccountId,
-                };
-            }
+            const discordId = account?.providerAccountId;
+            if (!discordId) return token;
 
+            token.discordId = discordId;
             return token;
         },
     },
     adapter: PrismaAdapter(db),
-    providers: [
-        Discord({
-            clientId: process.env.DISCORD_CLIENT_ID!,
-            clientSecret: process.env.DISCORD_CLIENT_SECRET!,
-        }),
-    ],
-};
-
-export const getServerAuthSession = () => getServerSession(authOptions);
+    session: { strategy: 'jwt' },
+    providers: [Discord],
+});

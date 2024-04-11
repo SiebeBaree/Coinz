@@ -1,8 +1,10 @@
-import PageTitle from '@/components/PageTitle';
+import PageTitle from '@/components/page-title';
 import { Button } from '@/components/ui/button';
 import { ChevronRightIcon, PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import guides from '@/lib/data/guides.json';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 export default function Guide() {
     return (
@@ -19,7 +21,7 @@ export default function Guide() {
                         Can&apos;t find what you&apos;re looking for?
                     </h3>
                     <Link href={'/support'} target="_blank">
-                        <Button>
+                        <Button variant="secondary">
                             <PlusIcon className="w-4 h-4 mr-1" />
                             <p>Join our support server</p>
                         </Button>
@@ -38,25 +40,23 @@ export default function Guide() {
 
 function GuideCard({ title, description, href }: { title: string; description: string; href?: string }) {
     return (
-        <div className="flex flex-col gap-3 bg-secondary rounded-md p-4">
-            <div>
-                <h2 className="text-lg font-semibold">{title}</h2>
-                <p className="text-muted text-sm mt-1">{description}</p>
-            </div>
-            {href ? (
+        <Card className="group ">
+            <CardContent className="flex flex-col h-full">
+                <div>
+                    <h2 className="text-lg font-semibold">{title}</h2>
+                    <p className="text-muted text-sm mt-1">{description}</p>
+                </div>
                 <Link
-                    href={'/guide/' + href ?? '/'}
-                    className="flex items-center text-sm text-primary ml-auto mt-auto border-b border-transparent hover:border-primary transition-all duration-100 ease-in-out"
+                    href={'/guide/' + href ?? ''}
+                    className={cn(
+                        'flex items-center text-sm  ml-auto mt-auto border-b border-transparent group:hover:border-primary transition-all duration-100 ease-in-out pt-2',
+                        href ? 'text-primary' : 'text-muted pointer-events-none',
+                    )}
                 >
-                    Visit the guide
+                    {href ? 'Read more' : 'Coming Soon'}
                     <ChevronRightIcon className="ml-1 h-4 w-4" />
                 </Link>
-            ) : (
-                <button className="flex items-center text-sm text-muted ml-auto mt-auto">
-                    Coming Soon
-                    <ChevronRightIcon className="ml-1 h-4 w-4" />
-                </button>
-            )}
-        </div>
+            </CardContent>
+        </Card>
     );
 }

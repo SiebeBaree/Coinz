@@ -13,9 +13,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronDown, Cloud, LifeBuoy, LogOut, LucideIcon, Plus } from 'lucide-react';
-import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { logout } from '@/actions/logout';
 
 export default function DashboardNavbar({ session }: { session: Session }) {
     const pathname = usePathname();
@@ -32,9 +32,7 @@ export default function DashboardNavbar({ session }: { session: Session }) {
                     <DropdownMenuTrigger className="outline-none group">
                         <div className="flex gap-2 items-center bg-secondary py-2 px-3 rounded-md select-none border-highlight">
                             <Avatar className="w-7 h-7">
-                                <AvatarImage
-                                    src={session?.user?.image ?? 'https://cdn.discordapp.com/embed/avatars/3.png'}
-                                />
+                                <AvatarImage src={session?.user?.image ?? '/logo.png'} />
                                 <AvatarFallback>
                                     {session?.user?.name
                                         ?.split(' ')
@@ -54,12 +52,8 @@ export default function DashboardNavbar({ session }: { session: Session }) {
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                            className="cursor-pointer transition-all duration-200 ease-in-out hover:bg-white/10"
-                            onClick={() =>
-                                signOut({
-                                    callbackUrl: '/',
-                                })
-                            }
+                            className="cursor-pointer transition-all duration-200 ease-in-out hover:bg-white/10 text-red-400"
+                            onClick={logout}
                         >
                             <LogOut className="mr-2 h-4 w-4" />
                             <span>Log out</span>

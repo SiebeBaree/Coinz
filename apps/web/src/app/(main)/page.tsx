@@ -1,15 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import DiscordIcon from '@/components/icons/Discord';
+import DiscordIcon from '@/components/icons/discord';
 import React from 'react';
-import Statistics from '@/components/Statistics';
-import heroImg from '@/lib/img/hero.png';
-import { IconProps } from '@/lib/interfaces';
+import Statistics from '@/components/statistics';
+import { IconProps } from '@/lib/types';
 import { cn, formatNumber } from '@/lib/utils';
-import InvestingIcon from '@/components/icons/Investing';
-import BusinessIcon from '@/components/icons/Business';
-import GamesIcon from '@/components/icons/Games';
-import FarmingIcon from '@/components/icons/Farming';
+import InvestingIcon from '@/components/icons/investing';
+import BusinessIcon from '@/components/icons/business';
+import GamesIcon from '@/components/icons/games';
+import FarmingIcon from '@/components/icons/farming';
 import { db } from '@/server/db';
 
 export const revalidate = 3600;
@@ -21,7 +20,7 @@ export default async function Home() {
         },
     });
 
-    const users = formatNumber(botStats?.users ?? 0);
+    const users = formatNumber(botStats?.users || 0);
     return (
         <main>
             <div
@@ -70,15 +69,17 @@ export default async function Home() {
                     </div>
 
                     <Image
-                        src={heroImg}
+                        src="/hero.png"
                         alt="Hero Image"
                         loading="eager"
                         priority={true}
+                        width={800}
+                        height={800}
                         className="object-cover max-h-[200px] sm:max-h-[300px] md:max-h-[400px] xl:max-h-[600px] max-w-[200px] sm:max-w-[300px] md:max-w-[400px] xl:max-w-[600px] mt-8 md:mt-0"
                     />
                 </div>
 
-                <div id="statistics" className="bg-secondary py-8">
+                <div id="statistics" className="bg-card py-8">
                     <div
                         className="grid gap-6 container mx-auto px-5"
                         style={{

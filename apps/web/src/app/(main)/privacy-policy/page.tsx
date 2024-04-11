@@ -1,17 +1,10 @@
+import PageTitle from '@/components/page-title';
+import SectionWrapper from '@/components/section-wrapper';
+
 export default function PrivacyPolicyPage() {
     return (
-        <main className="container mx-auto px-5">
-            <div className="page-title">
-                <h2
-                    className="watermark"
-                    style={{
-                        fontSize: '5rem',
-                    }}
-                >
-                    Privacy Policy
-                </h2>
-                <h1>Privacy Policy</h1>
-            </div>
+        <SectionWrapper>
+            <PageTitle title="Privacy Policy" />
 
             <div className="mb-12">
                 <p>
@@ -82,6 +75,6 @@ export default function PrivacyPolicyPage() {
                     policy constitutes acceptance of those changes.
                 </p>
             </div>
-        </main>
+        </SectionWrapper>
     );
 }

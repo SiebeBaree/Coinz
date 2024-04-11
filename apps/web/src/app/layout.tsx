@@ -1,14 +1,21 @@
 import '@/styles/globals.css';
-import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
-import React from 'react';
-import GlobalProviders from '@/components/GlobalProviders';
-import '@/lib/lemonsqueezy';
 
-const inter = Inter({ subsets: ['latin'] });
+import { Inter } from 'next/font/google';
+import { cn } from '@/lib/utils';
+import type { Metadata, Viewport } from 'next';
+import { env } from '@/env';
+import Providers from '@/components/providers';
+import PlausibleProvider from 'next-plausible';
+
+const inter = Inter({
+    subsets: ['latin'],
+});
 
 export const metadata: Metadata = {
-    title: 'Coinz',
+    title: {
+        template: 'Coinz - %s',
+        default: 'Coinz',
+    },
     description: 'A Discord bot with an economy system, stocks, crypto, poker, blackjack, roulette, and more!',
     generator: 'Coinz',
     applicationName: 'Coinz',
@@ -28,27 +35,36 @@ export const metadata: Metadata = {
         'Multiplayer',
         'Economy Bot',
     ],
-    authors: { name: 'Coinz' },
-    creator: 'SiebeBaree',
+    authors: [{ name: 'Siebe Barée', url: 'https://siebebaree.com' }],
+    creator: 'Siebe Barée',
     publisher: 'Coinz',
-    metadataBase: new URL('https://coinzbot.xyz'),
+    formatDetection: {
+        email: false,
+        address: false,
+        telephone: false,
+    },
+    metadataBase: new URL(env.NEXT_PUBLIC_BASE_URL),
     alternates: {
         canonical: '/',
     },
-    openGraph: {
-        type: 'website',
-        siteName: 'Coinz',
-        url: 'https://coinzbot.xyz',
-    },
-    twitter: {
-        card: 'summary',
-        creator: '@Coinz',
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+        },
     },
     icons: {
-        apple: [
+        icon: [
             {
-                sizes: '180x180',
-                url: '/apple-touch-icon.png',
+                url: '/favicon-16x16.png',
+                sizes: '16x16',
+                type: 'image/png',
+            },
+            {
+                url: '/favicon-32x32.png',
+                sizes: '32x32',
                 type: 'image/png',
             },
         ],
@@ -56,9 +72,21 @@ export const metadata: Metadata = {
             {
                 rel: 'mask-icon',
                 url: '/safari-pinned-tab.svg',
-                color: '#5bbad5',
+                color: '#ffca21',
             },
         ],
+    },
+    openGraph: {
+        type: 'website',
+        siteName: 'Coinz',
+        url: env.NEXT_PUBLIC_BASE_URL,
+    },
+    twitter: {
+        card: 'summary',
+        creator: '@Coinz',
+    },
+    other: {
+        'msapplication-TileColor': '#ffca21',
     },
 };
 
@@ -69,11 +97,14 @@ export const viewport: Viewport = {
     viewportFit: 'cover',
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
-            <body className={inter.className}>
-                <GlobalProviders>{children}</GlobalProviders>
+            <head>
+                <PlausibleProvider domain="coinzbot.xyz" selfHosted={true} />
+            </head>
+            <body className={cn('min-h-screen bg-background font-sans antialiased overflow-x-hidden', inter.className)}>
+                <Providers>{children}</Providers>
             </body>
         </html>
     );

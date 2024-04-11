@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import GuideTitle from '@/components/GuideTitle';
+import GuideTitle from './guide-title';
 import styles from '@/styles/guide.module.css';
 
 export default async function GuidesLayout({ children }: { children: React.ReactNode }) {

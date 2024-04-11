@@ -1,7 +1,7 @@
 'use client';
 
 import ReactMarkdown from 'react-markdown';
-import { Changelog } from '@/lib/interfaces';
+import { Changelog } from '@/lib/types';
 import { useEffect } from 'react';
 import { copyCode } from '@/lib/utils';
 

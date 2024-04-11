@@ -2,100 +2,89 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-    font-family: 'Ginto Nord';
-    src: url('../lib/fonts/GintoNord-Black.ttf');
-    font-weight: bold;
-    font-display: swap;
+@layer base {
+    :root {
+        --background: 233 11% 17%;
+        --foreground: 0 0% 96%;
+
+        --card: 229 10% 22%;
+        --card-foreground: var(--foreground);
+
+        --popover: var(--background);
+        --popover-foreground: var(--foreground);
+
+        --primary: 46 100% 56%;
+        --primary-foreground: 0 0% 7%;
+
+        --secondary: var(--card);
+        --secondary-foreground: var(--card-foreground);
+
+        --muted: var(--foreground) / 0.6;
+        --muted-foreground: var(--foreground) / 0.6;
+
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 222.2 84% 4.9%;
+
+        --radius: 0.5rem;
+
+        --highlight: var(--foreground) / 0.15;
+    }
 }
 
-:root {
-    --color-text: #f5f5f5;
-    --color-text-soft: rgba(255, 255, 255, 0.6);
-    --color-text-dark: #111111;
-    --color-background: #26272f;
-    --color-background-soft: #32343d;
-    --color-shadow: rgba(0, 0, 0, 0.1);
-    --color-highlight: rgba(255, 255, 255, 0.15);
-    --color-watermark: rgba(255, 255, 255, 0.05);
-    --color-selected: #ffca21;
-    --color-background-blur: rgba(255, 255, 255, 0.1);
-    --color-discord-mention: #3d4276;
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
 }
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-    margin: 0;
-    position: relative;
-    font-weight: normal;
-}
-
-html {
-    overflow-x: hidden;
-}
-
-body {
-    padding: 0;
-    margin: 0;
-
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        Roboto,
-        Ubuntu,
-        'Helvetica Neue',
-        sans-serif;
-
-    background: var(--color-background);
-    color: var(--color-text);
-    overflow-x: initial;
-    line-height: 1.6;
-    font-size: 1rem;
-
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%;
-}
-
-* {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-selected) var(--color-background);
-}
-
-*::-webkit-scrollbar {
-    width: 12px;
-}
-
-*::-webkit-scrollbar-track {
-    background: var(--color-background);
-}
-
-*::-webkit-scrollbar-thumb {
-    background-color: var(--color-selected);
-    border-radius: 20px;
-    border: 2px solid var(--color-background);
+@layer base {
+    @font-face {
+        font-family: 'Ginto Nord';
+        src: url('../fonts/GintoNord-Black.ttf') format('ttf');
+        font-weight: 900;
+        font-display: swap;
+    }
 }
 
 code {
-    background-color: var(--color-discord-mention);
+    background-color: #3d4276;
     padding: 3px 6px;
     border-radius: 4px;
     position: relative;
     cursor: pointer;
 }
 
+* {
+    scrollbar-color: hsl(var(--primary)) hsl(var(--background));
+}
+
+*::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--primary));
+    border-radius: 20px;
+    border: 2px solid hsl(var(--background));
+}
+
 .watermark {
-    color: var(--color-watermark);
+    color: hsl(var(--foreground) / 0.05);
 }
 
 @media screen and (min-width: 640px) {
     .watermark {
-        top: -100%;
+        top: 5%;
         left: -5%;
     }
 }
@@ -108,7 +97,7 @@ code {
 
 @media screen and (min-width: 1536px) {
     .watermark {
-        top: -130%;
+        top: 0%;
         left: -8%;
     }
 }
@@ -129,7 +118,7 @@ code {
 }
 
 .formatted-text a {
-    color: var(--color-selected);
+    color: hsl(var(--primary));
     text-decoration: none;
 }
 
@@ -138,7 +127,7 @@ code {
 }
 
 .formatted-text em {
-    background-color: var(--color-background);
+    background-color: hsl(var(--background));
     padding: 4px 8px;
     font-weight: 500;
     border-radius: 4px;

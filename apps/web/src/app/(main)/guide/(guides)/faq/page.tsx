@@ -1,5 +1,5 @@
 import faqItems from '@/lib/data/faq.json';
-import FaqCard from '@/components/FaqCard';
+import FaqCard from './faq-card';
 
 export default function FaqGuide() {
     return (

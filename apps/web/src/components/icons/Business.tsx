@@ -1,4 +1,4 @@
-import { IconProps } from '@/lib/interfaces';
+import { IconProps } from '@/lib/types';
 
 export default function BusinessIcon(props: IconProps) {
     return (
