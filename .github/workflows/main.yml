@@ -1,17 +1,5 @@
 name: CI
 
-env:
-    DATABASE_URL: ${{ secrets.DATABASE_URL }}
-    AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-    AUTH_DISCORD_ID: ${{ secrets.AUTH_DISCORD_ID }}
-    AUTH_DISCORD_SECRET: ${{ secrets.AUTH_DISCORD_SECRET }}
-    LEMONSQUEEZY_API_KEY: ${{ secrets.LEMONSQUEEZY_API_KEY }}
-    LEMONSQUEEZY_STORE_ID: ${{ secrets.LEMONSQUEEZY_STORE_ID }}
-    LEMONSQUEEZY_WEBHOOK_SECRET: ${{ secrets.LEMONSQUEEZY_WEBHOOK_SECRET }}
-    WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-    NODE_ENV: ${{ secrets.NODE_ENV }}
-    NEXT_PUBLIC_BASE_URL: ${{ vars.NEXT_PUBLIC_BASE_URL }}
-
 on:
     push:
         branches:
@@ -25,13 +13,19 @@ jobs:
         name: Build and Lint
         timeout-minutes: 5
         runs-on: ubuntu-latest
+        env:
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+            AUTH_DISCORD_ID: ${{ secrets.AUTH_DISCORD_ID }}
+            AUTH_DISCORD_SECRET: ${{ secrets.AUTH_DISCORD_SECRET }}
+            LEMONSQUEEZY_API_KEY: ${{ secrets.LEMONSQUEEZY_API_KEY }}
+            LEMONSQUEEZY_STORE_ID: ${{ secrets.LEMONSQUEEZY_STORE_ID }}
+            LEMONSQUEEZY_WEBHOOK_SECRET: ${{ secrets.LEMONSQUEEZY_WEBHOOK_SECRET }}
+            WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+            NODE_ENV: ${{ secrets.NODE_ENV }}
+            NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
         steps:
             - uses: actions/checkout@v4
-
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: '21'
 
             - uses: oven-sh/setup-bun@v1
               with:
