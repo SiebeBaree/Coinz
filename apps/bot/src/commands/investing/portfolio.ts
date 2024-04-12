@@ -34,7 +34,7 @@ function createEmbed(
     const itemsOnPage = investments.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
     const fields = itemsOnPage.map((investment: PortfolioInvestments) => {
         return {
-            name: `${investment.amount}x ${investment.name} (${investment.ticker})`,
+            name: `${roundNumber(Number.parseFloat(investment.amount), 2)}x ${investment.name} (${investment.ticker})`,
             value: `:money_with_wings: **Total Buy Price:** :coin: ${
                 investment.buyPrice
             }\n:moneybag: **Currently Worth:** :coin: ${roundNumber(investment.worth, 2)}\n${
