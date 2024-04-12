@@ -1,6 +1,19 @@
 {
-    "extends": "@repo/config/tsconfig/nextjs.json",
+    "$schema": "https://json.schemastore.org/tsconfig",
     "compilerOptions": {
+        "target": "es5",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "noEmit": true,
+        "esModuleInterop": true,
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "jsx": "preserve",
+        "incremental": true,
         "plugins": [
             {
                 "name": "next"
@@ -8,18 +21,8 @@
         ],
         "paths": {
             "@/*": ["./src/*"]
-        },
-        "preserveSymlinks": true
+        }
     },
-    "include": [
-        ".",
-        "next-env.d.ts",
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.cjs",
-        "**/*.js",
-        ".next/types/**/*.ts",
-        ".eslintrc.cjs"
-    ],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
     "exclude": ["node_modules"]
 }
