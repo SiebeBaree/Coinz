@@ -1,20 +1,18 @@
 FROM oven/bun:latest
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
 RUN mkdir -p ./src
 
 COPY ./src ./src
 COPY .env.* .
 COPY package.json .
-COPY bun.lockb .
 
-RUN bun install --frozen-lockfile --production
+RUN bun install --production
 
 ENV NODE_ENV=production
 
 RUN bun --bun run register-commands
 RUN bun --bun run script:add-items
 
-# run the app
 ENTRYPOINT [ "bun", "--bun", "run", "./src/sharder.ts" ]
