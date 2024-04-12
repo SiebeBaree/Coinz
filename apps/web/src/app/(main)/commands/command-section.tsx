@@ -51,7 +51,7 @@ function msToFormattedTime(duration: number): string {
     } else if (days === 0 && minutes === 0 && seconds === 0) {
         return `${hours} hour${hours === 1 ? '' : 's'}`;
     } else if (hours === 0 && minutes === 0 && seconds === 0) {
-        return `${hours} day${days === 1 ? '' : 's'}`;
+        return `${days} day${days === 1 ? '' : 's'}`;
     }
 
     let result = '';
@@ -194,7 +194,9 @@ function CommandCard({ command }: { command: Command }) {
                             <h3 className="text-lg font-medium mb-1">Usage</h3>
                             <div className="code-copy flex flex-col gap-1 items-start">
                                 {command.usage.map((usage, index) => (
-                                    <code key={index}>{usage}</code>
+                                    <code key={index}>
+                                        /{command.name} {usage}
+                                    </code>
                                 ))}
                             </div>
                         </div>
