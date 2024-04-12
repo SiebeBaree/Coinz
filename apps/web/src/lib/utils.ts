@@ -35,13 +35,20 @@ export function formatNumber(num: number): {
                 value: Math.round(num / 1000) * 1000,
                 suffix: '',
             };
-        } else {
+        }
+
+        if (num < 1000) {
             return {
-                // Round the number to the nearest 100
-                value: Math.round(num / 100) * 100,
+                value: num,
                 suffix: '',
             };
         }
+
+        return {
+            // Round the number to the nearest 100
+            value: Math.round(num / 100) * 100,
+            suffix: '',
+        };
     }
 
     // Round the number to the nearest 10,000
@@ -53,10 +60,10 @@ export function formatNumber(num: number): {
             value: rounded / 1000,
             suffix: 'K',
         };
-    } else {
-        return {
-            value: Math.round(rounded / 1000000),
-            suffix: 'M',
-        };
     }
+
+    return {
+        value: Math.round(rounded / 1000000),
+        suffix: 'M',
+    };
 }
