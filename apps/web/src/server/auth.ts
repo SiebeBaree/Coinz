@@ -1,7 +1,7 @@
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import NextAuth, { type DefaultSession } from 'next-auth';
-import Discord from 'next-auth/providers/discord';
 import { db } from '@/server/db';
+import authConfig from '@/server/auth.config';
 
 declare module 'next-auth' {
     interface Session extends DefaultSession {
@@ -34,5 +34,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     adapter: PrismaAdapter(db),
     session: { strategy: 'jwt' },
-    providers: [Discord],
+    ...authConfig,
 });

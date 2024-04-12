@@ -8,8 +8,18 @@
         ],
         "paths": {
             "@/*": ["./src/*"]
-        }
+        },
+        "preserveSymlinks": true
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.js", ".next/types/**/*.ts", ".eslintrc.cjs"],
+    "include": [
+        ".",
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.cjs",
+        "**/*.js",
+        ".next/types/**/*.ts",
+        ".eslintrc.cjs"
+    ],
     "exclude": ["node_modules"]
 }

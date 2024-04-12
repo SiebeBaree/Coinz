@@ -1,3 +1,6 @@
 {
-    "extends": "@repo/config/tsconfig/base.json"
+    "extends": "@repo/config/tsconfig/base.json",
+    "compilerOptions": {
+        "preserveSymlinks": true
+    }
 }
