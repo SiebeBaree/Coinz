@@ -1,7 +1,7 @@
 import process from 'node:process';
 import { setInterval } from 'node:timers';
 import { getInfo } from 'discord-hybrid-sharding';
-import { ActivityType, GatewayIntentBits, type Guild, Partials } from 'discord.js';
+import { ActivityType, GatewayIntentBits, Partials } from 'discord.js';
 import { connect } from 'mongoose';
 import Bot from './domain/Bot';
 import BotStats from './models/botStats';
@@ -33,22 +33,19 @@ import logger from './utils/logger';
         process.exit(1);
     }
 
-    bot.once('ready', () => {
+    bot.once('ready', async () => {
         if (bot.cluster.id === bot.cluster.info.CLUSTER_COUNT - 1) {
             const updateStatsInDb = async () => {
-                const guilds = await bot.cluster
-                    .broadcastEval((c) => c.guilds.cache.size)
-                    .then((results) => results.reduce((prev, val) => prev + val, 0));
-                const users = await bot.cluster
-                    .broadcastEval((c) =>
-                        c.guilds.cache.reduce((acc: number, guild: Guild) => acc + guild.memberCount, 0),
-                    )
-                    .then((results) => results.reduce((acc, memberCount) => acc + memberCount, 0));
-                const shards = bot.cluster.info.TOTAL_SHARDS;
+                const guilds = [...bot.guilds.cache.values()];
+                let users = 0;
+                for (const guild of guilds) {
+                    users += guild.memberCount;
+                }
 
+                const shards = bot.cluster.info.TOTAL_SHARDS;
                 const investmentsCount = await Investment.countDocuments();
                 const botStat = new BotStats({
-                    guilds: guilds,
+                    guilds: guilds.length,
                     users: users,
                     shards: shards,
                     commands: bot.commands.size,
@@ -61,8 +58,7 @@ import logger from './utils/logger';
             // Update stats in the database every 2 hours
             setInterval(updateStatsInDb, 1000 * 60 * 120);
 
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            updateStatsInDb();
+            await updateStatsInDb();
         }
     });
 
