@@ -17,6 +17,6 @@ RUN npm install -g bun@latest
 
 RUN bun install
 
-# ENV NODE_ENV=production
+ENV NODE_ENV=production
 
 ENTRYPOINT [ "bun", "--bun", "run", "start", "--filter", "crons" ]

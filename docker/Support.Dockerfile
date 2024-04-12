@@ -17,7 +17,7 @@ RUN npm install -g bun@latest
 
 RUN bun install
 
-# ENV NODE_ENV=production
+ENV NODE_ENV=production
 
 WORKDIR /usr/src/app/apps/support
 RUN bun --bun run register-commands
