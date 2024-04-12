@@ -345,7 +345,8 @@ async function getSell(client: Bot, interaction: ChatInputCommandInteraction, me
         );
     await interaction.reply({ embeds: [embed] });
 
-    if (Number.parseFloat(ownedInvestment.amount) <= amount) {
+    const ownedAmount = Number.parseFloat(ownedInvestment.amount);
+    if (Number.parseFloat(ownedInvestment.amount) <= amount || ownedAmount - amount < 0.00001) {
         await Member.updateOne(
             { id: member.id },
             {
@@ -358,12 +359,10 @@ async function getSell(client: Bot, interaction: ChatInputCommandInteraction, me
             { id: member.id, 'investments.ticker': investment.ticker },
             {
                 $set: {
-                    'investments.$.amount': `${Number.parseFloat(ownedInvestment.amount) - amount}`,
+                    'investments.$.amount': `${ownedAmount - amount}`,
                 },
                 $inc: {
-                    'investments.$.buyPrice': -Math.floor(
-                        (amount / Number.parseFloat(ownedInvestment.amount)) * ownedInvestment.buyPrice,
-                    ),
+                    'investments.$.buyPrice': -Math.floor((amount / ownedAmount) * ownedInvestment.buyPrice),
                     wallet: price,
                 },
             },
