@@ -6,7 +6,6 @@ import products from '@/lib/data/products.json';
 import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { Product } from '@/lib/types';
-import { login } from '@/actions/login';
 import { db } from '@/server/db';
 import Link from 'next/link';
 import CheckoutButton from './checkout-button';
@@ -106,9 +105,9 @@ function SubscriptionCard({
                         <p className="text-red-400 font-medium">You need to have used Coinz before!</p>
                     )
                 ) : (
-                    <Button className="h-auto py-3 px-8" onClick={() => login()}>
-                        Subscribe Now
-                    </Button>
+                    <Link href={`/login?url=${encodeURIComponent(`/premium`)}`}>
+                        <Button className="h-auto py-3 px-8">Subscribe Now</Button>
+                    </Link>
                 )}
             </div>
         </div>
