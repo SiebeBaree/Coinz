@@ -21,4 +21,5 @@ export type Product = {
     features: string[];
     planId: number;
     variantId: number;
+    premium: number;
 };

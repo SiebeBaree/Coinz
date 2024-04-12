@@ -18,9 +18,9 @@ export default async function PremiumPage() {
     let hasAccount = false;
     let alreadySubscribed = false;
     if (session) {
-        const member = await db.member.findFirst({
+        const member = await db.members.findFirst({
             where: {
-                id: session.user.discordId,
+                userId: session.user.discordId,
             },
         });
 

@@ -86,11 +86,10 @@ model Item {
   duration        Int?
 }
 
-model member {
+model members {
   oid           String          @id @default(auto()) @map("_id") @db.ObjectId
-  id            String          @unique
+  userId        String          @unique @map("id")
   premium       Int
-  subscriptions Subscriptions[]
 }
 
 model WebhookEvents {
@@ -104,19 +103,16 @@ model WebhookEvents {
 
 model Subscriptions {
   id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  lemonSqueezyId     String @unique
+  lemonSqueezyId     String   @unique
   orderId            Int
   name               String
   email              String
   status             String
-  statusFormatted    String
-  renewsAt           String
-  endsAt             String
+  statusFormatted    String?
+  renewsAt           String?
+  endsAt             String?
   subscriptionItemId Int
   userId             String
   planId             String
   variantId          String
-
-  user member @relation(fields: [userId], references: [id], onDelete: Cascade)
-
 }

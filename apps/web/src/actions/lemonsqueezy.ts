@@ -8,6 +8,7 @@ import { configureLemonSqueezy } from '@/server/lemonsqueezy';
 import { createCheckout, listWebhooks } from '@lemonsqueezy/lemonsqueezy.js';
 import { WebhookEvents } from '@prisma/client';
 import products from '@/lib/data/products.json';
+import { SubscriptionStatus } from '@/lib/enums';
 
 export async function getCheckoutURL(variantId: number) {
     configureLemonSqueezy();
@@ -30,7 +31,7 @@ export async function getCheckoutURL(variantId: number) {
             name: session.user.name ?? undefined,
             email: session.user.email ?? undefined,
             custom: {
-                user_id: session.user.id,
+                user_id: session.user.discordId,
             },
         },
         productOptions: {
@@ -82,19 +83,28 @@ export async function processWebhookEvent(webhookEvent: WebhookEvents) {
     }
 
     let processingError = '';
-    const eventBody = webhookEvent.body;
+    let eventBody;
 
-    if (!webhookHasMeta(eventBody)) {
+    try {
+        eventBody = JSON.parse(webhookEvent.body);
+    } catch {
+        // If the event body is not valid JSON, set the processing error and update the webhook event in the database.
+    }
+
+    if (!eventBody) {
+        processingError = 'Event body is not valid JSON or is missing';
+    } else if (!webhookHasMeta(eventBody)) {
         processingError = "Event body is missing the 'meta' property.";
     } else if (webhookHasData(eventBody)) {
         if (webhookEvent.eventName.startsWith('subscription_')) {
             const attributes = eventBody.data.attributes;
             const variantId = attributes.variant_id as string;
 
-            const product = products.find((p) => p.variantId.toString() === variantId);
+            const product = products.find((p) => p.variantId.toString() === variantId.toString());
             if (!product) {
-                processingError = `Product with variantId ${variantId} not found.`;
+                processingError += `Product with variantId ${variantId} not found.`;
             } else {
+                const discordId = eventBody.meta.custom_data.user_id;
                 const updateData = {
                     lemonSqueezyId: eventBody.data.id,
                     orderId: attributes.order_id as number,
@@ -117,19 +127,48 @@ export async function processWebhookEvent(webhookEvent: WebhookEvents) {
                         create: updateData,
                         update: updateData,
                     });
+
+                    try {
+                        const status = updateData.status;
+                        if (status === SubscriptionStatus.Active) {
+                            await db.members.upsert({
+                                where: { userId: discordId },
+                                update: {
+                                    premium: product.premium,
+                                },
+                                create: {
+                                    userId: discordId,
+                                    premium: product.premium,
+                                },
+                            });
+                        } else if (status === SubscriptionStatus.Expired) {
+                            await db.members.upsert({
+                                where: { userId: discordId },
+                                update: {
+                                    premium: 0,
+                                },
+                                create: {
+                                    userId: discordId,
+                                    premium: 0,
+                                },
+                            });
+                        }
+                    } catch {
+                        processingError += `Failed to update member with Subscription #${updateData.lemonSqueezyId}.`;
+                    }
                 } catch (error) {
-                    processingError = `Failed to upsert Subscription #${updateData.lemonSqueezyId} to the database.`;
+                    processingError += `Failed to upsert Subscription #${updateData.lemonSqueezyId} to the database.`;
                 }
             }
         }
-
-        // Update the webhook event in the database.
-        await db.webhookEvents.update({
-            where: { id: webhookEvent.id },
-            data: {
-                processed: true,
-                processingError,
-            },
-        });
     }
+
+    // Update the webhook event in the database.
+    await db.webhookEvents.update({
+        where: { id: webhookEvent.id },
+        data: {
+            processed: true,
+            processingError,
+        },
+    });
 }

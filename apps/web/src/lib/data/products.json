@@ -17,7 +17,8 @@
             "Get faster ticket support"
         ],
         "planId": 118335,
-        "variantId": 135876
+        "variantId": 135876,
+        "premium": 1
     },
     {
         "name": "Coinz Pro",
@@ -40,6 +41,7 @@
             "Donate someone up to 🪙 25.000 using /pay"
         ],
         "planId": 118336,
-        "variantId": 135877
+        "variantId": 135877,
+        "premium": 2
     }
 ]
