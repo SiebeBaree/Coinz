@@ -18,56 +18,49 @@ export default {
                 throw new Error(`Command '${interaction.commandName}' not found.`);
             }
 
+            const member = await getMember(interaction.user.id, true);
+            if (member.banned) {
+                await interaction.reply({
+                    content: `You are banned from using this bot. If you think this ban is unjustified, please join our [support server](${client.config.supportServer}) or DM \`siebe_b\` on Discord.`,
+                    ephemeral: true,
+                });
+                return;
+            }
+
             if (process.env.NODE_ENV === 'production') {
                 const cooldown = await client.cooldown.getCooldown(interaction.user.id, command.data.name);
                 if (cooldown) {
+                    let message = `Please wait ${msToTime(
+                        Math.abs(Number.parseInt(cooldown, 10) - Math.floor(Date.now() / 1_000)) * 1_000,
+                    )} before using this command again.`;
+
+                    if (command.data.category === 'games' && member.premium < 2) {
+                        message += `\nYou can reduce this cooldown by becoming a Coinz Pro subscriber. [**Upgrade now**](${client.config.website}/premium)`;
+                    } else if (
+                        (command.data.cooldown === undefined || command.data.cooldown === 0) &&
+                        member.premium === 0
+                    ) {
+                        message += `\nYou can reduce this cooldown to 1 second by becoming a Coinz Plus or Pro subscriber. [**Upgrade now**](${client.config.website}/premium)`;
+                    }
+
                     await interaction.reply({
-                        content: `Please wait ${msToTime(
-                            Math.abs(Number.parseInt(cooldown, 10) - Math.floor(Date.now() / 1_000)) * 1_000,
-                        )} before using this command again.`,
+                        content: message,
                         ephemeral: true,
                     });
                     return;
                 }
             }
 
+            if ((command.data.premium ?? 0) > member.premium) {
+                await interaction.reply({
+                    content: `This command is only for Coinz Plus or Pro subscribers. To gain access to this command, consider [**upgrading**](${client.config.website}/premium).`,
+                    ephemeral: true,
+                });
+                return;
+            }
+
             if (command.data.deferReply === true) {
                 await interaction.deferReply();
-            }
-
-            const member = await getMember(interaction.user.id, true);
-            if (member.banned) {
-                const banText = `You are banned from using this bot. If you think this ban is unjustified, please join our [discord server](${client.config.supportServer}).`;
-
-                if (command.data.deferReply === true) {
-                    await interaction.editReply({
-                        content: banText,
-                    });
-                } else {
-                    await interaction.reply({
-                        content: banText,
-                        ephemeral: true,
-                    });
-                }
-
-                return;
-            }
-
-            if ((command.data.premium ?? 0) > member.premium) {
-                const premiumText = `This command is only for Coinz Plus or Pro subscribers. To gain access to this command, please visit the [**webshop**](${client.config.website}/premium).`;
-
-                if (command.data.deferReply === true) {
-                    await interaction.editReply({
-                        content: premiumText,
-                    });
-                } else {
-                    await interaction.reply({
-                        content: premiumText,
-                        ephemeral: true,
-                    });
-                }
-
-                return;
             }
 
             if (process.env.NODE_ENV === 'production') {

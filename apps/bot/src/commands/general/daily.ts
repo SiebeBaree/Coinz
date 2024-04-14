@@ -48,9 +48,10 @@ function getEmbed(
     xp: number,
     streakReward: number,
     settings: Settings,
+    premium: number,
     msg = '',
 ): EmbedBuilder {
-    return new EmbedBuilder()
+    const embed = new EmbedBuilder()
         .setColor(client.config.embed.color as ColorResolvable)
         .setDescription(
             `:moneybag: **You claimed your daily reward!**${member.premium >= 2 ? '\n:four_leaf_clover: **You also gained an extra lucky wheel spin!**' : ''}${msg}\n\n**Daily Reward:** :coin: ${settings.defaultReward}\n**Daily Streak:** :coin: ${
@@ -59,6 +60,19 @@ function getEmbed(
                 member.streak + 1 === 1 ? 'day' : 'days'
             }\` streak\n**Total:** :coin: ${streakReward}\n**Gained XP:** \`${xp} XP\``,
         );
+
+    if (premium === 0) {
+        const premiumReward = calculateReward(parameters.premium, member.streak);
+        embed.addFields([
+            {
+                name: 'Upgrade to Coinz Plus or Pro',
+                value: `:star: **Coinz Plus rewards:** :coin: ${premiumReward}\n:crown: **Coinz Pro rewards:** :coin: ${premiumReward}, ${xp * 2} XP, and an extra lucky wheel spin!\n:money_with_wings: Consider [**upgrading**](${client.config.website}/premium) to get more rewards!`,
+                inline: false,
+            },
+        ]);
+    }
+
+    return embed;
 }
 
 export default {
@@ -98,7 +112,7 @@ export default {
         const xp = member.streak > 50 ? 25 : Math.floor(member.streak / 2);
 
         await interaction.reply({
-            embeds: [getEmbed(client, member, xp, streakReward, settings, msg)],
+            embeds: [getEmbed(client, member, xp, streakReward, settings, member.premium, msg)],
             components: [getVotingRow()],
         });
 

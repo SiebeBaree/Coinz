@@ -1,3 +1,4 @@
+import config from '../data/config.json';
 import type { IMember } from '../models/member';
 import Member from '../models/member';
 import UserStats from '../models/userStats';
@@ -36,6 +37,7 @@ export async function removeBetMoney(
     removeMoneyFromPlayer = true,
     minBet = 50,
     maxBet = 5_000,
+    premium = 0,
 ): Promise<number | string> {
     let bet = 0;
     if (['all', 'max'].includes(formattedBet.toLowerCase())) {
@@ -46,6 +48,8 @@ export async function removeBetMoney(
 
         if (Number.isNaN(bet)) return "That's not a valid number.";
         if (bet < minBet) return `You need to bet at least :coin: ${formatNumber(minBet)}.`;
+        if (bet > maxBet && premium === 0)
+            return `You can't bet more than :coin: ${formatNumber(maxBet)}. You can increase your max bet by becoming a Coinz Plus or Pro subscriber. [**Upgrade now**](${config.website}/premium)`;
         if (bet > maxBet) return `You can't bet more than :coin: ${formatNumber(maxBet)}.`;
         if (bet > member.wallet) return "You don't have that much money in your wallet.";
     }

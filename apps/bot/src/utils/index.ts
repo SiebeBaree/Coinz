@@ -238,7 +238,7 @@ export async function getBet(
 
         bet = Math.min(member.wallet, maxBet);
     } else {
-        const newBet = await removeBetMoney(betStr, member, true, minBet, maxBet);
+        const newBet = await removeBetMoney(betStr, member, true, minBet, maxBet, member.premium);
 
         if (typeof newBet === 'string') {
             await client.cooldown.deleteCooldown(interaction.user.id, interaction.commandName);

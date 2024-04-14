@@ -40,7 +40,7 @@ export default {
                 name: 'Limits',
                 value:
                     `You can donate up to :coin: ${START_LIMIT}. This limit will increase by :coin: 1000 every 3 levels and will be capped at a maximum of :coin: ${MAX_LIMIT}.\n` +
-                    `**Coinz Pro** users always have a maximum limit of :coin: ${PREMIUM_LIMIT}.`,
+                    `**Coinz Pro** users always have a maximum limit of :coin: ${PREMIUM_LIMIT}, [**upgrade to Coinz Pro**](https://coinzbot.xyz/premium).`,
                 inline: false,
             },
         ],
@@ -80,8 +80,14 @@ export default {
             return;
         } else if (amount > limit) {
             await client.cooldown.deleteCooldown(interaction.user.id, this.data.name);
+
+            let message = `:x: You can't donate more than :coin: ${limit} at your current level.`;
+            if (member.premium < 2 && amount < PREMIUM_LIMIT) {
+                message += ` You can increase your limit to :coin: 25.000 by becoming a Coinz Pro subscriber. [**Upgrade now**](${client.config.website}/premium).`;
+            }
+
             await interaction.reply({
-                content: `:x: You can't donate more than :coin: ${limit} at your current level.`,
+                content: message,
                 ephemeral: true,
             });
             return;

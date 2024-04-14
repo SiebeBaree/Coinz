@@ -54,8 +54,13 @@ async function hire(client: Bot, interaction: ChatInputCommandInteraction, membe
         });
         return;
     } else if (data.business.employees.length >= MAX_EMPLOYEES) {
+        let message = `You can only have ${MAX_EMPLOYEES} employees at a time. You need to fire someone before hiring a new employee.`;
+        if (member.premium < 2) {
+            message += ` If you need to hire more employees, consider upgrading to [**Coinz Pro**](<${client.config.website}/premium>).`;
+        }
+
         await interaction.reply({
-            content: `You can only have ${MAX_EMPLOYEES} employees at a time. You need to fire someone before hiring a new employee.`,
+            content: message,
             ephemeral: true,
         });
         return;

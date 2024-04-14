@@ -182,6 +182,7 @@ function createEmbedFieldRow(emote: string): string {
 
 async function getEmbed(client: Bot, user: User, member: IMember): Promise<EmbedBuilder> {
     const now = Math.floor(Date.now() / 1_000);
+    const maxPlots = member.premium === 2 ? 15 : member.premium === 1 ? 12 : 9;
 
     let description = ':seedling: **Use `/farm plant` to plant crops.**';
     description +=
@@ -190,10 +191,16 @@ async function getEmbed(client: Bot, user: User, member: IMember): Promise<Embed
             : '\n:droplet: **You can water your plots.**';
     description +=
         '\n:wilted_rose: **You can clear rotten crops by pressing the `Harvest` button.**\n:basket: **All harvested crops are found in your inventory.**';
-    description +=
-        member.plots.length < 15
-            ? `\n:moneybag: **You can buy a new plot for :coin: ${getPlotPrice(member.plots.length)}.**`
-            : '';
+
+    if (member.plots.length < maxPlots) {
+        description += `\n:moneybag: **You can buy a new plot for :coin: ${getPlotPrice(member.plots.length)}.**`;
+    } else if (member.plots.length >= maxPlots && member.plots.length < 15 && member.premium < 2) {
+        if (member.premium === 1) {
+            description += `\n:star: **Upgrade to [Coinz Pro](${client.config.website}/premium) to buy up to 15 plots.**`;
+        } else {
+            description += `\n:star: **Consider [upgrading to Coinz Plus or Pro](${client.config.website}/premium) to unlock up to 15 plots.**`;
+        }
+    }
 
     const embed = new EmbedBuilder()
         .setTitle(`${user.username}'s Farm`)
