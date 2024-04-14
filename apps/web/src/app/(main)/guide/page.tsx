@@ -40,7 +40,7 @@ export default function Guide() {
 
 function GuideCard({ title, description, href }: { title: string; description: string; href?: string }) {
     return (
-        <Card className="group ">
+        <Card className="border border-card hover:border-highlight transition-all duration-150 ease-in-out">
             <CardContent className="flex flex-col h-full">
                 <div>
                     <h2 className="text-lg font-semibold">{title}</h2>
@@ -49,8 +49,8 @@ function GuideCard({ title, description, href }: { title: string; description: s
                 <Link
                     href={'/guide/' + href ?? ''}
                     className={cn(
-                        'flex items-center text-sm  ml-auto mt-auto border-b border-transparent group:hover:border-primary transition-all duration-100 ease-in-out pt-2',
-                        href ? 'text-primary' : 'text-muted pointer-events-none',
+                        'flex items-center text-sm  ml-auto mt-auto border-b border-transparent transition-all duration-100 ease-in-out pt-2',
+                        href ? 'text-primary hover:border-primary' : 'text-muted pointer-events-none',
                     )}
                 >
                     {href ? 'Read more' : 'Coming Soon'}
