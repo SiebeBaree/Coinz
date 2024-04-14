@@ -24,8 +24,20 @@
 }
 
 #guide em {
-    background-color: var(--color-background-soft);
+    background-color: hsl(var(--secondary));
     padding: 4px 8px;
     font-weight: 500;
     border-radius: 4px;
+    font-style: normal;
+}
+
+#guide a {
+    color: hsl(var(--primary));
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.1s ease-in-out;
+}
+
+#guide a:hover {
+    decoration: underline;
 }

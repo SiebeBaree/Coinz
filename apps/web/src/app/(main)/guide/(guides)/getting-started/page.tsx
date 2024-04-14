@@ -77,11 +77,7 @@ export default function GettingStartedGuide() {
                 </li>
                 <li>
                     Go to the{' '}
-                    <Link
-                        href={'/invite'}
-                        target="_blank"
-                        className="text-primary hover:underline font-bold transition-all duration-100 ease-in-out"
-                    >
+                    <Link href={'/invite'} target="_blank">
                         invite link
                     </Link>{' '}
                     or use the <code>/invite</code> command in a server where Coinz is already added.
@@ -160,19 +156,11 @@ export default function GettingStartedGuide() {
                 <li>
                     <strong>Voting</strong> - The easiest and fastest way to earn money is by voting. You can vote for
                     Coinz on{' '}
-                    <Link
-                        href="https://top.gg/bot/938771676433362955/vote"
-                        target="_blank"
-                        className="text-primary hover:underline font-bold transition-all duration-100 ease-in-out"
-                    >
+                    <Link href="https://top.gg/bot/938771676433362955/vote" target="_blank">
                         top.gg
                     </Link>{' '}
                     and{' '}
-                    <Link
-                        href="https://discordbotlist.com/bots/coinz/upvote"
-                        target="_blank"
-                        className="text-primary hover:underline font-bold transition-all duration-100 ease-in-out"
-                    >
+                    <Link href="https://discordbotlist.com/bots/coinz/upvote" target="_blank">
                         discordbotlist.com
                     </Link>
                     . You can vote every 12 hours and you will receive a lucky wheel spin for every vote. You can win
@@ -198,18 +186,8 @@ export default function GettingStartedGuide() {
             <h2>Asking for Help</h2>
             <p>
                 If this guide didn&apos;t answer your question, please check the other{' '}
-                <Link
-                    href={'/guide'}
-                    className="text-primary hover:underline font-bold transition-all duration-100 ease-in-out"
-                >
-                    guides
-                </Link>{' '}
-                or join the{' '}
-                <Link
-                    href={'https://discord.gg/4xqpqSQ9d5'}
-                    target="_blank"
-                    className="text-primary hover:underline font-bold transition-all duration-100 ease-in-out"
-                >
+                <Link href={'/guide'}>guides</Link> or join the{' '}
+                <Link href={'https://discord.gg/4xqpqSQ9d5'} target="_blank">
                     support server
                 </Link>{' '}
                 and ask your question there.
