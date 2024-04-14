@@ -41,9 +41,9 @@ export default {
                 ],
             },
             {
-                name: 'pay',
+                name: 'payout',
                 type: ApplicationCommandOptionType.Subcommand,
-                description: 'Pay you and your employees an equal amount of money.',
+                description: 'Payout you and your employees an equal amount of money.',
                 options: [
                     {
                         name: 'amount',
@@ -151,7 +151,7 @@ export default {
         usage: [
             'info [name]',
             'invest <amount>',
-            'pay <amount>',
+            'payout <amount>',
             'supply <item> [amount]',
             'employee hire <user>',
             'employee fire <user | employee-id | username>',
