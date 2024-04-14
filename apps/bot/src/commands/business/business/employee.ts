@@ -12,7 +12,7 @@ import { generateRandomString, msToTime } from '../../../utils';
 const COMMAND_NAME = 'business.employee.fire';
 const COOLDOWN_TIME = 60 * 60 * 6; // 6 hours
 
-function getConfirmHireActionRow(disabled = true): ActionRowBuilder<ButtonBuilder> {
+function getConfirmHireActionRow(disabled = false): ActionRowBuilder<ButtonBuilder> {
     return new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
             .setCustomId('business.employee.hire.accept')
@@ -96,13 +96,15 @@ async function hire(client: Bot, interaction: ChatInputCommandInteraction, membe
 
     collector.on('collect', async (i) => {
         if (finishedCommand) return;
+
+        await i.deferUpdate();
         if (i.customId === 'business.employee.hire.accept') {
             finishedCommand = true;
             const embed = new EmbedBuilder()
                 .setTitle(`${user.username} joined ${data.business.name}`)
                 .setDescription(`${user} has signed a contract with ${data.business.name} as an employee.`)
                 .setColor(Colors.Green);
-            await i.update({ content: '', embeds: [embed], components: [getConfirmHireActionRow(true)] });
+            await interaction.editReply({ content: '', embeds: [embed], components: [getConfirmHireActionRow(true)] });
             collector.stop();
 
             let employeeId: string;
@@ -117,7 +119,7 @@ async function hire(client: Bot, interaction: ChatInputCommandInteraction, membe
         } else if (i.customId === 'business.employee.hire.decline') {
             finishedCommand = true;
             const embed = new EmbedBuilder().setTitle(`${user.username} declined the job offer`).setColor(Colors.Red);
-            await i.update({ content: '', embeds: [embed], components: [getConfirmHireActionRow(true)] });
+            await interaction.editReply({ content: '', embeds: [embed], components: [getConfirmHireActionRow(true)] });
             collector.stop();
         }
     });
