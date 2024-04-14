@@ -30,7 +30,7 @@
         "fuse.js": "^7.0.0",
         "html-react-parser": "^5.1.10",
         "lucide-react": "^0.367.0",
-        "next": "^14.2.0",
+        "next": "^14.2.1",
         "next-auth": "^5.0.0-beta.16",
         "next-plausible": "^3.12.0",
         "react": "18.2.0",
