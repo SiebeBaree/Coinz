@@ -76,5 +76,9 @@ export default async function pay(client: Bot, interaction: ChatInputCommandInte
             { $inc: { totalEarned: moneyPerEmployee } },
             { upsert: true },
         );
+        await Business.updateOne(
+            { name: data.business.name, 'employees.userId': employee.userId },
+            { $inc: { 'employees.$.moneyEarned': moneyPerEmployee } },
+        );
     }
 }
