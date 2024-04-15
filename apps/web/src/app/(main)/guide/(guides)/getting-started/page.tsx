@@ -218,10 +218,10 @@ function DiscordServerCard({
             >
                 <Avatar>
                     <AvatarImage src={image} />
-                    <AvatarFallback className="bg-background">{name[0]?.toUpperCase()}</AvatarFallback>
+                    <AvatarFallback className="bg-background text-foreground">{name[0]?.toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div>
-                    <h6>{name}</h6>
+                    <h6 className="text-foreground">{name}</h6>
                     <h6 className="text-sm text-muted">{description}</h6>
                 </div>
             </Link>

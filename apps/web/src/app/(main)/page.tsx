@@ -29,27 +29,28 @@ export default async function Home() {
                     minHeight: 'calc(100vh - 60px)',
                 }}
             >
-                <div className="container mx-auto px-5 flex flex-col-reverse md:flex-row justify-between items-center flex-grow">
+                <div className="container mx-auto px-5 flex flex-col-reverse md:flex-row justify-center md:justify-between items-center flex-grow gap-12 sm:gap-20 md:gap-0">
                     <div>
-                        <h2
-                            className="text-7xl sm:text-9xl md:text-8xl lg:text-9xl xl:text-[180px] font-bold absolute -top-[40%] sm:-top-[60%] md:-top-[20%] xl:-top-[30%] left-1/2 -translate-x-1/2 md:translate-x-0 md:-left-[5%] xl:-left-[15%] select-none"
-                            style={{
-                                fontFamily: 'Ginto Nord, Inter, Poppins, Roboto, sans-serif',
-                                color: 'var(--color-watermark)',
-                            }}
-                        >
-                            Coinz
-                        </h2>
-                        <h1 className="text-center md:text-left text-3xl sm:text-5xl lg:text-6xl font-bold">
-                            The Ultimate Economy Discord Bot
-                        </h1>
+                        <div className="relative">
+                            <h2
+                                className="text-7xl sm:text-9xl md:text-8xl lg:text-9xl xl:text-[180px] font-bold absolute select-none text-foreground/5 -top-8 sm:-top-16 left-1/2 -translate-x-1/2 md:translate-x-0 md:-top-12 lg:-top-16 md:-left-16 xl:-top-20 xl:-left-28 z-0"
+                                style={{
+                                    fontFamily: 'Ginto Nord, Inter, Poppins, Roboto, sans-serif',
+                                }}
+                            >
+                                Coinz
+                            </h2>
+                            <h1 className="text-center md:text-left text-3xl sm:text-5xl lg:text-6xl font-bold">
+                                The Ultimate Economy Discord Bot
+                            </h1>
+                        </div>
                         <p className="text-center md:text-left sm:text-lg md:text-base mt-3 text-muted">
                             Join over {users.value}
                             {users.suffix}+ users and compete to be the wealthiest person on Coinz with our entertaining
                             commands. You can buy stocks, start your own business, play fun minigames and much more!
                         </p>
 
-                        <div className="flex flex-col sm:flex-row justify-center md:justify-start items-center gap-2 my-6">
+                        <div className="flex flex-col sm:flex-row justify-center md:justify-start items-center gap-4 md:gap-2 my-6">
                             <Link
                                 href={'/invite'}
                                 target="_blank"
