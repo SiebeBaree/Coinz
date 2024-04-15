@@ -92,38 +92,49 @@ export default async function Home() {
                 </div>
             </div>
 
-            <div className="container mx-auto px-5 my-24">
-                <div className="flex flex-col gap-64">
-                    <FeatureCard
-                        imagePath="/investing.webp"
-                        Icon={InvestingIcon}
-                        title="Buy, hold and sell stocks"
-                        description="Enhance your knowledge of the stock and crypto market by buying, holding and selling stocks and crypto within Coinz. All prices are updated regularly. Coinz currently has 30 stocks and 40 crypto currencies."
-                    />
-                    <FeatureCard
-                        imagePath="/business.webp"
-                        Icon={BusinessIcon}
-                        title="Start your own business"
-                        description="Create your own business, buy factories and produce items that you can sell for a big profit. Repeat this step over and over and become richer than Elon Musk! Did I mention that you can employ real users?!"
-                        imageRight={true}
-                        lineToLeft={true}
-                    />
-                    <FeatureCard
-                        imagePath="/games.webp"
-                        Icon={GamesIcon}
-                        title="Play more than 15 games"
-                        description="Play all sorts of minigames inside of discord! You will never get bored when playing these minigames. We plan to release a lot more minigames in the future. Some examples are: Blackjack, Poker, Roulette, Crash, ..."
-                        lineToLeft={false}
-                    />
-                    <FeatureCard
-                        imagePath="/farming.webp"
-                        Icon={FarmingIcon}
-                        title="Grow your own crops"
-                        description="Buy farmland to grow crops on and live a peaceful live. Buy up to 9 plots to grow crops on. With premium you can buy up to 15 plots! Each crop has a different grow time, don't let your crops grow rotten!"
-                        imageRight={true}
-                        lineToLeft={true}
-                    />
-                </div>
+            <div className="container mx-auto px-5 my-24 flex flex-col gap-64">
+                <FeatureCard
+                    imagePath="/investing.webp"
+                    Icon={InvestingIcon}
+                    title="Buy, hold and sell stocks"
+                    description="Enhance your knowledge of the stock and crypto market by buying, holding and selling stocks and crypto within Coinz. All prices are updated regularly. Coinz currently has 30 stocks and 40 crypto currencies."
+                />
+                <FeatureCard
+                    imagePath="/business.webp"
+                    Icon={BusinessIcon}
+                    title="Start your own business"
+                    description="Create your own business, buy factories and produce items that you can sell for a big profit. Repeat this step over and over and become richer than Elon Musk! Did I mention that you can employ real users?!"
+                    imageRight={true}
+                    lineToLeft={true}
+                />
+                <FeatureCard
+                    imagePath="/games.webp"
+                    Icon={GamesIcon}
+                    title="Play more than 15 games"
+                    description="Play all sorts of minigames inside of discord! You will never get bored when playing these minigames. We plan to release a lot more minigames in the future. Some examples are: Blackjack, Poker, Roulette, Crash, ..."
+                    lineToLeft={false}
+                />
+                <FeatureCard
+                    imagePath="/farming.webp"
+                    Icon={FarmingIcon}
+                    title="Grow your own crops"
+                    description="Buy farmland to grow crops on and live a peaceful live. Buy up to 9 plots to grow crops on. With premium you can buy up to 15 plots! Each crop has a different grow time, don't let your crops grow rotten!"
+                    imageRight={true}
+                    lineToLeft={true}
+                />
+            </div>
+
+            <div className="container bg-secondary rounded-md h-72 flex flex-col justify-center items-center p-6 gap-4">
+                <p className="text-3xl text-center font-semibold">Engage your community today with Coinz!</p>
+                <Link
+                    href={'/invite'}
+                    target="_blank"
+                    className="px-3 lg:px-4 py-1 lg:py-2 lg:text-lg font-semibold rounded-md bg-primary text-primary-foreground relative z-10 mr-3 flex gap-2 items-center"
+                >
+                    <DiscordIcon className="text-primary-foreground h-4 w-4 lg:h-6 lg:w-6" />
+                    Add to Discord
+                    <div className="w-full h-full absolute border-[3px] border-primary rounded-md transition-all duration-150 ease-in-out top-2 left-2 hover:top-0 hover:left-0" />
+                </Link>
             </div>
         </main>
     );
