@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         'investments',
         'changelog',
         'guide',
+        'roadmap',
     ];
 
     const routes: MetadataRoute.Sitemap = [];
