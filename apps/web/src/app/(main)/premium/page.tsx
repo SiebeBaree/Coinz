@@ -51,6 +51,13 @@ export default async function PremiumPage() {
                     />
                 ))}
             </div>
+
+            <div className="flex flex-col justify-center items-center gap-3 p-4 rounded-md bg-secondary h-56">
+                <p className="text-2xl font-semibold">Want to support Coinz even more? Consider donating!</p>
+                <Link href="/donate">
+                    <Button className="px-12">Donate</Button>
+                </Link>
+            </div>
         </main>
     );
 }
