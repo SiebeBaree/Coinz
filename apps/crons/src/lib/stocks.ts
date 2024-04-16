@@ -51,3 +51,17 @@ export function getExpireTime(): Date {
 
     return newYorkTime.toDate();
 }
+
+export function getChunks<T>(arr: T[], size: number): T[][] {
+    const chunks: T[][] = [];
+    for (let i = 0; i < arr.length; i += size) {
+        chunks.push(arr.slice(i, i + size));
+    }
+
+    return chunks;
+}
+
+export function calculatePercentageChange(current: number, previous: number): number {
+    const change = ((current - previous) / previous) * 100;
+    return Number.parseFloat(change.toFixed(2));
+}

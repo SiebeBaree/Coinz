@@ -5,18 +5,10 @@ import botListings from '../data/bot-listings.json';
 import investments from '../data/investments.json';
 import ApiController from '../lib/bot-listings';
 import crypto from '../lib/crypto';
-import { getExpireTime, isMarketOpen } from '../lib/stocks';
+import { calculatePercentageChange, getChunks, getExpireTime, isMarketOpen } from '../lib/stocks';
 import type { BotListing } from '../lib/types';
 import BotStats from '../models/BotStats';
 import Investment from '../models/Investment';
-
-type InvestmentResponse = {
-    ticker: string;
-    name: string;
-    price: string;
-    changed: string;
-    expires: Date;
-};
 
 // Run every 10 minutes from Monday to Friday
 schedule(
@@ -24,70 +16,45 @@ schedule(
     async () => {
         if (!isMarketOpen()) return;
 
-        const stockPromises: Promise<InvestmentResponse | null>[] = [];
         try {
-            for (const stock of investments.stocks) {
-                const stockPromise = axios
-                    .get(`https://realstonks.p.rapidapi.com/${stock.ticker.toUpperCase()}`, {
+            const chunks = getChunks(investments.stocks, 10);
+            for (const chunk of chunks) {
+                const tickers = chunk.map((stock) => stock.ticker.toUpperCase()).join(',');
+
+                const response = await axios.get(
+                    `https://yfapi.net/v8/finance/spark?interval=1h&range=1d&symbols=${tickers}`,
+                    {
                         headers: {
-                            'X-RapidAPI-Key': process.env.STOCKS_API_KEY!,
-                            'X-RapidAPI-Host': 'realstonks.p.rapidapi.com',
+                            Accept: 'application/json',
+                            'X-API-Key': process.env.STOCKS_API_KEY!,
                         },
-                    })
-                    .then((response) => {
-                        if (response.status !== 200) return null;
+                    },
+                );
 
-                        return {
-                            ticker: stock.ticker,
-                            name: stock.name,
-                            price: response.data.price.toString(),
-                            changed: response.data.change_percentage.toString(),
-                            expires: getExpireTime(),
-                        } as InvestmentResponse;
-                    })
-                    .catch(() => null);
+                if (response.status !== 200) continue;
 
-                stockPromises.push(stockPromise);
-            }
-
-            if (stockPromises.length === 0) return;
-            const stockData = new Map<string, InvestmentResponse>();
-            const responses = await Promise.all(stockPromises);
-
-            for (const response of responses) {
-                if (response === null) continue;
-                stockData.set(response.ticker, response);
-            }
-
-            for (const [ticker, data] of stockData) {
-                let investment = await Investment.findOne({ ticker });
-                if (investment === null) {
-                    investment = new Investment({
-                        ticker: ticker.toUpperCase(),
-                        type: 'Stock',
-                        fullName: data.name,
-                        price: data.price,
-                        changed: data.changed,
-                        expires: data.expires,
-                    });
-                } else {
-                    if (investment.fullName !== data.name) {
-                        investment.fullName = data.name;
-                    }
-
-                    investment.price = data.price;
-                    investment.changed = data.changed;
-                    investment.expires = data.expires;
+                const stocks = Object.keys(response.data);
+                for (const ticker of stocks) {
+                    const stock = response.data[ticker];
+                    const close = stock.close[stock.close.length - 1];
+                    await Investment.updateOne(
+                        { ticker: stock.symbol },
+                        {
+                            $set: {
+                                price: close.toString(),
+                                changed: calculatePercentageChange(close, stock.previousClose).toString(),
+                                expires: getExpireTime(),
+                            },
+                        },
+                    );
                 }
-
-                await investment.save();
             }
         } catch (error) {
             console.error(error);
         }
     },
     {
-        scheduled: false,
+        scheduled: true,
         timezone: 'America/New_York',
     },
 );
@@ -134,7 +101,7 @@ schedule(
         }
     },
     {
-        scheduled: false,
+        scheduled: true,
         timezone: 'America/New_York',
     },
 );
