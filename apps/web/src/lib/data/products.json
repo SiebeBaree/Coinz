@@ -16,8 +16,8 @@
             "Change your profile color",
             "Get faster ticket support"
         ],
-        "planId": 118335,
-        "variantId": 135876,
+        "planId": 247785,
+        "variantId": 342284,
         "premium": 1
     },
     {
@@ -40,8 +40,8 @@
             "Hire a 6th employee for your business",
             "Donate someone up to 🪙 25.000 using /pay"
         ],
-        "planId": 118336,
-        "variantId": 135877,
+        "planId": 247787,
+        "variantId": 342288,
         "premium": 2
     }
 ]
