@@ -25,7 +25,8 @@ export async function getCheckoutURL(variantId: number) {
         checkoutOptions: {
             embed: false,
             media: false,
-            logo: false,
+            logo: true,
+            discount: true,
         },
         checkoutData: {
             name: session.user.name ?? undefined,
