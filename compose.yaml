@@ -8,6 +8,14 @@ services:
             - redis-network
         ports:
             - '6379:6379'
+    rabbitmq:
+        image: rabbitmq:management-alpine
+        restart: always
+        networks:
+            - queue-network
+        ports:
+            - '5672:5672'
+            - '15672:15672'
     bot:
         build:
             context: .
@@ -31,3 +39,6 @@ services:
         restart: always
 networks:
     redis-network:
+        driver: bridge
+    queue-network:
+        driver: bridge
