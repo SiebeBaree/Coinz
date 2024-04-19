@@ -13,13 +13,26 @@ app.post('/topgg', async (c) => {
     }
 
     const body: TopGGWebhook = await c.req.json();
+    if (body.type !== 'upvote') {
+        return c.json({ error: 'Invalid vote type' }, 400);
+    }
+
     const voteResponse = await processVote(body.user, Website.TopGG);
 
     try {
         if (voteResponse.sendMessage) {
-            send(`${body.user} voted on ${Website.TopGG}. Type: ${body.type}`);
+            send(
+                JSON.stringify({
+                    userId: body.user,
+                    website: Website.TopGG,
+                    votes: voteResponse.totalVotes,
+                    spins: voteResponse.totalSpins,
+                }),
+            );
         }
-    } catch {}
+    } catch {
+        console.log(`Failed to send vote message for ${body.user} on ${Website.TopGG}`);
+    }
 
     return c.json({ success: true }, 200);
 });
@@ -35,9 +48,18 @@ app.post('/dbl', async (c) => {
 
     try {
         if (voteResponse.sendMessage) {
-            send(`${body.id} voted on ${Website.DiscordBotList}. Admin: ${body.admin}`);
+            send(
+                JSON.stringify({
+                    userId: body.id,
+                    website: Website.DiscordBotList,
+                    votes: voteResponse.totalVotes,
+                    spins: voteResponse.totalSpins,
+                }),
+            );
         }
-    } catch {}
+    } catch {
+        console.log(`Failed to send vote message for ${body.id} on ${Website.DiscordBotList}`);
+    }
 
     return c.json({ success: true }, 200);
 });

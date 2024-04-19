@@ -4,9 +4,10 @@ import Member from '../schemas/member';
 type VoteResponse = {
     success: boolean;
     website: Website;
-    totalVotes: number;
+    totalVotes?: number;
+    totalSpins?: number;
     nextReminder?: number;
-    sendMessage: boolean;
+    sendMessage?: boolean;
 };
 
 export async function processVote(userId: string, website: Website): Promise<VoteResponse> {
@@ -15,8 +16,6 @@ export async function processVote(userId: string, website: Website): Promise<Vot
         return {
             success: false,
             website,
-            totalVotes: 0,
-            sendMessage: false,
         };
     }
 
@@ -25,6 +24,7 @@ export async function processVote(userId: string, website: Website): Promise<Vot
         success: true,
         website,
         totalVotes: member.votes + 1,
+        totalSpins: member.spins + (member.premium === 2 ? 2 : 1),
         sendMessage: member.notifications.includes('vote'),
     };
 }
