@@ -9,13 +9,12 @@ services:
         ports:
             - '6379:6379'
     rabbitmq:
-        image: rabbitmq:management-alpine
+        image: rabbitmq:alpine
         restart: always
         networks:
             - queue-network
         ports:
             - '5672:5672'
-            - '15672:15672'
     bot:
         build:
             context: .
@@ -27,6 +26,7 @@ services:
             REDIS_URI: redis://cooldowns_db:6379
         networks:
             - redis-network
+            - queue-network
     support:
         build:
             context: .
@@ -37,6 +37,15 @@ services:
             context: .
             dockerfile: ./docker/Crons.Dockerfile
         restart: always
+    api:
+        build:
+            context: .
+            dockerfile: ./docker/Api.Dockerfile
+        restart: always
+        ports:
+            - '4101:3000'
+        networks:
+            - queue-network
 networks:
     redis-network:
         driver: bridge
