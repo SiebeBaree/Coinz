@@ -15,7 +15,7 @@ export default middleware((req) => {
         const callbackUrl = req.nextUrl.pathname;
 
         const encodedCallbackUrl = encodeURIComponent(callbackUrl);
-        return Response.redirect(new URL(`/login?callbackUrl=${encodedCallbackUrl}`, req.nextUrl), 302);
+        return Response.redirect(`/login?callbackUrl=${encodedCallbackUrl}`, 302);
     }
 });
 
