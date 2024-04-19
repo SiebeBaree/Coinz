@@ -8,5 +8,5 @@ app.route('/api', router);
 
 export default {
     fetch: app.fetch,
-    port: process.env.PORT || 3001,
+    port: process.env.PORT || 3000,
 };

@@ -22,6 +22,7 @@ services:
         restart: always
         depends_on:
             - cooldowns_db
+            - rabbitmq
         environment:
             REDIS_URI: redis://cooldowns_db:6379
         networks:
@@ -46,6 +47,8 @@ services:
             - '4101:3000'
         networks:
             - queue-network
+        depends_on:
+            - rabbitmq
 networks:
     redis-network:
         driver: bridge
