@@ -3,8 +3,6 @@ import ChangelogSection from '@/app/(main)/changelog/ChangelogSection';
 import { Changelog } from '@/lib/types';
 import PageTitle from '@/components/page-title';
 
-export const dynamic = 'force-static';
-
 export default function ChangelogPage() {
     changelog.sort((a: Changelog, b: Changelog) => b.timestamp - a.timestamp);
 

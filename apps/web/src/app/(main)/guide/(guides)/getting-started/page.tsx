@@ -3,8 +3,6 @@ import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Image from 'next/image';
 
-export const dynamic = 'force-static';
-
 export default function GettingStartedGuide() {
     return (
         <>

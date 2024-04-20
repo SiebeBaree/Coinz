@@ -1,8 +1,6 @@
 import PageTitle from '@/components/page-title';
 import { BotIcon, GlobeIcon, LucideIcon, TriangleAlertIcon } from 'lucide-react';
 
-export const dynamic = 'force-static';
-
 type Roadmap = {
     version: string;
     plannedRelease?: string;
