@@ -31,6 +31,7 @@ export default function Footer() {
                         <h1 className="font-semibold uppercase text-muted text-lg text-center">VOTE FOR US</h1>
 
                         <div className="flex flex-col gap-1 text-center">
+                            <Link href={'/vote'}>Vote</Link>
                             <Link href={'https://top.gg/bot/938771676433362955'} target="_blank">
                                 Top.gg
                             </Link>
