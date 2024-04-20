@@ -22,6 +22,7 @@
             "- Added random events in `/tree` that can change the outcome of your tree. These events can be good or bad.",
             "- Moved the `/help guide` to the new [**guide page**](https://coinzbot.xyz/guide) on the website.",
             "- You can now use *Knife* and *Bow* in `/hunt`",
+            "- Added voting back in Coinz, vote for Coinz [**here**](https://coinzbot.xyz/vote).",
             "#### Changed",
             "- Merged `/tree cut` and `/tree view` into `/tree`.",
             "- Merged `/ping` into `/info`.",

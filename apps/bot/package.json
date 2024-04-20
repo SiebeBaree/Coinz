@@ -39,6 +39,7 @@
     ],
     "prettier": "@repo/config/prettier/base.js",
     "dependencies": {
+        "amqplib": "^0.10.4",
         "bufferutil": "^4.0.8",
         "discord-hybrid-sharding": "^2.1.9",
         "discord.js": "^14.14.1",
