@@ -6,6 +6,8 @@ import guides from '@/lib/data/guides.json';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
+export const dynamic = 'force-static';
+
 export default function Guide() {
     return (
         <main className="container mx-auto px-5">

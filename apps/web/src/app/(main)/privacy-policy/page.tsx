@@ -1,6 +1,8 @@
 import PageTitle from '@/components/page-title';
 import SectionWrapper from '@/components/section-wrapper';
 
+export const dynamic = 'force-static';
+
 export default function PrivacyPolicyPage() {
     return (
         <SectionWrapper>
