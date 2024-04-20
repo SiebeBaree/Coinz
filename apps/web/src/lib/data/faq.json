@@ -1,0 +1,50 @@
+[
+    {
+        "title": "How do I get started using Coinz?",
+        "description": "To get started using Coinz, you need to [invite](https://discord.com/oauth2/authorize?client_id=938771676433362955&permissions=313344&scope=bot%20applications.commands) the bot to your Discord server. Once you've done this, you can use the `/help categories` command to see a list of all available commands. This will give you an idea of what Coinz can do and how it can benefit your server. Additionally, you can use `/help guide` to learn more about Coinz and how to use it. The guide provides detailed information on each feature of the bot."
+    },
+    {
+        "title": "How do I invest in stocks and crypto?",
+        "description": "To invest in stocks and crypto, use the `/invest` command in Coinz. You can get information about a specific investment using `/invest info <ticker>` and get a list of all available investments with `/invest info`. Tickers are used to identify investments, for example, *AAPL* for Apple stock or *BTC* for Bitcoin. Keep in mind that investments are bought using virtual currency, but their prices are tracked with real-time data. Also, investing comes with risks, so be sure to do your research before making any investment decisions."
+    },
+    {
+        "title": "How do I earn money using Coinz?",
+        "description": "Coinz is an economy simulation bot that uses the Coinz currency. To earn money, you can use commands like `/beg` or `/work` for new players. In order to use `/work` you need to apply for a job using `/job list` and `/job apply`. To learn more ways to earn money, scroll through the command list using `/help categories`. Don't hesitate to use commands you're not familiar with since the bot will inform you if a command is not applicable or if you're trying to delete your bank account."
+    },
+    {
+        "title": "Is it possible to enable/disable the bot in specific channels?",
+        "description": "Yes, it is possible to enable or disable Coinz in specific channels using Discord's built-in command permissions feature. Only admins will see the commands in every channel. You can find more information on how to do this in [Discord's documentation on slash command permissions](https://support.discord.com/hc/en-us/articles/4644915651095-Command-Permissions)."
+    },
+    {
+        "title": "How do I report a bug or issue with Coinz?",
+        "description": "To report any bugs or issues with Coinz, you can use the `#help` channel in our [Discord server](https://discord.gg/asnZQwc6kW). Our team will investigate and fix any problems as soon as possible."
+    },
+    {
+        "title": "How can I limit which users can access Coinz commands?",
+        "description": "You can restrict access to Coinz commands using Discord's built-in command permissions feature. This allows you to enable or disable the bot for specific roles or users. You can find more information on how to do this in [Discord's documentation on slash command permissions](https://support.discord.com/hc/en-us/articles/4644915651095-Command-Permissions)."
+    },
+    {
+        "title": "Can I suggest new shop items or new stocks/crypto investments?",
+        "description": "You can suggest new shop items or investments in the `#suggestions` channel in our [Discord server](https://discord.gg/asnZQwc6kW). However, we reserve the right to decide whether or not the item or investment is worth adding to Coinz. Unfortunately, it is not possible to add your own items to the shop since Coinz uses a global economy, which means that progress is the same on every server."
+    },
+    {
+        "title": "What's the process for withdrawing a company's balance in Coinz?",
+        "description": "To withdraw a company's balance in Coinz, you can use the `/business pay-dividends` command. You can also change the dividend percentages for employees using `/business employee set-payout`. This command will distribute the balance among the company's shareholders. Keep in mind that this command can only be used by the business owner."
+    },
+    {
+        "title": "Is it possible to cheat money in Coinz as an admin?",
+        "description": "No, it is not possible to cheat money in Coinz as an admin. Coinz uses a global economy, which means that cheating on one server would affect progress on every other server. Additionally, cheating is against the terms of service for both Discord and Coinz. Any attempts to cheat or exploit the system will result in consequences, such as being banned from using the bot."
+    },
+    {
+        "title": "How do factory levels work for my business?",
+        "description": "Factory levels in Coinz determine the production rate of your business. You can increase your factory level by producing items in those factories. The maximum factory level is 6, and with each level, your factory can produce more items. At level 5, your factory produces the amount displayed in the `/factory list-products` command, and at level 6, it even increases by 1."
+    },
+    {
+        "title": "Can I transfer my progress to another server?",
+        "description": "Coinz uses a global economy, which means you have the same stats and progress in every server. You can play with the same progress on any server, so there is no need to transfer anything."
+    },
+    {
+        "title": "How do I suggest new features or improvements for Coinz?",
+        "description": "To suggest new features or improvements for Coinz, you can use the `#suggestions` channel in our [Discord server](https://discord.gg/asnZQwc6kW). You can suggest new ideas or features for the bot, website, Discord server, or anything else related to Coinz. Please note that we reserve the right to deny any suggestions we receive."
+    }
+]

@@ -1,0 +1,286 @@
+[
+    {
+        "itemId": "processor",
+        "name": "Processor",
+        "emoteId": "991232152060563486",
+        "price": 150,
+        "duration": 115200,
+        "amount": 2,
+        "level": 0,
+        "sellable": true,
+        "producable": true,
+        "isEndProduct": false,
+        "requirements": [
+            {
+                "itemId": "silicon",
+                "amount": 2
+            }
+        ]
+    },
+    {
+        "itemId": "memory",
+        "name": "Memory",
+        "emoteId": "1215742555681980478",
+        "price": 45,
+        "duration": 28800,
+        "amount": 2,
+        "level": 0,
+        "sellable": true,
+        "producable": true,
+        "isEndProduct": false,
+        "requirements": [
+            {
+                "itemId": "copper_wire",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "itemId": "screen",
+        "name": "Screen",
+        "emoteId": "1215742558886694912",
+        "price": 90,
+        "duration": 79200,
+        "amount": 2,
+        "level": 0,
+        "sellable": true,
+        "producable": true,
+        "isEndProduct": false,
+        "requirements": [
+            {
+                "itemId": "glass",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "itemId": "engine",
+        "name": "Engine",
+        "emoteId": "1215742550196097156",
+        "price": 1000,
+        "duration": 259200,
+        "amount": 1,
+        "level": 2,
+        "sellable": true,
+        "producable": true,
+        "isEndProduct": false,
+        "requirements": [
+            {
+                "itemId": "copper_wire",
+                "amount": 5
+            },
+            {
+                "itemId": "magnet",
+                "amount": 12
+            }
+        ]
+    },
+    {
+        "itemId": "power_cell",
+        "name": "Power Cell",
+        "emoteId": "1215742557347385434",
+        "price": 55,
+        "duration": 64800,
+        "amount": 4,
+        "level": 1,
+        "sellable": true,
+        "producable": true,
+        "isEndProduct": false,
+        "requirements": [
+            {
+                "itemId": "lithium",
+                "amount": 2
+            }
+        ]
+    },
+    {
+        "itemId": "electric_car",
+        "name": "Electric Car",
+        "emoteId": "1215742542201487410",
+        "price": 10000,
+        "duration": 1209600,
+        "amount": 1,
+        "level": 5,
+        "sellable": true,
+        "producable": true,
+        "isEndProduct": true,
+        "requirements": [
+            {
+                "itemId": "engine",
+                "amount": 1
+            },
+            {
+                "itemId": "power_cell",
+                "amount": 40
+            },
+            {
+                "itemId": "processor",
+                "amount": 2
+            },
+            {
+                "itemId": "glass",
+                "amount": 20
+            }
+        ]
+    },
+    {
+        "itemId": "server",
+        "name": "Server",
+        "emoteId": "991232153188847626",
+        "price": 2000,
+        "duration": 345600,
+        "amount": 1,
+        "level": 4,
+        "sellable": true,
+        "producable": true,
+        "isEndProduct": true,
+        "requirements": [
+            {
+                "itemId": "processor",
+                "amount": 2
+            },
+            {
+                "itemId": "memory",
+                "amount": 12
+            }
+        ]
+    },
+    {
+        "itemId": "computer",
+        "name": "Computer",
+        "emoteId": "991232149896298546",
+        "price": 1100,
+        "duration": 201600,
+        "amount": 1,
+        "level": 2,
+        "sellable": true,
+        "producable": true,
+        "isEndProduct": true,
+        "requirements": [
+            {
+                "itemId": "processor",
+                "amount": 1
+            },
+            {
+                "itemId": "memory",
+                "amount": 4
+            },
+            {
+                "itemId": "plastic",
+                "amount": 20
+            }
+        ]
+    },
+    {
+        "itemId": "smartphone",
+        "name": "Smartphone",
+        "emoteId": "1013474375275663530",
+        "price": 600,
+        "duration": 86400,
+        "amount": 1,
+        "level": 3,
+        "sellable": true,
+        "producable": true,
+        "isEndProduct": true,
+        "requirements": [
+            {
+                "itemId": "processor",
+                "amount": 1
+            },
+            {
+                "itemId": "memory",
+                "amount": 1
+            },
+            {
+                "itemId": "plastic",
+                "amount": 3
+            },
+            {
+                "itemId": "screen",
+                "amount": 1
+            },
+            {
+                "itemId": "power_cell",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "itemId": "glass",
+        "name": "Glass",
+        "emoteId": "1215742551668293753",
+        "price": 20,
+        "duration": 0,
+        "amount": 1,
+        "level": 0,
+        "sellable": false,
+        "producable": false,
+        "isEndProduct": false,
+        "requirements": []
+    },
+    {
+        "itemId": "silicon",
+        "name": "Silicon",
+        "emoteId": "1046874604184031252",
+        "price": 40,
+        "duration": 0,
+        "amount": 1,
+        "level": 0,
+        "sellable": false,
+        "producable": false,
+        "isEndProduct": false,
+        "requirements": []
+    },
+    {
+        "itemId": "plastic",
+        "name": "Plastic",
+        "emoteId": "1046874601646477353",
+        "price": 8,
+        "duration": 0,
+        "amount": 1,
+        "level": 0,
+        "sellable": false,
+        "producable": false,
+        "isEndProduct": false,
+        "requirements": []
+    },
+    {
+        "itemId": "copper_wire",
+        "name": "Copper Wire",
+        "emoteId": "1215742540754587728",
+        "price": 25,
+        "duration": 0,
+        "amount": 1,
+        "level": 0,
+        "sellable": false,
+        "producable": false,
+        "isEndProduct": false,
+        "requirements": []
+    },
+    {
+        "itemId": "lithium",
+        "name": "Lithium",
+        "emoteId": "1215742553060802751",
+        "price": 40,
+        "duration": 0,
+        "amount": 1,
+        "level": 0,
+        "sellable": false,
+        "producable": false,
+        "isEndProduct": false,
+        "requirements": []
+    },
+    {
+        "itemId": "magnet",
+        "name": "Magnet",
+        "emoteId": "1215742554507706598",
+        "price": 35,
+        "duration": 0,
+        "amount": 1,
+        "level": 0,
+        "sellable": false,
+        "producable": false,
+        "isEndProduct": false,
+        "requirements": []
+    }
+]

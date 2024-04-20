@@ -1,0 +1,43 @@
+#guide h2 {
+    margin-top: 1.8rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+#guide h3 {
+    margin-top: 0.8rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+#guide p {
+    margin: 0.3rem 0;
+    max-width: 800px;
+}
+
+#guide ol {
+    list-style: decimal inside;
+}
+
+#guide ul {
+    list-style: disc inside;
+}
+
+#guide em {
+    background-color: hsl(var(--secondary));
+    padding: 4px 8px;
+    font-weight: 500;
+    border-radius: 4px;
+    font-style: normal;
+}
+
+#guide a {
+    color: hsl(var(--primary));
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.1s ease-in-out;
+}
+
+#guide a:hover {
+    decoration: underline;
+}

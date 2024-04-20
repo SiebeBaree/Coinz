@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 233 11% 17%;
+        --foreground: 0 0% 96%;
+
+        --card: 229 10% 22%;
+        --card-foreground: var(--foreground);
+
+        --popover: var(--background);
+        --popover-foreground: var(--foreground);
+
+        --primary: 46 100% 56%;
+        --primary-foreground: 0 0% 7%;
+
+        --secondary: var(--card);
+        --secondary-foreground: var(--card-foreground);
+
+        --muted: var(--foreground) / 0.6;
+        --muted-foreground: var(--foreground) / 0.6;
+
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 222.2 84% 4.9%;
+
+        --radius: 0.5rem;
+
+        --highlight: var(--foreground) / 0.15;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+@layer base {
+    @font-face {
+        font-family: 'Ginto Nord';
+        src: url('../fonts/GintoNord-Black.ttf') format('ttf');
+        font-weight: 900;
+        font-display: swap;
+    }
+}
+
+code {
+    background-color: #3d4276;
+    padding: 3px 6px;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+}
+
+* {
+    scrollbar-color: hsl(var(--primary)) hsl(var(--background));
+}
+
+*::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--primary));
+    border-radius: 20px;
+    border: 2px solid hsl(var(--background));
+}
+
+.watermark {
+    color: hsl(var(--foreground) / 0.05);
+}
+
+@media screen and (min-width: 640px) {
+    .watermark {
+        top: 5%;
+        left: -5%;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .watermark {
+        left: -5%;
+    }
+}
+
+@media screen and (min-width: 1536px) {
+    .watermark {
+        top: 0%;
+        left: -8%;
+    }
+}
+
+.formatted-text h4 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+.formatted-text ul {
+    list-style-type: disc;
+    margin-left: 30px;
+}
+
+.formatted-text li {
+    margin: 4px 0;
+}
+
+.formatted-text a {
+    color: hsl(var(--primary));
+    text-decoration: none;
+}
+
+.formatted-text a:hover {
+    text-decoration: underline;
+}
+
+.formatted-text em {
+    background-color: hsl(var(--background));
+    padding: 4px 8px;
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+.code-copy code::before,
+.code-copy code::after {
+    position: absolute;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    z-index: 1;
+    visibility: hidden;
+}
+
+.code-copy code::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+    z-index: 1;
+}
+
+.code-copy code::after {
+    position: absolute;
+    top: -39px;
+    right: auto;
+    padding: 4px 5px;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+    white-space: nowrap;
+    z-index: 2;
+}
+
+.code-copy code:hover::before,
+.code-copy code:hover::after {
+    visibility: visible;
+}
+
+.code-copy code:not([data-tooltip])::after {
+    content: 'Click to copy';
+}
+
+.code-copy code[data-tooltip]::after {
+    content: attr(data-tooltip);
+}

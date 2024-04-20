@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig.json",
+    "display": "Bot",
+    "extends": "./base.json",
+    "compilerOptions": {
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+        "target": "ES6",
+        "outDir": "dist",
+        "baseUrl": ".",
+        "removeComments": true,
+        "sourceMap": true,
+        "alwaysStrict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "noImplicitReturns": true,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "dist"]
+}

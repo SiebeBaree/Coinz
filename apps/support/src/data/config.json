@@ -1,0 +1,24 @@
+{
+    "guildId": "938177962698735616",
+    "website": "https://coinzbot.xyz",
+    "embed": {
+        "color": "#DBA514",
+        "footer": "Coinz | coinzbot.xyz",
+        "icon": "https://cdn.discordapp.com/embed/avatars/1.png"
+    },
+    "welcomeChannel": "939824122240839720",
+    "modLogChannel": "939870751744462868",
+    "logChannel": "939824122240839720",
+    "ticketSupportRole": "1188875038305296445",
+    "ticketCategory": "1188856897688846346",
+    "channels": {
+        "welcome": "939824122240839720",
+        "modLog": "939870751744462868",
+        "log": "939824122240839720",
+        "ticketSupport": "1188875038305296445",
+        "ticketCategory": "1188856897688846346",
+        "suggestions": "1051857901502869575",
+        "help": "1019848559962624020",
+        "bug": "1175807301286903828"
+    }
+}

@@ -1,0 +1,34 @@
+[
+    {
+        "name": "Getting Started",
+        "description": "Discover the basics of Coinz and how to navigate its features. Ideal for new users starting their journey.",
+        "href": "getting-started"
+    },
+    {
+        "name": "Coinz Plus/Pro",
+        "description": "Explore the advanced features and benefits of Coinz Plus and Pro, including premium features and benefits.",
+        "href": "premium"
+    },
+    {
+        "name": "Leveling",
+        "description": "Learn about the leveling system in Coinz, how to gain levels, and the perks associated with each level."
+    },
+    {
+        "name": "Starting a business",
+        "description": "Guidance on how to start and manage your business within Coinz."
+    },
+    {
+        "name": "Farming",
+        "description": "Insights into farming mechanics in Coinz, techniques for efficient farming, and maximizing your farming outputs."
+    },
+    {
+        "name": "Investing",
+        "description": "Advice on investment strategies within Coinz, understanding market trends, and managing your investment portfolio."
+    },
+    {
+        "name": "Frequently Asked Questions",
+        "description": "Answers to common questions about Coinz, covering a range of topics from basic usage to more complex queries.",
+        "href": "faq",
+        "watermark": "Questions"
+    }
+]

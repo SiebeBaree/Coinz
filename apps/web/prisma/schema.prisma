@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String            @id @default(auto()) @map("_id") @db.ObjectId
+  name             String?
+  email            String?           @unique
+  emailVerified    DateTime?
+  image            String?
+  accounts         Account[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@unique([provider, providerAccountId])
+}
+
+model Investment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  ticker    String
+  type      String
+  fullName  String
+  price     String
+  changed   String
+  updatedAt DateTime @updatedAt
+  expires   DateTime
+
+  @@unique([ticker, type])
+}
+
+model BotStats {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  guilds      Int
+  users       Int
+  commands    Int
+  investments Int
+  updatedAt   DateTime @updatedAt
+}
+
+model Commands { 
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  category    String
+  cooldown    Int?
+  usage       String[]
+  premium     Int?
+}
+
+model Item {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  itemId          String  @unique
+  category        String
+  name            String
+  emoteId         String
+  description     String
+  longDescription String?
+  buyPrice        Int?
+  sellPrice       Int?
+  multiplier      Int?
+  duration        Int?
+}
+
+model members {
+  oid           String          @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String          @unique @map("id")
+  premium       Int
+}
+
+model WebhookEvents {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime @default(now())
+  eventName       String
+  processed       Boolean  @default(false)
+  body            String
+  processingError String?
+}
+
+model Subscriptions {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  lemonSqueezyId     String   @unique
+  orderId            Int
+  name               String
+  email              String
+  status             String
+  statusFormatted    String?
+  renewsAt           String?
+  endsAt             String?
+  subscriptionItemId Int
+  userId             String
+  planId             String
+  variantId          String
+}

@@ -1,0 +1,12 @@
+{
+    "extends": "@repo/config/tsconfig/bot.json",
+    "include": ["src/**/*.ts", ".eslintrc.cjs"],
+    "exclude": ["node_modules", "dist"],
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "jsxImportSource": "hono/jsx",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "target": "ES2022"
+    }
+}

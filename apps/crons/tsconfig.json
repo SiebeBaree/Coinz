@@ -1,0 +1,5 @@
+{
+    "extends": "@repo/config/tsconfig/bot.json",
+    "include": ["src/**/*.ts", ".eslintrc.cjs"],
+    "exclude": ["node_modules", "dist"]
+}

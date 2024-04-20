@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+    cooldowns_db:
+        image: redis:alpine
+        restart: always
+        networks:
+            - redis-network
+        ports:
+            - '6379:6379'
+    rabbitmq:
+        image: rabbitmq:alpine
+        restart: always
+        networks:
+            - queue-network
+        ports:
+            - '5672:5672'
+    bot:
+        build:
+            context: .
+            dockerfile: ./docker/Bot.Dockerfile
+        restart: always
+        depends_on:
+            - cooldowns_db
+            - rabbitmq
+        environment:
+            REDIS_URI: redis://cooldowns_db:6379
+        networks:
+            - redis-network
+            - queue-network
+    support:
+        build:
+            context: .
+            dockerfile: ./docker/Support.Dockerfile
+        restart: always
+    crons:
+        build:
+            context: .
+            dockerfile: ./docker/Crons.Dockerfile
+        restart: always
+    api:
+        build:
+            context: .
+            dockerfile: ./docker/Api.Dockerfile
+        restart: always
+        ports:
+            - '4101:3000'
+        networks:
+            - queue-network
+        depends_on:
+            - rabbitmq
+networks:
+    redis-network:
+        driver: bridge
+    queue-network:
+        driver: bridge
