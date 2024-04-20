@@ -1,5 +1,5 @@
 import PageTitle from '@/components/page-title';
-import { BotIcon, GlobeIcon, LucideIcon, SparklesIcon, TriangleAlertIcon } from 'lucide-react';
+import { BotIcon, GlobeIcon, LucideIcon, TriangleAlertIcon } from 'lucide-react';
 
 export const dynamic = 'force-static';
 
@@ -25,7 +25,7 @@ const roadmap: Roadmap[] = [
                     'Add option to upgrade bank limit back.',
                     'Add minimum work requirement.',
                     'Add /slots command.',
-                    "Add notifications for when you vote, when it's time to vote again or when you get robbed.",
+                    "Add notifications for when it's time to vote again or when you get robbed.",
                     'Add a business leaderboard of the top 50 businesses in certain categories.',
                     'Let Coinz Pro users invest up to 🪙 5.000 per day in their business',
                 ],
@@ -34,11 +34,6 @@ const roadmap: Roadmap[] = [
                 name: 'Website',
                 icon: GlobeIcon,
                 features: ['Add status page back', 'Fix dashboard page.', 'Add new guides.'],
-            },
-            {
-                name: 'Improvements',
-                icon: SparklesIcon,
-                features: ['Implement a voting system.'],
             },
         ],
     },
@@ -52,17 +47,13 @@ const roadmap: Roadmap[] = [
                     'Add /connect4 command.',
                     "Add market history command for business to see their market's history.",
                     'Add sorting options to /market list command.',
+                    'Add 10 more stocks',
                 ],
             },
             {
                 name: 'Website',
                 icon: GlobeIcon,
                 features: ['Add option to buy and sell items from the website.'],
-            },
-            {
-                name: 'Improvements',
-                icon: SparklesIcon,
-                features: ['Add 10 more stocks'],
             },
         ],
     },
