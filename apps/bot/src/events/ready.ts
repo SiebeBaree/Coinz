@@ -13,7 +13,7 @@ export default {
     async execute(bot, client) {
         logger.info(`Ready! Logged in as ${client.user.tag}`);
 
-        (async () => {
+        if (process.env.NODE_ENV === 'production') {
             const conn = await amqplib.connect(process.env.QUEUE_URI!);
 
             const ch1 = await conn.createChannel();
@@ -54,6 +54,6 @@ export default {
                     } catch {}
                 }
             });
-        })();
+        }
     },
 } satisfies Event<Events.ClientReady>;

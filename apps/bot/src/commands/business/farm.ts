@@ -196,9 +196,9 @@ async function getEmbed(client: Bot, user: User, member: IMember): Promise<Embed
         description += `\n:moneybag: **You can buy a new plot for :coin: ${getPlotPrice(member.plots.length)}.**`;
     } else if (member.plots.length >= maxPlots && member.plots.length < 15 && member.premium < 2) {
         if (member.premium === 1) {
-            description += `\n:star: **Upgrade to [Coinz Pro](${client.config.website}/premium) to buy up to 15 plots.**`;
+            description += `\n:star: **Upgrade to [Coinz Pro](<${client.config.website}/premium>) to buy up to 15 plots.**`;
         } else {
-            description += `\n:star: **Consider [upgrading to Coinz Plus or Pro](${client.config.website}/premium) to unlock up to 15 plots.**`;
+            description += `\n:star: **Consider [upgrading to Coinz Plus or Pro](<${client.config.website}/premium>) to unlock up to 15 plots.**`;
         }
     }
 

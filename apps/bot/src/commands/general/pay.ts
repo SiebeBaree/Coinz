@@ -9,7 +9,7 @@ import { addMoney, removeMoney } from '../../utils/money';
 const LOWER_LIMIT = 30;
 const START_LIMIT = 1000;
 const MAX_LIMIT = 15_000;
-const PREMIUM_LIMIT = 25_000;
+const PREMIUM_LIMIT = 30_000;
 
 function getLimit(level: number, premium: number): number {
     if (premium >= 2) return PREMIUM_LIMIT;
@@ -83,7 +83,7 @@ export default {
 
             let message = `:x: You can't donate more than :coin: ${limit} at your current level.`;
             if (member.premium < 2 && amount < PREMIUM_LIMIT) {
-                message += ` You can increase your limit to :coin: 25.000 by becoming a Coinz Pro subscriber. [**Upgrade now**](${client.config.website}/premium).`;
+                message += ` You can increase your limit to :coin: 25.000 by becoming a Coinz Pro subscriber. [**Upgrade now**](<${client.config.website}/premium>).`;
             }
 
             await interaction.reply({

@@ -3,9 +3,10 @@ import type { ColorResolvable, ChatInputCommandInteraction } from 'discord.js';
 import type Bot from '../../../domain/Bot';
 import type { Command } from '../../../domain/Command';
 import { Positions, type BusinessData, type InventoryItem } from '../../../lib/types';
-import Business, { type IFactory } from '../../../models/business';
+// import Business, { type IFactory } from '../../../models/business';
+import Business from '../../../models/business';
 import { filter, getBusiness } from '../../../utils';
-import levelUp from './_levelUp';
+// import levelUp from './_levelUp';
 import listItems from './_listItems';
 import startProduction from './_startProduction';
 
@@ -204,22 +205,22 @@ async function pressButton_CollectProducts(client: Bot, data: BusinessData): Pro
     }
 }
 
-async function pressButton_BuyFactory(data: BusinessData): Promise<boolean> {
-    const factoryId = data.business.factories.length;
-    const cost = getFactoryCost(factoryId + 1);
-    if (data.business.balance < cost) return false;
+// async function pressButton_BuyFactory(data: BusinessData): Promise<boolean> {
+//     const factoryId = data.business.factories.length;
+//     const cost = getFactoryCost(factoryId + 1);
+//     if (data.business.balance < cost) return false;
 
-    const factory: IFactory = {
-        factoryId,
-        level: 0,
-        production: '',
-        status: 'standby',
-        produceOn: 0,
-    };
+//     const factory: IFactory = {
+//         factoryId,
+//         level: 0,
+//         production: '',
+//         status: 'standby',
+//         produceOn: 0,
+//     };
 
-    await Business.updateOne({ name: data.business.name }, { $push: { factories: factory }, $inc: { balance: -cost } });
-    return true;
-}
+//     await Business.updateOne({ name: data.business.name }, { $push: { factories: factory }, $inc: { balance: -cost } });
+//     return true;
+// }
 
 export default {
     data: {
@@ -270,20 +271,20 @@ export default {
                         await pressButton_CollectProducts(client, data);
                         await interaction.followUp({ content: 'You have collected all products.', ephemeral: true });
                         break;
-                    case 'factory_buy_factory':
-                        if (await pressButton_BuyFactory(data)) {
-                            await interaction.followUp({ content: 'You have bought a new factory.', ephemeral: true });
-                        } else {
-                            await interaction.followUp({
-                                content: 'You do not have enough balance to buy a new factory.',
-                                ephemeral: true,
-                            });
-                        }
+                    // case 'factory_buy_factory':
+                    //     if (await pressButton_BuyFactory(data)) {
+                    //         await interaction.followUp({ content: 'You have bought a new factory.', ephemeral: true });
+                    //     } else {
+                    //         await interaction.followUp({
+                    //             content: 'You do not have enough balance to buy a new factory.',
+                    //             ephemeral: true,
+                    //         });
+                    //     }
 
-                        break;
-                    case 'factory_level_up':
-                        hasReplied = await levelUp(interaction, i, data);
-                        break;
+                    //     break;
+                    // case 'factory_level_up':
+                    //     hasReplied = await levelUp(interaction, i, data);
+                    //     break;
                     case 'factory_start_production':
                         hasReplied = await startProduction(client, interaction, i, data);
                         break;
@@ -291,8 +292,10 @@ export default {
                         await listItems(client, interaction, data);
                         break;
                     default:
-                        return;
+                        break;
                 }
+
+                if (!hasReplied) await i.deferUpdate();
 
                 // get updated business to update embed
                 data = await getBusiness(interaction.user.id);
@@ -302,7 +305,6 @@ export default {
                     return;
                 }
 
-                if (!hasReplied) await i.deferUpdate();
                 await interaction.editReply({
                     embeds: [await createEmbed(client, data)],
                     components: createComponents(data, finishedCommand),

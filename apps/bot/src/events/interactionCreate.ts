@@ -35,12 +35,12 @@ export default {
                     )} before using this command again.`;
 
                     if (command.data.category === 'games' && member.premium < 2) {
-                        message += `\nYou can reduce this cooldown by becoming a Coinz Pro subscriber. [**Upgrade now**](${client.config.website}/premium)`;
+                        message += `\nYou can reduce this cooldown by becoming a Coinz Pro subscriber. [**Upgrade now**](<${client.config.website}/premium>)`;
                     } else if (
                         (command.data.cooldown === undefined || command.data.cooldown === 0) &&
                         member.premium === 0
                     ) {
-                        message += `\nYou can reduce this cooldown to 1 second by becoming a Coinz Plus or Pro subscriber. [**Upgrade now**](${client.config.website}/premium)`;
+                        message += `\nYou can reduce this cooldown to 1 second by becoming a Coinz Plus or Pro subscriber. [**Upgrade now**](<${client.config.website}/premium>)`;
                     }
 
                     await interaction.reply({
@@ -52,8 +52,16 @@ export default {
             }
 
             if ((command.data.premium ?? 0) > member.premium) {
+                if (command.data.premium === 2) {
+                    await interaction.reply({
+                        content: `This command is only for Coinz Pro subscribers. To gain access to this command, consider [**upgrading**](<${client.config.website}/premium>).`,
+                        ephemeral: true,
+                    });
+                    return;
+                }
+
                 await interaction.reply({
-                    content: `This command is only for Coinz Plus or Pro subscribers. To gain access to this command, consider [**upgrading**](${client.config.website}/premium).`,
+                    content: `This command is only for Coinz Plus or Pro subscribers. To gain access to this command, consider [**upgrading**](<${client.config.website}/premium>).`,
                     ephemeral: true,
                 });
                 return;
@@ -95,6 +103,7 @@ export default {
                     client.achievement.getById('no_life'),
                 );
             } catch (error) {
+                logger.error(`Error while executing command '${command.data.name}':`);
                 logger.error((error as Error).stack ?? (error as Error).message);
 
                 const errorMsg = `There was an error while executing this command! Please try again.\nIf this keeps happening please join our [support server](<${client.config.supportServer}>).`;

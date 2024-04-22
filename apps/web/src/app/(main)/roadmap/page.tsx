@@ -25,7 +25,6 @@ const roadmap: Roadmap[] = [
                     'Add /slots command.',
                     "Add notifications for when it's time to vote again or when you get robbed.",
                     'Add a business leaderboard of the top 50 businesses in certain categories.',
-                    'Let Coinz Pro users invest up to 🪙 5.000 per day in their business',
                 ],
             },
             {

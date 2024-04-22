@@ -234,7 +234,7 @@ async function fire(client: Bot, interaction: ChatInputCommandInteraction, data:
     const embed = new EmbedBuilder()
         .setTitle(`Fired ${fetchedUser.username}`)
         .setDescription(
-            `${fetchedUser} has been fired from ${data.business.name} and they recieved their cut of ${percentage}% (:coin: ${cut}) of the business balance.`,
+            `${fetchedUser} has been fired from ${data.business.name} and they received their cut of ${percentage}% (:coin: ${cut}) of the business balance.`,
         )
         .setColor(Colors.Red);
     await interaction.reply({ embeds: [embed] });

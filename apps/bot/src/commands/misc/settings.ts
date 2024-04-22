@@ -40,7 +40,7 @@ async function settingsProfileColor(client: Bot, interaction: ChatInputCommandIn
 
     if (member.premium < 1 && color !== client.config.embed.color) {
         await interaction.reply({
-            content: `This feature is reserved for premium users! Upgrade to [**Coinz Plus**](${client.config.website}/premium) or [**Coinz Pro**](${client.config.website}/premium) today!`,
+            content: `This feature is reserved for premium users! Upgrade to [**Coinz Plus**](<${client.config.website}/premium>) or [**Coinz Pro**](<${client.config.website}/premium>) today!`,
             ephemeral: true,
         });
         return;

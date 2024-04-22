@@ -66,7 +66,7 @@ function getEmbed(
         embed.addFields([
             {
                 name: 'Upgrade to Coinz Plus or Pro',
-                value: `:star: **Coinz Plus rewards:** :coin: ${premiumReward}\n:crown: **Coinz Pro rewards:** :coin: ${premiumReward}, ${xp * 2} XP, and an extra lucky wheel spin!\n:money_with_wings: Consider [**upgrading**](${client.config.website}/premium) to get more rewards!`,
+                value: `:star: **Coinz Plus rewards:** :coin: ${premiumReward}\n:crown: **Coinz Pro rewards:** :coin: ${premiumReward}, ${xp * 2} XP, and an extra lucky wheel spin!\n:money_with_wings: Consider [**upgrading**](<${client.config.website}/premium>) to get more rewards!`,
                 inline: false,
             },
         ]);

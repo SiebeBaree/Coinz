@@ -1,8 +1,24 @@
 [
     {
+        "version": "4.0.1",
+        "name": "Stability Bug Fixes",
+        "timestamp": 1713772800,
+        "content": [
+            "#### Changed",
+            "- Let Coinz Pro users invest up to 🪙 10.000 in their business.",
+            "- Coinz Pro users can now pay up to 🪙 30.000 to other users instead of the previous 🪙 25.000.",
+            "- Fix an issue where all CEO's are removed from their businesses.",
+            "- Updated small typo's in messages.",
+            "- Added the ability for business employee's to leave the business.",
+            "#### Known Bugs",
+            "- No ability to upgrade your bank balance.",
+            "- Factory not working issue, we disabled some features to fix this issue."
+        ]
+    },
+    {
         "version": "4.0",
         "name": "Premium & Quality of Life Update",
-        "timestamp": 1707382800,
+        "timestamp": 1713600000,
         "content": [
             "#### Premium",
             "- We've decided to bring back the premium subscription in Coinz. We try to also keep it as fair as possible.",
