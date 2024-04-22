@@ -57,7 +57,10 @@ export default function Navbar({ session }: { session: Session | null }) {
                             <DropdownMenuTrigger className="outline-none group">
                                 <div className="flex gap-2 items-center bg-secondary py-2 px-3 rounded-md select-none border-highlight">
                                     <Avatar className="w-7 h-7">
-                                        <AvatarImage src={session.user.image ?? '/logo.png'} />
+                                        <AvatarImage
+                                            src={session.user.image ?? '/logo.png'}
+                                            alt={`${session.user.name} profile picture`}
+                                        />
                                         <AvatarFallback>
                                             {session.user.name
                                                 ?.split(' ')
@@ -84,7 +87,7 @@ export default function Navbar({ session }: { session: Session | null }) {
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     className="cursor-pointer transition-all duration-200 ease-in-out hover:bg-white/10 text-red-400"
-                                    onClick={logout}
+                                    onClick={() => logout()}
                                 >
                                     <LogOut className="mr-2 h-4 w-4" />
                                     <span>Log out</span>

@@ -124,7 +124,7 @@ export default async function Home() {
                 />
             </div>
 
-            <div className="container bg-secondary rounded-md h-72 flex flex-col justify-center items-center p-6 gap-4">
+            <div className="container bg-secondary sm:rounded-md h-72 flex flex-col justify-center items-center p-6 gap-4">
                 <p className="text-3xl text-center font-semibold">Engage your community today with Coinz!</p>
                 <Link
                     href={'/invite'}
