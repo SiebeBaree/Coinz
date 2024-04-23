@@ -60,9 +60,9 @@ export default async function listItems(
 
     const collector = message.createMessageComponentCollector({
         filter: async (i) => filter(interaction, i),
-        max: 20,
-        idle: 20_000,
-        time: 90_000,
+        max: 10,
+        idle: 15_000,
+        time: 60_000,
         componentType: ComponentType.Button,
     });
 
