@@ -288,7 +288,6 @@ export default {
                 checkWinner(gameData);
                 if (gameData.finishedCommand && gameData.hostWon !== null) {
                     await addMoney(gameData.hostWon ? interaction.user.id : gameData.secondUser.id, bet * 2);
-                    await addMoney(gameData.hostWon ? gameData.secondUser.id : interaction.user.id, -bet);
                     await addExperience(gameData.hostWon ? member : secondMember);
 
                     await UserStats.updateOne(
