@@ -512,7 +512,7 @@ async function getPlots(client: Bot, interaction: ChatInputCommandInteraction, m
             }
 
             const visibleMember = await getMember(interaction.user.id);
-            await i.editReply({
+            await interaction.editReply({
                 embeds: [await getEmbed(client, interaction.user, visibleMember)],
                 components: [getButtons(visibleMember, finishedCommand)],
             });
@@ -521,7 +521,7 @@ async function getPlots(client: Bot, interaction: ChatInputCommandInteraction, m
 
     collector.on('end', async () => {
         if (!finishedCommand) finishedCommand = true;
-        await message.edit({
+        await interaction.editReply({
             components: [getButtons(member, true)],
         });
     });
