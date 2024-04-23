@@ -48,19 +48,6 @@ export default function GettingStartedGuide() {
                         href=""
                         description="Does your server use Coinz? Send a DM to siebe_b on Discord."
                     />
-                    <DiscordServerCard
-                        image=""
-                        name="Your server here"
-                        href=""
-                        description="Does your server use Coinz? Send a DM to siebe_b on Discord."
-                    />
-                    <DiscordServerCard
-                        image=""
-                        name="Your server here"
-                        href=""
-                        description="Does your server use Coinz? Send a DM to siebe_b on Discord."
-                        separator={false}
-                    />
                 </div>
             </div>
             <p className="text-sm text-muted">
