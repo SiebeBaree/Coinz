@@ -127,6 +127,7 @@ async function getSpin(client: Bot, interaction: ChatInputCommandInteraction, me
         },
     );
 
+    await client.items.addItemBulk(itemsToAdd, member);
     await UserStats.updateOne({ id: interaction.user.id }, { $inc: { luckyWheelSpins: amount } }, { upsert: true });
     await client.achievement.sendAchievementMessage(
         interaction,

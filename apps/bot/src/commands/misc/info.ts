@@ -18,7 +18,7 @@ export default {
             })
             .setColor(client.config.embed.color as ColorResolvable)
             .setDescription(
-                `**If you like this bot, consider buying [Coinz Premium](${client.config.website}/premium).**`,
+                `**If you like this bot, consider buying [Coinz Premium](<${client.config.website}/premium>).**`,
             )
             .addFields([
                 {

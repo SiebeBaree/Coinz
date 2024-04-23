@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
     return {
         name: 'Coinz',
         short_name: 'Coinz',
-        description: '',
+        description: 'A Discord bot with an economy system, stocks, crypto, blackjack, roulette, and more!',
         start_url: '/',
         display: 'standalone',
         background_color: '#26272f',

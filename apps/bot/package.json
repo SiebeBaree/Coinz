@@ -8,7 +8,7 @@
         "lint": "prettier --check . && eslint src --ext .ts --format stylish src",
         "format": "prettier --write . && eslint src --ext .ts --fix --format stylish src",
         "register-commands": "bun run ./src/register.ts",
-        "script:balance-items": "nodemon --watch src --exec bun ./src/item-balancer.ts",
+        "script:balance-items": "bun run --hot ./src/item-balancer.ts",
         "script:add-items": "bun run ./src/itemUploader.ts",
         "script:convert-commands": "bun run ./src/commandsConverter.ts"
     },

@@ -124,17 +124,19 @@ export default async function Home() {
                 />
             </div>
 
-            <div className="container bg-secondary rounded-md h-72 flex flex-col justify-center items-center p-6 gap-4">
-                <p className="text-3xl text-center font-semibold">Engage your community today with Coinz!</p>
-                <Link
-                    href={'/invite'}
-                    target="_blank"
-                    className="px-3 lg:px-4 py-1 lg:py-2 lg:text-lg font-semibold rounded-md bg-primary text-primary-foreground relative z-10 mr-3 flex gap-2 items-center"
-                >
-                    <DiscordIcon className="text-primary-foreground h-4 w-4 lg:h-6 lg:w-6" />
-                    Add to Discord
-                    <div className="w-full h-full absolute border-[3px] border-primary rounded-md transition-all duration-150 ease-in-out top-2 left-2 hover:top-0 hover:left-0" />
-                </Link>
+            <div className="w-full sm:container">
+                <div className="bg-secondary sm:rounded-md h-72 flex flex-col justify-center items-center p-6 gap-4">
+                    <p className="text-3xl text-center font-semibold">Engage your community today with Coinz!</p>
+                    <Link
+                        href={'/invite'}
+                        target="_blank"
+                        className="px-3 lg:px-4 py-1 lg:py-2 lg:text-lg font-semibold rounded-md bg-primary text-primary-foreground relative z-10 mr-3 flex gap-2 items-center"
+                    >
+                        <DiscordIcon className="text-primary-foreground h-4 w-4 lg:h-6 lg:w-6" />
+                        Add to Discord
+                        <div className="w-full h-full absolute border-[3px] border-primary rounded-md transition-all duration-150 ease-in-out top-2 left-2 hover:top-0 hover:left-0" />
+                    </Link>
+                </div>
             </div>
         </main>
     );
@@ -149,6 +151,7 @@ function FeatureCard({
     imageRight = false,
 }: {
     imagePath: string;
+    // eslint-disable-next-line no-unused-vars
     Icon: (props: IconProps) => React.JSX.Element;
     title: string;
     description: string;

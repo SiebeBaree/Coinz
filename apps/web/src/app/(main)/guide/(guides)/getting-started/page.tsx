@@ -3,8 +3,6 @@ import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Image from 'next/image';
 
-export const dynamic = 'force-static';
-
 export default function GettingStartedGuide() {
     return (
         <>
@@ -49,19 +47,6 @@ export default function GettingStartedGuide() {
                         name="Your server here"
                         href=""
                         description="Does your server use Coinz? Send a DM to siebe_b on Discord."
-                    />
-                    <DiscordServerCard
-                        image=""
-                        name="Your server here"
-                        href=""
-                        description="Does your server use Coinz? Send a DM to siebe_b on Discord."
-                    />
-                    <DiscordServerCard
-                        image=""
-                        name="Your server here"
-                        href=""
-                        description="Does your server use Coinz? Send a DM to siebe_b on Discord."
-                        separator={false}
                     />
                 </div>
             </div>

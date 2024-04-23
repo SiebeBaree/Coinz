@@ -8,6 +8,7 @@ import Member from '../../models/member';
 import UserStats from '../../models/userStats';
 import { filter, roundNumber } from '../../utils';
 import { calculatePageNumber, getPageButtons, getSelectMenu } from '../../utils/embed';
+import { addMoney, removeMoney } from '../../utils/money';
 
 const MAX_OWNED_STOCK = 20_000_000;
 const MIN_PRICE = 50;
@@ -245,6 +246,7 @@ async function getBuy(client: Bot, interaction: ChatInputCommandInteraction, mem
         );
     await interaction.reply({ embeds: [embed] });
 
+    await removeMoney(member.id, price);
     if (ownedInvestment) {
         await Member.updateOne(
             { id: member.id, 'investments.ticker': investment.ticker },
@@ -345,13 +347,14 @@ async function getSell(client: Bot, interaction: ChatInputCommandInteraction, me
         );
     await interaction.reply({ embeds: [embed] });
 
+    await addMoney(member.id, price);
+
     const ownedAmount = Number.parseFloat(ownedInvestment.amount);
     if (Number.parseFloat(ownedInvestment.amount) <= amount || ownedAmount - amount < 0.00001) {
         await Member.updateOne(
             { id: member.id },
             {
                 $pull: { investments: { ticker: ownedInvestment.ticker } },
-                $inc: { wallet: price },
             },
         );
     } else {
@@ -363,7 +366,6 @@ async function getSell(client: Bot, interaction: ChatInputCommandInteraction, me
                 },
                 $inc: {
                     'investments.$.buyPrice': -Math.floor((amount / ownedAmount) * ownedInvestment.buyPrice),
-                    wallet: price,
                 },
             },
         );

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
         template: 'Coinz - %s',
         default: 'Coinz',
     },
-    description: 'A Discord bot with an economy system, stocks, crypto, poker, blackjack, roulette, and more!',
+    description: 'A Discord bot with an economy system, stocks, crypto, blackjack, roulette, and more!',
     generator: 'Coinz',
     applicationName: 'Coinz',
     referrer: 'origin-when-cross-origin',

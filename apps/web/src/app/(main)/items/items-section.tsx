@@ -16,7 +16,6 @@ const categories: { [key: string]: string } = {
     crops: 'Crops',
     animals: 'Animals',
     fish: 'Fish',
-    factory: 'Factory Products',
     rare_items: 'Rare Items',
     other: 'Other',
 };

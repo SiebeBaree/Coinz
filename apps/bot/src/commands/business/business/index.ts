@@ -129,7 +129,7 @@ export default {
                             },
                             {
                                 name: 'position',
-                                type: ApplicationCommandOptionType.Number,
+                                type: ApplicationCommandOptionType.Integer,
                                 description: 'The position of that employee.',
                                 required: true,
                                 choices: [

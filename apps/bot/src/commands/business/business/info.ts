@@ -41,10 +41,10 @@ function getInventory(
     let worth = 0;
 
     for (const invItem of business.inventory) {
-        const item = client.items.getById(invItem.itemId);
-        if (!item?.sellPrice) continue;
+        const item = client.business.getById(invItem.itemId);
+        if (!item?.price) continue;
 
-        worth += item.sellPrice * invItem.amount;
+        worth += item.price * invItem.amount;
         items.push(`**${invItem.amount}x** <:${invItem.itemId}:${item.emoteId}> ${item.name}`);
     }
 
@@ -182,6 +182,14 @@ async function getButtons(
                         .setStyle(ButtonStyle.Danger)
                         .setDisabled(disabled),
                 );
+            } else {
+                buttons.push(
+                    new ButtonBuilder()
+                        .setCustomId('business_leave')
+                        .setLabel('Leave Business')
+                        .setStyle(ButtonStyle.Danger)
+                        .setDisabled(disabled),
+                );
             }
         } else {
             buttons.push(
@@ -284,7 +292,36 @@ export default async function info(
 
     collector.on('collect', async (i) => {
         if (i.componentType === ComponentType.Button && i.customId.startsWith('business_')) {
-            if (i.customId === 'business_create' && business === null) {
+            if (i.customId === 'business_leave' && business !== null) {
+                const employee = business.employees.find((e) => e.userId === member.id);
+                if (!employee) return;
+
+                if (employee.position === Positions.CEO) {
+                    await i.reply({
+                        content: 'You cannot leave your business as the CEO. You can sell your business instead.',
+                        ephemeral: true,
+                    });
+                    return;
+                }
+
+                await i.reply({
+                    content: 'You have left the business.',
+                    ephemeral: true,
+                });
+
+                await Business.updateOne(
+                    { name: business.name },
+                    {
+                        $pull: {
+                            employees: {
+                                userId: member.id,
+                            },
+                        },
+                    },
+                );
+
+                business = null;
+            } else if (i.customId === 'business_create' && business === null) {
                 const createNameInput = new TextInputBuilder()
                     .setCustomId('business-create-name')
                     .setLabel('Business Name')

@@ -153,7 +153,6 @@ export default class Shop {
             { label: 'Crops', value: 'crops' },
             { label: 'Animals', value: 'animals' },
             { label: 'Fish', value: 'fish' },
-            { label: 'Factory Products', value: 'factory' },
             { label: 'Rare Items', value: 'rare_items' },
             { label: 'Other', value: 'other' },
             { label: 'All Items', value: 'all' },

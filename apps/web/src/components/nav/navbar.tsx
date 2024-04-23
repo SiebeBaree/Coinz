@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Session } from 'next-auth';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Sidebar from '@/components/nav/sidebar';
 import { ChevronDown, LucideIcon, Menu } from 'lucide-react';
@@ -22,9 +21,11 @@ import { CreditCard, LifeBuoy, LogOut, Plus, LayoutDashboard } from 'lucide-reac
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { login } from '@/actions/login';
 import { logout } from '@/actions/logout';
+import { useSession } from 'next-auth/react';
 
-export default function Navbar({ session }: { session: Session | null }) {
+export default function Navbar() {
     const pathname = usePathname();
+    const { data: session, status } = useSession();
 
     return (
         <nav className="container flex justify-between items-center p-4 h-[60px] z-50">
@@ -52,12 +53,15 @@ export default function Navbar({ session }: { session: Session | null }) {
                 <div className="flex md:gap-3 justify-between items-center">
                     <NavItem name="Premium" href="/premium" pathname={pathname} />
 
-                    {session && session.user ? (
+                    {status === 'authenticated' && session && session.user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger className="outline-none group">
                                 <div className="flex gap-2 items-center bg-secondary py-2 px-3 rounded-md select-none border-highlight">
                                     <Avatar className="w-7 h-7">
-                                        <AvatarImage src={session.user.image ?? '/logo.png'} />
+                                        <AvatarImage
+                                            src={session.user.image ?? '/logo.png'}
+                                            alt={`${session.user.name} profile picture`}
+                                        />
                                         <AvatarFallback>
                                             {session.user.name
                                                 ?.split(' ')
@@ -84,7 +88,7 @@ export default function Navbar({ session }: { session: Session | null }) {
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     className="cursor-pointer transition-all duration-200 ease-in-out hover:bg-white/10 text-red-400"
-                                    onClick={logout}
+                                    onClick={() => logout()}
                                 >
                                     <LogOut className="mr-2 h-4 w-4" />
                                     <span>Log out</span>
@@ -92,9 +96,11 @@ export default function Navbar({ session }: { session: Session | null }) {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     ) : (
-                        <Button className="px-5 py-2 h-auto" onClick={() => login()}>
-                            Login
-                        </Button>
+                        <form onSubmit={() => login()}>
+                            <Button className="px-5 py-2 h-auto" type="submit">
+                                Login
+                            </Button>
+                        </form>
                     )}
                 </div>
             </div>

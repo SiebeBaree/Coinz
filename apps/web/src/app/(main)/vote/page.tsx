@@ -3,8 +3,6 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export const dynamic = 'force-static';
-
 export default function VotePage() {
     return (
         <main className="container mx-auto px-5">
