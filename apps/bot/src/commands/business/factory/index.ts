@@ -248,9 +248,9 @@ export default {
 
         const collector = message.createMessageComponentCollector({
             filter: async (i) => filter(interaction, i),
-            max: 15,
-            idle: 25_000,
-            time: 120_000,
+            max: 12,
+            idle: 20_000,
+            time: 90_000,
             componentType: ComponentType.Button,
         });
 
