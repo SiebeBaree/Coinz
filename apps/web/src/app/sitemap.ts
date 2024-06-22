@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         'guide',
         'roadmap',
         'vote',
+        'status',
     ];
 
     const routes: MetadataRoute.Sitemap = [];

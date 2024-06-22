@@ -5,7 +5,6 @@ import { ActivityType, GatewayIntentBits, Partials } from 'discord.js';
 import { connect } from 'mongoose';
 import Bot from './domain/Bot';
 import BotStats from './models/botStats';
-import Investment from './models/investment';
 import logger from './utils/logger';
 
 (async () => {
@@ -34,32 +33,55 @@ import logger from './utils/logger';
     }
 
     bot.once('ready', async () => {
-        if (bot.cluster.id === bot.cluster.info.CLUSTER_COUNT - 1) {
-            const updateStatsInDb = async () => {
-                const guilds = [...bot.guilds.cache.values()];
-                let users = 0;
-                for (const guild of guilds) {
-                    users += guild.memberCount;
+        const updateStatsInDb = async () => {
+            const guilds = [...bot.guilds.cache.values()];
+            let users = 0;
+            for (const guild of guilds) {
+                users += guild.memberCount;
+            }
+
+            const botStat = await BotStats.findOne({ updatedAt: { $gte: new Date().setHours(0, 0, 0, 0) } });
+            if (botStat) {
+                const clusterIndex = botStat.clusters.findIndex((cluster) => cluster.id === bot.cluster.id);
+                if (clusterIndex === -1) {
+                    botStat.clusters.push({
+                        id: bot.cluster.id,
+                        guilds: guilds.length,
+                        users: users,
+                        totalShards: Number.parseInt(process.env.SHARDS_PER_CLUSTER!, 10),
+                    });
+                    await botStat.save();
+                } else {
+                    await BotStats.updateOne(
+                        { _id: botStat._id, 'clusters.id': bot.cluster.id },
+                        {
+                            $set: {
+                                'clusters.$.guilds': guilds.length,
+                                'clusters.$.users': users,
+                                'clusters.$.totalShards': Number.parseInt(process.env.SHARDS_PER_CLUSTER!, 10),
+                            },
+                        },
+                    );
                 }
-
-                const shards = bot.cluster.info.TOTAL_SHARDS;
-                const investmentsCount = await Investment.countDocuments();
-                const botStat = new BotStats({
-                    guilds: guilds.length,
-                    users: users,
-                    shards: shards,
-                    commands: bot.commands.size,
-                    investments: investmentsCount,
-                    updatedAt: new Date(),
+            } else {
+                const newBotStat = new BotStats({
+                    clusters: [
+                        {
+                            id: bot.cluster.id,
+                            guilds: guilds.length,
+                            users: users,
+                            totalShards: Number.parseInt(process.env.SHARDS_PER_CLUSTER!, 10),
+                        },
+                    ],
                 });
-                await botStat.save();
-            };
+                await newBotStat.save();
+            }
+        };
 
-            // Update stats in the database every 2 hours
-            setInterval(updateStatsInDb, 1000 * 60 * 120);
+        // Update stats in the database every day
+        setInterval(updateStatsInDb, 1000 * 60 * 60 * 24);
 
-            await updateStatsInDb();
-        }
+        await updateStatsInDb();
     });
 
     await bot.login(process.env.DISCORD_TOKEN!);

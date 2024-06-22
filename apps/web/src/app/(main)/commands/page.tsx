@@ -3,7 +3,7 @@ import PageTitle from '@/components/page-title';
 import SectionWrapper from '@/components/section-wrapper';
 import { db } from '@/server/db';
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function CommandsPage() {
     const commands = await db.commands.findMany({});

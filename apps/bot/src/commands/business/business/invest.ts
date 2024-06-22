@@ -29,7 +29,15 @@ export default async function invest(
 
     const amountStr = interaction.options.getString('amount', true);
     const amount = parseStrToNum(amountStr);
-    const maxAmount = member.premium === 2 ? 10000 : 2000;
+    const maxAmount = member.premium === 2 ? 15000 : 1500;
+
+    if (Number.isNaN(amount)) {
+        await interaction.reply({
+            content: 'Please provide a valid number.',
+            ephemeral: true,
+        });
+        return;
+    }
 
     if (amount < 100) {
         await interaction.reply({
@@ -45,7 +53,7 @@ export default async function invest(
         return;
     } else if (amount > maxAmount) {
         await interaction.reply({
-            content: `You cannot invest more than :coin: ${maxAmount}.${member.premium < 2 ? `(Upgrade to [premium](<${client.config.website}/premium>) to increase the limit to :coin: 10,000)` : ''}`,
+            content: `You cannot invest more than :coin: ${maxAmount}.${member.premium < 2 ? ` Upgrade to [premium](<${client.config.website}/premium>) to increase the limit to :coin: 15,000.` : ''}`,
             ephemeral: true,
         });
         return;

@@ -1,13 +1,6 @@
 version: '3.8'
 
 services:
-    cooldowns_db:
-        image: redis:alpine
-        restart: always
-        networks:
-            - redis-network
-        ports:
-            - '6379:6379'
     rabbitmq:
         image: rabbitmq:alpine
         restart: always
@@ -26,7 +19,6 @@ services:
         environment:
             REDIS_URI: redis://cooldowns_db:6379
         networks:
-            - redis-network
             - queue-network
     support:
         build:
@@ -50,7 +42,5 @@ services:
         depends_on:
             - rabbitmq
 networks:
-    redis-network:
-        driver: bridge
     queue-network:
         driver: bridge

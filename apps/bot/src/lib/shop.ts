@@ -103,6 +103,41 @@ export default class Shop {
         return true;
     }
 
+    public async removeItemBulk(items: { [key: string]: number }, member: IMember): Promise<boolean> {
+        const bulkOps = [];
+
+        for (const [id, amount] of Object.entries(items)) {
+            if (!this.hasInInventory(id, member)) return false;
+
+            const item = this.getInventoryItem(id, member);
+            if (item === undefined) return false;
+
+            if (item.amount <= amount) {
+                // Remove item from inventory
+                bulkOps.push({
+                    updateOne: {
+                        filter: { id: member.id, 'inventory.itemId': id },
+                        update: { $pull: { inventory: { itemId: id } } },
+                    },
+                });
+            } else {
+                // Decrement amount for existing items
+                bulkOps.push({
+                    updateOne: {
+                        filter: { id: member.id, 'inventory.itemId': id },
+                        update: { $inc: { 'inventory.$.amount': -amount } },
+                    },
+                });
+            }
+        }
+
+        if (bulkOps.length > 0) {
+            await Member.bulkWrite(bulkOps);
+        }
+
+        return true;
+    }
+
     public async checkForDuplicates(member: IMember): Promise<void> {
         const inventory = member.inventory;
 

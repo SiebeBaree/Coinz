@@ -94,6 +94,11 @@ export default {
     },
     async execute(client, interaction, member) {
         const user = interaction.options.getUser('user') ?? interaction.user;
+        if (user.bot) {
+            await interaction.editReply({ content: "You can't get the profile of a bot." });
+            return;
+        }
+
         const memberData = interaction.user.id === user.id ? member : await getMember(user.id);
 
         const inventory = getInventoryValue(client, memberData.inventory);

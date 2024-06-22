@@ -15,7 +15,7 @@ export default async function sell(client: Bot, interaction: ChatInputCommandInt
     }
 
     const itemId = interaction.options.getString('item', true);
-    const amount = interaction.options.getNumber('amount', true);
+    const amount = interaction.options.getInteger('amount', true);
 
     const item = client.business.getById(itemId) ?? client.business.getByName(itemId);
     if (!item) {

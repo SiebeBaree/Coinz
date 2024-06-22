@@ -183,7 +183,7 @@ export default {
             case 'supply':
                 await supply(client, interaction, data);
                 break;
-            case 'pay':
+            case 'payout':
                 await pay(client, interaction, data);
                 break;
             case 'invest':

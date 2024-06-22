@@ -2,30 +2,28 @@
 
 import { CandlestickChartIcon, LucideIcon, ServerIcon, TerminalSquareIcon, Users2Icon } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { BotStats } from '@prisma/client';
 import { formatNumber } from '@/lib/utils';
 
-export default function Statistics({ botStats }: { botStats: BotStats | null }) {
-    if (!botStats) {
-        return (
-            <>
-                <Statistic Icon={ServerIcon} title="Servers" value={0} />
-                <Statistic Icon={Users2Icon} title="Users" value={0} />
-                <Statistic Icon={TerminalSquareIcon} title="Commands" value={0} />
-                <Statistic Icon={CandlestickChartIcon} title="Investments" value={0} />
-            </>
-        );
-    }
-
-    const serverCount = formatNumber(botStats.guilds);
-    const userCount = formatNumber(botStats.users);
+export default function Statistics({
+    guilds,
+    users,
+    commands,
+    investments,
+}: {
+    guilds: number;
+    users: number;
+    commands: number;
+    investments: number;
+}) {
+    const serverCount = formatNumber(guilds);
+    const userCount = formatNumber(users);
 
     return (
         <>
             <Statistic Icon={ServerIcon} title="Servers" value={serverCount.value} suffix={serverCount.suffix + '+'} />
             <Statistic Icon={Users2Icon} title="Users" value={userCount.value} suffix={userCount.suffix + '+'} />
-            <Statistic Icon={TerminalSquareIcon} title="Commands" value={botStats.commands} />
-            <Statistic Icon={CandlestickChartIcon} title="Investments" value={botStats.investments} />
+            <Statistic Icon={TerminalSquareIcon} title="Commands" value={commands} />
+            <Statistic Icon={CandlestickChartIcon} title="Investments" value={investments} />
         </>
     );
 }

@@ -1,21 +1,27 @@
 import { Schema, model } from 'mongoose';
 
-export type IBotStats = {
+type ICluster = {
+    id: number;
     guilds: number;
     users: number;
-    shards: number;
-    commands: number;
-    investments: number;
-    updatedAt: Date;
+    totalShards: number;
 };
+
+export type IBotStats = {
+    clusters: ICluster[];
+    updatedAt: Date;
+    createdAt: Date;
+};
+
+const ClusterSchema = new Schema<ICluster>({
+    id: { type: Number, required: true },
+    guilds: { type: Number, required: true },
+    users: { type: Number, required: true },
+});
 
 export const botStatsSchema = new Schema<IBotStats>(
     {
-        guilds: { type: Number, required: true },
-        users: { type: Number, required: true },
-        shards: { type: Number, required: true },
-        commands: { type: Number, required: true },
-        investments: { type: Number, required: true },
+        clusters: [{ type: ClusterSchema }],
     },
     { timestamps: true },
 );

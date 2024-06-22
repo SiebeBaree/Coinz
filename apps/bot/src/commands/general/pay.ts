@@ -8,7 +8,7 @@ import { addMoney, removeMoney } from '../../utils/money';
 
 const LOWER_LIMIT = 30;
 const START_LIMIT = 1000;
-const MAX_LIMIT = 15_000;
+const MAX_LIMIT = 10_000;
 const PREMIUM_LIMIT = 30_000;
 
 function getLimit(level: number, premium: number): number {

@@ -536,6 +536,7 @@ async function getPlant(client: Bot, interaction: ChatInputCommandInteraction, m
         return;
     }
 
+    let commandSuccess = false;
     const modal = new ModalBuilder()
         .setTitle('Plant crops on your plots')
         .setCustomId(`farm_plant-${interaction.user.id}`)
@@ -639,6 +640,7 @@ async function getPlant(client: Bot, interaction: ChatInputCommandInteraction, m
                 } ${plots.join(', ')}.`,
                 ephemeral: true,
             });
+            commandSuccess = true;
 
             await client.items.removeItem(crop.itemId, member, plots.length);
             const harvestOn = Math.floor(Date.now() / 1_000) + (crop.duration ?? 21_600);
@@ -656,10 +658,12 @@ async function getPlant(client: Bot, interaction: ChatInputCommandInteraction, m
                 { upsert: true },
             );
         } catch (error) {
-            await modalInteraction.reply({
-                content: (error as Error).message,
-                ephemeral: true,
-            });
+            if (!commandSuccess) {
+                await modalInteraction.reply({
+                    content: (error as Error).message,
+                    ephemeral: true,
+                });
+            }
         }
     } catch (error) {
         if ((error as Error).name.includes('InteractionCollectorError')) {

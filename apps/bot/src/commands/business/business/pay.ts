@@ -63,10 +63,7 @@ export default async function pay(client: Bot, interaction: ChatInputCommandInte
         ]);
 
     await client.cooldown.setCooldown(interaction.user.id, COMMAND_NAME, COOLDOWN_TIME);
-    await interaction.reply({
-        embeds: [embed],
-        ephemeral: true,
-    });
+    await interaction.reply({ embeds: [embed] });
 
     await Business.updateOne({ name: data.business.name }, { $inc: { balance: -totalAmount } });
     for (const employee of data.business.employees) {
