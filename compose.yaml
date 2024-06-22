@@ -14,10 +14,7 @@ services:
             dockerfile: ./docker/Bot.Dockerfile
         restart: always
         depends_on:
-            - cooldowns_db
             - rabbitmq
-        environment:
-            REDIS_URI: redis://cooldowns_db:6379
         networks:
             - queue-network
     support:
