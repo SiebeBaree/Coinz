@@ -6,6 +6,7 @@ import type { Metadata, Viewport } from 'next';
 import { env } from '@/env';
 import Providers from '@/components/providers';
 import PlausibleProvider from 'next-plausible';
+import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -107,7 +108,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <PlausibleProvider domain="coinzbot.xyz" selfHosted={true} />
             </head>
             <body className={cn('min-h-screen bg-background font-sans antialiased overflow-x-hidden', inter.className)}>
-                <Providers>{children}</Providers>
+                <Providers>
+                    {children}
+                    <Toaster />
+                </Providers>
             </body>
         </html>
     );

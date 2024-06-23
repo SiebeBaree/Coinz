@@ -2,7 +2,7 @@ import ItemsSection from './items-section';
 import PageTitle from '@/components/page-title';
 import { db } from '@/server/db';
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function ItemsPage() {
     const items = await db.item.findMany({});

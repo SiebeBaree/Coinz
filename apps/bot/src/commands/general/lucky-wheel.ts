@@ -50,7 +50,9 @@ async function getInfo(client: Bot, interaction: ChatInputCommandInteraction, me
         );
 
     for (const [i, element] of lootTable.entries()) {
-        embed.addFields([{ name: `Possible Rewards (${i + 1})`, value: element, inline: true }]);
+        embed.addFields([
+            { name: `Possible Rewards (${i + 1})`, value: element ?? 'No other rewards than money...', inline: true },
+        ]);
     }
 
     await interaction.reply({ embeds: [embed] });

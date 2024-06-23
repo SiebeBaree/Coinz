@@ -51,7 +51,7 @@ export default {
                 }
             }
 
-            if ((command.data.premium ?? 0) > member.premium) {
+            if (process.env.NODE_ENV === 'production' && (command.data.premium ?? 0) > member.premium) {
                 if (command.data.premium === 2) {
                     await interaction.reply({
                         content: `This command is only for Coinz Pro subscribers. To gain access to this command, consider [**upgrading**](<${client.config.website}/premium>).`,

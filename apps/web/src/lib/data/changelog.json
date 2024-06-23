@@ -1,5 +1,24 @@
 [
     {
+        "version": "4.1",
+        "name": "Trade & Premium Update",
+        "timestamp": 1713772800,
+        "content": [
+            "#### Added",
+            "- Added the ability to trade items with other users. Use `/trade` to start a trade.",
+            "- Added upgradable bank limits back in Coinz. Use `/balance` to upgrade your bank limit.",
+            "- Added the [**status page**](https://coinzbot.xyz/status) to the website.",
+            "- Added the ability to buy and sell investments on the [**investments page**](https://coinzbot.xyz/investments).",
+            "- Added `/slots` command to play a slot machine.",
+            "#### Changed",
+            "- Let Coinz Pro users invest up to 🪙 15.000 in their business instead of the previous 🪙 10.000.",
+            "- Coinz Premium users will now receive a 50% discount on upgrading their bank limit.",
+            "- Fixed a lot of small bugs in Coinz.",
+            "- Lowered the maximum amount of money you can pay to other users from 🪙 15.000 to 🪙 10.000 for Free users.",
+            "- Fixed the factory buy and upgrade buttons."
+        ]
+    },
+    {
         "version": "4.0.1",
         "name": "Stability Bug Fixes",
         "timestamp": 1713772800,
@@ -7,7 +26,7 @@
             "#### Changed",
             "- Let Coinz Pro users invest up to 🪙 10.000 in their business.",
             "- Coinz Pro users can now pay up to 🪙 30.000 to other users instead of the previous 🪙 25.000.",
-            "- Fix an issue where all CEO's are removed from their businesses.",
+            "- Fixed an issue where all CEO's are removed from their businesses.",
             "- Updated small typo's in messages.",
             "- Added the ability for business employee's to leave the business.",
             "#### Known Bugs",

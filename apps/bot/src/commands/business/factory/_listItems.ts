@@ -25,9 +25,9 @@ function createEmbed(client: Bot, items: FactoryItem[], data: BusinessData, page
         }
 
         description.push(
-            `${client.business.getItemString(item)}${stock ? `(Stock: ${stock.amount})` : ''}\n` +
+            `${client.business.getItemString(item)}${stock ? ` (Stock: ${stock.amount})` : ''}\n` +
                 (item.producable
-                    ? `> Produces ${item.amount} <:${item.itemId}:${item.emoteId}> every ${msToTime(item.duration * 1000)}\n> __Requirements:__ ${requirementsList.length > 0 ? requirementsList.join(', ') : 'No Requirements'}`
+                    ? `> Normal Sell Price: :coin: ${item.price}\n> Produces ${item.amount} <:${item.itemId}:${item.emoteId}> every ${msToTime(item.duration * 1000)}\n> Requirements: ${requirementsList.length > 0 ? requirementsList.join(', ') : 'No Requirements'}`
                     : `> Buy Price: :coin: ${item.price}`),
         );
     }

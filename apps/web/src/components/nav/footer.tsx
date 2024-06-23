@@ -14,6 +14,7 @@ export default function Footer() {
                         <div className="flex flex-col gap-1 text-center">
                             <Link href={'/invite'}>Invite Coinz</Link>
                             <Link href={'/support'}>Support Server</Link>
+                            <Link href={'/status'}>Status</Link>
                             <Link href={'/roadmap'}>Roadmap</Link>
                         </div>
                     </div>

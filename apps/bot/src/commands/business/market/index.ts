@@ -50,13 +50,13 @@ export default {
                     },
                     {
                         name: 'amount',
-                        type: ApplicationCommandOptionType.Number,
+                        type: ApplicationCommandOptionType.Integer,
                         description: 'The amount of the item you want to sell.',
                         required: true,
                     },
                     {
                         name: 'price',
-                        type: ApplicationCommandOptionType.Number,
+                        type: ApplicationCommandOptionType.Integer,
                         description: 'The price per item you want to sell.',
                         required: false,
                     },

@@ -53,13 +53,18 @@ model Investment {
   @@unique([ticker, type])
 }
 
-model BotStats {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+type Cluster {
+  id          Int
   guilds      Int
   users       Int
-  commands    Int
-  investments Int
-  updatedAt   DateTime @updatedAt
+  totalShards Int
+}
+
+model BotStats {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  clusters    Cluster[]
+  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime  @default(now())
 }
 
 model Commands { 
@@ -86,10 +91,65 @@ model Item {
   duration        Int?
 }
 
+type InvestmentData {
+  ticker   String
+  amount   String
+  buyPrice Int
+}
+
 model members {
-  oid           String          @id @default(auto()) @map("_id") @db.ObjectId
-  userId        String          @unique @map("id")
-  premium       Int
+  oid           String            @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String            @unique @map("id")
+  wallet        Int               @default(0)
+  bank          Int               @default(0)
+  investments   InvestmentData[]
+  premium       Int               @default(0)
+}
+
+type Games {
+  won Int @default(0)
+  lost Int @default(0)
+  tied Int @default(0)
+  moneySpent Int @default(0)
+  moneyEarned Int @default(0)
+  moneyLost Int @default(0)
+}
+
+type DailyActivity {
+  startDay DateTime @default(now())
+  totalCommands Int @default(0)
+}
+
+type InvestmentStats {
+  amountOfTimesBought Int @default(0)
+  amountOfTimesSold Int @default(0)
+  totalBuyPrice Int @default(0)
+}
+
+model userstats {
+  oid             String          @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String          @unique @map("id")
+  totalEarned     Int             @default(0)
+  totalSpend      Int             @default(0)
+  itemsBought     Int             @default(0)
+  itemsSold       Int             @default(0)
+  games           Games
+  treesCutDown    Int             @default(0)
+  totalTreeHeight Int             @default(0)
+  luckyWheelSpins Int             @default(0)
+  timesWorked     Int             @default(0)
+  fishCaught      Int             @default(0)
+  animalsKilled   Int             @default(0)
+  timesRobbed     Int             @default(0)
+  timesPlotPlanted Int            @default(0)
+  timesPlotHarvested Int          @default(0)
+  timesPlotWatered Int            @default(0)
+  timesPlotFertilized Int         @default(0)
+  moneyEarnedOnBusinesses Int     @default(0)
+  dailyActivity   DailyActivity
+  moneyDonated    Int             @default(0)
+  moneyReceived   Int             @default(0)
+  investments     InvestmentStats
 }
 
 model WebhookEvents {

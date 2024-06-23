@@ -17,7 +17,7 @@ import { Positions, type BusinessData } from '../../../lib/types';
 import type { IBusiness } from '../../../models/business';
 import Business from '../../../models/business';
 import type { IMember } from '../../../models/member';
-import { generateRandomString } from '../../../utils';
+import { generateRandomString, getLevel } from '../../../utils';
 import { removeMoney } from '../../../utils/money';
 
 enum Category {
@@ -322,6 +322,15 @@ export default async function info(
 
                 business = null;
             } else if (i.customId === 'business_create' && business === null) {
+                if (getLevel(member.experience) < 15) {
+                    await i.deferUpdate();
+                    await interaction.reply({
+                        content: 'You need to be level 15 to create a business.',
+                        ephemeral: true,
+                    });
+                    return;
+                }
+
                 const createNameInput = new TextInputBuilder()
                     .setCustomId('business-create-name')
                     .setLabel('Business Name')

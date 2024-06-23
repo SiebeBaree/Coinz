@@ -6,7 +6,7 @@ import { getMember, getUserStats } from '../../lib/database';
 import type { IMember } from '../../models/member';
 import Member from '../../models/member';
 import UserStats from '../../models/userStats';
-import { feetToMeters, getRandomNumber } from '../../utils';
+import { feetToMeters, filter, getRandomNumber } from '../../utils';
 
 type Event = {
     name: string;
@@ -265,7 +265,7 @@ export default {
         }
 
         const collector = message.createMessageComponentCollector({
-            filter: (i) => i.user.id === interaction.user.id,
+            filter: async (i) => filter(interaction, i),
             max: 4,
             time: 60_000,
             componentType: ComponentType.Button,

@@ -11,7 +11,7 @@ import GamesIcon from '@/components/icons/games';
 import FarmingIcon from '@/components/icons/farming';
 import { db } from '@/server/db';
 
-export const revalidate = 3600;
+export const revalidate = 14400;
 
 export default async function Home() {
     const botStats = await db.botStats.findFirst({
@@ -20,7 +20,12 @@ export default async function Home() {
         },
     });
 
-    const users = formatNumber(botStats?.users || 0);
+    const totalGuilds = botStats?.clusters.reduce((acc, cluster) => acc + cluster.guilds, 0) || 0;
+    const totalUsers = botStats?.clusters.reduce((acc, cluster) => acc + cluster.users, 0) || 0;
+    const totalCommands = await db.commands.count();
+    const totalInvestments = await db.investment.count();
+
+    const users = formatNumber(totalUsers);
     return (
         <main>
             <div
@@ -87,7 +92,12 @@ export default async function Home() {
                             gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                         }}
                     >
-                        <Statistics botStats={botStats} />
+                        <Statistics
+                            guilds={totalGuilds}
+                            users={totalUsers}
+                            commands={totalCommands}
+                            investments={totalInvestments}
+                        />
                     </div>
                 </div>
             </div>

@@ -6,6 +6,7 @@ import type {
     MentionableSelectMenuInteraction,
     RoleSelectMenuInteraction,
     StringSelectMenuInteraction,
+    User,
     UserSelectMenuInteraction,
 } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
@@ -14,6 +15,7 @@ import type Bot from '../domain/Bot';
 import type { Loot } from '../lib/types';
 import Business from '../models/business';
 import type { IMember } from '../models/member';
+import TradeModel, { TradeStatus, type Trade } from '../models/trade';
 import { removeBetMoney } from './money';
 
 const countries = new Map<string, string>(Object.entries(countriesData));
@@ -272,4 +274,25 @@ export async function getBusiness(memberId: string) {
 
 export function generateRandomString(length: number = 6): string {
     return Array.from({ length }, () => Math.random().toString(36)[2]).join('');
+}
+
+export async function getUser(client: Bot, userId: string): Promise<User | null> {
+    try {
+        return client.users.cache.get(userId) || (await client.users.fetch(userId));
+    } catch {
+        return null;
+    }
+}
+
+export async function updateTrade(trade: Trade): Promise<Trade> {
+    if (
+        (trade.status === TradeStatus.PENDING || trade.status === TradeStatus.WAITING_FOR_CONFIRMATION) &&
+        trade.expiresAt.getTime() < Date.now()
+    ) {
+        const newTrade = await TradeModel.findOneAndUpdate({ tradeId: trade.tradeId }, { status: TradeStatus.EXPIRED });
+        if (!newTrade) return trade;
+        return newTrade;
+    }
+
+    return trade;
 }

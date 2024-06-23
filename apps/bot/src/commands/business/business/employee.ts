@@ -46,7 +46,7 @@ export default async function employee(
 }
 
 async function hire(client: Bot, interaction: ChatInputCommandInteraction, member: IMember, data: BusinessData) {
-    const MAX_EMPLOYEES = member.premium >= 2 ? 6 : 5;
+    const MAX_EMPLOYEES = member.premium >= 2 ? 6 : 3;
     if (data.employee.position < Positions.Manager) {
         await interaction.reply({
             content: 'You need to be a manager or higher to hire employees.',
