@@ -25,6 +25,8 @@ jobs:
             WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
             NODE_ENV: ${{ secrets.NODE_ENV }}
             NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
+            API_TOKEN: ${{ secrets.API_TOKEN }}
+            API_URL: ${{ secrets.API_URL }}
         steps:
             - uses: actions/checkout@v4
 
