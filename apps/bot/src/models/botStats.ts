@@ -17,6 +17,7 @@ const ClusterSchema = new Schema<ICluster>({
     id: { type: Number, required: true },
     guilds: { type: Number, required: true },
     users: { type: Number, required: true },
+    totalShards: { type: Number, required: true },
 });
 
 export const botStatsSchema = new Schema<IBotStats>(
