@@ -1,7 +1,6 @@
 import InvestmentsSection from './investments-section';
 import { db } from '@/server/db';
 import PageTitle from '@/components/page-title';
-import { InvestmentData } from '@prisma/client';
 
 export default async function InvestmentsPage() {
     const investments = await db.investment.findMany({});
