@@ -6,7 +6,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const pages = [
         'commands',
         'items',
-        'premium',
         'terms-of-use',
         'privacy-policy',
         'investments',

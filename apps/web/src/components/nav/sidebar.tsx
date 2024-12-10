@@ -5,20 +5,14 @@ import Image from 'next/image';
 import {
     CandlestickChartIcon,
     CommandIcon,
-    CreditCard,
     ExternalLinkIcon,
     HelpCircleIcon,
     HomeIcon,
     InfoIcon,
-    LayoutDashboardIcon,
-    LogInIcon,
-    LogOutIcon,
     ShoppingCartIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
-import { Session } from 'next-auth';
-import { signIn, signOut } from 'next-auth/react';
 
 const routes = [
     {
@@ -58,7 +52,7 @@ const routes = [
     },
 ];
 
-export default function Sidebar({ session }: { session: Session | null }) {
+export default function Sidebar() {
     const pathname = usePathname();
 
     return (
@@ -86,72 +80,7 @@ export default function Sidebar({ session }: { session: Session | null }) {
                             {route.label}
                         </Link>
                     ))}
-                    {!session && (
-                        <p
-                            onClick={() => signIn('discord', { callbackUrl: '/dashboard' })}
-                            className={
-                                'text-sm group flex p-3 w-full justify-start cursor-pointer hover:bg-white/10 rounded-lg transition font-medium text-primary'
-                            }
-                        >
-                            <LogInIcon className="h-5 w-5 mr-3" />
-                            Log In
-                        </p>
-                    )}
                 </div>
-            </div>
-            <div className="px-3 py-2">
-                {session && (
-                    <>
-                        <div className="flex flex-col gap-1 my-3">
-                            <Link
-                                href={'/dashboard'}
-                                className={cn(
-                                    'text-sm group flex p-3 w-full justify-start cursor-pointer hover:bg-white/10 rounded-lg transition font-medium',
-                                    pathname.startsWith('/dashboard')
-                                        ? 'text-accent-foreground bg-white/10'
-                                        : 'text-muted',
-                                )}
-                            >
-                                <LayoutDashboardIcon className="h-5 w-5 mr-3" />
-                                Dashboard
-                            </Link>
-                            <Link
-                                href={'/billing'}
-                                className={cn(
-                                    'text-sm group flex p-3 w-full justify-start cursor-pointer hover:bg-white/10 rounded-lg transition font-medium',
-                                    pathname === '/billing' ? 'text-accent-foreground bg-white/10' : 'text-muted',
-                                )}
-                            >
-                                <CreditCard className="h-5 w-5 mr-3" />
-                                Billing
-                            </Link>
-                            <p
-                                onClick={() =>
-                                    signOut({
-                                        callbackUrl: '/',
-                                    })
-                                }
-                                className={
-                                    'text-sm group flex p-3 w-full justify-start cursor-pointer hover:bg-white/10 rounded-lg transition font-bold text-red-400'
-                                }
-                            >
-                                <LogOutIcon className="h-5 w-5 mr-3" />
-                                Log Out
-                            </p>
-                        </div>
-
-                        <div className="flex gap-2 items-center bg-secondary py-2 px-3 rounded-md select-none">
-                            <Image
-                                src={session?.user?.image || 'https://cdn.discordapp.com/embed/avatars/3.png'}
-                                alt="Profile picture"
-                                width={28}
-                                height={28}
-                                className="rounded-full"
-                            />
-                            <p className="font-medium">{session?.user?.name}</p>
-                        </div>
-                    </>
-                )}
             </div>
         </div>
     );

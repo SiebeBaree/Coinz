@@ -20,15 +20,6 @@ export default function Footer() {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                        <p className="font-semibold uppercase text-muted text-lg text-center">MANAGE</p>
-
-                        <div className="flex flex-col gap-1 text-center">
-                            <Link href={'/premium'}>Premium</Link>
-                            <Link href={'/dashboard'}>Dashboard</Link>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-3">
                         <p className="font-semibold uppercase text-muted text-lg text-center">VOTE FOR US</p>
 
                         <div className="flex flex-col gap-1 text-center">
