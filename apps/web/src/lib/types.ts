@@ -10,16 +10,3 @@ export type Changelog = {
     timestamp: number;
     content: string[];
 };
-
-export type Product = {
-    name: string;
-    logo: string;
-    price: {
-        monthly: number;
-        quarterly: number;
-    };
-    features: string[];
-    planId: number;
-    variantId: number;
-    premium: number;
-};
