@@ -7,7 +7,7 @@ export default function Footer() {
     return (
         <footer className="w-full bg-card flex items-center">
             <div className="container mx-auto px-5 flex flex-col max-w-[800px]">
-                <div className="grid gap-8 mt-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+                <div className="grid gap-8 mt-6 grid-cols-1 md:grid-cols-3">
                     <div className="flex flex-col gap-3">
                         <p className="font-semibold uppercase text-muted text-lg text-center">LINKS</p>
 
